@@ -1,0 +1,10 @@
+{
+  "name": "🏆 سجل وحسابات ⚽️ قروب الكورة 🏆",
+  "short_name": "قروب الكورة",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#f7f7f7",
+  "theme_color": "#0f5132",
+  "orientation": "portrait",
+  "icons": []
+}
