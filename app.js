@@ -437,7 +437,13 @@ function renderDepositHistory(){
   if(!box)return;
 
   const s=state();
-  const list=[...(s.deposits||[])].sort((a,b)=>{
+  const list=[...(s.deposits||[])].map(d=>{
+    const raw=String(d.date||'').replace(/-/g,'/');
+    if((raw==='2026/01/01'||raw==='1/1/2026') && !d.type){
+      return {...d,type:'initial'};
+    }
+    return d;
+  }).sort((a,b)=>{
     const da=new Date(a.date||'1900-01-01').getTime();
     const db=new Date(b.date||'1900-01-01').getTime();
     if(db!==da)return db-da;
