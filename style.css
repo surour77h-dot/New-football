@@ -154,3 +154,384 @@ nav button.activeTab{
   border-color:#0f5132 !important;
   box-shadow:0 2px 8px rgba(15,81,50,.25);
 }
+
+
+/* تحسين نهائي لشريط الصفحات وأزرار الاختيار */
+nav{
+  background:linear-gradient(180deg,#eaf7f0,#ffffff) !important;
+  padding:10px 8px !important;
+  gap:8px !important;
+  border-bottom:2px solid #cde6d8 !important;
+  box-shadow:0 3px 10px rgba(0,0,0,.08) !important;
+}
+
+nav button{
+  background:#ffffff !important;
+  color:#0f5132 !important;
+  border:1.5px solid #b9d8c7 !important;
+  border-radius:14px !important;
+  padding:10px 13px !important;
+  font-weight:800 !important;
+  font-size:13px !important;
+  white-space:nowrap !important;
+  box-shadow:0 2px 5px rgba(0,0,0,.08) !important;
+  min-height:40px !important;
+}
+
+nav button.activeTab{
+  background:linear-gradient(180deg,#198754,#0f5132) !important;
+  color:#ffffff !important;
+  border:2px solid #083b24 !important;
+  box-shadow:0 4px 12px rgba(15,81,50,.45) !important;
+  transform:translateY(-1px);
+}
+
+nav button.activeTab::after{
+  content:"";
+  display:block;
+  height:3px;
+  width:65%;
+  background:#fff3cd;
+  border-radius:10px;
+  margin:5px auto 0;
+}
+
+/* تحسين تباين أزرار إيداع/خصم */
+#depositTypeIn{
+  background:#dff7e7 !important;
+  color:#0f5132 !important;
+  border:1.5px solid #8bd3a3 !important;
+}
+#depositTypeOut{
+  background:#ffe3e7 !important;
+  color:#842029 !important;
+  border:1.5px solid #ef9aa5 !important;
+}
+#depositTypeIn.primary{
+  background:#198754 !important;
+  color:white !important;
+  border-color:#0f5132 !important;
+  box-shadow:0 3px 10px rgba(25,135,84,.35) !important;
+}
+#depositTypeOut.danger{
+  background:#dc3545 !important;
+  color:white !important;
+  border-color:#842029 !important;
+  box-shadow:0 3px 10px rgba(220,53,69,.35) !important;
+}
+
+
+/* ===== التحديث النهائي المتكامل ===== */
+.editOnly{background:#f7f7f7}
+.editPlayersGrid{display:grid;grid-template-columns:1fr 1fr;gap:5px}
+.editCheck{border:1px solid #ddd;border-radius:10px;padding:7px;background:white}
+.guestEditRow{display:grid;grid-template-columns:1fr 1fr auto;gap:5px;margin-bottom:5px;align-items:center}
+
+.participantsPreview{margin-top:8px}
+.chipGrid{display:grid;grid-template-columns:1fr 1fr;gap:5px}
+.chip{
+  border-radius:10px;
+  padding:6px;
+  font-weight:700;
+  font-size:12px;
+  text-align:center;
+  border:1px solid #ddd;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+.memberChip{background:#eef7f1;color:#0f5132}
+.guestChip{background:#fff3cd;color:#5c4200}
+
+.guestEditor{
+  background:#fafafa;
+  border:1px solid #eee;
+  border-radius:12px;
+  padding:7px;
+  margin:7px 0;
+}
+.guestEditor > b{display:block;margin-bottom:5px}
+
+.dateCard{
+  background:linear-gradient(180deg,#ffffff,#f3f8f5);
+  border:1.5px solid #cfe7d9;
+  border-radius:14px;
+  padding:8px !important;
+  box-shadow:0 2px 6px rgba(15,81,50,.08);
+}
+.dateCard input{
+  background:#ffffff !important;
+  border:1px solid #d8eadf !important;
+  font-weight:700;
+  text-align:center;
+}
+.prettyDate{
+  margin-top:5px;
+  background:#0f5132;
+  color:white;
+  border-radius:8px;
+  padding:4px;
+  font-size:13px;
+  font-weight:800;
+  text-align:center;
+}
+
+.inactiveName{
+  background:#f8d7da !important;
+  color:#842029 !important;
+  font-weight:800;
+}
+td:empty{background:white!important}
+
+
+/* إصلاح نهائي لشكل التاريخ وعدم النشاط */
+.prettyDate{
+  margin-top:6px !important;
+  background:#0f5132 !important;
+  color:#ffffff !important;
+  border-radius:9px !important;
+  padding:5px !important;
+  font-size:14px !important;
+  font-weight:900 !important;
+  text-align:center !important;
+  direction:ltr !important;
+}
+.dateCard{
+  background:linear-gradient(180deg,#ffffff,#f3f8f5) !important;
+  border:1.5px solid #cfe7d9 !important;
+  border-radius:14px !important;
+  padding:8px !important;
+}
+.inactiveName{
+  background:#f8d7da !important;
+  color:#842029 !important;
+  font-weight:900 !important;
+}
+
+
+/* إصلاح حقيقي لحقل التاريخ: يظهر بصيغة 11-5-2026 داخل نفس الخانة */
+#matchDate,#depositDate,#editMatchDate,#editDepositDate{
+  direction:ltr !important;
+  text-align:center !important;
+  font-weight:900 !important;
+  letter-spacing:.5px;
+  color:#0f5132 !important;
+  background:#ffffff !important;
+  border:1.5px solid #0f5132 !important;
+}
+td.inactiveName{
+  background:#f8d7da !important;
+  color:#842029 !important;
+  font-weight:900 !important;
+}
+
+
+/* ===== دعم iPhone و iPad mini ===== */
+
+/* الأساس يبقى مناسب للـ iPhone */
+main{
+  width:100%;
+  margin:0 auto;
+}
+
+/* iPad mini / tablet portrait */
+@media (min-width: 700px){
+  body{
+    font-size:16px;
+    background:#eef3f1;
+  }
+
+  header h1{
+    font-size:24px !important;
+  }
+
+  main{
+    max-width:760px;
+    padding:14px;
+  }
+
+  nav{
+    justify-content:center;
+    flex-wrap:wrap;
+    overflow-x:visible !important;
+    gap:10px !important;
+    padding:12px !important;
+  }
+
+  nav button{
+    font-size:15px !important;
+    padding:11px 16px !important;
+    min-height:44px !important;
+  }
+
+  .card{
+    padding:16px !important;
+    border-radius:18px !important;
+  }
+
+  .two{
+    grid-template-columns:1fr 1fr !important;
+    gap:12px !important;
+  }
+
+  .twoBtns{
+    gap:12px !important;
+  }
+
+  input,select,textarea{
+    font-size:17px !important;
+    min-height:44px !important;
+  }
+
+  button{
+    font-size:15px !important;
+    padding:10px 14px !important;
+  }
+
+  .checks{
+    grid-template-columns:1fr 1fr 1fr !important;
+    gap:8px !important;
+  }
+
+  .checks label{
+    font-size:14px !important;
+    padding:9px !important;
+  }
+
+  .plainList{
+    grid-template-columns:1fr 1fr 1fr !important;
+    max-height:65vh;
+  }
+
+  .chipGrid{
+    grid-template-columns:1fr 1fr 1fr !important;
+  }
+
+  .teamsGrid,
+  .calendarTeams{
+    gap:12px !important;
+  }
+
+  th,td{
+    font-size:13px !important;
+    padding:8px 5px !important;
+  }
+
+  .summaryCards{
+    grid-template-columns:repeat(4,1fr) !important;
+  }
+
+  .summaryCard{
+    padding:14px !important;
+  }
+
+  .summaryCard b{
+    font-size:18px !important;
+  }
+
+  .month{
+    gap:6px !important;
+  }
+
+  .day{
+    min-height:70px !important;
+    font-size:13px !important;
+    padding:7px !important;
+  }
+
+  .day b{
+    font-size:12px !important;
+  }
+}
+
+/* iPad mini landscape أو الشاشات الأعرض */
+@media (min-width: 900px){
+  main{
+    max-width:980px;
+  }
+
+  .tab.active{
+    animation:fadeIn .15s ease-in;
+  }
+
+  @keyframes fadeIn{
+    from{opacity:.85}
+    to{opacity:1}
+  }
+
+  .checks{
+    grid-template-columns:repeat(4,1fr) !important;
+  }
+
+  .plainList{
+    grid-template-columns:repeat(4,1fr) !important;
+  }
+
+  .chipGrid{
+    grid-template-columns:repeat(4,1fr) !important;
+  }
+
+  .editPlayersGrid{
+    grid-template-columns:repeat(4,1fr) !important;
+  }
+
+  table{
+    font-size:14px;
+  }
+}
+
+/* منع تمدد مبالغ أو تواريخ الجداول على iPad */
+.tableWrap{
+  overflow:hidden !important;
+}
+
+td,th{
+  vertical-align:middle;
+}
+
+#depositTypeIn{
+background:#8fd3ff !important;
+color:#0b3558 !important;
+}
+#depositTypeIn.active,
+#depositTypeIn.selected{
+background:#3498db !important;
+color:#fff !important;
+}
+
+.checks{
+grid-template-columns:repeat(4,1fr)!important;
+gap:5px!important;
+}
+.checks label{
+padding:5px!important;
+font-size:11px!important;
+min-height:auto!important;
+border-radius:8px!important;
+}
+
+.teamSummaryWrap{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:10px;
+margin-top:10px;
+}
+.teamSummaryCard{
+background:#f7f7f7;
+border:1px solid #ddd;
+border-radius:14px;
+padding:10px;
+}
+.teamSummaryCard h3{
+text-align:center;
+margin:0 0 8px;
+}
+.teamSummaryName{
+background:#fff;
+padding:6px;
+border-radius:8px;
+margin-bottom:5px;
+text-align:center;
+font-size:13px;
+font-weight:700;
+}

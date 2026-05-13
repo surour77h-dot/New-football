@@ -29,7 +29,7 @@
 <div class="card">
 <input type="hidden" id="editingMatchId">
 <div class="two">
-<label>التاريخ<input type="date" id="matchDate"></label>
+<label class="dateCard">تاريخ اللعب<input type="date" id="matchDate"></label>
 <label>المكان<input id="place" placeholder="اختياري"></label>
 <label>الحجز<input type="number" id="bookingCost" step="0.001" inputmode="decimal"></label>
 <label>العدد<input type="number" id="neededPlayers" inputmode="numeric"></label>
@@ -41,6 +41,7 @@
 <div class="two"><input id="guestName" placeholder="اسم الضيف"><select id="guestOwner"></select></div>
 <button onclick="addGuestTemp()">إضافة ضيف</button>
 <div id="tempGuests"></div>
+<div id="matchParticipantsPreview" class="participantsPreview"></div>
 <div class="twoBtns"><button class="primary" onclick="saveMatch()">حفظ</button><button onclick="clearMatchForm()">تفريغ</button></div>
 </div>
 </section>
@@ -55,7 +56,7 @@
 <h2>الإيداعات</h2>
 <div class="card depositBox">
 <input type="hidden" id="editingDepositId">
-<label>التاريخ<input type="date" id="depositDate"></label>
+<label class="dateCard">تاريخ الإيداع<input type="date" id="depositDate"></label>
 <div class="two"><label>اللاعب<select id="depositPlayer"></select></label><label>المبلغ<input type="number" id="depositAmount" step="0.001" inputmode="decimal" placeholder="0.000"></label></div>
 <div class="twoBtns"><button id="depositTypeIn" class="primary" onclick="setDepositType('in')">إيداع</button><button id="depositTypeOut" onclick="setDepositType('out')">خصم/مديونية</button></div>
 <div id="depositQuickButtons" class="quickButtons"></div>
@@ -106,6 +107,18 @@
 </section>
 
 <section id="backup" class="tab"><h2>النسخة الاحتياطية</h2><div class="card"><button class="wide" onclick="exportData()">تصدير البيانات</button><label>استيراد<input type="file" accept=".json" onchange="importData(event)"></label></div></section>
+
+<section id="editPage" class="tab editOnly">
+<h2 id="editPageTitle">تعديل</h2>
+<div class="card">
+<div id="editPageContent"></div>
+<div class="twoBtns">
+<button class="primary" onclick="saveEditPage()">حفظ التعديل</button>
+<button onclick="closeEditPage()">إلغاء</button>
+</div>
+</div>
+</section>
+
 </main>
 <script src="app.js"></script>
 </body></html>
