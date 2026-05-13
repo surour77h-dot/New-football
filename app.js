@@ -212,7 +212,7 @@ const date=getDateValue('depositDate')||today();
 if(!date)return alert('اكتب التاريخ بالشكل 11-5-2026');if(!player||isNaN(amount)||amount===0)return alert('اختر اللاعب واكتب مبلغ صحيح');
 if((depositType==='out'||depositType==='late') && amount>0) amount=-amount;
 if(depositType==='in' && amount<0) amount=Math.abs(amount);
-const s=state(),id=editingDepositId.value||uid(),dep={id,player,amount,date,createdAt:Date.now()};
+const s=state(),id=editingDepositId.value||uid(),dep={id,player,amount,date,type:depositType,createdAt:Date.now()};
 const idx=s.deposits.findIndex(d=>d.id===id);
 if(idx>=0){ dep.createdAt=s.deposits[idx].createdAt||Date.now(); s.deposits[idx]=dep; }
 else s.deposits.push(dep);

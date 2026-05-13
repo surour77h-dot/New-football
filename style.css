@@ -1197,3 +1197,46 @@ direction:ltr!important;
 }
 
 #teamsPreview{display:none!important;}
+
+
+/* تحديث خاصية التأخير */
+#depositTypeLate{
+  background:#ffd8a8 !important;
+  color:#7a4100 !important;
+  border:1px solid #ffb866 !important;
+}
+#depositTypeLate.active,
+#depositTypeLate.selected{
+  background:#ff922b !important;
+  color:#ffffff !important;
+  border-color:#e67700 !important;
+}
+
+/* تنسيق مربع التاريخ داخل صفحة لعبة والإيداعات */
+#newMatch .dateCard,
+#deposits .dateCard{
+  display:block !important;
+  width:100% !important;
+  box-sizing:border-box !important;
+  padding:6px !important;
+  border-radius:12px !important;
+  overflow:hidden !important;
+}
+
+#newMatch .dateCard input[type="date"],
+#deposits .dateCard input[type="date"]{
+  display:block !important;
+  width:100% !important;
+  max-width:100% !important;
+  min-height:36px !important;
+  box-sizing:border-box !important;
+  margin-top:5px !important;
+  padding:4px 8px !important;
+  border-radius:8px !important;
+  font-size:14px !important;
+  font-weight:700 !important;
+  direction:ltr !important;
+  text-align:center !important;
+  -webkit-appearance:auto !important;
+  appearance:auto !important;
+}
