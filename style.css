@@ -1936,3 +1936,12 @@ direction:ltr!important;
   border-radius:8px !important;
   font-weight:800 !important;
 }
+
+
+/* سجل الإيداعات في صفحة الإيداعات */
+#depositHistoryList .item{
+  display:flex !important;
+  align-items:center !important;
+  justify-content:space-between !important;
+  gap:8px !important;
+}

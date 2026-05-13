@@ -430,3 +430,29 @@ function exportData(){const blob=new Blob([JSON.stringify(state(),null,2)],{type
 function importData(e){const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{localStorage.setItem('qatiyaState',r.result);renderAll();alert('تم الاستيراد')};r.readAsText(f)}
 if('serviceWorker'in navigator){navigator.serviceWorker.register('sw.js')}setDepositType('in');renderAll();
 setTimeout(()=>{const first=document.querySelector("nav button");if(first)first.classList.add('activeTab')},100);
+
+function renderDepositHistory(){
+  const box=document.getElementById('depositHistoryList');
+  if(!box)return;
+
+  const s=state();
+  const arr=[...(s.deposits||[])].sort((a,b)=>
+    new Date(b.date||'1900-01-01')-new Date(a.date||'1900-01-01')
+    || (b.createdAt||0)-(a.createdAt||0)
+  );
+
+  if(!arr.length){
+    box.innerHTML='<p class="muted">لا توجد عمليات</p>';
+    return;
+  }
+
+  box.innerHTML=arr.map(d=>`
+    <div class="item">
+      <span>${formatDateDisplay(d.date)}</span>
+      <span style="flex:1;text-align:center">${d.player||''}</span>
+      <span class="${clsMoney(d.amount)} depoAmountGroup">
+        <b>${depositTypeLabel(d)}</b>&nbsp;&nbsp;${money(d.amount)}
+      </span>
+    </div>
+  `).join('');
+}
