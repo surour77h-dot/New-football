@@ -1,0 +1,6 @@
+ملفات التطبيق النهائية:
+- index.html
+- football-app.js
+- football-style.css
+- manifest.json
+- sw.js
