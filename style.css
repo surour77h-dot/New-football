@@ -1914,3 +1914,25 @@ direction:ltr!important;
   color:inherit !important;
   background:transparent !important;
 }
+
+
+/* تحسين لون مبلغ الإيداع والمديونية مثل النظام السابق */
+.depoAmountGroup.pos,
+.pos .depoAmountGroup,
+.depoAmountGroup .pos{
+  background:#dff5e3 !important;
+  color:#1b7f3a !important;
+  padding:4px 8px !important;
+  border-radius:8px !important;
+  font-weight:800 !important;
+}
+
+.depoAmountGroup.neg,
+.neg .depoAmountGroup,
+.depoAmountGroup .neg{
+  background:#ffe1e1 !important;
+  color:#c92a2a !important;
+  padding:4px 8px !important;
+  border-radius:8px !important;
+  font-weight:800 !important;
+}
