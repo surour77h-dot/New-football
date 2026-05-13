@@ -1318,3 +1318,38 @@ direction:ltr!important;
   text-align:center !important;
   display:block !important;
 }
+
+
+/* تأكيد مباشر على أزرار الإيداع الثلاثة */
+#depositTypeIn,
+#depositTypeOut,
+#depositTypeLate{
+  flex:1 1 0 !important;
+  min-width:0 !important;
+  max-width:100% !important;
+  min-height:40px !important;
+  border-radius:11px !important;
+  font-size:13px !important;
+  font-weight:800 !important;
+  white-space:nowrap !important;
+  padding:8px 6px !important;
+}
+
+/* الحاوية التي تحتوي أزرار الإيداع الثلاثة حتى لو اختلف اسمها */
+/* دعم Safari/iPhone بدون :has في حال توفره */
+@supports selector(:has(*)){
+  div:has(> #depositTypeIn):has(> #depositTypeOut){
+    display:grid !important;
+    grid-template-columns:repeat(3,minmax(0,1fr)) !important;
+    gap:7px !important;
+    width:100% !important;
+  }
+}
+
+/* التاريخ داخل الإطار */
+#matchDate,
+#depositDate{
+  width:100% !important;
+  max-width:100% !important;
+  box-sizing:border-box !important;
+}
