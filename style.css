@@ -1689,3 +1689,52 @@ direction:ltr!important;
 }
 
 #teamsPreview button{ display:none !important; }
+
+
+/* كشف اللاعب - 3 أعمدة */
+.statementRow{
+  display:grid !important;
+  grid-template-columns:1.2fr 1fr 1fr !important;
+  align-items:center !important;
+  gap:8px !important;
+  padding:8px 0 !important;
+  border-bottom:1px solid #ececec !important;
+}
+
+.statementDate,
+.statementType,
+.statementAmount{
+  background:#f5f7f8 !important;
+  border-radius:8px !important;
+  padding:7px 8px !important;
+  font-size:13px !important;
+  font-weight:700 !important;
+  color:#333 !important;
+}
+
+.statementDate{
+  text-align:right !important;
+}
+
+.statementType{
+  text-align:center !important;
+}
+
+.statementAmount{
+  text-align:left !important;
+  direction:ltr !important;
+}
+
+@media (max-width:430px){
+  .statementRow{
+    grid-template-columns:1.2fr .9fr .9fr !important;
+    gap:5px !important;
+  }
+
+  .statementDate,
+  .statementType,
+  .statementAmount{
+    font-size:11px !important;
+    padding:6px 5px !important;
+  }
+}
