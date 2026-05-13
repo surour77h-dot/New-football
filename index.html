@@ -29,7 +29,7 @@
 <div class="card">
 <input type="hidden" id="editingMatchId">
 <div class="two">
-<label class="dateCard" class="dateCard">تاريخ اللعب<input type="date" id="matchDate"></label>
+<label class="dateCard dateCompact"><span class="dateTitle">تاريخ اللعب</span><span class="dateInputBox"><input type="date" id="matchDate"></span></label>
 <label>المكان<input id="place" placeholder="اختياري"></label>
 <label>الحجز<input type="number" id="bookingCost" step="0.001" inputmode="decimal"></label>
 <label>العدد<input type="number" id="neededPlayers" inputmode="numeric"></label>
@@ -56,7 +56,7 @@
 <h2>الإيداعات</h2>
 <div class="card depositBox">
 <input type="hidden" id="editingDepositId">
-<label class="dateCard" class="dateCard">تاريخ الإيداع<input type="date" id="depositDate"></label>
+<label class="dateCard dateCompact"><span class="dateTitle">تاريخ الإيداع</span><span class="dateInputBox"><input type="date" id="depositDate"></span></label>
 <div class="two"><label>اللاعب<select id="depositPlayer"></select></label><label>المبلغ<input type="number" id="depositAmount" step="0.001" inputmode="decimal" placeholder="0.000"></label></div>
 <div class="twoBtns"><button id="depositTypeIn" class="primary" onclick="setDepositType('in')">إيداع</button><button id="depositTypeOut" onclick="setDepositType('out')">خصم/مديونية</button><button id="depositTypeLate" type="button" onclick="setDepositType('late')">تأخير</button></div>
 <div id="depositQuickButtons" class="quickButtons"></div>

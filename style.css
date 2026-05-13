@@ -1409,3 +1409,61 @@ direction:ltr!important;
     font-size:14px !important;
   }
 }
+
+
+/* ===== إصلاح بنية مربع التاريخ داخل الإطار فعليًا ===== */
+.dateCompact{
+  display:block !important;
+  width:100% !important;
+  max-width:100% !important;
+  box-sizing:border-box !important;
+  padding:6px !important;
+  border-radius:12px !important;
+  overflow:hidden !important;
+}
+
+.dateCompact .dateTitle{
+  display:block !important;
+  margin-bottom:5px !important;
+  font-size:13px !important;
+  font-weight:700 !important;
+}
+
+.dateCompact .dateInputBox{
+  display:block !important;
+  width:100% !important;
+  max-width:100% !important;
+  box-sizing:border-box !important;
+  overflow:hidden !important;
+  border-radius:9px !important;
+}
+
+.dateCompact input[type="date"]{
+  display:block !important;
+  width:100% !important;
+  max-width:100% !important;
+  min-width:0 !important;
+  height:34px !important;
+  min-height:34px !important;
+  box-sizing:border-box !important;
+  border-radius:9px !important;
+  border:1px solid #d8eadf !important;
+  padding:3px 6px !important;
+  margin:0 !important;
+  font-size:13px !important;
+  font-weight:700 !important;
+  direction:ltr !important;
+  text-align:center !important;
+  background:white !important;
+  color:#222 !important;
+  -webkit-appearance:auto !important;
+  appearance:auto !important;
+}
+
+@media (min-width:700px){
+  .dateCompact input[type="date"]{
+    height:38px !important;
+    min-height:38px !important;
+    font-size:14px !important;
+  }
+}
