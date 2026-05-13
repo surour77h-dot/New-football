@@ -645,3 +645,88 @@ td,th{
 #teamsPreview .chipGrid{
   all:unset;
 }
+
+
+/* إصلاح مطابق: أسفل صفحة الفريقين = نفس صندوق المشاركون في صفحة التقويم */
+#teamsPreview{
+  display:block !important;
+}
+
+#teamsPreview .teamsAsCalendarCard{
+  background:white !important;
+  border:1px solid #ddd !important;
+  border-radius:14px !important;
+  padding:9px !important;
+  margin:7px 0 !important;
+  box-shadow:0 2px 6px rgba(0,0,0,.04) !important;
+}
+
+#teamsPreview .teamsAsCalendarCard h3{
+  font-size:15px !important;
+  margin:4px 0 8px !important;
+  text-align:right !important;
+}
+
+#teamsPreview .teamsAsCalendarList{
+  display:block !important;
+}
+
+/* نفس شكل عرض الفريقين المستخدم داخل التقويم */
+#teamsPreview .calendarTeams{
+  display:grid !important;
+  grid-template-columns:1fr 1fr !important;
+  gap:6px !important;
+}
+
+#teamsPreview .calendarTeam{
+  background:white !important;
+  border:1px solid #ddd !important;
+  border-radius:12px !important;
+  padding:7px !important;
+  min-width:0 !important;
+  box-shadow:none !important;
+}
+
+#teamsPreview .calendarTeam h4{
+  text-align:center !important;
+  margin:2px 0 6px !important;
+  font-size:13px !important;
+}
+
+#teamsPreview .teamName{
+  font-size:12px !important;
+  font-weight:700 !important;
+  border-bottom:1px solid #eee !important;
+  padding:5px !important;
+  overflow:hidden !important;
+  text-overflow:ellipsis !important;
+  background:transparent !important;
+  border-radius:0 !important;
+  margin:0 !important;
+  text-align:initial !important;
+}
+
+/* نفس شكل قائمة المشاركين إذا لم يتم تقسيم الفرق */
+#teamsPreview .item{
+  display:flex !important;
+  justify-content:space-between !important;
+  align-items:center !important;
+  gap:5px !important;
+  padding:7px !important;
+  border-bottom:1px solid #eee !important;
+  background:white !important;
+  flex-wrap:wrap !important;
+}
+
+/* إلغاء أي تنسيق سابق كان يغير شكل صفحة الفريقين */
+#teamsPreview .teamSummaryWrap,
+#teamsPreview .teamSummaryCard,
+#teamsPreview .teamSummaryName,
+#teamsPreview > .participantsPreview,
+#teamsPreview > .teamsGrid{
+  all:unset !important;
+}
+
+#teamsPreview button{
+  display:none !important;
+}
