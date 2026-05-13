@@ -1240,3 +1240,81 @@ direction:ltr!important;
   -webkit-appearance:auto !important;
   appearance:auto !important;
 }
+
+
+/* تأكيد نهائي لزر التأخير */
+#depositTypeLate{
+  background:#ffd8a8 !important;
+  color:#7a4100 !important;
+  border:1px solid #ffb866 !important;
+}
+#depositTypeLate.active,
+#depositTypeLate.selected{
+  background:#ff922b !important;
+  color:#fff !important;
+  border-color:#e67700 !important;
+}
+
+
+/* ===== أزرار الإيداع / الخصم / التأخير مرنة ===== */
+.depositButtons,
+.depositTypes,
+.depositActions{
+  display:grid !important;
+  grid-template-columns:repeat(auto-fit,minmax(110px,1fr)) !important;
+  gap:8px !important;
+  width:100% !important;
+}
+
+.depositButtons button,
+.depositTypes button,
+.depositActions button{
+  width:100% !important;
+  min-height:42px !important;
+  border-radius:11px !important;
+  font-size:14px !important;
+  font-weight:700 !important;
+  white-space:nowrap !important;
+}
+
+/* iPhone صغير */
+@media (max-width:430px){
+  .depositButtons,
+  .depositTypes,
+  .depositActions{
+    grid-template-columns:repeat(3,minmax(0,1fr)) !important;
+  }
+
+  .depositButtons button,
+  .depositTypes button,
+  .depositActions button{
+    font-size:12px !important;
+    padding:8px 4px !important;
+  }
+}
+
+/* ===== مربع التاريخ داخل الإطار نفسه ===== */
+.dateCard{
+  display:flex !important;
+  flex-direction:column !important;
+  gap:5px !important;
+  width:100% !important;
+  box-sizing:border-box !important;
+  padding:7px !important;
+  border-radius:12px !important;
+  overflow:hidden !important;
+}
+
+.dateCard input[type="date"]{
+  width:100% !important;
+  max-width:100% !important;
+  min-height:36px !important;
+  margin:0 !important;
+  padding:4px 8px !important;
+  box-sizing:border-box !important;
+  border-radius:8px !important;
+  font-size:14px !important;
+  direction:ltr !important;
+  text-align:center !important;
+  display:block !important;
+}
