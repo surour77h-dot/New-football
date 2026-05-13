@@ -136,14 +136,15 @@ function renderPlayerFilter(){
    <h3>الإيداعات والمديونيات</h3>
    ${deposits.length?`
    <div class="statementHeader">
-     <span>التاريخ</span>
-     <span>نوع</span>
-     <span>المبلغ</span>
+     <span class="statementHeaderDate">التاريخ</span>
+     <span class="statementHeaderInfo">العملية</span>
    </div>
    ${deposits.map(d=>`<div class="statementRow">
      <div class="statementDate">${formatDateDisplay(d.date)}</div>
-     <div class="statementType">${depositTypeLabel(d)}</div>
-     <div class="statementAmount ${clsMoney(d.amount)}">${money(d.amount)}</div>
+     <div class="statementInfo">
+       <span class="statementType">${depositTypeLabel(d)}</span>
+       <span class="statementAmount ${clsMoney(d.amount)}">${money(d.amount)}</span>
+     </div>
    </div>`).join('')}`:'<p class="muted">لا يوجد</p>'}
  </div>
 

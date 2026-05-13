@@ -1809,3 +1809,87 @@ direction:ltr!important;
     padding:5px 4px !important;
   }
 }
+
+
+/* كشف اللاعب - التاريخ يمين والعملية+المبلغ يسار */
+.statementHeader,
+.statementRow{
+  display:grid !important;
+  grid-template-columns:1fr 1.6fr !important;
+  gap:8px !important;
+  align-items:center !important;
+  margin-bottom:6px !important;
+}
+
+.statementHeaderDate,
+.statementHeaderInfo{
+  background:#eef2f4 !important;
+  color:#333 !important;
+  border-radius:8px !important;
+  padding:6px 8px !important;
+  font-size:12px !important;
+  font-weight:800 !important;
+  text-align:center !important;
+}
+
+.statementDate{
+  background:#f5f7f8 !important;
+  border-radius:8px !important;
+  padding:7px 8px !important;
+  font-size:12px !important;
+  font-weight:700 !important;
+  text-align:right !important;
+  color:#333 !important;
+}
+
+.statementInfo{
+  display:flex !important;
+  align-items:center !important;
+  justify-content:space-between !important;
+  gap:10px !important;
+  background:#f5f7f8 !important;
+  border-radius:8px !important;
+  padding:7px 8px !important;
+}
+
+.statementType{
+  font-size:12px !important;
+  font-weight:700 !important;
+  color:#444 !important;
+  background:none !important;
+}
+
+.statementAmount{
+  font-size:12px !important;
+  font-weight:800 !important;
+  direction:ltr !important;
+}
+
+.statementAmount.pos{
+  color:#1b8f3f !important;
+}
+
+.statementAmount.neg{
+  color:#c92a2a !important;
+}
+
+@media (max-width:430px){
+  .statementHeader,
+  .statementRow{
+    grid-template-columns:1fr 1.8fr !important;
+    gap:5px !important;
+  }
+
+  .statementHeaderDate,
+  .statementHeaderInfo,
+  .statementDate,
+  .statementInfo{
+    padding:5px 6px !important;
+    font-size:10.5px !important;
+  }
+
+  .statementType,
+  .statementAmount{
+    font-size:10.5px !important;
+  }
+}
