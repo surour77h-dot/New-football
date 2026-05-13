@@ -1945,3 +1945,23 @@ direction:ltr!important;
   justify-content:space-between !important;
   gap:8px !important;
 }
+
+
+#depositHistoryList .item{
+  display:flex !important;
+  align-items:center !important;
+  justify-content:space-between !important;
+  gap:8px !important;
+}
+
+
+/* صفحة الإيداعات - جميع العمليات */
+.depositHistoryRow{
+  display:flex !important;
+  align-items:center !important;
+  justify-content:space-between !important;
+  gap:8px !important;
+}
+.depositHistoryRow .depoAmountGroup{
+  white-space:nowrap !important;
+}

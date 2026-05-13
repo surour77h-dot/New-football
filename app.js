@@ -422,7 +422,7 @@ function renderTables(s,b){playerTableWrap.innerHTML=`<div class="tableWrap"><ta
 <div class="summaryCard"><span>مديونيات</span><b class="${debt?'negText':''}">${debt||''}</b></div>
 <div class="summaryCard"><span>إجمالي الأرصدة</span><b class="${total<0?'negText':total>0?'posText':''}">${moneyBlank(total)}</b></div>
 </div>`;reportsList.innerHTML=`<div class="tableWrap"><table><thead><tr><th>الاسم</th><th>الرصيد</th><th>لعب</th><th>آخر لعبة</th><th>الإيداعات</th></tr></thead><tbody>${s.players.map(p=>{const r=b[p]||{};return`<tr><td>${p}</td><td class="${clsMoney(r.balance)}">${moneyBlank(r.balance)}</td><td>${r.games||''}</td><td>${formatDateDisplay(r.last)||''}</td><td class="pos">${moneyBlank(r.deposits)}</td></tr>`}).join('')}</tbody></table></div>`}
-function renderAll(){renderNav();setActiveNavButton(currentTabId);renderPageOrder();const s=state();saveNoRender(s);if(!matchDate.value)setDateDisplay('matchDate',today());if(!depositDate.value)setDateDisplay('depositDate',s.settings.lastDepositDate||today());pricePerPlayer.textContent=money(calcPrice());const b=balances(s);playersList.innerHTML=s.players.map(p=>`<div class="nameOnly">${p}</div>`).join('')||'<p class="muted">أضف اللاعبين أولًا.</p>';const opts=s.players.map(p=>`<option>${p}</option>`).join('');guestOwner.innerHTML=opts;depositPlayer.innerHTML=opts;const pf=document.getElementById('playerFilterSelect');if(pf){pf.innerHTML='<option value="">اختر لاعب</option>'+opts; if(!pf.value&&s.players[0])pf.value=s.players[0]; renderPlayerFilter();}matchPlayers.innerHTML=s.players.map(p=>`<label><input class="playerCheck" type="checkbox" value="${p}"> <span>${p}</span></label>`).join('');renderMatchParticipantsPreview();depositQuickButtons.innerHTML=getDepositPresets(s).map(v=>`<span class="quick"><button class="x" type="button" onclick="event.stopPropagation();deleteDepositPreset('${v}')">×</button><span onclick="setDepositAmount('${v}')">${money(v)}</span></span>`).join('')||'<span class="muted">احفظ أول مبلغ ليظهر كزر سريع.</span>';depositsList.innerHTML=[...s.deposits].map((d,i)=>({...d,_i:i})).sort((a,b)=>(b.createdAt||b._i)-(a.createdAt||a._i)).slice(0,50).map(d=>`<div class="item depositRow" onclick="depositOptions('${d.id}')"><span>${formatDateDisplay(d.date)} - ${d.player}</span><span class="${clsMoney(d.amount)}"><div class="depositRow">
+function renderAll(){renderNav();setActiveNavButton(currentTabId);renderPageOrder();const s=state();saveNoRender(s);if(!matchDate.value)setDateDisplay('matchDate',today());if(!depositDate.value)setDateDisplay('depositDate',s.settings.lastDepositDate||today());pricePerPlayer.textContent=money(calcPrice());const b=balances(s);playersList.innerHTML=s.players.map(p=>`<div class="nameOnly">${p}</div>`).join('')||'<p class="muted">أضف اللاعبين أولًا.</p>';const opts=s.players.map(p=>`<option>${p}</option>`).join('');guestOwner.innerHTML=opts;depositPlayer.innerHTML=opts;const pf=document.getElementById('playerFilterSelect');if(pf){pf.innerHTML='<option value="">اختر لاعب</option>'+opts; if(!pf.value&&s.players[0])pf.value=s.players[0]; renderPlayerFilter();renderDepositHistory();}matchPlayers.innerHTML=s.players.map(p=>`<label><input class="playerCheck" type="checkbox" value="${p}"> <span>${p}</span></label>`).join('');renderMatchParticipantsPreview();depositQuickButtons.innerHTML=getDepositPresets(s).map(v=>`<span class="quick"><button class="x" type="button" onclick="event.stopPropagation();deleteDepositPreset('${v}')">×</button><span onclick="setDepositAmount('${v}')">${money(v)}</span></span>`).join('')||'<span class="muted">احفظ أول مبلغ ليظهر كزر سريع.</span>';depositsList.innerHTML=[...s.deposits].map((d,i)=>({...d,_i:i})).sort((a,b)=>(b.createdAt||b._i)-(a.createdAt||a._i)).slice(0,50).map(d=>`<div class="item depositRow" onclick="depositOptions('${d.id}')"><span>${formatDateDisplay(d.date)} - ${d.player}</span><span class="${clsMoney(d.amount)}"><div class="depositRow">
 <span class="depositTypeText">${depositTypeLabel(d)}</span>
 <span class="depositAmountText">${money(d.amount)}</span>
 </div></span></div>`).join('');teamsMatchSelect.innerHTML=s.matches.sort((a,b)=>b.date.localeCompare(a.date)).map(m=>`<option value="${m.id}">${formatDateDisplay(m.date)}${m.place?' - '+m.place:''}</option>`).join('');renderTempGuests();renderCalendar();renderCalendarList();renderMatchLog(s);renderTeams();renderTables(s,b);updatePrettyDates()}
@@ -431,23 +431,26 @@ function importData(e){const f=e.target.files[0];if(!f)return;const r=new FileRe
 if('serviceWorker'in navigator){navigator.serviceWorker.register('sw.js')}setDepositType('in');renderAll();
 setTimeout(()=>{const first=document.querySelector("nav button");if(first)first.classList.add('activeTab')},100);
 
+
 function renderDepositHistory(){
-  const box=document.getElementById('depositHistoryList');
+  const box=document.getElementById('depositHistoryList') || document.getElementById('depositsList');
   if(!box)return;
 
   const s=state();
-  const arr=[...(s.deposits||[])].sort((a,b)=>
-    new Date(b.date||'1900-01-01')-new Date(a.date||'1900-01-01')
-    || (b.createdAt||0)-(a.createdAt||0)
-  );
+  const list=[...(s.deposits||[])].sort((a,b)=>{
+    const da=new Date(a.date||'1900-01-01').getTime();
+    const db=new Date(b.date||'1900-01-01').getTime();
+    if(db!==da)return db-da;
+    return (b.createdAt||0)-(a.createdAt||0);
+  });
 
-  if(!arr.length){
+  if(!list.length){
     box.innerHTML='<p class="muted">لا توجد عمليات</p>';
     return;
   }
 
-  box.innerHTML=arr.map(d=>`
-    <div class="item">
+  box.innerHTML=list.map(d=>`
+    <div class="item depositHistoryRow">
       <span>${formatDateDisplay(d.date)}</span>
       <span style="flex:1;text-align:center">${d.player||''}</span>
       <span class="${clsMoney(d.amount)} depoAmountGroup">
@@ -456,3 +459,4 @@ function renderDepositHistory(){
     </div>
   `).join('');
 }
+
