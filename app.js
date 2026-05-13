@@ -355,15 +355,22 @@ function renderTeamsPreview(){
 
   const clean={...tempTeamMap};
   delete clean.__matchId;
-  const previewState={...s,teams:{...(s.teams||{}),[id]:clean}};
 
-  let content=teamHtml(previewState,m);
-  content=content.replace(/<button[^>]*>تعديل اللعبة<\/button>/g,'');
+  const allNames=[
+    ...(m.players||[]),
+    ...(m.guests||[]).map(g=>guestLabel(g))
+  ];
 
-  teamsPreview.innerHTML=`<div class="card teamsAsCalendarCard">
+  const ordered=[
+    ...allNames.filter(n=>clean[n]==='A'),
+    ...allNames.filter(n=>clean[n]==='B'),
+    ...allNames.filter(n=>!clean[n])
+  ];
+
+  teamsPreview.innerHTML=`<div class="card teamsParticipantsBox">
     <h3>المشاركون</h3>
-    <div class="teamsAsCalendarList">
-      ${content}
+    <div class="teamsParticipantsList">
+      ${ordered.length?ordered.map(n=>`<div class="item"><b>${n}</b></div>`).join(''):'<p class="muted">لا يوجد مشاركون</p>'}
     </div>
   </div>`;
 }
