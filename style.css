@@ -1738,3 +1738,74 @@ direction:ltr!important;
     padding:6px 5px !important;
   }
 }
+
+
+/* كشف اللاعب - الإيداعات والمديونيات 3 أعمدة */
+.statementHeader,
+.statementRow{
+  display:grid !important;
+  grid-template-columns:1.15fr .85fr 1fr !important;
+  gap:6px !important;
+  align-items:center !important;
+  direction:rtl !important;
+  margin-bottom:6px !important;
+}
+
+.statementHeader span{
+  background:#eef2f4 !important;
+  color:#333 !important;
+  border-radius:8px !important;
+  padding:6px !important;
+  font-size:12px !important;
+  font-weight:800 !important;
+  text-align:center !important;
+}
+
+.statementDate,
+.statementType,
+.statementAmount{
+  background:#f5f7f8 !important;
+  color:#333 !important;
+  border-radius:8px !important;
+  padding:7px 6px !important;
+  font-size:12px !important;
+  font-weight:700 !important;
+  min-height:20px !important;
+  box-sizing:border-box !important;
+}
+
+.statementDate{
+  text-align:right !important;
+}
+
+.statementType{
+  text-align:center !important;
+  background:#f5f7f8 !important;
+}
+
+.statementAmount{
+  text-align:left !important;
+  direction:ltr !important;
+  background:#f5f7f8 !important;
+}
+
+.statementAmount.pos,
+.statementAmount.neg,
+.statementAmount.count{
+  background:#f5f7f8 !important;
+}
+
+@media (max-width:430px){
+  .statementHeader,
+  .statementRow{
+    grid-template-columns:1.25fr .8fr .95fr !important;
+    gap:4px !important;
+  }
+  .statementHeader span,
+  .statementDate,
+  .statementType,
+  .statementAmount{
+    font-size:10.5px !important;
+    padding:5px 4px !important;
+  }
+}

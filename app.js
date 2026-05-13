@@ -106,12 +106,19 @@ function renderPlayerFilter(){
  const player=sel.value;
  if(!player){wrap.innerHTML='';return;}
  const b=balances(s)[player]||{};
- const deposits=s.deposits.filter(d=>d.player===player);
- const games=s.matches.filter(m=>(m.players||[]).includes(player));
- const guestMatches=s.matches.filter(m=>(m.guests||[]).some(g=>g.owner===player));
+ const deposits=s.deposits
+   .filter(d=>d.player===player)
+   .sort((a,b)=>new Date(b.date||'1900-01-01')-new Date(a.date||'1900-01-01') || (b.createdAt||0)-(a.createdAt||0));
+ const games=s.matches
+   .filter(m=>(m.players||[]).includes(player))
+   .sort((a,b)=>new Date(b.date||'1900-01-01')-new Date(a.date||'1900-01-01'));
+ const guestMatches=s.matches
+   .filter(m=>(m.guests||[]).some(g=>g.owner===player))
+   .sort((a,b)=>new Date(b.date||'1900-01-01')-new Date(a.date||'1900-01-01'));
  const guestDeductTotal=guestMatches.reduce((sum,m)=>sum+(m.guests||[]).filter(g=>g.owner===player).length*Number(m.price||0),0);
  const totalDep=deposits.filter(d=>d.amount>0).reduce((a,b)=>a+b.amount,0);
  const totalDebt=Math.abs(deposits.filter(d=>d.amount<0).reduce((a,b)=>a+b.amount,0));
+
  wrap.innerHTML=`
  <div class="summaryCards">
    <div class="summaryCard"><span>الرصيد</span><b class="${(b.balance||0)<0?'negText':(b.balance||0)>0?'posText':''}">${moneyBlank(b.balance)}</b></div>
@@ -119,17 +126,27 @@ function renderPlayerFilter(){
    <div class="summaryCard"><span>الإيداعات</span><b class="posText">${moneyBlank(totalDep)}</b></div>
    <div class="summaryCard"><span>الخصومات</span><b class="negText">${moneyBlank(totalDebt)}</b></div>
  </div>
+
  <div class="card">
    <h3>أيام اللعب</h3>
-   ${(games.length?games.sort((a,b)=>new Date((b.date||''))-new Date((a.date||''))).map(g=>`<div class="item"><span>${g.date}</span><span class="count">${money(g.price)}</span></div>`).join(''):'<p class="muted">لا يوجد</p>')}
+   ${(games.length?games.map(g=>`<div class="item"><span>${formatDateDisplay(g.date)}</span><span class="count">${money(g.price)}</span></div>`).join(''):'<p class="muted">لا يوجد</p>')}
  </div>
+
  <div class="card">
    <h3>الإيداعات والمديونيات</h3>
-   ${(deposits.length?deposits.sort((a,b)=>(b.createdAt||0)-(a.createdAt||0)).map(d=>`<div class="item"><span>${d.date}</span><span class="${clsMoney(d.amount)}"><div class="depositRow">
-<span class="depositTypeText">${depositTypeLabel(d)}</span>
-<span class="depositAmountText"><div class="depositRow"><span class="depositTypeText">${depositTypeLabel(d)}</span><span class="depositAmountText">${money(d.amount)}</span></div></span>
-</div></span></div>`).join(''):'<p class="muted">لا يوجد</p>')}
+   ${deposits.length?`
+   <div class="statementHeader">
+     <span>التاريخ</span>
+     <span>نوع</span>
+     <span>المبلغ</span>
+   </div>
+   ${deposits.map(d=>`<div class="statementRow">
+     <div class="statementDate">${formatDateDisplay(d.date)}</div>
+     <div class="statementType">${depositTypeLabel(d)}</div>
+     <div class="statementAmount ${clsMoney(d.amount)}">${money(d.amount)}</div>
+   </div>`).join('')}`:'<p class="muted">لا يوجد</p>'}
  </div>
+
  <div class="card">
    <h3>الأسماء التي أحضرها</h3>
    ${(guestMatches.length?guestMatches.map(m=>(m.guests||[]).filter(g=>g.owner===player).map(g=>`<div class="item"><span>${g.guest}</span><span>${formatDateDisplay(m.date)}</span><span class="neg">${money(Number(m.price||0)*-1)}</span></div>`).join('')).join(''):'<p class="muted">لا يوجد</p>')}
