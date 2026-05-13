@@ -347,10 +347,19 @@ function guestsEditorHtml(m){
 }
 
 function renderMatchLog(s){matchLogList.innerHTML=[...s.matches].sort((a,b)=>b.date.localeCompare(a.date)).map(m=>`<div class="card"><b>${formatDateDisplay(m.date)}${m.place?' - '+m.place:''}</b><p>السعر: <span class="count">${money(m.price)}</span> | المشاركين: <span class="count">${(m.players||[]).length+(m.guests||[]).length}</span></p>${teamHtml(s,m)}<div class="actions"><button onclick="openEditPage('match','${m.id}','matchLog')">تعديل</button><button class="danger" onclick="deleteMatch('${m.id}')">حذف</button></div></div>`).join('')||'<p class="muted">لا توجد ألعاب محفوظة.</p>'}
-function renderTeams(){const s=state(),id=teamsMatchSelect.value,m=s.matches.find(x=>x.id===id);if(!m){teamsPlayers.innerHTML='';return}if(Object.keys(tempTeamMap).length===0)if(!tempTeamMap.__matchId || tempTeamMap.__matchId!==id){tempTeamMap={...(s.teams[id]||{}),__matchId:id};}const names=participants(m);teamsPlayers.innerHTML=names.map(n=>`<div class="teamPick"><b>${n}</b><button class="${tempTeamMap[n]==='A'?'selA':''}" onclick="pickTeam('${n.replace(/'/g,"\\'")}','A')">الأول</button><button class="${tempTeamMap[n]==='B'?'selB':''}" onclick="pickTeam('${n.replace(/'/g,"\\'")}','B')">الثاني</button></div>`).join('');renderTeamsPreview()}
+function renderTeams(){
+  const s=state(),id=teamsMatchSelect.value,m=s.matches.find(x=>x.id===id);
+  if(!m){teamsPlayers.innerHTML='';renderTeamsPreview();return}
+  if(!tempTeamMap.__matchId || tempTeamMap.__matchId!==id){
+    tempTeamMap={...(s.teams[id]||{}),__matchId:id};
+  }
+  const names=participants(m);
+  teamsPlayers.innerHTML=names.map(n=>`<div class="teamPick"><b>${n}</b><button class="${tempTeamMap[n]==='A'?'selA':''}" onclick="pickTeam('${n.replace(/'/g,"\\'")}','A')">الأول</button><button class="${tempTeamMap[n]==='B'?'selB':''}" onclick="pickTeam('${n.replace(/'/g,"\\'")}','B')">الثاني</button></div>`).join('');
+  renderTeamsPreview();
+}
 function pickTeam(n,t){tempTeamMap[n]=t;renderTeamsPreview();renderTeams()}
 function randomTeams(){const s=state(),id=teamsMatchSelect.value,m=s.matches.find(x=>x.id===id);if(!m)return;const arr=participants(m).sort(()=>Math.random()-.5);tempTeamMap={__matchId:id};arr.forEach((n,i)=>tempTeamMap[n]=i%2?'B':'A');renderTeamsPreview();renderTeams()}
-function saveTeams(){const s=state(),id=teamsMatchSelect.value;if(!id)return;const clean={...tempTeamMap};delete clean.__matchId;s.teams[id]=clean;save(s);alert('تم حفظ الفريقين')}
+function saveTeams(){const s=state(),id=teamsMatchSelect.value;if(!id)return;const clean={...tempTeamMap};delete clean.__matchId;s.teams[id]=clean;save(s);alert('تم حفظ الفريقين');renderTeamsPreview()}
 
 function teamPreviewSameAsCalendar(id){
   const s=state();
@@ -369,12 +378,18 @@ function renderTeamsPreview(){
   if(!el)return;
   if(!m){el.innerHTML='';return;}
 
-  const clean={...tempTeamMap};
-  delete clean.__matchId;
+  // Use current unsaved choices if they belong to selected match; otherwise saved teams
+  let map={};
+  if(tempTeamMap && tempTeamMap.__matchId===id){
+    map={...tempTeamMap};
+    delete map.__matchId;
+  }else{
+    map={...(s.teams[id]||{})};
+  }
 
-  const allNames=participants(m);
-  const teamA=allNames.filter(n=>clean[n]==='A');
-  const teamB=allNames.filter(n=>clean[n]==='B');
+  const names=participants(m);
+  const teamA=names.filter(n=>map[n]==='A');
+  const teamB=names.filter(n=>map[n]==='B');
 
   el.innerHTML=`<div class="ftCalendarBox">
     <h3>المشاركون ${formatDateDisplay(m.date)||''}</h3>

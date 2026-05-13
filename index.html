@@ -77,7 +77,7 @@
 <section id="teams" class="tab">
 <h2>الفريقين</h2>
 <div class="card">
-<label>اللعبة<select id="teamsMatchSelect" onchange="renderTeams()"></select></label>
+<label>اللعبة<select id="teamsMatchSelect" onchange="renderTeams();renderTeamsPreview()"></select></label>
 <button onclick="randomTeams()">تقسيم عشوائي</button>
 <div id="teamsPlayers"></div>
 <button class="primary wide" onclick="saveTeams()">حفظ الفريقين</button>
