@@ -919,3 +919,17 @@ label:has(input[type="date"]){
   color:#222 !important;
   margin-top:5px !important;
 }
+
+
+/* إزالة نهائية للعمودين أسفل حفظ الفريقين */
+#teamsPreview,
+#teamsPreview *{
+  display:none !important;
+  visibility:hidden !important;
+  height:0 !important;
+  max-height:0 !important;
+  overflow:hidden !important;
+  margin:0 !important;
+  padding:0 !important;
+  border:0 !important;
+}

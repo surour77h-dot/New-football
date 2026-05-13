@@ -330,7 +330,7 @@ function guestsEditorHtml(m){
 }
 
 function renderMatchLog(s){matchLogList.innerHTML=[...s.matches].sort((a,b)=>b.date.localeCompare(a.date)).map(m=>`<div class="card"><b>${formatDateDisplay(m.date)}${m.place?' - '+m.place:''}</b><p>السعر: <span class="count">${money(m.price)}</span> | المشاركين: <span class="count">${(m.players||[]).length+(m.guests||[]).length}</span></p>${teamHtml(s,m)}<div class="actions"><button onclick="openEditPage('match','${m.id}','matchLog')">تعديل</button><button class="danger" onclick="deleteMatch('${m.id}')">حذف</button></div></div>`).join('')||'<p class="muted">لا توجد ألعاب محفوظة.</p>'}
-function renderTeams(){const s=state(),id=teamsMatchSelect.value,m=s.matches.find(x=>x.id===id);if(!m){teamsPlayers.innerHTML='';teamsPreview.innerHTML='';return}if(Object.keys(tempTeamMap).length===0)if(!tempTeamMap.__matchId || tempTeamMap.__matchId!==id){tempTeamMap={...(s.teams[id]||{}),__matchId:id};}const names=participants(m);teamsPlayers.innerHTML=names.map(n=>`<div class="teamPick"><b>${n}</b><button class="${tempTeamMap[n]==='A'?'selA':''}" onclick="pickTeam('${n.replace(/'/g,"\\'")}','A')">الأول</button><button class="${tempTeamMap[n]==='B'?'selB':''}" onclick="pickTeam('${n.replace(/'/g,"\\'")}','B')">الثاني</button></div>`).join('');renderTeamsPreview()}
+function renderTeams(){const s=state(),id=teamsMatchSelect.value,m=s.matches.find(x=>x.id===id);if(!m){teamsPlayers.innerHTML='';return}if(Object.keys(tempTeamMap).length===0)if(!tempTeamMap.__matchId || tempTeamMap.__matchId!==id){tempTeamMap={...(s.teams[id]||{}),__matchId:id};}const names=participants(m);teamsPlayers.innerHTML=names.map(n=>`<div class="teamPick"><b>${n}</b><button class="${tempTeamMap[n]==='A'?'selA':''}" onclick="pickTeam('${n.replace(/'/g,"\\'")}','A')">الأول</button><button class="${tempTeamMap[n]==='B'?'selB':''}" onclick="pickTeam('${n.replace(/'/g,"\\'")}','B')">الثاني</button></div>`).join('');renderTeamsPreview()}
 function pickTeam(n,t){tempTeamMap[n]=t;renderTeamsPreview();renderTeams()}
 function randomTeams(){const s=state(),id=teamsMatchSelect.value,m=s.matches.find(x=>x.id===id);if(!m)return;const arr=participants(m).sort(()=>Math.random()-.5);tempTeamMap={__matchId:id};arr.forEach((n,i)=>tempTeamMap[n]=i%2?'B':'A');renderTeamsPreview();renderTeams()}
 function saveTeams(){const s=state(),id=teamsMatchSelect.value;if(!id)return;const clean={...tempTeamMap};delete clean.__matchId;s.teams[id]=clean;save(s);alert('تم حفظ الفريقين')}
@@ -344,9 +344,7 @@ function teamPreviewSameAsCalendar(id){
   return `<div class="card teamCalendarClone"><h3>المشاركون</h3>${html}</div>`;
 }
 
-function renderTeamsPreview(){
-  if(typeof teamsPreview!=='undefined' && teamsPreview) teamsPreview.innerHTML='';
-}
+function renderTeamsPreview(){return;}
 function renderTables(s,b){playerTableWrap.innerHTML=`<div class="tableWrap"><table><thead><tr><th>م</th><th>الاسم</th><th>الرصيد</th><th>لعب</th><th>آخر لعب</th></tr></thead><tbody>${s.players.map((p,i)=>`<tr><td>${i+1}</td><td class="${isInactiveFiveMonths(b[p]?.last)?'inactiveName':''}" style="${isInactiveFiveMonths(b[p]?.last)?'background:#f8d7da;color:#842029;font-weight:900;':''}">${p}</td><td class="${clsMoney(b[p]?.balance)}">${moneyBlank(b[p]?.balance)}</td><td>${b[p]?.games||''}</td><td>${formatDateDisplay(b[p]?.last)||''}</td></tr>`).join('')}</tbody></table></div>`;const debt=s.players.filter(p=>(b[p]?.balance||0)<0).length,total=s.players.reduce((sum,p)=>sum+(b[p]?.balance||0),0);reportSummary.innerHTML=`<div class="summaryCards">
 <div class="summaryCard"><span>اللاعبين</span><b>${s.players.length}</b></div>
 <div class="summaryCard"><span>الألعاب</span><b>${s.matches.length}</b></div>
