@@ -1051,3 +1051,36 @@ label:has(input[type="date"]){
 #teamsPreview{
   display:none !important;
 }
+
+
+#depositTypeLate{
+background:#ffd8a8!important;
+color:#7a4100!important;
+border:1px solid #ffb866!important;
+}
+#depositTypeLate.active,
+#depositTypeLate.selected{
+background:#ff922b!important;
+color:#fff!important;
+}
+
+@media (max-width:430px){
+#matchPlayers.checks,.checks{
+grid-template-columns:repeat(2,minmax(0,1fr))!important;
+}
+}
+@media (min-width:431px) and (max-width:699px){
+#matchPlayers.checks,.checks{
+grid-template-columns:repeat(3,minmax(0,1fr))!important;
+}
+}
+
+.dateCard{
+padding:6px!important;
+}
+.dateCard input[type="date"]{
+min-height:38px!important;
+padding:4px 8px!important;
+border-radius:9px!important;
+font-size:14px!important;
+}
