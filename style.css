@@ -1467,3 +1467,73 @@ direction:ltr!important;
     font-size:14px !important;
   }
 }
+
+
+/* إظهار مربع المشاركون أسفل صفحة الفريقين بنفس شكل التقويم */
+#teamsPreview{
+  display:block !important;
+  visibility:visible !important;
+  height:auto !important;
+  max-height:none !important;
+  overflow:visible !important;
+  margin-top:10px !important;
+  padding:0 !important;
+  border:0 !important;
+}
+#teamsPreview *{
+  visibility:visible !important;
+  height:auto !important;
+  max-height:none !important;
+}
+
+/* نفس شكل مربع التقويم */
+#teamsPreview .calendarParticipantsClone{
+  background:white !important;
+  border:1px solid #ddd !important;
+  border-radius:14px !important;
+  padding:14px !important;
+  margin:10px 0 !important;
+  box-shadow:0 2px 6px rgba(0,0,0,.06) !important;
+}
+#teamsPreview .calendarParticipantsClone h3{
+  margin:0 0 10px !important;
+  font-size:20px !important;
+  text-align:right !important;
+}
+#teamsPreview .calendarParticipantsClone .matchInfo{
+  font-weight:800 !important;
+  font-size:17px !important;
+  text-align:right !important;
+  margin-bottom:12px !important;
+}
+#teamsPreview .calendarTeams{
+  display:grid !important;
+  grid-template-columns:1fr 1fr !important;
+  gap:14px !important;
+}
+#teamsPreview .calendarTeam{
+  border:1px solid rgba(0,0,0,.12) !important;
+  border-radius:12px !important;
+  padding:10px !important;
+}
+#teamsPreview .calendarTeam.teamA{
+  background:#ffffb8 !important;
+}
+#teamsPreview .calendarTeam.teamB{
+  background:#ffd0f2 !important;
+}
+#teamsPreview .calendarTeam h4{
+  text-align:center !important;
+  margin:0 0 10px !important;
+  font-size:16px !important;
+}
+#teamsPreview .calendarTeam .teamName{
+  padding:7px 4px !important;
+  border-bottom:1px solid rgba(255,255,255,.7) !important;
+  font-weight:700 !important;
+  font-size:14px !important;
+  text-align:right !important;
+}
+#teamsPreview button{
+  display:none !important;
+}

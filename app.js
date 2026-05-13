@@ -361,7 +361,39 @@ function teamPreviewSameAsCalendar(id){
   return `<div class="card teamCalendarClone"><h3>المشاركون</h3>${html}</div>`;
 }
 
-function renderTeamsPreview(){return;}
+function renderTeamsPreview(){
+  const s=state();
+  const id=teamsMatchSelect.value;
+  const m=s.matches.find(x=>x.id===id);
+  const el=document.getElementById('teamsPreview');
+  if(!el)return;
+  if(!m){el.innerHTML='';return;}
+
+  const clean={...tempTeamMap};
+  delete clean.__matchId;
+
+  const allNames=participants(m);
+  const teamA=allNames.filter(n=>clean[n]==='A');
+  const teamB=allNames.filter(n=>clean[n]==='B');
+
+  const fallbackA=teamA.length?teamA:[];
+  const fallbackB=teamB.length?teamB:[];
+
+  el.innerHTML=`<div class="calendarParticipantsClone">
+    <h3>المشاركون ${formatDateDisplay(m.date)||''}</h3>
+    <div class="matchInfo">${m.place?formatDateDisplay(m.date)+' - '+m.place:formatDateDisplay(m.date)}</div>
+    <div class="calendarTeams">
+      <div class="calendarTeam teamB">
+        <h4>الفريق الثاني</h4>
+        ${fallbackB.length?fallbackB.map(n=>`<div class="teamName">${n}</div>`).join(''):'<p class="muted">لا يوجد</p>'}
+      </div>
+      <div class="calendarTeam teamA">
+        <h4>الفريق الأول</h4>
+        ${fallbackA.length?fallbackA.map(n=>`<div class="teamName">${n}</div>`).join(''):'<p class="muted">لا يوجد</p>'}
+      </div>
+    </div>
+  </div>`;
+}
 function renderTables(s,b){playerTableWrap.innerHTML=`<div class="tableWrap"><table><thead><tr><th>م</th><th>الاسم</th><th>الرصيد</th><th>لعب</th><th>آخر لعب</th></tr></thead><tbody>${s.players.map((p,i)=>`<tr><td>${i+1}</td><td class="${isInactiveFiveMonths(b[p]?.last)?'inactiveName':''}" style="${isInactiveFiveMonths(b[p]?.last)?'background:#f8d7da;color:#842029;font-weight:900;':''}">${p}</td><td class="${clsMoney(b[p]?.balance)}">${moneyBlank(b[p]?.balance)}</td><td>${b[p]?.games||''}</td><td>${formatDateDisplay(b[p]?.last)||''}</td></tr>`).join('')}</tbody></table></div>`;const debt=s.players.filter(p=>(b[p]?.balance||0)<0).length,total=s.players.reduce((sum,p)=>sum+(b[p]?.balance||0),0);reportSummary.innerHTML=`<div class="summaryCards">
 <div class="summaryCard"><span>اللاعبين</span><b>${s.players.length}</b></div>
 <div class="summaryCard"><span>الألعاب</span><b>${s.matches.length}</b></div>
