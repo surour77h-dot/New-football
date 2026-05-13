@@ -345,20 +345,7 @@ function teamPreviewSameAsCalendar(id){
 }
 
 function renderTeamsPreview(){
-  const s=state();
-  const id=teamsMatchSelect.value;
-  const m=s.matches.find(x=>x.id===id);
-  if(!m){teamsPreview.innerHTML='';return;}
-
-  const names=[
-    ...(m.players||[]),
-    ...(m.guests||[]).map(g=>guestLabel(g))
-  ];
-
-  teamsPreview.innerHTML=`<div class="card">
-    <h3>المشاركون</h3>
-    ${names.length?names.map(n=>`<div class="item"><b>${n}</b></div>`).join(''):'<p class="muted">لا يوجد مشاركون</p>'}
-  </div>`;
+  if(typeof teamsPreview!=='undefined' && teamsPreview) teamsPreview.innerHTML='';
 }
 function renderTables(s,b){playerTableWrap.innerHTML=`<div class="tableWrap"><table><thead><tr><th>م</th><th>الاسم</th><th>الرصيد</th><th>لعب</th><th>آخر لعب</th></tr></thead><tbody>${s.players.map((p,i)=>`<tr><td>${i+1}</td><td class="${isInactiveFiveMonths(b[p]?.last)?'inactiveName':''}" style="${isInactiveFiveMonths(b[p]?.last)?'background:#f8d7da;color:#842029;font-weight:900;':''}">${p}</td><td class="${clsMoney(b[p]?.balance)}">${moneyBlank(b[p]?.balance)}</td><td>${b[p]?.games||''}</td><td>${formatDateDisplay(b[p]?.last)||''}</td></tr>`).join('')}</tbody></table></div>`;const debt=s.players.filter(p=>(b[p]?.balance||0)<0).length,total=s.players.reduce((sum,p)=>sum+(b[p]?.balance||0),0);reportSummary.innerHTML=`<div class="summaryCards">
 <div class="summaryCard"><span>اللاعبين</span><b>${s.players.length}</b></div>
