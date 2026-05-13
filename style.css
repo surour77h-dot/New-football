@@ -1893,3 +1893,8 @@ direction:ltr!important;
     font-size:10.5px !important;
   }
 }
+
+
+/* تعطيل أي تأثير سابق على كشف اللاعب بعد إضافة التنسيق الداخلي */
+#playerFilterContent .statementAmount.pos{color:#1b8f3f!important;background:transparent!important}
+#playerFilterContent .statementAmount.neg{color:#c92a2a!important;background:transparent!important}
