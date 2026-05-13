@@ -121,11 +121,14 @@ function renderPlayerFilter(){
  </div>
  <div class="card">
    <h3>أيام اللعب</h3>
-   ${(games.length?games.map(g=>`<div class="item"><span>${g.date}</span><span class="count">${money(g.price)}</span></div>`).join(''):'<p class="muted">لا يوجد</p>')}
+   ${(games.length?games.sort((a,b)=>new Date((b.date||''))-new Date((a.date||''))).map(g=>`<div class="item"><span>${g.date}</span><span class="count">${money(g.price)}</span></div>`).join(''):'<p class="muted">لا يوجد</p>')}
  </div>
  <div class="card">
    <h3>الإيداعات والمديونيات</h3>
-   ${(deposits.length?deposits.sort((a,b)=>(b.createdAt||0)-(a.createdAt||0)).map(d=>`<div class="item"><span>${d.date}</span><span class="${clsMoney(d.amount)}">${money(d.amount)} (${depositTypeLabel(d)})</span></div>`).join(''):'<p class="muted">لا يوجد</p>')}
+   ${(deposits.length?deposits.sort((a,b)=>(b.createdAt||0)-(a.createdAt||0)).map(d=>`<div class="item"><span>${d.date}</span><span class="${clsMoney(d.amount)}"><div class="depositRow">
+<span class="depositTypeText">${depositTypeLabel(d)}</span>
+<span class="depositAmountText"><div class="depositRow"><span class="depositTypeText">${depositTypeLabel(d)}</span><span class="depositAmountText">${money(d.amount)}</span></div></span>
+</div></span></div>`).join(''):'<p class="muted">لا يوجد</p>')}
  </div>
  <div class="card">
    <h3>الأسماء التي أحضرها</h3>
@@ -229,7 +232,10 @@ const msg=`عملية الإيداع / المديونية
 
 اللاعب: ${d.player}
 التاريخ: ${d.date}
-المبلغ: ${money(d.amount)} (${depositTypeLabel(d)})
+المبلغ: <div class="depositRow">
+<span class="depositTypeText">${depositTypeLabel(d)}</span>
+<span class="depositAmountText">${money(d.amount)}</span>
+</div>
 
 اضغط موافق للتعديل.
 اضغط إلغاء للانتقال لخيار الحذف.`;
@@ -240,7 +246,10 @@ else{
 
 ${d.player}
 ${d.date}
-${money(d.amount)} (${depositTypeLabel(d)})`)) deleteDeposit(id);
+<div class="depositRow">
+<span class="depositTypeText">${depositTypeLabel(d)}</span>
+<span class="depositAmountText">${money(d.amount)}</span>
+</div>`)) deleteDeposit(id);
 }
 }
 function balances(s){const r={};s.players.forEach(p=>r[p]={balance:0,games:0,free:0,streak:0,guestFreeCredits:0,last:'',deposits:0});s.deposits.forEach(d=>{if(r[d.player]){r[d.player].balance+=Number(d.amount||0);if(Number(d.amount)>0)r[d.player].deposits+=Number(d.amount)}});const ms=[...s.matches].sort((a,b)=>a.date.localeCompare(b.date));ms.forEach((m,idx)=>{const present=new Set(m.players||[]);Object.keys(r).forEach(name=>{if(present.has(name)){let free=false;if(m.date>=FREE_START&&r[name].streak>=5){free=true;r[name].streak=0;r[name].free++}if(!free&&r[name].guestFreeCredits>0){free=true;r[name].guestFreeCredits--;r[name].free++}r[name].games++;r[name].last=m.date;if(!free)r[name].balance-=Number(m.price||0);r[name].streak++}else r[name].streak=0});(m.guests||[]).forEach(g=>{if(r[g.owner])r[g.owner].balance-=Number(m.price||0);const count=ms.slice(0,idx+1).reduce((n,mm)=>n+(mm.guests||[]).filter(x=>x.guest===g.guest&&x.owner===g.owner).length,0);if(count>0&&count%3===0&&r[g.owner])r[g.owner].guestFreeCredits++})});return r}
@@ -359,7 +368,10 @@ function renderTables(s,b){playerTableWrap.innerHTML=`<div class="tableWrap"><ta
 <div class="summaryCard"><span>مديونيات</span><b class="${debt?'negText':''}">${debt||''}</b></div>
 <div class="summaryCard"><span>إجمالي الأرصدة</span><b class="${total<0?'negText':total>0?'posText':''}">${moneyBlank(total)}</b></div>
 </div>`;reportsList.innerHTML=`<div class="tableWrap"><table><thead><tr><th>الاسم</th><th>الرصيد</th><th>لعب</th><th>آخر لعبة</th><th>الإيداعات</th></tr></thead><tbody>${s.players.map(p=>{const r=b[p]||{};return`<tr><td>${p}</td><td class="${clsMoney(r.balance)}">${moneyBlank(r.balance)}</td><td>${r.games||''}</td><td>${formatDateDisplay(r.last)||''}</td><td class="pos">${moneyBlank(r.deposits)}</td></tr>`}).join('')}</tbody></table></div>`}
-function renderAll(){renderNav();setActiveNavButton(currentTabId);renderPageOrder();const s=state();saveNoRender(s);if(!matchDate.value)setDateDisplay('matchDate',today());if(!depositDate.value)setDateDisplay('depositDate',s.settings.lastDepositDate||today());pricePerPlayer.textContent=money(calcPrice());const b=balances(s);playersList.innerHTML=s.players.map(p=>`<div class="nameOnly">${p}</div>`).join('')||'<p class="muted">أضف اللاعبين أولًا.</p>';const opts=s.players.map(p=>`<option>${p}</option>`).join('');guestOwner.innerHTML=opts;depositPlayer.innerHTML=opts;const pf=document.getElementById('playerFilterSelect');if(pf){pf.innerHTML='<option value="">اختر لاعب</option>'+opts; if(!pf.value&&s.players[0])pf.value=s.players[0]; renderPlayerFilter();}matchPlayers.innerHTML=s.players.map(p=>`<label><input class="playerCheck" type="checkbox" value="${p}"> <span>${p}</span></label>`).join('');renderMatchParticipantsPreview();depositQuickButtons.innerHTML=getDepositPresets(s).map(v=>`<span class="quick"><button class="x" type="button" onclick="event.stopPropagation();deleteDepositPreset('${v}')">×</button><span onclick="setDepositAmount('${v}')">${money(v)}</span></span>`).join('')||'<span class="muted">احفظ أول مبلغ ليظهر كزر سريع.</span>';depositsList.innerHTML=[...s.deposits].map((d,i)=>({...d,_i:i})).sort((a,b)=>(b.createdAt||b._i)-(a.createdAt||a._i)).slice(0,50).map(d=>`<div class="item depositRow" onclick="depositOptions('${d.id}')"><span>${formatDateDisplay(d.date)} - ${d.player}</span><span class="${clsMoney(d.amount)}">${money(d.amount)} (${depositTypeLabel(d)})</span></div>`).join('');teamsMatchSelect.innerHTML=s.matches.sort((a,b)=>b.date.localeCompare(a.date)).map(m=>`<option value="${m.id}">${formatDateDisplay(m.date)}${m.place?' - '+m.place:''}</option>`).join('');renderTempGuests();renderCalendar();renderCalendarList();renderMatchLog(s);renderTeams();renderTables(s,b);updatePrettyDates()}
+function renderAll(){renderNav();setActiveNavButton(currentTabId);renderPageOrder();const s=state();saveNoRender(s);if(!matchDate.value)setDateDisplay('matchDate',today());if(!depositDate.value)setDateDisplay('depositDate',s.settings.lastDepositDate||today());pricePerPlayer.textContent=money(calcPrice());const b=balances(s);playersList.innerHTML=s.players.map(p=>`<div class="nameOnly">${p}</div>`).join('')||'<p class="muted">أضف اللاعبين أولًا.</p>';const opts=s.players.map(p=>`<option>${p}</option>`).join('');guestOwner.innerHTML=opts;depositPlayer.innerHTML=opts;const pf=document.getElementById('playerFilterSelect');if(pf){pf.innerHTML='<option value="">اختر لاعب</option>'+opts; if(!pf.value&&s.players[0])pf.value=s.players[0]; renderPlayerFilter();}matchPlayers.innerHTML=s.players.map(p=>`<label><input class="playerCheck" type="checkbox" value="${p}"> <span>${p}</span></label>`).join('');renderMatchParticipantsPreview();depositQuickButtons.innerHTML=getDepositPresets(s).map(v=>`<span class="quick"><button class="x" type="button" onclick="event.stopPropagation();deleteDepositPreset('${v}')">×</button><span onclick="setDepositAmount('${v}')">${money(v)}</span></span>`).join('')||'<span class="muted">احفظ أول مبلغ ليظهر كزر سريع.</span>';depositsList.innerHTML=[...s.deposits].map((d,i)=>({...d,_i:i})).sort((a,b)=>(b.createdAt||b._i)-(a.createdAt||a._i)).slice(0,50).map(d=>`<div class="item depositRow" onclick="depositOptions('${d.id}')"><span>${formatDateDisplay(d.date)} - ${d.player}</span><span class="${clsMoney(d.amount)}"><div class="depositRow">
+<span class="depositTypeText">${depositTypeLabel(d)}</span>
+<span class="depositAmountText">${money(d.amount)}</span>
+</div></span></div>`).join('');teamsMatchSelect.innerHTML=s.matches.sort((a,b)=>b.date.localeCompare(a.date)).map(m=>`<option value="${m.id}">${formatDateDisplay(m.date)}${m.place?' - '+m.place:''}</option>`).join('');renderTempGuests();renderCalendar();renderCalendarList();renderMatchLog(s);renderTeams();renderTables(s,b);updatePrettyDates()}
 function exportData(){const blob=new Blob([JSON.stringify(state(),null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='qatiya-backup.json';a.click()}
 function importData(e){const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{localStorage.setItem('qatiyaState',r.result);renderAll();alert('تم الاستيراد')};r.readAsText(f)}
 if('serviceWorker'in navigator){navigator.serviceWorker.register('sw.js')}setDepositType('in');renderAll();
