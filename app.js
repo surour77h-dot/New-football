@@ -335,19 +335,19 @@ function pickTeam(n,t){tempTeamMap[n]=t;renderTeamsPreview();renderTeams()}
 function randomTeams(){const s=state(),id=teamsMatchSelect.value,m=s.matches.find(x=>x.id===id);if(!m)return;const arr=participants(m).sort(()=>Math.random()-.5);tempTeamMap={__matchId:id};arr.forEach((n,i)=>tempTeamMap[n]=i%2?'B':'A');renderTeamsPreview();renderTeams()}
 function saveTeams(){const s=state(),id=teamsMatchSelect.value;if(!id)return;const clean={...tempTeamMap};delete clean.__matchId;s.teams[id]=clean;save(s);alert('تم حفظ الفريقين')}
 function renderTeamsPreview(){
-const a=Object.keys(tempTeamMap).filter(k=>k!=='__matchId'&&tempTeamMap[k]==='A'),
-b=Object.keys(tempTeamMap).filter(k=>k!=='__matchId'&&tempTeamMap[k]==='B');
-teamsPreview.innerHTML=`<div class="teamSummaryWrap">
-<div class="teamSummaryCard">
-<h3>الفريق الأول</h3>
-${a.map(x=>`<div class="teamSummaryName">${x}</div>`).join('')||'<p class="muted">لا يوجد</p>'}
-</div>
-<div class="teamSummaryCard">
-<h3>الفريق الثاني</h3>
-${b.map(x=>`<div class="teamSummaryName">${x}</div>`).join('')||'<p class="muted">لا يوجد</p>'}
-</div>
-</div>`;
-}</div>`).join('')||'<p class="muted">لا يوجد</p>'}</div><div class="teamBox teamBBox"><h3>الثاني</h3>${b.map(x=>`<div class="teamName">${x}</div>`).join('')||'<p class="muted">لا يوجد</p>'}</div>`}
+  const a=Object.keys(tempTeamMap).filter(k=>k!=='__matchId'&&tempTeamMap[k]==='A');
+  const b=Object.keys(tempTeamMap).filter(k=>k!=='__matchId'&&tempTeamMap[k]==='B');
+  teamsPreview.innerHTML=`<div class="teamSummaryWrap">
+    <div class="teamSummaryCard">
+      <h3>الفريق الأول</h3>
+      ${a.map(x=>`<div class="teamSummaryName">${x}</div>`).join('')||'<p class="muted">لا يوجد</p>'}
+    </div>
+    <div class="teamSummaryCard">
+      <h3>الفريق الثاني</h3>
+      ${b.map(x=>`<div class="teamSummaryName">${x}</div>`).join('')||'<p class="muted">لا يوجد</p>'}
+    </div>
+  </div>`;
+}
 function renderTables(s,b){playerTableWrap.innerHTML=`<div class="tableWrap"><table><thead><tr><th>م</th><th>الاسم</th><th>الرصيد</th><th>لعب</th><th>آخر لعب</th></tr></thead><tbody>${s.players.map((p,i)=>`<tr><td>${i+1}</td><td class="${isInactiveFiveMonths(b[p]?.last)?'inactiveName':''}" style="${isInactiveFiveMonths(b[p]?.last)?'background:#f8d7da;color:#842029;font-weight:900;':''}">${p}</td><td class="${clsMoney(b[p]?.balance)}">${moneyBlank(b[p]?.balance)}</td><td>${b[p]?.games||''}</td><td>${formatDateDisplay(b[p]?.last)||''}</td></tr>`).join('')}</tbody></table></div>`;const debt=s.players.filter(p=>(b[p]?.balance||0)<0).length,total=s.players.reduce((sum,p)=>sum+(b[p]?.balance||0),0);reportSummary.innerHTML=`<div class="summaryCards">
 <div class="summaryCard"><span>اللاعبين</span><b>${s.players.length}</b></div>
 <div class="summaryCard"><span>الألعاب</span><b>${s.matches.length}</b></div>

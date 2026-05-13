@@ -489,49 +489,60 @@ td,th{
   vertical-align:middle;
 }
 
+
+/* تصحيح آمن: لون زر إيداع */
 #depositTypeIn{
-background:#8fd3ff !important;
-color:#0b3558 !important;
+  background:#9bd8ff !important;
+  color:#063b63 !important;
+  border:1.5px solid #5bbcf2 !important;
 }
+#depositTypeIn.primary,
 #depositTypeIn.active,
 #depositTypeIn.selected{
-background:#3498db !important;
-color:#fff !important;
+  background:#2d9cdb !important;
+  color:white !important;
+  border-color:#1976a7 !important;
+  box-shadow:0 3px 10px rgba(45,156,219,.35) !important;
 }
 
+/* تصغير مربعات المشاركين مع 4 بالسطر */
+#matchPlayers.checks,
 .checks{
-grid-template-columns:repeat(4,1fr)!important;
-gap:5px!important;
+  grid-template-columns:repeat(4, minmax(0,1fr)) !important;
+  gap:4px !important;
 }
+#matchPlayers.checks label,
 .checks label{
-padding:5px!important;
-font-size:11px!important;
-min-height:auto!important;
-border-radius:8px!important;
+  padding:4px !important;
+  font-size:10.5px !important;
+  min-height:28px !important;
+  border-radius:8px !important;
 }
 
+/* شكل أسفل الفريقين أخف */
 .teamSummaryWrap{
-display:grid;
-grid-template-columns:1fr 1fr;
-gap:10px;
-margin-top:10px;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+  margin-top:8px;
 }
 .teamSummaryCard{
-background:#f7f7f7;
-border:1px solid #ddd;
-border-radius:14px;
-padding:10px;
+  background:#f7f7f7;
+  border:1px solid #ddd;
+  border-radius:14px;
+  padding:8px;
 }
 .teamSummaryCard h3{
-text-align:center;
-margin:0 0 8px;
+  text-align:center;
+  margin:0 0 6px;
+  font-size:14px;
 }
 .teamSummaryName{
-background:#fff;
-padding:6px;
-border-radius:8px;
-margin-bottom:5px;
-text-align:center;
-font-size:13px;
-font-weight:700;
+  background:white;
+  padding:5px;
+  border-radius:8px;
+  margin-bottom:4px;
+  text-align:center;
+  font-size:12px;
+  font-weight:700;
 }
