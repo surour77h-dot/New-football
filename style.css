@@ -1898,3 +1898,19 @@ direction:ltr!important;
 /* تعطيل أي تأثير سابق على كشف اللاعب بعد إضافة التنسيق الداخلي */
 #playerFilterContent .statementAmount.pos{color:#1b8f3f!important;background:transparent!important}
 #playerFilterContent .statementAmount.neg{color:#c92a2a!important;background:transparent!important}
+
+
+/* كشف اللاعب: الإيداعات والمديونيات نفس شكل أيام اللعب */
+.depoAmountGroup{
+  display:inline-flex !important;
+  align-items:center !important;
+  gap:4px !important;
+  direction:rtl !important;
+  font-size:inherit !important;
+  background:transparent !important;
+}
+.depoAmountGroup b{
+  font-weight:700 !important;
+  color:inherit !important;
+  background:transparent !important;
+}

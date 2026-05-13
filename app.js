@@ -134,18 +134,10 @@ function renderPlayerFilter(){
 
  <div class="card">
    <h3>الإيداعات والمديونيات</h3>
-   ${deposits.length?`
-   <div style="display:grid;grid-template-columns:1fr 1.8fr;gap:6px;margin-bottom:6px;direction:rtl;">
-     <div style="background:#eef2f4;border-radius:8px;padding:6px;font-size:12px;font-weight:800;text-align:right;">التاريخ</div>
-     <div style="background:#eef2f4;border-radius:8px;padding:6px;font-size:12px;font-weight:800;text-align:center;">نوع العملية / المبلغ</div>
-   </div>
-   ${deposits.map(d=>`<div style="display:grid;grid-template-columns:1fr 1.8fr;gap:6px;align-items:center;margin-bottom:6px;direction:rtl;">
-     <div style="background:#f5f7f8;border-radius:8px;padding:7px 6px;font-size:12px;font-weight:700;text-align:right;color:#333;">${formatDateDisplay(d.date)}</div>
-     <div style="background:#f5f7f8;border-radius:8px;padding:7px 6px;display:flex;align-items:center;justify-content:flex-end;gap:10px;direction:rtl;">
-       <span style="font-size:12px;font-weight:700;color:#444;background:none;">${depositTypeLabel(d)}</span>
-       <span style="font-size:12px;font-weight:800;direction:ltr;color:${Number(d.amount||0)<0?'#c92a2a':'#1b8f3f'};">${money(d.amount)}</span>
-     </div>
-   </div>`).join('')}`:'<p class="muted">لا يوجد</p>'}
+   ${(deposits.length?deposits.map(d=>`<div class="item">
+     <span>${formatDateDisplay(d.date)}</span>
+     <span class="${clsMoney(d.amount)} depoAmountGroup"><b>${depositTypeLabel(d)}</b>&nbsp;&nbsp;${money(d.amount)}</span>
+   </div>`).join(''):'<p class="muted">لا يوجد</p>')}
  </div>
 
  <div class="card">
