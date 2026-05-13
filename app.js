@@ -376,20 +376,17 @@ function renderTeamsPreview(){
   const teamA=allNames.filter(n=>clean[n]==='A');
   const teamB=allNames.filter(n=>clean[n]==='B');
 
-  const fallbackA=teamA.length?teamA:[];
-  const fallbackB=teamB.length?teamB:[];
-
-  el.innerHTML=`<div class="calendarParticipantsClone">
+  el.innerHTML=`<div class="ftCalendarBox">
     <h3>المشاركون ${formatDateDisplay(m.date)||''}</h3>
-    <div class="matchInfo">${m.place?formatDateDisplay(m.date)+' - '+m.place:formatDateDisplay(m.date)}</div>
-    <div class="calendarTeams">
-      <div class="calendarTeam teamB">
+    <div class="ftMatchInfo">${m.place?formatDateDisplay(m.date)+' - '+m.place:formatDateDisplay(m.date)}</div>
+    <div class="ftTeams">
+      <div class="ftTeam ftTeamB">
         <h4>الفريق الثاني</h4>
-        ${fallbackB.length?fallbackB.map(n=>`<div class="teamName">${n}</div>`).join(''):'<p class="muted">لا يوجد</p>'}
+        ${teamB.length?teamB.map(n=>`<div class="ftName">${n}</div>`).join(''):'<p class="muted">لا يوجد</p>'}
       </div>
-      <div class="calendarTeam teamA">
+      <div class="ftTeam ftTeamA">
         <h4>الفريق الأول</h4>
-        ${fallbackA.length?fallbackA.map(n=>`<div class="teamName">${n}</div>`).join(''):'<p class="muted">لا يوجد</p>'}
+        ${teamA.length?teamA.map(n=>`<div class="ftName">${n}</div>`).join(''):'<p class="muted">لا يوجد</p>'}
       </div>
     </div>
   </div>`;
