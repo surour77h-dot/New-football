@@ -2060,14 +2060,9 @@ direction:ltr!important;
 }
 
 
-/* أسماء قابلة للضغط */
 .tablePlayerLink{
-  cursor:pointer !important;
-  color:inherit !important;
-  text-decoration:none !important;
-  font-weight:700 !important;
-}
-
-.tablePlayerLink:hover{
-  opacity:.85 !important;
+ cursor:pointer !important;
+ font-weight:700 !important;
+ color:inherit !important;
+ text-decoration:none !important;
 }
