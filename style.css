@@ -2145,3 +2145,15 @@ direction:ltr!important;
   color:#174a8b !important;
   font-weight:700 !important;
 }
+
+
+.lastGameCell{
+ background:#eef4ff !important;
+ color:#174a8b !important;
+ font-weight:700 !important;
+}
+
+#teamsMatchSelect,
+#teamsMatchSelect option{
+ white-space:nowrap !important;
+}
