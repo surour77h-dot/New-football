@@ -1988,3 +1988,73 @@ direction:ltr!important;
   text-align:right !important;
   font-weight:700 !important;
 }
+
+
+/* توحيد خط وحجم الأسماء في جميع الصفحات مثل صفحة الإيداعات */
+.nameOnly,
+.playerName,
+.teamName,
+.ftName,
+.guestName,
+.depositPlayerCell,
+#playersList div,
+#matchPlayers label span,
+#teamsPlayers b,
+#calendarList .teamName,
+#matchLog .item span,
+#playerTableWrap td:nth-child(2),
+#reportsList td:nth-child(1),
+#playerFilterContent .item span,
+#depositHistoryList .depositPlayerCell,
+#depositsList .depositPlayerCell{
+  font-family: inherit !important;
+  font-size: 14px !important;
+  font-weight: 700 !important;
+  line-height: 1.35 !important;
+}
+
+/* iPhone: الحفاظ على التناسق بدون تضخيم زائد */
+@media (max-width:430px){
+  .nameOnly,
+  .playerName,
+  .teamName,
+  .ftName,
+  .guestName,
+  .depositPlayerCell,
+  #playersList div,
+  #matchPlayers label span,
+  #teamsPlayers b,
+  #calendarList .teamName,
+  #matchLog .item span,
+  #playerTableWrap td:nth-child(2),
+  #reportsList td:nth-child(1),
+  #playerFilterContent .item span,
+  #depositHistoryList .depositPlayerCell,
+  #depositsList .depositPlayerCell{
+    font-size: 13px !important;
+    font-weight: 700 !important;
+  }
+}
+
+/* iPad mini */
+@media (min-width:700px){
+  .nameOnly,
+  .playerName,
+  .teamName,
+  .ftName,
+  .guestName,
+  .depositPlayerCell,
+  #playersList div,
+  #matchPlayers label span,
+  #teamsPlayers b,
+  #calendarList .teamName,
+  #matchLog .item span,
+  #playerTableWrap td:nth-child(2),
+  #reportsList td:nth-child(1),
+  #playerFilterContent .item span,
+  #depositHistoryList .depositPlayerCell,
+  #depositsList .depositPlayerCell{
+    font-size: 14px !important;
+    font-weight: 700 !important;
+  }
+}
