@@ -451,6 +451,7 @@ function renderDepositHistory(){
     return (b.createdAt||0)-(a.createdAt||0);
   });
 
+  console.log('deposit history entries',list.length,list);
   if(!list.length){
     box.innerHTML='<p class="muted">لا توجد عمليات</p>';
     return;
