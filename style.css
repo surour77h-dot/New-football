@@ -2066,3 +2066,18 @@ direction:ltr!important;
  color:inherit !important;
  text-decoration:none !important;
 }
+
+
+/* تلوين آخر لعبة */
+.tableWrap table td:last-child{
+  background:#eef4ff !important;
+  color:#174a8b !important;
+  font-weight:700 !important;
+  border-radius:6px !important;
+}
+
+/* عداد المشاركين */
+.liveCount{
+  color:#174a8b !important;
+  font-weight:800 !important;
+}
