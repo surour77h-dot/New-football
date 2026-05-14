@@ -2071,3 +2071,13 @@ direction:ltr!important;
 .tablePlayerLink:hover{
   opacity:.8 !important;
 }
+
+
+/* فتح كشف اللاعب من الجدول والتقارير */
+.tablePlayerLink{
+  cursor:pointer !important;
+  color:inherit !important;
+  font-weight:700 !important;
+  text-decoration:none !important;
+}
+.tablePlayerLink:hover{opacity:.8!important}
