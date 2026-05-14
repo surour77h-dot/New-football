@@ -1988,23 +1988,3 @@ direction:ltr!important;
   text-align:right !important;
   font-weight:700 !important;
 }
-
-
-/* تكبير الخط في صفحة التقارير */
-#reports,
-#reports *{
-  font-size:1.06em !important;
-}
-
-#reports h2,
-#reports h3{
-  font-size:1.18em !important;
-  font-weight:800 !important;
-}
-
-#reports .item,
-#reports table,
-#reports td,
-#reports th{
-  font-size:1.05em !important;
-}
