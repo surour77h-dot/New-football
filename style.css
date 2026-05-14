@@ -1965,3 +1965,26 @@ direction:ltr!important;
 .depositHistoryRow .depoAmountGroup{
   white-space:nowrap !important;
 }
+
+
+/* فصل التاريخ عن الاسم ومحاذاة الأسماء عمودياً */
+.depositDateNameRow{
+  display:flex !important;
+  align-items:center !important;
+  gap:18px !important;
+  flex:1 !important;
+}
+
+.depositDateCell{
+  min-width:105px !important;
+  text-align:right !important;
+  font-weight:700 !important;
+  color:#333 !important;
+}
+
+.depositPlayerCell{
+  display:inline-block !important;
+  min-width:160px !important;
+  text-align:right !important;
+  font-weight:700 !important;
+}

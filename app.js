@@ -432,7 +432,7 @@ function renderAll(){renderNav();setActiveNavButton(currentTabId);renderPageOrde
  return (b.createdAt||b._i||0)-(a.createdAt||a._i||0);
 })
 .map(d=>`<div class="item depositRow" onclick="depositOptions('${d.id}')">
-<span>${formatDateDisplay(d.date)} - ${d.player}</span>
+<span class="depositDateNameRow"><span class="depositDateCell">${formatDateDisplay(d.date)}</span><span class="depositPlayerCell">${d.player}</span></span>
 <span class="${clsMoney(d.amount)} depoAmountGroup"><b>${depositTypeLabel(d)}</b>&nbsp;&nbsp;${money(d.amount)}</span>
 </div>`).join('');teamsMatchSelect.innerHTML=s.matches.sort((a,b)=>b.date.localeCompare(a.date)).map(m=>`<option value="${m.id}">${formatDateDisplay(m.date)}${m.place?' - '+m.place:''}</option>`).join('');renderTempGuests();renderCalendar();renderCalendarList();renderMatchLog(s);renderTeams();renderTables(s,b);updatePrettyDates()}
 function exportData(){const blob=new Blob([JSON.stringify(state(),null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='qatiya-backup.json';a.click()}
