@@ -2081,3 +2081,11 @@ direction:ltr!important;
   color:#174a8b !important;
   font-weight:800 !important;
 }
+
+
+/* قائمة الفريقين بسطر واحد */
+#teamsMatchSelect{
+  white-space:nowrap !important;
+  overflow:hidden !important;
+  text-overflow:ellipsis !important;
+}
