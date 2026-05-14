@@ -2,7 +2,8 @@
 function depositTypeLabel(d){
  const dt=(d.date||'').replace(/-/g,'/');
  if(dt==='2026/01/01'||dt==='1/1/2026') return 'إيداع مبدئي';
- if(d.type==='late') return 'تأخير';
+ if(d.type==='initial') return 'إيداع مبدئي';
+  if(d.type==='late') return 'تأخير';
  if(d.type==='debt') return 'خصم';
  return 'إيداع';
 }
