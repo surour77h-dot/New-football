@@ -2089,3 +2089,15 @@ direction:ltr!important;
   overflow:hidden !important;
   text-overflow:ellipsis !important;
 }
+
+
+/* قائمة الفريقين سطر واحد */
+#teamsMatchSelect{
+  white-space:nowrap !important;
+  overflow:hidden !important;
+  text-overflow:ellipsis !important;
+}
+
+#teamsMatchSelect option{
+  white-space:nowrap !important;
+}
