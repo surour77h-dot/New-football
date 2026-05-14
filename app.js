@@ -502,3 +502,11 @@ function openExactPlayerProfile(playerName){
     }
   },120);
 }
+
+
+document.addEventListener('click',function(e){
+  const el=e.target.closest('.tablePlayerLink');
+  if(!el)return;
+  const name=(el.textContent||'').trim();
+  if(name) openPlayerProfileExact(name);
+});

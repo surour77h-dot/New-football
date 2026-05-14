@@ -2081,3 +2081,15 @@ direction:ltr!important;
   text-decoration:none !important;
 }
 .tablePlayerLink:hover{opacity:.8!important}
+
+
+/* رابط اسم اللاعب في الجدول والتقارير */
+.tablePlayerLink{
+  cursor:pointer !important;
+  color:inherit !important;
+  font-weight:700 !important;
+  text-decoration:none !important;
+}
+.tablePlayerLink:hover{
+  opacity:.8 !important;
+}
