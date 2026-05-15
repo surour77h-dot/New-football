@@ -2123,8 +2123,8 @@ direction:ltr!important;
 }
 
 
-/* تلوين كامل خلية أحدث تاريخ */
-#playerTableWrap td.latestPlayedCell{
+/* صفحة التقارير: نفس طريقة الجدول، تلوين أحدث تاريخ فقط */
+#reportsList td.latestPlayedCell{
   background:#ffe8cc !important;
   color:#9a4f00 !important;
   border-radius:10px !important;
