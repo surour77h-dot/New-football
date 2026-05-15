@@ -129,7 +129,8 @@ function renderPlayerFilter(){
    .sort((a,b)=>new Date(b.date||'1900-01-01')-new Date(a.date||'1900-01-01'));
  const guestDeductTotal=guestMatches.reduce((sum,m)=>sum+(m.guests||[]).filter(g=>g.owner===player).length*Number(m.price||0),0);
  const totalDep=deposits.filter(d=>d.amount>0).reduce((a,b)=>a+b.amount,0);
- const totalDebt=Math.abs(deposits.filter(d=>d.amount<0).reduce((a,b)=>a+b.amount,0));
+ const gameDeductTotal=games.reduce((sum,g)=>sum+Number(g.price||0),0);
+ const totalDebt=gameDeductTotal+guestDeductTotal;
 
  wrap.innerHTML=`
  <div class="summaryCards">
