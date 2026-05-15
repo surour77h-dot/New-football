@@ -418,44 +418,44 @@ function renderTeamsPreview(){
   </div>`;
 }
 function renderTables(s,b){
-  const latestDate=Object.values(b||{}).map(x=>x.last||'').filter(Boolean).sort().pop()||'';
+  const latestDate=Object.values(b||{}).map(v=>v.last||'').filter(Boolean).sort().pop()||'';
   const totalBalance=s.players.reduce((sum,p)=>sum+Number(b[p]?.balance||0),0);
-  const debt=s.players.filter(p=>(b[p]?.balance||0)<0).length;
-  const total=s.players.reduce((sum,p)=>sum+(b[p]?.balance||0),0);
 
   playerTableWrap.innerHTML=`<div class="tableWrap"><table>
-    <thead><tr><th>م</th><th>الاسم</th><th>الرصيد</th><th>لعب</th><th>آخر لعب</th></tr></thead>
-    <tbody>${s.players.map((p,i)=>`<tr>
-      <td>${i+1}</td>
-      <td class="${isInactiveFiveMonths(b[p]?.last)?'inactiveName':''}" style="${isInactiveFiveMonths(b[p]?.last)?'background:#f8d7da;color:#842029;font-weight:900;':''}">
-        <span class="tablePlayerLink" onclick="openPlayerProfileDirect('${String(p).replace(/'/g,"\\'")}')">${p}</span>
-      </td>
-      <td class="${clsMoney(b[p]?.balance)}">${moneyBlank(b[p]?.balance)}</td>
-      <td>${b[p]?.games||''}</td>
-      <td class="${b[p]?.last && b[p]?.last===latestDate ? 'latestPlayedCell' : ''}">${formatDateDisplay(b[p]?.last)||''}</td>
-    </tr>`).join('')}</tbody>
-  </table></div>`;
+  <thead><tr><th>م</th><th>الاسم</th><th>الرصيد</th><th>لعب</th><th>آخر لعب</th></tr></thead>
+  <tbody>
+  ${s.players.map((p,i)=>`<tr>
+    <td>${i+1}</td>
+    <td>
+      <span class="tablePlayerLink" onclick="openPlayerProfileDirect('${String(p).replace(/'/g,"\\'")}')">${p}</span>
+    </td>
+    <td class="${clsMoney(b[p]?.balance)}">${moneyBlank(b[p]?.balance)}</td>
+    <td>${b[p]?.games||''}</td>
+    <td class="${b[p]?.last===latestDate && latestDate ? 'latestPlayedCell' : ''}">${formatDateDisplay(b[p]?.last)||''}</td>
+  </tr>`).join('')}
+  </tbody></table></div>`;
 
   reportSummary.innerHTML=`<div class="summaryCards">
     <div class="summaryCard"><span>اللاعبين</span><b>${s.players.length}</b></div>
     <div class="summaryCard"><span>الألعاب</span><b>${s.matches.length}</b></div>
     <div class="summaryCard"><span>مجموع الرصيد</span><b class="${totalBalance<0?'negText':totalBalance>0?'posText':''}">${moneyBlank(totalBalance)}</b></div>
-    <div class="summaryCard"><span>إجمالي الأرصدة</span><b class="${total<0?'negText':total>0?'posText':''}">${moneyBlank(total)}</b></div>
+    <div class="summaryCard"><span>إجمالي الأرصدة</span><b class="${totalBalance<0?'negText':totalBalance>0?'posText':''}">${moneyBlank(totalBalance)}</b></div>
   </div>`;
 
   reportsList.innerHTML=`<div class="tableWrap"><table>
-    <thead><tr><th>الاسم</th><th>الرصيد</th><th>لعب</th><th>آخر لعبة</th><th>الإيداعات</th></tr></thead>
-    <tbody>${s.players.map(p=>{
-      const r=b[p]||{};
-      return `<tr>
-        <td><span class="tablePlayerLink" onclick="openPlayerProfileDirect('${String(p).replace(/'/g,"\\'")}')">${p}</span></td>
-        <td class="${clsMoney(r.balance)}">${moneyBlank(r.balance)}</td>
-        <td>${r.games||''}</td>
-        <td class="${r.last && r.last===latestDate ? 'latestPlayedCell' : ''}">${formatDateDisplay(r.last)||''}</td>
-        <td class="pos">${moneyBlank(r.deposits)}</td>
-      </tr>`;
-    }).join('')}</tbody>
-  </table></div>`;
+  <thead><tr><th>الاسم</th><th>الرصيد</th><th>لعب</th><th>آخر لعبة</th><th>الإيداعات</th></tr></thead>
+  <tbody>
+  ${s.players.map(p=>{
+    const r=b[p]||{};
+    return `<tr>
+      <td><span class="tablePlayerLink" onclick="openPlayerProfileDirect('${String(p).replace(/'/g,"\\'")}')">${p}</span></td>
+      <td class="${clsMoney(r.balance)}">${moneyBlank(r.balance)}</td>
+      <td>${r.games||''}</td>
+      <td class="${r.last===latestDate && latestDate ? 'latestPlayedCell' : ''}">${formatDateDisplay(r.last)||''}</td>
+      <td class="pos">${moneyBlank(r.deposits)}</td>
+    </tr>`;
+  }).join('')}
+  </tbody></table></div>`;
 }
 function renderAll(){renderNav();setActiveNavButton(currentTabId);renderPageOrder();const s=state();saveNoRender(s);if(!matchDate.value)setDateDisplay('matchDate',today());if(!depositDate.value)setDateDisplay('depositDate',s.settings.lastDepositDate||today());pricePerPlayer.textContent=money(calcPrice());const b=balances(s);playersList.innerHTML=s.players.map(p=>`<div class="nameOnly">${p}</div>`).join('')||'<p class="muted">أضف اللاعبين أولًا.</p>';const opts=s.players.map(p=>`<option>${p}</option>`).join('');guestOwner.innerHTML=opts;depositPlayer.innerHTML=opts;const pf=document.getElementById('playerFilterSelect');if(pf){pf.innerHTML='<option value="">اختر لاعب</option>'+opts; if(!pf.value&&s.players[0])pf.value=s.players[0]; renderPlayerFilter();renderDepositHistory();}matchPlayers.innerHTML=s.players.map(p=>`<label><input class="playerCheck" type="checkbox" value="${p}"> <span>${p}</span></label>`).join('');renderMatchParticipantsPreview();depositQuickButtons.innerHTML=getDepositPresets(s).map(v=>`<span class="quick"><button class="x" type="button" onclick="event.stopPropagation();deleteDepositPreset('${v}')">×</button><span onclick="setDepositAmount('${v}')">${money(v)}</span></span>`).join('')||'<span class="muted">احفظ أول مبلغ ليظهر كزر سريع.</span>';depositsList.innerHTML=[...s.deposits]
 .map((d,i)=>({...d,_i:i,type:(String(d.date||'').replace(/-/g,'/')==='2026/01/01'||String(d.date||'').replace(/-/g,'/')==='1/1/2026')&&!d.type?'initial':d.type}))
