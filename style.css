@@ -2081,3 +2081,26 @@ direction:ltr!important;
   color:#174a8b !important;
   font-weight:800 !important;
 }
+
+
+/* صفحة الجدول: إرجاع عمود آخر لعبة للشكل السابق */
+#playerTableWrap table td.lastGameColumn{
+  background:transparent !important;
+  color:inherit !important;
+  font-weight:700 !important;
+}
+
+/* تاريخ آخر لعب داخل نفس العمود بلون برتقالي فاتح */
+#playerTableWrap .lastPlayedDate{
+  display:inline-block !important;
+  background:#ffe8cc !important;
+  color:#9a4f00 !important;
+  border-radius:8px !important;
+  padding:4px 8px !important;
+  font-weight:800 !important;
+  white-space:nowrap !important;
+}
+
+#playerTableWrap .lastPlayedDate:empty{
+  display:none !important;
+}
