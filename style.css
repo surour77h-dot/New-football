@@ -2153,12 +2153,10 @@ direction:ltr!important;
 }
 
 
-/* عمود آخر لعب: كل الخانات عادية بيضاء ماعدا أحدث تاريخ */
-#playerTableWrap td{
-  background-clip:padding-box !important;
-}
-
-#playerTableWrap td:not(.latestPlayedCell){
+/* فقط عمود آخر لعب في صفحة الجدول:
+   الخانات العادية بيضاء
+   وأحدث تاريخ فقط يبقى برتقالي */
+#playerTableWrap td:nth-child(5):not(.latestPlayedCell){
   background:#ffffff !important;
   color:inherit !important;
 }
