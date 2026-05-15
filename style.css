@@ -2083,225 +2083,50 @@ direction:ltr!important;
 }
 
 
-/* قائمة الفريقين بسطر واحد */
-#teamsMatchSelect{
-  white-space:nowrap !important;
-  overflow:hidden !important;
-  text-overflow:ellipsis !important;
-}
 
 
-/* قائمة الفريقين سطر واحد */
-#teamsMatchSelect{
-  white-space:nowrap !important;
-  overflow:hidden !important;
-  text-overflow:ellipsis !important;
-}
-
-#teamsMatchSelect option{
-  white-space:nowrap !important;
-}
 
 
-/* تأكيد لون آخر لعبة */
-.lastGameCell,
-#playerTableWrap table td:last-child,
-#reportsList table td:nth-child(4){
-  background:#eef4ff !important;
-  color:#174a8b !important;
-  font-weight:700 !important;
-  border-radius:6px !important;
-}
-
-/* قائمة الفريقين سطر واحد */
-#teamsMatchSelect{
-  white-space:nowrap !important;
-  overflow:hidden !important;
-  text-overflow:ellipsis !important;
-  width:100% !important;
-}
-#teamsMatchSelect option{
-  white-space:nowrap !important;
-}
 
 
-/* تأكيد قائمة الفريقين بسطر واحد: التاريخ ثم مكان اللعب */
-#teamsMatchSelect{
-  white-space:nowrap !important;
-  overflow:hidden !important;
-  text-overflow:ellipsis !important;
-  width:100% !important;
-  direction:rtl !important;
-}
-#teamsMatchSelect option{
-  white-space:nowrap !important;
-}
-
-/* آخر لعبة بلون مغاير */
-.lastGameCell,
-#playerTableWrap table td:last-child,
-#reportsList table td:nth-child(4){
-  background:#eef4ff !important;
-  color:#174a8b !important;
-  font-weight:700 !important;
-}
 
 
-/* ===== Final verified fixes: iPhone + iPad mini ===== */
 
-/* أسماء اللاعبين قابلة للضغط في الجدول والتقارير */
-.tablePlayerLink{
-  cursor:pointer !important;
+/* عمود آخر لعبة: كل التواريخ عادية، فقط أحدث تاريخ بخلفية برتقالي فاتح */
+#playerTableWrap .lastGameColumn{
+  background:transparent !important;
   color:inherit !important;
   font-weight:700 !important;
-  text-decoration:none !important;
-}
-.tablePlayerLink:hover{
-  opacity:.85 !important;
 }
 
-/* أحدث تاريخ لعب فقط في صفحة الجدول والتقارير */
-#playerTableWrap td.latestPlayedCellFinal,
-#reportsList td.latestPlayedCellFinal{
+#playerTableWrap .normalPlayedDate{
+  background:transparent !important;
+  color:inherit !important;
+  padding:0 !important;
+  border-radius:0 !important;
+  font-weight:700 !important;
+}
+
+#playerTableWrap .latestPlayedDate{
+  display:inline-block !important;
+  background:#ffe8cc !important;
+  color:#9a4f00 !important;
+  border-radius:8px !important;
+  padding:4px 8px !important;
+  font-weight:800 !important;
+  white-space:nowrap !important;
+}
+
+#playerTableWrap .normalPlayedDate:empty,
+#playerTableWrap .latestPlayedDate:empty{
+  display:none !important;
+}
+
+
+/* تلوين كامل خلية أحدث تاريخ */
+#playerTableWrap td.latestPlayedCell{
   background:#ffe8cc !important;
   color:#9a4f00 !important;
   border-radius:10px !important;
-  font-weight:900 !important;
-}
-
-/* خلية آخر لعبة العادية بدون لون */
-#playerTableWrap td:not(.latestPlayedCellFinal),
-#reportsList td:not(.latestPlayedCellFinal){
-  box-shadow:none;
-}
-
-/* قائمة الفريقين: تكبير العرض والقراءة على iPhone و iPad mini */
-#teams .card label,
-#teamsMatchSelect{
-  width:100% !important;
-  max-width:100% !important;
-}
-#teamsMatchSelect{
-  display:block !important;
-  min-width:100% !important;
-  font-size:18px !important;
-  padding:12px !important;
-  min-height:48px !important;
-  white-space:nowrap !important;
-  overflow:hidden !important;
-  text-overflow:ellipsis !important;
-  box-sizing:border-box !important;
-}
-#teamsMatchSelect option{
-  font-size:18px !important;
-  white-space:nowrap !important;
-}
-
-/* iPhone */
-@media (max-width:430px){
-  #teamsMatchSelect{
-    font-size:16px !important;
-    padding:10px !important;
-  }
-  #playerTableWrap td,
-  #reportsList td{
-    font-size:10px !important;
-  }
-}
-
-/* iPad mini */
-@media (min-width:700px) and (max-width:900px){
-  #teamsMatchSelect{
-    font-size:20px !important;
-    min-height:54px !important;
-  }
-  #teams .card{
-    overflow:visible !important;
-  }
-}
-
-
-/* ===== إعادة تطبيق نهائية: مجموع الرصيد / أحدث تاريخ / قائمة الفريقين / iPhone + iPad mini ===== */
-.tablePlayerLink{
-  cursor:pointer !important;
-  color:inherit !important;
-  font-weight:700 !important;
-  text-decoration:none !important;
-}
-.tablePlayerLink:hover{opacity:.85!important}
-
-#playerTableWrap td.latestPlayedCellFinal,
-#reportsList td.latestPlayedCellFinal{
-  background:#ffe8cc !important;
-  color:#9a4f00 !important;
-  border-radius:10px !important;
-  font-weight:900 !important;
-}
-
-#teams .card label{
-  display:block !important;
-  width:100% !important;
-  max-width:100% !important;
-}
-
-#teamsMatchSelect{
-  display:block !important;
-  width:100% !important;
-  min-width:100% !important;
-  max-width:100% !important;
-  box-sizing:border-box !important;
-  font-size:18px !important;
-  min-height:50px !important;
-  padding:12px 14px !important;
-  margin-top:6px !important;
-  white-space:nowrap !important;
-  overflow:hidden !important;
-  text-overflow:ellipsis !important;
-}
-
-#teamsMatchSelect option{
-  font-size:18px !important;
-  white-space:nowrap !important;
-}
-
-@media (max-width:430px){
-  body{font-size:14px!important}
-  main{padding:8px!important;width:100%!important}
-  #teamsMatchSelect{
-    font-size:16px !important;
-    min-height:46px !important;
-    padding:10px 12px !important;
-  }
-  #playerTableWrap td,
-  #reportsList td{
-    font-size:10px !important;
-    padding:5px 2px !important;
-  }
-  .summaryCards{
-    grid-template-columns:1fr 1fr !important;
-  }
-}
-
-@media (min-width:700px) and (max-width:900px){
-  body{font-size:16px!important}
-  main{
-    max-width:820px!important;
-    padding:14px!important;
-  }
-  #teamsMatchSelect{
-    font-size:20px !important;
-    min-height:56px !important;
-    padding:14px 16px !important;
-  }
-  #teams .card{
-    overflow:visible !important;
-  }
-  #playerTableWrap td,
-  #reportsList td{
-    font-size:13px !important;
-    padding:8px 5px !important;
-  }
-  .summaryCards{
-    grid-template-columns:repeat(4,1fr) !important;
-  }
+  font-weight:800 !important;
 }
