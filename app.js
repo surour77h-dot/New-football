@@ -71,20 +71,19 @@ function guestLabel(g){
 
 function moneyBlank(n){n=Number(n||0);return n===0?'':money(n)}
 const defaultPages=[
- ['newMatch','لعبة'],['players','اللاعبين'],['deposits','الإيداعات'],['calendar','التقويم'],
- ['matchLog','السجل'],['teams','الفريقين'],['playerTable','الجدول'],
- ['backup','النسخ'],['playerFilter','كشف لاعب'],['settings','الترتيب']
+ ['newMatch','لعبة'],
+ ['teams','الفريقين'],
+ ['deposits','الإيداعات'],
+ ['calendar','التقويم'],
+ ['playerTable','الجدول'],
+ ['playerFilter','كشف لاعب'],
+ ['matchLog','السجل'],
+ ['players','اللاعبين'],
+ ['settings','الترتيب'],
+ ['backup','النسخ']
 ];
 function getPageOrder(){
- const s=state();
- const saved=s.settings.pageOrder;
- const ids=defaultPages.map(x=>x[0]);
- if(Array.isArray(saved)){
-   const clean=saved.filter(x=>ids.includes(x));
-   ids.forEach(id=>{if(!clean.includes(id))clean.push(id)});
-   return clean;
- }
- return ids;
+ return defaultPages.map(x=>x[0]);
 }
 function savePageOrder(order){
  const s=state();
@@ -477,7 +476,10 @@ function renderAll(){renderNav();setActiveNavButton(currentTabId);renderPageOrde
 .map(d=>`<div class="item depositRow" onclick="depositOptions('${d.id}')">
 <span class="depositDateNameRow"><span class="depositDateCell">${formatDateDisplay(d.date)}</span><span class="depositPlayerCell">${d.player}</span></span>
 <span class="${clsMoney(d.amount)} depoAmountGroup"><b>${depositTypeLabel(d)}</b>&nbsp;&nbsp;${money(d.amount)}</span>
-</div>`).join('');teamsMatchSelect.innerHTML=s.matches.sort((a,b)=>b.date.localeCompare(a.date)).map(m=>`<option value="${m.id}">${formatDateDisplay(m.date)}${m.place?' - '+m.place:''}</option>`).join('');renderTempGuests();renderCalendar();renderCalendarList();renderMatchLog(s);renderTeams();renderTables(s,b);updatePrettyDates()}
+</div>`).join('');teamsMatchSelect.innerHTML=s.matches
+.sort((a,b)=>b.date.localeCompare(a.date))
+.map(m=>`<option value="${m.id}">${formatDateDisplay(m.date)} | ${m.place||m.location||''}</option>`)
+.join('');renderTempGuests();renderCalendar();renderCalendarList();renderMatchLog(s);renderTeams();renderTables(s,b);updatePrettyDates()}
 function exportData(){const blob=new Blob([JSON.stringify(state(),null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='qatiya-backup.json';a.click()}
 function importData(e){const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{localStorage.setItem('qatiyaState',r.result);renderAll();alert('تم الاستيراد')};r.readAsText(f)}
 if('serviceWorker'in navigator){navigator.serviceWorker.register('sw.js')}setDepositType('in');renderAll();

@@ -2214,3 +2214,52 @@ direction:ltr!important;
     padding:10px 8px !important;
   }
 }
+
+
+/* ترتيب ومرونة قائمة الفريقين */
+#teams .card{
+  overflow:visible !important;
+}
+
+#teams label{
+  width:100% !important;
+  display:block !important;
+}
+
+#teamsMatchSelect{
+  display:block !important;
+  width:100% !important;
+  min-width:100% !important;
+  max-width:100% !important;
+  box-sizing:border-box !important;
+  white-space:nowrap !important;
+  overflow:hidden !important;
+  text-overflow:ellipsis !important;
+  font-size:18px !important;
+  min-height:50px !important;
+  padding:12px 14px !important;
+  direction:rtl !important;
+}
+
+#teamsMatchSelect option{
+  white-space:nowrap !important;
+  font-size:18px !important;
+}
+
+/* iPhone */
+@media (max-width:430px){
+  #teamsMatchSelect{
+    font-size:15px !important;
+    min-height:44px !important;
+    padding:9px 10px !important;
+  }
+}
+
+/* iPad mini */
+@media (min-width:700px) and (max-width:900px){
+  #teamsMatchSelect{
+    font-size:20px !important;
+    min-height:56px !important;
+    padding:14px 16px !important;
+  }
+}
