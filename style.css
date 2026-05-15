@@ -2151,3 +2151,14 @@ direction:ltr!important;
 .tablePlayerLink:hover{
   opacity:.85 !important;
 }
+
+
+/* عمود آخر لعب: كل الخانات عادية بيضاء ماعدا أحدث تاريخ */
+#playerTableWrap td{
+  background-clip:padding-box !important;
+}
+
+#playerTableWrap td:not(.latestPlayedCell){
+  background:#ffffff !important;
+  color:inherit !important;
+}
