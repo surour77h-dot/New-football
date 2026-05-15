@@ -2130,3 +2130,13 @@ direction:ltr!important;
   border-radius:10px !important;
   font-weight:800 !important;
 }
+
+
+/* مطابقة عمود آخر لعبة في التقارير مع عمود آخر لعب في الجدول */
+#playerTableWrap td.latestPlayedCell,
+#reportsList td.latestPlayedCell{
+  background:#ffe8cc !important;
+  color:#9a4f00 !important;
+  border-radius:10px !important;
+  font-weight:800 !important;
+}

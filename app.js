@@ -438,7 +438,7 @@ function renderTables(s,b){
       <td class="${isInactiveFiveMonths(b[p]?.last)?'inactiveName':''}" style="${isInactiveFiveMonths(b[p]?.last)?'background:#f8d7da;color:#842029;font-weight:900;':''}">${p}</td>
       <td class="${clsMoney(b[p]?.balance)}">${moneyBlank(b[p]?.balance)}</td>
       <td>${b[p]?.games||''}</td>
-      <td class="lastGameColumn"><span class="${b[p]?.last && b[p]?.last===latestDate ? 'latestPlayedDate' : 'normalPlayedDate'}">${formatDateDisplay(b[p]?.last)||''}</span></td>
+      <td class="${b[p]?.last && b[p]?.last===latestDate ? 'latestPlayedCell' : ''}">${formatDateDisplay(b[p]?.last)||''}</td>
     </tr>`).join('')}</tbody>
   </table></div>`;
 
@@ -456,7 +456,13 @@ function renderTables(s,b){
     <thead><tr><th>الاسم</th><th>الرصيد</th><th>لعب</th><th>آخر لعبة</th><th>الإيداعات</th></tr></thead>
     <tbody>${s.players.map(p=>{
       const r=b[p]||{};
-      return `<tr><td>${p}</td><td class="${clsMoney(r.balance)}">${moneyBlank(r.balance)}</td><td>${r.games||''}</td><td class="${r.last && r.last===latestDate ? 'latestPlayedCell' : ''}">${formatDateDisplay(r.last)||''}</td><td class="pos">${moneyBlank(r.deposits)}</td></tr>`;
+      return `<tr>
+        <td>${p}</td>
+        <td class="${clsMoney(r.balance)}">${moneyBlank(r.balance)}</td>
+        <td>${r.games||''}</td>
+        <td class="${r.last && r.last===latestDate ? 'latestPlayedCell' : ''}">${formatDateDisplay(r.last)||''}</td>
+        <td class="pos">${moneyBlank(r.deposits)}</td>
+      </tr>`;
     }).join('')}</tbody>
   </table></div>`;
 }
