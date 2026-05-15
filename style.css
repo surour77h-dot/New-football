@@ -2140,3 +2140,14 @@ direction:ltr!important;
   border-radius:10px !important;
   font-weight:800 !important;
 }
+
+
+.tablePlayerLink{
+  cursor:pointer !important;
+  color:inherit !important;
+  font-weight:700 !important;
+  text-decoration:none !important;
+}
+.tablePlayerLink:hover{
+  opacity:.85 !important;
+}

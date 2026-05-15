@@ -435,7 +435,7 @@ function renderTables(s,b){
     <thead><tr><th>م</th><th>الاسم</th><th>الرصيد</th><th>لعب</th><th>آخر لعب</th></tr></thead>
     <tbody>${s.players.map((p,i)=>`<tr>
       <td>${i+1}</td>
-      <td class="${isInactiveFiveMonths(b[p]?.last)?'inactiveName':''}" style="${isInactiveFiveMonths(b[p]?.last)?'background:#f8d7da;color:#842029;font-weight:900;':''}">${p}</td>
+      <td class="${isInactiveFiveMonths(b[p]?.last)?'inactiveName':''}" style="${isInactiveFiveMonths(b[p]?.last)?'background:#f8d7da;color:#842029;font-weight:900;':''}"><span class="tablePlayerLink" onclick="openPlayerProfileDirect('${String(p).replace(/'/g,"\\'")}')">${p}</span></td>
       <td class="${clsMoney(b[p]?.balance)}">${moneyBlank(b[p]?.balance)}</td>
       <td>${b[p]?.games||''}</td>
       <td class="${b[p]?.last && b[p]?.last===latestDate ? 'latestPlayedCell' : ''}">${formatDateDisplay(b[p]?.last)||''}</td>
@@ -457,7 +457,7 @@ function renderTables(s,b){
     <tbody>${s.players.map(p=>{
       const r=b[p]||{};
       return `<tr>
-        <td>${p}</td>
+        <td><span class="tablePlayerLink" onclick="openPlayerProfileDirect('${String(p).replace(/'/g,"\\'")}')">${p}</span></td>
         <td class="${clsMoney(r.balance)}">${moneyBlank(r.balance)}</td>
         <td>${r.games||''}</td>
         <td class="${r.last && r.last===latestDate ? 'latestPlayedCell' : ''}">${formatDateDisplay(r.last)||''}</td>
