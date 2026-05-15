@@ -2083,15 +2083,31 @@ direction:ltr!important;
 }
 
 
-/* صفحة الجدول: إرجاع عمود آخر لعبة للشكل السابق */
-#playerTableWrap table td.lastGameColumn{
+
+
+
+
+
+
+
+
+
+/* عمود آخر لعبة: كل التواريخ عادية، فقط أحدث تاريخ بخلفية برتقالي فاتح */
+#playerTableWrap .lastGameColumn{
   background:transparent !important;
   color:inherit !important;
   font-weight:700 !important;
 }
 
-/* تاريخ آخر لعب داخل نفس العمود بلون برتقالي فاتح */
-#playerTableWrap .lastPlayedDate{
+#playerTableWrap .normalPlayedDate{
+  background:transparent !important;
+  color:inherit !important;
+  padding:0 !important;
+  border-radius:0 !important;
+  font-weight:700 !important;
+}
+
+#playerTableWrap .latestPlayedDate{
   display:inline-block !important;
   background:#ffe8cc !important;
   color:#9a4f00 !important;
@@ -2101,20 +2117,7 @@ direction:ltr!important;
   white-space:nowrap !important;
 }
 
-#playerTableWrap .lastPlayedDate:empty{
+#playerTableWrap .normalPlayedDate:empty,
+#playerTableWrap .latestPlayedDate:empty{
   display:none !important;
-}
-
-
-
-
-
-/* فقط أحدث تاريخ لعب يكون برتقالي */
-#playerTableWrap .latestPlayedDate{
- background:#ffe8cc !important;
- color:#9a4f00 !important;
- border-radius:8px !important;
- padding:4px 8px !important;
- font-weight:800 !important;
- display:inline-block !important;
 }
