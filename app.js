@@ -431,7 +431,7 @@ function renderTeamsPreview(){
 function renderTables(s,b){
   const latestDate=latestPlayedDateOnly(b);
 
-  playerTableWrap.innerHTML=`<div class="tableWrap"><table>
+  playerTableWrap.innerHTML=reportSummary.innerHTML+`<div class="tableWrap"><table>
     <thead><tr><th>م</th><th>الاسم</th><th>الرصيد</th><th>لعب</th><th>آخر لعب</th></tr></thead>
     <tbody>${s.players.map((p,i)=>`<tr>
       <td>${i+1}</td>
