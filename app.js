@@ -60,19 +60,20 @@ function guestLabel(g){
 
 function moneyBlank(n){n=Number(n||0);return n===0?'':money(n)}
 const defaultPages=[
- ['newMatch','لعبة'],['players','اللاعبين'],['deposits','الإيداعات'],['calendar','التقويم'],
- ['matchLog','السجل'],['teams','الفريقين'],['playerTable','الجدول'],['reports','التقارير'],
- ['backup','النسخ'],['playerFilter','كشف لاعب'],['settings','الترتيب']
+ ['newMatch','لعبة'],
+ ['teams','الفريقين'],
+ ['deposits','الإيداعات'],
+ ['calendar','التقويم'],
+ ['playerTable','الجدول'],
+ ['reports','التقارير'],
+ ['playerFilter','كشف لاعب'],
+ ['matchLog','السجل'],
+ ['players','اللاعبين'],
+ ['settings','الترتيب'],
+ ['backup','النسخ']
 ];
 function getPageOrder(){
- const s=state();
- const saved=s.settings.pageOrder;
  const ids=defaultPages.map(x=>x[0]);
- if(Array.isArray(saved)){
-   const clean=saved.filter(x=>ids.includes(x));
-   ids.forEach(id=>{if(!clean.includes(id))clean.push(id)});
-   return clean;
- }
  return ids;
 }
 function savePageOrder(order){
@@ -417,12 +418,45 @@ function renderTeamsPreview(){
     </div>
   </div>`;
 }
-function renderTables(s,b){playerTableWrap.innerHTML=`<div class="tableWrap"><table><thead><tr><th>م</th><th>الاسم</th><th>الرصيد</th><th>لعب</th><th>آخر لعب</th></tr></thead><tbody>${s.players.map((p,i)=>`<tr><td>${i+1}</td><td class="${isInactiveFiveMonths(b[p]?.last)?'inactiveName':''}" style="${isInactiveFiveMonths(b[p]?.last)?'background:#f8d7da;color:#842029;font-weight:900;':''}"><span class="tablePlayerLink" onclick="openPlayerProfileDirect('${String(p).replace(/'/g,"\'")}')">${p}</span></td><td class="${clsMoney(b[p]?.balance)}">${moneyBlank(b[p]?.balance)}</td><td>${b[p]?.games||''}</td><td>${formatDateDisplay(b[p]?.last)||''}</td></tr>`).join('')}</tbody></table></div>`;const debt=s.players.filter(p=>(b[p]?.balance||0)<0).length,total=s.players.reduce((sum,p)=>sum+(b[p]?.balance||0),0);reportSummary.innerHTML=`<div class="summaryCards">
-<div class="summaryCard"><span>اللاعبين</span><b>${s.players.length}</b></div>
-<div class="summaryCard"><span>الألعاب</span><b>${s.matches.length}</b></div>
-<div class="summaryCard"><span>مجموع الرصيد</span><b class="${total<0?'negText':total>0?'posText':''}">${moneyBlank(total)}</b></div>
-<div class="summaryCard"><span>إجمالي الإيداعات</span><b class="${total<0?'negText':total>0?'posText':''}">${moneyBlank(total)}</b></div>
-</div>`;reportsList.innerHTML=`<div class="tableWrap"><table><thead><tr><th>الاسم</th><th>الرصيد</th><th>لعب</th><th>آخر لعبة</th><th>الإيداعات</th></tr></thead><tbody>${s.players.map(p=>{const r=b[p]||{};return`<tr><td><span class="tablePlayerLink" onclick="openPlayerProfileDirect('${String(p).replace(/'/g,"\'")}')">${p}</span></td><td class="${clsMoney(r.balance)}">${moneyBlank(r.balance)}</td><td>${r.games||''}</td><td>${formatDateDisplay(r.last)||''}</td><td class="pos">${moneyBlank(r.deposits)}</td></tr>`}).join('')}</tbody></table></div>`}
+function renderTables(s,b){
+  const latestDate=Object.values(b||{}).map(v=>v.last||'').filter(Boolean).sort().pop()||'';
+  const totalBalance=s.players.reduce((sum,p)=>sum+Number(b[p]?.balance||0),0);
+  const totalDeposits=s.players.reduce((sum,p)=>sum+Number(b[p]?.deposits||0),0);
+
+  playerTableWrap.innerHTML=`<div class="tableWrap"><table>
+    <thead><tr><th>م</th><th>الاسم</th><th>الرصيد</th><th>لعب</th><th>آخر لعب</th></tr></thead>
+    <tbody>${s.players.map((p,i)=>`<tr>
+      <td>${i+1}</td>
+      <td class="${isInactiveFiveMonths(b[p]?.last)?'inactiveName':''}" style="${isInactiveFiveMonths(b[p]?.last)?'background:#f8d7da;color:#842029;font-weight:900;':''}">
+        <span class="tablePlayerLink" onclick="openPlayerProfileDirect('${String(p).replace(/'/g,"\\'")}')">${p}</span>
+      </td>
+      <td class="${clsMoney(b[p]?.balance)}">${moneyBlank(b[p]?.balance)}</td>
+      <td>${b[p]?.games||''}</td>
+      <td class="${b[p]?.last && b[p]?.last===latestDate ? 'latestPlayedCellFinal' : ''}">${formatDateDisplay(b[p]?.last)||''}</td>
+    </tr>`).join('')}</tbody>
+  </table></div>`;
+
+  reportSummary.innerHTML=`<div class="summaryCards">
+    <div class="summaryCard"><span>اللاعبين</span><b>${s.players.length}</b></div>
+    <div class="summaryCard"><span>الألعاب</span><b>${s.matches.length}</b></div>
+    <div class="summaryCard"><span>مجموع الرصيد</span><b class="${totalBalance<0?'negText':totalBalance>0?'posText':''}">${moneyBlank(totalBalance)}</b></div>
+    <div class="summaryCard"><span>إجمالي الإيداعات</span><b class="posText">${moneyBlank(totalDeposits)}</b></div>
+  </div>`;
+
+  reportsList.innerHTML=`<div class="tableWrap"><table>
+    <thead><tr><th>الاسم</th><th>الرصيد</th><th>لعب</th><th>آخر لعبة</th><th>الإيداعات</th></tr></thead>
+    <tbody>${s.players.map(p=>{
+      const r=b[p]||{};
+      return `<tr>
+        <td><span class="tablePlayerLink" onclick="openPlayerProfileDirect('${String(p).replace(/'/g,"\\'")}')">${p}</span></td>
+        <td class="${clsMoney(r.balance)}">${moneyBlank(r.balance)}</td>
+        <td>${r.games||''}</td>
+        <td class="${r.last && r.last===latestDate ? 'latestPlayedCellFinal' : ''}">${formatDateDisplay(r.last)||''}</td>
+        <td class="pos">${moneyBlank(r.deposits)}</td>
+      </tr>`;
+    }).join('')}</tbody>
+  </table></div>`;
+}
 function renderAll(){renderNav();setActiveNavButton(currentTabId);renderPageOrder();const s=state();saveNoRender(s);if(!matchDate.value)setDateDisplay('matchDate',today());if(!depositDate.value)setDateDisplay('depositDate',s.settings.lastDepositDate||today());pricePerPlayer.textContent=money(calcPrice());const b=balances(s);playersList.innerHTML=s.players.map(p=>`<div class="nameOnly">${p}</div>`).join('')||'<p class="muted">أضف اللاعبين أولًا.</p>';const opts=s.players.map(p=>`<option>${p}</option>`).join('');guestOwner.innerHTML=opts;depositPlayer.innerHTML=opts;const pf=document.getElementById('playerFilterSelect');if(pf){pf.innerHTML='<option value="">اختر لاعب</option>'+opts; if(!pf.value&&s.players[0])pf.value=s.players[0]; renderPlayerFilter();renderDepositHistory();}matchPlayers.innerHTML=s.players.map(p=>`<label><input class="playerCheck" type="checkbox" value="${p}"> <span>${p}</span></label>`).join('');renderMatchParticipantsPreview();depositQuickButtons.innerHTML=getDepositPresets(s).map(v=>`<span class="quick"><button class="x" type="button" onclick="event.stopPropagation();deleteDepositPreset('${v}')">×</button><span onclick="setDepositAmount('${v}')">${money(v)}</span></span>`).join('')||'<span class="muted">احفظ أول مبلغ ليظهر كزر سريع.</span>';depositsList.innerHTML=[...s.deposits]
 .map((d,i)=>({...d,_i:i,type:(String(d.date||'').replace(/-/g,'/')==='2026/01/01'||String(d.date||'').replace(/-/g,'/')==='1/1/2026')&&!d.type?'initial':d.type}))
 .sort((a,b)=>{
@@ -434,7 +468,11 @@ function renderAll(){renderNav();setActiveNavButton(currentTabId);renderPageOrde
 .map(d=>`<div class="item depositRow" onclick="depositOptions('${d.id}')">
 <span class="depositDateNameRow"><span class="depositDateCell">${formatDateDisplay(d.date)}</span><span class="depositPlayerCell">${d.player}</span></span>
 <span class="${clsMoney(d.amount)} depoAmountGroup"><b>${depositTypeLabel(d)}</b>&nbsp;&nbsp;${money(d.amount)}</span>
-</div>`).join('');teamsMatchSelect.innerHTML=s.matches.sort((a,b)=>b.date.localeCompare(a.date)).map(m=>`<option value="${m.id}">${formatDateDisplay(m.date)}${m.place?' - '+m.place:''}</option>`).join('');renderTempGuests();renderCalendar();renderCalendarList();renderMatchLog(s);renderTeams();renderTables(s,b);updatePrettyDates()}
+</div>`).join('');teamsMatchSelect.innerHTML=s.matches
+.sort((a,b)=>b.date.localeCompare(a.date))
+.map(m=>`<option value="${m.id}">${formatDateDisplay(m.date)} | ${m.place||m.location||''}</option>`)
+.join('');
+renderTempGuests();renderCalendar();renderCalendarList();renderMatchLog(s);renderTeams();renderTables(s,b);updatePrettyDates()}
 function exportData(){const blob=new Blob([JSON.stringify(state(),null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='qatiya-backup.json';a.click()}
 function importData(e){const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{localStorage.setItem('qatiyaState',r.result);renderAll();alert('تم الاستيراد')};r.readAsText(f)}
 if('serviceWorker'in navigator){navigator.serviceWorker.register('sw.js')}setDepositType('in');renderAll();
@@ -477,34 +515,29 @@ function renderDepositHistory(){
 
 
 
-
-
 function openPlayerProfileDirect(playerName){
   try{
-    if(typeof showTab==='function'){
-      showTab('playerFilter');
-    }
-
+    currentTabId='playerFilter';
+    showTab('playerFilter');
     setTimeout(()=>{
       const select=document.getElementById('playerFilterSelect');
-
       if(select){
         select.value=playerName;
-
-        if(typeof renderPlayerFilter==='function'){
-          renderPlayerFilter();
-        }
-
+        renderPlayerFilter();
         select.dispatchEvent(new Event('change'));
       }
-    },200);
-
+    },80);
+    setTimeout(()=>{
+      const select=document.getElementById('playerFilterSelect');
+      if(select){
+        select.value=playerName;
+        renderPlayerFilter();
+      }
+    },220);
   }catch(e){
-    console.log(e);
+    console.log('openPlayerProfileDirect error',e);
   }
 }
-
-
 
 
 function updatePlayersGuestsCount(){
@@ -532,300 +565,3 @@ document.addEventListener('change',function(e){
 setInterval(function(){
   try{updatePlayersGuestsCount()}catch(e){}
 },1000);
-
-
-
-/* ===== تصحيح نهائي ظاهر للبنود 1 و2 و4 ===== */
-function _parseDisplayedDateForFix(txt){
-  txt=String(txt||'').trim();
-  const m=txt.match(/(\d{1,2})[-\/](\d{1,2})[-\/](\d{4})/);
-  if(!m)return '';
-  return `${m[3]}-${String(m[2]).padStart(2,'0')}-${String(m[1]).padStart(2,'0')}`;
-}
-
-function _applyFinalVisibleFixes(){
-  try{
-    const s=state();
-    const b=balances(s);
-
-    /* البند 2: مربع مديونيات = مجموع الرصيد من عمود الرصيد */
-    const totalBalance=s.players.reduce((sum,p)=>sum+Number(b[p]?.balance||0),0);
-    const summary=document.getElementById('reportSummary');
-    if(summary){
-      const cards=[...summary.querySelectorAll('.summaryCard')];
-      const debtCard=cards.find(c=>(c.querySelector('span')?.textContent||'').trim()==='مديونيات');
-      if(debtCard){
-        const label=debtCard.querySelector('span');
-        const val=debtCard.querySelector('b');
-        if(label) label.textContent='مجموع الرصيد';
-        if(val){
-          val.textContent=moneyBlank(totalBalance);
-          val.className=totalBalance<0?'negText':totalBalance>0?'posText':'';
-        }
-      }
-      // إذا كان هناك مربع مكرر باسم مجموع الرصيد قديم، نترك الأول ونحوّل التكرار إلى إجمالي الأرصدة
-      const totalCards=cards.filter(c=>(c.querySelector('span')?.textContent||'').trim()==='مجموع الرصيد');
-      if(totalCards.length>1){
-        const extra=totalCards[1];
-        const label=extra.querySelector('span');
-        if(label) label.textContent='إجمالي الأرصدة';
-      }
-    }
-
-    /* البند 1: أحدث تاريخ فقط في الجدول والتقارير */
-    ['playerTableWrap','reportsList'].forEach(id=>{
-      const wrap=document.getElementById(id);
-      if(!wrap)return;
-      wrap.querySelectorAll('.latestPlayedCellFinal').forEach(td=>td.classList.remove('latestPlayedCellFinal'));
-      const tables=[...wrap.querySelectorAll('table')];
-      tables.forEach(table=>{
-        const headers=[...table.querySelectorAll('thead th')].map(th=>th.textContent.trim());
-        const idx=headers.findIndex(h=>h==='آخر لعب'||h==='آخر لعبة');
-        if(idx<0)return;
-        const cells=[...table.querySelectorAll('tbody tr')].map(tr=>tr.children[idx]).filter(Boolean);
-        const maxIso=cells.map(td=>_parseDisplayedDateForFix(td.textContent)).filter(Boolean).sort().pop();
-        if(!maxIso)return;
-        cells.forEach(td=>{
-          if(_parseDisplayedDateForFix(td.textContent)===maxIso) td.classList.add('latestPlayedCellFinal');
-        });
-      });
-    });
-
-    /* البند 4: قائمة الفريقين = التاريخ | مكان اللعب وبعرض كامل */
-    const sel=document.getElementById('teamsMatchSelect');
-    if(sel){
-      const matchMap=Object.fromEntries((s.matches||[]).map(m=>[m.id,m]));
-      [...sel.options].forEach(opt=>{
-        const m=matchMap[opt.value];
-        if(m) opt.textContent=`${formatDateDisplay(m.date)} | ${m.place||m.location||''}`;
-      });
-      sel.style.width='100%';
-      sel.style.minWidth='100%';
-      sel.style.fontSize='18px';
-      sel.style.padding='12px';
-      sel.style.whiteSpace='nowrap';
-    }
-  }catch(e){
-    console.log('final visible fix error',e);
-  }
-}
-
-/* تشغيل التصحيح بعد كل رسم للصفحة */
-const _oldRenderAllFinalFix=typeof renderAll==='function'?renderAll:null;
-if(_oldRenderAllFinalFix && !_oldRenderAllFinalFix._finalWrapped){
-  renderAll=function(){
-    const r=_oldRenderAllFinalFix.apply(this,arguments);
-    setTimeout(_applyFinalVisibleFixes,50);
-    setTimeout(_applyFinalVisibleFixes,250);
-    return r;
-  };
-  renderAll._finalWrapped=true;
-}
-
-document.addEventListener('DOMContentLoaded',()=>setTimeout(_applyFinalVisibleFixes,200));
-setInterval(_applyFinalVisibleFixes,1500);
-
-
-
-function _fixReportBalanceAndPlayerLinks(){
-  try{
-    const s=state();
-    const b=balances(s);
-    const totalBalance=s.players.reduce((sum,p)=>sum+Number(b[p]?.balance||0),0);
-
-    /* البند 2: تعديل مربع مديونيات أو أي مربع مكرر ليصبح مجموع الرصيد الحقيقي */
-    const summary=document.getElementById('reportSummary');
-    if(summary){
-      const cards=[...summary.querySelectorAll('.summaryCard')];
-      let target=cards.find(c=>(c.querySelector('span')?.textContent||'').trim()==='مديونيات')
-              || cards.find(c=>(c.querySelector('span')?.textContent||'').trim()==='مجموع الرصيد');
-
-      if(target){
-        const label=target.querySelector('span');
-        const value=target.querySelector('b');
-        if(label) label.textContent='مجموع الرصيد';
-        if(value){
-          value.textContent=moneyBlank(totalBalance);
-          value.className=totalBalance<0?'negText':totalBalance>0?'posText':'';
-        }
-      }
-
-      // إذا وجدت بطاقة ثانية باسم مجموع الرصيد، غيّر اسمها حتى لا تتكرر.
-      const totalCards=cards.filter(c=>(c.querySelector('span')?.textContent||'').trim()==='مجموع الرصيد');
-      totalCards.slice(1).forEach(c=>{
-        const label=c.querySelector('span');
-        if(label) label.textContent='إجمالي الأرصدة';
-      });
-    }
-
-    /* البند 3: جعل أسماء الجدول والتقارير قابلة للضغط وتفتح كشف نفس اللاعب */
-    ['playerTableWrap','reportsList'].forEach(id=>{
-      const wrap=document.getElementById(id);
-      if(!wrap)return;
-      const tables=[...wrap.querySelectorAll('table')];
-      tables.forEach(table=>{
-        const headers=[...table.querySelectorAll('thead th')].map(th=>th.textContent.trim());
-        const nameIndex=headers.findIndex(h=>h==='الاسم');
-        if(nameIndex<0)return;
-
-        [...table.querySelectorAll('tbody tr')].forEach(tr=>{
-          const td=tr.children[nameIndex];
-          if(!td)return;
-
-          const existing=td.querySelector('.tablePlayerLink');
-          if(existing){
-            const player=(existing.textContent||'').trim();
-            existing.onclick=function(e){
-              e.stopPropagation();
-              openPlayerProfileDirect(player);
-            };
-            return;
-          }
-
-          const player=(td.textContent||'').trim();
-          if(!player)return;
-          td.innerHTML=`<span class="tablePlayerLink">${player}</span>`;
-          td.querySelector('.tablePlayerLink').onclick=function(e){
-            e.stopPropagation();
-            openPlayerProfileDirect(player);
-          };
-        });
-      });
-    });
-  }catch(e){
-    console.log('fix report/player links error',e);
-  }
-}
-
-const _oldRenderAllFix23=typeof renderAll==='function'?renderAll:null;
-if(_oldRenderAllFix23 && !_oldRenderAllFix23._fix23Wrapped){
-  renderAll=function(){
-    const r=_oldRenderAllFix23.apply(this,arguments);
-    setTimeout(_fixReportBalanceAndPlayerLinks,80);
-    setTimeout(_fixReportBalanceAndPlayerLinks,300);
-    return r;
-  };
-  renderAll._fix23Wrapped=true;
-}
-
-document.addEventListener('click',function(e){
-  const el=e.target.closest('.tablePlayerLink');
-  if(!el)return;
-  const player=(el.textContent||'').trim();
-  if(player){
-    e.preventDefault();
-    e.stopPropagation();
-    openPlayerProfileDirect(player);
-  }
-},true);
-
-document.addEventListener('DOMContentLoaded',()=>setTimeout(_fixReportBalanceAndPlayerLinks,250));
-setInterval(_fixReportBalanceAndPlayerLinks,1500);
-
-
-function applyFinalUserFixes(){
-  try{
-    const s=state();
-    const b=balances(s);
-
-    // FIX 2 مجموع الرصيد
-    const totalBalance=s.players.reduce((sum,p)=>sum+Number(b[p]?.balance||0),0);
-
-    const summary=document.getElementById('reportSummary');
-    if(summary){
-      const cards=[...summary.querySelectorAll('.summaryCard')];
-
-      let target=cards.find(c=>{
-        const t=(c.querySelector('span')?.textContent||'').trim();
-        return t==='مديونيات' || t==='مجموع الرصيد';
-      });
-
-      if(target){
-        const sp=target.querySelector('span');
-        const bb=target.querySelector('b');
-
-        if(sp) sp.textContent='مجموع الرصيد';
-
-        if(bb){
-          bb.textContent=moneyBlank(totalBalance);
-          bb.className=totalBalance<0?'negText':totalBalance>0?'posText':'';
-        }
-      }
-    }
-
-    // FIX 3 فتح كشف اللاعب من الجدول والتقارير
-    ['playerTableWrap','reportsList'].forEach(id=>{
-      const wrap=document.getElementById(id);
-      if(!wrap)return;
-
-      const rows=[...wrap.querySelectorAll('tbody tr')];
-
-      rows.forEach(tr=>{
-        const firstNameCell=tr.children[1] || tr.children[0];
-        if(!firstNameCell)return;
-
-        const player=(firstNameCell.textContent||'').trim();
-        if(!player)return;
-
-        firstNameCell.innerHTML=`<span class="tablePlayerLink">${player}</span>`;
-
-        const link=firstNameCell.querySelector('.tablePlayerLink');
-
-        link.onclick=function(e){
-          e.preventDefault();
-          e.stopPropagation();
-          openPlayerProfileDirect(player);
-        };
-      });
-    });
-
-    // ترتيب الصفحات
-    const nav=document.querySelector('.bottomNav,.tabs,.navTabs,.tabBar');
-    if(nav){
-      const desired=[
-        'لعبة',
-        'الفريقين',
-        'الإيداعات',
-        'التقويم',
-        'الجدول',
-        'التقارير',
-        'كشف لاعب',
-        'السجل',
-        'اللاعبين',
-        'الترتيب',
-        'النسخ'
-      ];
-
-      const items=[...nav.children];
-
-      desired.forEach(name=>{
-        const found=items.find(el=>(el.textContent||'').trim().includes(name));
-        if(found) nav.appendChild(found);
-      });
-    }
-
-  }catch(e){
-    console.log(e);
-  }
-}
-
-const __oldRenderAll=typeof renderAll==='function'?renderAll:null;
-
-if(__oldRenderAll && !__oldRenderAll.__wrappedFinal){
-  renderAll=function(){
-    const r=__oldRenderAll.apply(this,arguments);
-
-    setTimeout(applyFinalUserFixes,100);
-    setTimeout(applyFinalUserFixes,500);
-
-    return r;
-  };
-
-  renderAll.__wrappedFinal=true;
-}
-
-document.addEventListener('DOMContentLoaded',()=>{
-  setTimeout(applyFinalUserFixes,300);
-});
-
-setInterval(applyFinalUserFixes,2000);
