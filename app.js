@@ -450,7 +450,6 @@ function renderTables(s,b){
     <div class="summaryCard"><span>اللاعبين</span><b>${s.players.length}</b></div>
     <div class="summaryCard"><span>الألعاب</span><b>${s.matches.length}</b></div>
     <div class="summaryCard"><span>إجمالي الرصيد</span><b class="${total<0?'negText':total>0?'posText':''}">${moneyBlank(total)}</b></div>
-    <div class="summaryCard"><span>إجمالي الأرصدة</span><b class="${total<0?'negText':total>0?'posText':''}">${moneyBlank(total)}</b></div>
   </div>`;
 
   reportsList.innerHTML=`<div class="tableWrap"><table>

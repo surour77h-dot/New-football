@@ -2160,3 +2160,57 @@ direction:ltr!important;
   background:#ffffff !important;
   color:inherit !important;
 }
+
+
+/* صفحة الجدول: تنسيق مربعات البيانات مع عرض الجدول */
+#playerTableWrap > .summaryCards{
+  width:100% !important;
+  margin:0 0 8px 0 !important;
+  display:grid !important;
+  grid-template-columns:repeat(3, minmax(0,1fr)) !important;
+  gap:6px !important;
+}
+
+#playerTableWrap > .summaryCards .summaryCard{
+  margin:0 !important;
+  min-width:0 !important;
+  padding:8px 6px !important;
+  border-radius:12px !important;
+}
+
+#playerTableWrap > .summaryCards .summaryCard span{
+  font-size:11px !important;
+  white-space:nowrap !important;
+}
+
+#playerTableWrap > .summaryCards .summaryCard b{
+  font-size:14px !important;
+}
+
+/* iPhone */
+@media (max-width:430px){
+  #playerTableWrap > .summaryCards{
+    grid-template-columns:repeat(3, minmax(0,1fr)) !important;
+    gap:4px !important;
+  }
+  #playerTableWrap > .summaryCards .summaryCard{
+    padding:6px 4px !important;
+  }
+  #playerTableWrap > .summaryCards .summaryCard span{
+    font-size:9.5px !important;
+  }
+  #playerTableWrap > .summaryCards .summaryCard b{
+    font-size:12px !important;
+  }
+}
+
+/* iPad mini */
+@media (min-width:700px){
+  #playerTableWrap > .summaryCards{
+    grid-template-columns:repeat(3, minmax(0,1fr)) !important;
+    gap:8px !important;
+  }
+  #playerTableWrap > .summaryCards .summaryCard{
+    padding:10px 8px !important;
+  }
+}
