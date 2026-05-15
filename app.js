@@ -1,15 +1,4 @@
 
-function latestPlayedDateOnly(b){
-  return Object.values(b||{}).map(x=>x.last||'').filter(Boolean).sort().pop()||'';
-}
-
-function isLatestPlayedDate(b,lastDate){
-  if(!lastDate)return false;
-  const latest=Object.values(b||{}).map(x=>x.last||'').filter(Boolean).sort().pop();
-  return latest===lastDate;
-}
-
-
 function depositTypeLabel(d){
  const dt=(d.date||'').replace(/-/g,'/');
  if(dt==='2026/01/01'||dt==='1/1/2026') return 'إيداع مبدئي';
@@ -429,26 +418,28 @@ function renderTeamsPreview(){
   </div>`;
 }
 function renderTables(s,b){
-  const latestDate=latestPlayedDateOnly(b);
+  const latestDate=Object.values(b||{}).map(x=>x.last||'').filter(Boolean).sort().pop()||'';
+  const totalBalance=s.players.reduce((sum,p)=>sum+Number(b[p]?.balance||0),0);
+  const debt=s.players.filter(p=>(b[p]?.balance||0)<0).length;
+  const total=s.players.reduce((sum,p)=>sum+(b[p]?.balance||0),0);
 
   playerTableWrap.innerHTML=`<div class="tableWrap"><table>
     <thead><tr><th>م</th><th>الاسم</th><th>الرصيد</th><th>لعب</th><th>آخر لعب</th></tr></thead>
     <tbody>${s.players.map((p,i)=>`<tr>
       <td>${i+1}</td>
-      <td class="${isInactiveFiveMonths(b[p]?.last)?'inactiveName':''}" style="${isInactiveFiveMonths(b[p]?.last)?'background:#f8d7da;color:#842029;font-weight:900;':''}">${p}</td>
+      <td class="${isInactiveFiveMonths(b[p]?.last)?'inactiveName':''}" style="${isInactiveFiveMonths(b[p]?.last)?'background:#f8d7da;color:#842029;font-weight:900;':''}">
+        <span class="tablePlayerLink" onclick="openPlayerProfileDirect('${String(p).replace(/'/g,"\\'")}')">${p}</span>
+      </td>
       <td class="${clsMoney(b[p]?.balance)}">${moneyBlank(b[p]?.balance)}</td>
       <td>${b[p]?.games||''}</td>
-      <td class="${b[p]?.last && b[p]?.last===latestDate ? 'lastGameColumn latestPlayedCell' : 'lastGameColumn'}"><span class="${b[p]?.last && b[p]?.last===latestDate ? 'latestPlayedDate' : 'normalPlayedDate'}">${formatDateDisplay(b[p]?.last)||''}</span></td>
+      <td class="${b[p]?.last && b[p]?.last===latestDate ? 'latestPlayedCell' : ''}">${formatDateDisplay(b[p]?.last)||''}</td>
     </tr>`).join('')}</tbody>
   </table></div>`;
-
-  const debt=s.players.filter(p=>(b[p]?.balance||0)<0).length;
-  const total=s.players.reduce((sum,p)=>sum+(b[p]?.balance||0),0);
 
   reportSummary.innerHTML=`<div class="summaryCards">
     <div class="summaryCard"><span>اللاعبين</span><b>${s.players.length}</b></div>
     <div class="summaryCard"><span>الألعاب</span><b>${s.matches.length}</b></div>
-    <div class="summaryCard"><span>مديونيات</span><b class="${debt?'negText':''}">${debt||''}</b></div>
+    <div class="summaryCard"><span>مجموع الرصيد</span><b class="${totalBalance<0?'negText':totalBalance>0?'posText':''}">${moneyBlank(totalBalance)}</b></div>
     <div class="summaryCard"><span>إجمالي الأرصدة</span><b class="${total<0?'negText':total>0?'posText':''}">${moneyBlank(total)}</b></div>
   </div>`;
 
@@ -456,7 +447,13 @@ function renderTables(s,b){
     <thead><tr><th>الاسم</th><th>الرصيد</th><th>لعب</th><th>آخر لعبة</th><th>الإيداعات</th></tr></thead>
     <tbody>${s.players.map(p=>{
       const r=b[p]||{};
-      return `<tr><td>${p}</td><td class="${clsMoney(r.balance)}">${moneyBlank(r.balance)}</td><td>${r.games||''}</td><td>${formatDateDisplay(r.last)||''}</td><td class="pos">${moneyBlank(r.deposits)}</td></tr>`;
+      return `<tr>
+        <td><span class="tablePlayerLink" onclick="openPlayerProfileDirect('${String(p).replace(/'/g,"\\'")}')">${p}</span></td>
+        <td class="${clsMoney(r.balance)}">${moneyBlank(r.balance)}</td>
+        <td>${r.games||''}</td>
+        <td class="${r.last && r.last===latestDate ? 'latestPlayedCell' : ''}">${formatDateDisplay(r.last)||''}</td>
+        <td class="pos">${moneyBlank(r.deposits)}</td>
+      </tr>`;
     }).join('')}</tbody>
   </table></div>`;
 }
@@ -471,7 +468,8 @@ function renderAll(){renderNav();setActiveNavButton(currentTabId);renderPageOrde
 .map(d=>`<div class="item depositRow" onclick="depositOptions('${d.id}')">
 <span class="depositDateNameRow"><span class="depositDateCell">${formatDateDisplay(d.date)}</span><span class="depositPlayerCell">${d.player}</span></span>
 <span class="${clsMoney(d.amount)} depoAmountGroup"><b>${depositTypeLabel(d)}</b>&nbsp;&nbsp;${money(d.amount)}</span>
-</div>`).join('');teamsMatchSelect.innerHTML=s.matches.sort((a,b)=>b.date.localeCompare(a.date)).map(m=>`<option value="${m.id}">${formatDateDisplay(m.date)}${m.place?' - '+m.place:''}</option>`).join('');renderTempGuests();renderCalendar();renderCalendarList();renderMatchLog(s);renderTeams();renderTables(s,b);updatePrettyDates()}
+</div>`).join('');teamsMatchSelect.innerHTML=s.matches.sort((a,b)=>b.date.localeCompare(a.date)).map(m=>`<option value="${m.id}">${formatDateDisplay(m.date)} | ${m.place||m.location||''}</option>`).join('');
+renderTempGuests();renderCalendar();renderCalendarList();renderMatchLog(s);renderTeams();renderTables(s,b);updatePrettyDates()}
 function exportData(){const blob=new Blob([JSON.stringify(state(),null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='qatiya-backup.json';a.click()}
 function importData(e){const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{localStorage.setItem('qatiyaState',r.result);renderAll();alert('تم الاستيراد')};r.readAsText(f)}
 if('serviceWorker'in navigator){navigator.serviceWorker.register('sw.js')}setDepositType('in');renderAll();
