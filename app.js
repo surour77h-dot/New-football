@@ -478,21 +478,32 @@ function renderDepositHistory(){
 
 
 
+
 function openPlayerProfileDirect(playerName){
   try{
-    currentTabId='playerFilter';
-    showTab('playerFilter');
+    if(typeof showTab==='function'){
+      showTab('playerFilter');
+    }
+
     setTimeout(()=>{
       const select=document.getElementById('playerFilterSelect');
+
       if(select){
         select.value=playerName;
-        renderPlayerFilter();
+
+        if(typeof renderPlayerFilter==='function'){
+          renderPlayerFilter();
+        }
+
+        select.dispatchEvent(new Event('change'));
       }
-    },150);
+    },200);
+
   }catch(e){
-    console.log('open player profile error',e);
+    console.log(e);
   }
 }
+
 
 
 
@@ -711,3 +722,110 @@ document.addEventListener('click',function(e){
 document.addEventListener('DOMContentLoaded',()=>setTimeout(_fixReportBalanceAndPlayerLinks,250));
 setInterval(_fixReportBalanceAndPlayerLinks,1500);
 
+
+function applyFinalUserFixes(){
+  try{
+    const s=state();
+    const b=balances(s);
+
+    // FIX 2 مجموع الرصيد
+    const totalBalance=s.players.reduce((sum,p)=>sum+Number(b[p]?.balance||0),0);
+
+    const summary=document.getElementById('reportSummary');
+    if(summary){
+      const cards=[...summary.querySelectorAll('.summaryCard')];
+
+      let target=cards.find(c=>{
+        const t=(c.querySelector('span')?.textContent||'').trim();
+        return t==='مديونيات' || t==='مجموع الرصيد';
+      });
+
+      if(target){
+        const sp=target.querySelector('span');
+        const bb=target.querySelector('b');
+
+        if(sp) sp.textContent='مجموع الرصيد';
+
+        if(bb){
+          bb.textContent=moneyBlank(totalBalance);
+          bb.className=totalBalance<0?'negText':totalBalance>0?'posText':'';
+        }
+      }
+    }
+
+    // FIX 3 فتح كشف اللاعب من الجدول والتقارير
+    ['playerTableWrap','reportsList'].forEach(id=>{
+      const wrap=document.getElementById(id);
+      if(!wrap)return;
+
+      const rows=[...wrap.querySelectorAll('tbody tr')];
+
+      rows.forEach(tr=>{
+        const firstNameCell=tr.children[1] || tr.children[0];
+        if(!firstNameCell)return;
+
+        const player=(firstNameCell.textContent||'').trim();
+        if(!player)return;
+
+        firstNameCell.innerHTML=`<span class="tablePlayerLink">${player}</span>`;
+
+        const link=firstNameCell.querySelector('.tablePlayerLink');
+
+        link.onclick=function(e){
+          e.preventDefault();
+          e.stopPropagation();
+          openPlayerProfileDirect(player);
+        };
+      });
+    });
+
+    // ترتيب الصفحات
+    const nav=document.querySelector('.bottomNav,.tabs,.navTabs,.tabBar');
+    if(nav){
+      const desired=[
+        'لعبة',
+        'الفريقين',
+        'الإيداعات',
+        'التقويم',
+        'الجدول',
+        'التقارير',
+        'كشف لاعب',
+        'السجل',
+        'اللاعبين',
+        'الترتيب',
+        'النسخ'
+      ];
+
+      const items=[...nav.children];
+
+      desired.forEach(name=>{
+        const found=items.find(el=>(el.textContent||'').trim().includes(name));
+        if(found) nav.appendChild(found);
+      });
+    }
+
+  }catch(e){
+    console.log(e);
+  }
+}
+
+const __oldRenderAll=typeof renderAll==='function'?renderAll:null;
+
+if(__oldRenderAll && !__oldRenderAll.__wrappedFinal){
+  renderAll=function(){
+    const r=__oldRenderAll.apply(this,arguments);
+
+    setTimeout(applyFinalUserFixes,100);
+    setTimeout(applyFinalUserFixes,500);
+
+    return r;
+  };
+
+  renderAll.__wrappedFinal=true;
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+  setTimeout(applyFinalUserFixes,300);
+});
+
+setInterval(applyFinalUserFixes,2000);

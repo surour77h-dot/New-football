@@ -2118,3 +2118,15 @@ direction:ltr!important;
 .tablePlayerLink:hover{
   opacity:.8 !important;
 }
+
+
+.tablePlayerLink{
+ cursor:pointer !important;
+ font-weight:700 !important;
+ color:inherit !important;
+ text-decoration:none !important;
+}
+
+.tablePlayerLink:hover{
+ opacity:.85 !important;
+}
