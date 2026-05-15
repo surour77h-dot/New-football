@@ -2106,3 +2106,15 @@ direction:ltr!important;
   font-size:18px !important;
   white-space:nowrap !important;
 }
+
+
+/* البند 3: أسماء اللاعبين في الجدول والتقارير قابلة للضغط */
+.tablePlayerLink{
+  cursor:pointer !important;
+  color:inherit !important;
+  text-decoration:none !important;
+  font-weight:700 !important;
+}
+.tablePlayerLink:hover{
+  opacity:.8 !important;
+}

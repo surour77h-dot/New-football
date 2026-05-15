@@ -477,20 +477,23 @@ function renderDepositHistory(){
 
 
 
-function openPlayerProfileDirect(playerName){
-  currentTabId='playerFilter';
-  document.querySelectorAll('section').forEach(s=>s.classList.remove('active'));
-  const sec=document.getElementById('playerFilter');
-  if(sec) sec.classList.add('active');
 
-  setTimeout(()=>{
-    const select=document.getElementById('playerFilterSelect');
-    if(select){
-      select.value=playerName;
-      renderPlayerFilter();
-    }
-  },150);
+function openPlayerProfileDirect(playerName){
+  try{
+    currentTabId='playerFilter';
+    showTab('playerFilter');
+    setTimeout(()=>{
+      const select=document.getElementById('playerFilterSelect');
+      if(select){
+        select.value=playerName;
+        renderPlayerFilter();
+      }
+    },150);
+  }catch(e){
+    console.log('open player profile error',e);
+  }
 }
+
 
 
 function updatePlayersGuestsCount(){
@@ -610,4 +613,101 @@ if(_oldRenderAllFinalFix && !_oldRenderAllFinalFix._finalWrapped){
 
 document.addEventListener('DOMContentLoaded',()=>setTimeout(_applyFinalVisibleFixes,200));
 setInterval(_applyFinalVisibleFixes,1500);
+
+
+
+function _fixReportBalanceAndPlayerLinks(){
+  try{
+    const s=state();
+    const b=balances(s);
+    const totalBalance=s.players.reduce((sum,p)=>sum+Number(b[p]?.balance||0),0);
+
+    /* البند 2: تعديل مربع مديونيات أو أي مربع مكرر ليصبح مجموع الرصيد الحقيقي */
+    const summary=document.getElementById('reportSummary');
+    if(summary){
+      const cards=[...summary.querySelectorAll('.summaryCard')];
+      let target=cards.find(c=>(c.querySelector('span')?.textContent||'').trim()==='مديونيات')
+              || cards.find(c=>(c.querySelector('span')?.textContent||'').trim()==='مجموع الرصيد');
+
+      if(target){
+        const label=target.querySelector('span');
+        const value=target.querySelector('b');
+        if(label) label.textContent='مجموع الرصيد';
+        if(value){
+          value.textContent=moneyBlank(totalBalance);
+          value.className=totalBalance<0?'negText':totalBalance>0?'posText':'';
+        }
+      }
+
+      // إذا وجدت بطاقة ثانية باسم مجموع الرصيد، غيّر اسمها حتى لا تتكرر.
+      const totalCards=cards.filter(c=>(c.querySelector('span')?.textContent||'').trim()==='مجموع الرصيد');
+      totalCards.slice(1).forEach(c=>{
+        const label=c.querySelector('span');
+        if(label) label.textContent='إجمالي الأرصدة';
+      });
+    }
+
+    /* البند 3: جعل أسماء الجدول والتقارير قابلة للضغط وتفتح كشف نفس اللاعب */
+    ['playerTableWrap','reportsList'].forEach(id=>{
+      const wrap=document.getElementById(id);
+      if(!wrap)return;
+      const tables=[...wrap.querySelectorAll('table')];
+      tables.forEach(table=>{
+        const headers=[...table.querySelectorAll('thead th')].map(th=>th.textContent.trim());
+        const nameIndex=headers.findIndex(h=>h==='الاسم');
+        if(nameIndex<0)return;
+
+        [...table.querySelectorAll('tbody tr')].forEach(tr=>{
+          const td=tr.children[nameIndex];
+          if(!td)return;
+
+          const existing=td.querySelector('.tablePlayerLink');
+          if(existing){
+            const player=(existing.textContent||'').trim();
+            existing.onclick=function(e){
+              e.stopPropagation();
+              openPlayerProfileDirect(player);
+            };
+            return;
+          }
+
+          const player=(td.textContent||'').trim();
+          if(!player)return;
+          td.innerHTML=`<span class="tablePlayerLink">${player}</span>`;
+          td.querySelector('.tablePlayerLink').onclick=function(e){
+            e.stopPropagation();
+            openPlayerProfileDirect(player);
+          };
+        });
+      });
+    });
+  }catch(e){
+    console.log('fix report/player links error',e);
+  }
+}
+
+const _oldRenderAllFix23=typeof renderAll==='function'?renderAll:null;
+if(_oldRenderAllFix23 && !_oldRenderAllFix23._fix23Wrapped){
+  renderAll=function(){
+    const r=_oldRenderAllFix23.apply(this,arguments);
+    setTimeout(_fixReportBalanceAndPlayerLinks,80);
+    setTimeout(_fixReportBalanceAndPlayerLinks,300);
+    return r;
+  };
+  renderAll._fix23Wrapped=true;
+}
+
+document.addEventListener('click',function(e){
+  const el=e.target.closest('.tablePlayerLink');
+  if(!el)return;
+  const player=(el.textContent||'').trim();
+  if(player){
+    e.preventDefault();
+    e.stopPropagation();
+    openPlayerProfileDirect(player);
+  }
+},true);
+
+document.addEventListener('DOMContentLoaded',()=>setTimeout(_fixReportBalanceAndPlayerLinks,250));
+setInterval(_fixReportBalanceAndPlayerLinks,1500);
 
