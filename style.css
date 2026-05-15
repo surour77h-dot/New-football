@@ -2219,3 +2219,81 @@ direction:ltr!important;
     overflow:visible !important;
   }
 }
+
+
+/* ===== Reapplied final requirements ===== */
+
+/* أحدث تاريخ فقط في الجدول والتقارير */
+#playerTableWrap td.latestPlayedCellFinal,
+#reportsList td.latestPlayedCellFinal{
+  background:#ffe8cc !important;
+  color:#9a4f00 !important;
+  border-radius:10px !important;
+  font-weight:900 !important;
+}
+
+/* أسماء اللاعبين قابلة للضغط */
+.tablePlayerLink{
+  cursor:pointer !important;
+  color:inherit !important;
+  font-weight:700 !important;
+  text-decoration:none !important;
+}
+.tablePlayerLink:hover{
+  opacity:.85 !important;
+}
+
+/* تعريض قائمة الفريقين لتأخذ كامل إطار المربع */
+#teams .card,
+#teams .card label{
+  width:100% !important;
+  max-width:100% !important;
+  overflow:visible !important;
+}
+#teamsMatchSelect{
+  display:block !important;
+  width:100% !important;
+  min-width:100% !important;
+  max-width:100% !important;
+  box-sizing:border-box !important;
+  font-size:18px !important;
+  padding:12px !important;
+  min-height:50px !important;
+  white-space:nowrap !important;
+  overflow:hidden !important;
+  text-overflow:ellipsis !important;
+}
+#teamsMatchSelect option{
+  font-size:18px !important;
+  white-space:nowrap !important;
+}
+
+/* توافق iPhone */
+@media (max-width:430px){
+  main{padding:8px !important;}
+  #teamsMatchSelect{
+    font-size:16px !important;
+    min-height:46px !important;
+    padding:10px !important;
+  }
+  #playerTableWrap td,
+  #reportsList td{
+    font-size:10px !important;
+  }
+}
+
+/* توافق iPad mini */
+@media (min-width:700px) and (max-width:900px){
+  main{
+    max-width:760px !important;
+    margin:0 auto !important;
+  }
+  #teamsMatchSelect{
+    font-size:20px !important;
+    min-height:54px !important;
+    padding:13px !important;
+  }
+  #teams .card{
+    padding:16px !important;
+  }
+}

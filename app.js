@@ -526,14 +526,7 @@ function openPlayerProfileDirect(playerName){
         renderPlayerFilter();
         select.dispatchEvent(new Event('change'));
       }
-    },80);
-    setTimeout(()=>{
-      const select=document.getElementById('playerFilterSelect');
-      if(select){
-        select.value=playerName;
-        renderPlayerFilter();
-      }
-    },220);
+    },100);
   }catch(e){
     console.log('openPlayerProfileDirect error',e);
   }
