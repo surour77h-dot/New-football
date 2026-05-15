@@ -2297,3 +2297,9 @@ direction:ltr!important;
     padding:16px !important;
   }
 }
+
+
+/* FORCE UPDATE VISIBLE */
+nav{
+ outline:3px solid #0f5132 !important;
+}
