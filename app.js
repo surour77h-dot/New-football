@@ -72,7 +72,7 @@ function guestLabel(g){
 function moneyBlank(n){n=Number(n||0);return n===0?'':money(n)}
 const defaultPages=[
  ['newMatch','لعبة'],['players','اللاعبين'],['deposits','الإيداعات'],['calendar','التقويم'],
- ['matchLog','السجل'],['teams','الفريقين'],['playerTable','الجدول'],['reports','التقارير'],
+ ['matchLog','السجل'],['teams','الفريقين'],['playerTable','الجدول'],
  ['backup','النسخ'],['playerFilter','كشف لاعب'],['settings','الترتيب']
 ];
 function getPageOrder(){
