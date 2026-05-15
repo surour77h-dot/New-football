@@ -2104,3 +2104,28 @@ direction:ltr!important;
 #playerTableWrap .lastPlayedDate:empty{
   display:none !important;
 }
+
+
+/* آخر لعبة: لا يتم تلوين كل التواريخ */
+#playerTableWrap .lastPlayedDate{
+  background:transparent !important;
+  color:inherit !important;
+  padding:0 !important;
+  border-radius:0 !important;
+  font-weight:700 !important;
+}
+
+/* فقط أحدث تاريخ تم اللعب به يكون برتقالي فاتح */
+#playerTableWrap .latestPlayedDate{
+  display:inline-block !important;
+  background:#ffe8cc !important;
+  color:#9a4f00 !important;
+  border-radius:8px !important;
+  padding:4px 8px !important;
+  font-weight:800 !important;
+  white-space:nowrap !important;
+}
+
+#playerTableWrap .lastPlayedDate:empty{
+  display:none !important;
+}

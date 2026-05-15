@@ -1,4 +1,11 @@
 
+function isLatestPlayedDate(b,lastDate){
+  if(!lastDate)return false;
+  const latest=Object.values(b||{}).map(x=>x.last||'').filter(Boolean).sort().pop();
+  return latest===lastDate;
+}
+
+
 function depositTypeLabel(d){
  const dt=(d.date||'').replace(/-/g,'/');
  if(dt==='2026/01/01'||dt==='1/1/2026') return 'إيداع مبدئي';
@@ -417,7 +424,7 @@ function renderTeamsPreview(){
     </div>
   </div>`;
 }
-function renderTables(s,b){playerTableWrap.innerHTML=`<div class="tableWrap"><table><thead><tr><th>م</th><th>الاسم</th><th>الرصيد</th><th>لعب</th><th>آخر لعب</th></tr></thead><tbody>${s.players.map((p,i)=>`<tr><td>${i+1}</td><td class="${isInactiveFiveMonths(b[p]?.last)?'inactiveName':''}" style="${isInactiveFiveMonths(b[p]?.last)?'background:#f8d7da;color:#842029;font-weight:900;':''}"><span class="tablePlayerLink" onclick="openPlayerProfileDirect('${String(p).replace(/'/g,"\'")}')">${p}</span></td><td class="${clsMoney(b[p]?.balance)}">${moneyBlank(b[p]?.balance)}</td><td>${b[p]?.games||''}</td><td class="lastGameColumn"><span class="lastPlayedDate">${formatDateDisplay(b[p]?.last)||''}</span></td></tr>`).join('')}</tbody></table></div>`;const debt=s.players.filter(p=>(b[p]?.balance||0)<0).length,total=s.players.reduce((sum,p)=>sum+(b[p]?.balance||0),0);reportSummary.innerHTML=`<div class="summaryCards">
+function renderTables(s,b){playerTableWrap.innerHTML=`<div class="tableWrap"><table><thead><tr><th>م</th><th>الاسم</th><th>الرصيد</th><th>لعب</th><th>آخر لعب</th></tr></thead><tbody>${s.players.map((p,i)=>`<tr><td>${i+1}</td><td class="${isInactiveFiveMonths(b[p]?.last)?'inactiveName':''}" style="${isInactiveFiveMonths(b[p]?.last)?'background:#f8d7da;color:#842029;font-weight:900;':''}"><span class="tablePlayerLink" onclick="openPlayerProfileDirect('${String(p).replace(/'/g,"\'")}')">${p}</span></td><td class="${clsMoney(b[p]?.balance)}">${moneyBlank(b[p]?.balance)}</td><td>${b[p]?.games||''}</td><td class="lastGameColumn"><span class="${isLatestPlayedDate(b,b[p]?.last)?'lastPlayedDate latestPlayedDate':'lastPlayedDate'}">${formatDateDisplay(b[p]?.last)||''}</span></td></tr>`).join('')}</tbody></table></div>`;const debt=s.players.filter(p=>(b[p]?.balance||0)<0).length,total=s.players.reduce((sum,p)=>sum+(b[p]?.balance||0),0);reportSummary.innerHTML=`<div class="summaryCards">
 <div class="summaryCard"><span>اللاعبين</span><b>${s.players.length}</b></div>
 <div class="summaryCard"><span>الألعاب</span><b>${s.matches.length}</b></div>
 <div class="summaryCard"><span>مجموع الرصيد</span><b class="${total<0?'negText':total>0?'posText':''}">${moneyBlank(total)}</b></div>
