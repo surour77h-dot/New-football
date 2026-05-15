@@ -2083,126 +2083,26 @@ direction:ltr!important;
 }
 
 
-/* قائمة الفريقين بسطر واحد */
-#teamsMatchSelect{
-  white-space:nowrap !important;
-  overflow:hidden !important;
-  text-overflow:ellipsis !important;
-}
-
-
-/* قائمة الفريقين سطر واحد */
-#teamsMatchSelect{
-  white-space:nowrap !important;
-  overflow:hidden !important;
-  text-overflow:ellipsis !important;
-}
-
-#teamsMatchSelect option{
-  white-space:nowrap !important;
-}
-
-
-/* تأكيد لون آخر لعبة */
-.lastGameCell,
-#playerTableWrap table td:last-child,
-#reportsList table td:nth-child(4){
-  background:#eef4ff !important;
-  color:#174a8b !important;
-  font-weight:700 !important;
-  border-radius:6px !important;
-}
-
-/* قائمة الفريقين سطر واحد */
-#teamsMatchSelect{
-  white-space:nowrap !important;
-  overflow:hidden !important;
-  text-overflow:ellipsis !important;
-  width:100% !important;
-}
-#teamsMatchSelect option{
-  white-space:nowrap !important;
-}
-
-
-/* تأكيد قائمة الفريقين بسطر واحد: التاريخ ثم مكان اللعب */
-#teamsMatchSelect{
-  white-space:nowrap !important;
-  overflow:hidden !important;
-  text-overflow:ellipsis !important;
-  width:100% !important;
-  direction:rtl !important;
-}
-#teamsMatchSelect option{
-  white-space:nowrap !important;
-}
-
-/* آخر لعبة بلون مغاير */
-.lastGameCell,
-#playerTableWrap table td:last-child,
-#reportsList table td:nth-child(4){
-  background:#eef4ff !important;
-  color:#174a8b !important;
-  font-weight:700 !important;
-}
-
-
-/* ===== روابط أسماء اللاعبين في الجدول والتقارير ===== */
-.tablePlayerLink{
-  cursor:pointer !important;
-  color:inherit !important;
-  font-weight:700 !important;
-  text-decoration:none !important;
-}
-.tablePlayerLink:hover{
-  opacity:.85 !important;
-}
-
-/* ===== تلوين أحدث تاريخ فقط في الجدول والتقارير ===== */
-#playerTableWrap td.latestPlayedCell,
-#reportsList td.latestPlayedCell{
+/* البند 1: تلوين كامل مربع أحدث تاريخ فقط */
+#playerTableWrap td.latestPlayedCellFinal,
+#reportsList td.latestPlayedCellFinal{
   background:#ffe8cc !important;
   color:#9a4f00 !important;
   border-radius:10px !important;
   font-weight:800 !important;
 }
 
-/* ===== تكبير عرض القائمة المنسدلة في صفحة الفريقين ===== */
+/* البند 4: تكبير القائمة المنسدلة في الفريقين */
 #teamsMatchSelect{
   width:100% !important;
   min-width:100% !important;
+  max-width:100% !important;
   font-size:18px !important;
   padding:12px !important;
   white-space:nowrap !important;
+  box-sizing:border-box !important;
 }
 #teamsMatchSelect option{
   font-size:18px !important;
   white-space:nowrap !important;
-}
-
-
-#teamsMatchSelect{
- width:100% !important;
- min-width:100% !important;
- max-width:100% !important;
- font-size:20px !important;
- padding:14px !important;
-}
-
-#teamsMatchSelect option{
- font-size:20px !important;
- white-space:nowrap !important;
-}
-
-#playerTableWrap td.latestPlayedCell,
-#reportsList td.latestPlayedCell{
- background:#ffe8cc !important;
- color:#9a4f00 !important;
- border-radius:10px !important;
- font-weight:800 !important;
-}
-
-.tablePlayerLink{
- cursor:pointer !important;
- font-weight:700 !important;
 }
