@@ -2121,3 +2121,12 @@ direction:ltr!important;
 #playerTableWrap .latestPlayedDate:empty{
   display:none !important;
 }
+
+
+/* تلوين كامل خلية أحدث تاريخ */
+#playerTableWrap td.latestPlayedCell{
+  background:#ffe8cc !important;
+  color:#9a4f00 !important;
+  border-radius:10px !important;
+  font-weight:800 !important;
+}

@@ -438,7 +438,7 @@ function renderTables(s,b){
       <td class="${isInactiveFiveMonths(b[p]?.last)?'inactiveName':''}" style="${isInactiveFiveMonths(b[p]?.last)?'background:#f8d7da;color:#842029;font-weight:900;':''}">${p}</td>
       <td class="${clsMoney(b[p]?.balance)}">${moneyBlank(b[p]?.balance)}</td>
       <td>${b[p]?.games||''}</td>
-      <td class="lastGameColumn"><span class="${b[p]?.last && b[p]?.last===latestDate ? 'latestPlayedDate' : 'normalPlayedDate'}">${formatDateDisplay(b[p]?.last)||''}</span></td>
+      <td class="${b[p]?.last && b[p]?.last===latestDate ? 'lastGameColumn latestPlayedCell' : 'lastGameColumn'}"><span class="${b[p]?.last && b[p]?.last===latestDate ? 'latestPlayedDate' : 'normalPlayedDate'}">${formatDateDisplay(b[p]?.last)||''}</span></td>
     </tr>`).join('')}</tbody>
   </table></div>`;
 
