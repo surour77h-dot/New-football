@@ -2123,25 +2123,3 @@ direction:ltr!important;
 #teamsMatchSelect option{
   white-space:nowrap !important;
 }
-
-
-/* تأكيد قائمة الفريقين بسطر واحد: التاريخ ثم مكان اللعب */
-#teamsMatchSelect{
-  white-space:nowrap !important;
-  overflow:hidden !important;
-  text-overflow:ellipsis !important;
-  width:100% !important;
-  direction:rtl !important;
-}
-#teamsMatchSelect option{
-  white-space:nowrap !important;
-}
-
-/* آخر لعبة بلون مغاير */
-.lastGameCell,
-#playerTableWrap table td:last-child,
-#reportsList table td:nth-child(4){
-  background:#eef4ff !important;
-  color:#174a8b !important;
-  font-weight:700 !important;
-}
