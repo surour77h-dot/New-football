@@ -2145,19 +2145,3 @@ direction:ltr!important;
   color:#174a8b !important;
   font-weight:700 !important;
 }
-
-
-/* آخر لعبة بلون مغاير */
-.lastGameCell,
-#playerTableWrap table td:last-child,
-#reportsList table td:nth-child(4){
-  background:#eef4ff !important;
-  color:#174a8b !important;
-  font-weight:700 !important;
-}
-
-/* قائمة الفريقين: محاولة منع التفاف الاختيار */
-#teamsMatchSelect,
-#teamsMatchSelect option{
-  white-space:nowrap !important;
-}
