@@ -2979,3 +2979,11 @@ direction:ltr!important;
     0 7px 20px rgba(0,0,0,.10),
     0 18px 44px rgba(0,0,0,.08) !important;
 }
+
+
+/* زر إيداع عند عدم الاختيار = أخضر فاتح بدل الأزرق */
+#depositTypeIn:not(.selectedDepositBtn){
+  background:#d1fae5 !important;
+  color:#065f46 !important;
+  border-color:#86efac !important;
+}
