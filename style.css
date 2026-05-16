@@ -2377,3 +2377,31 @@ direction:ltr!important;
 .card .item:has(> b:first-child) span.neg{
   color:#b35c00 !important;
 }
+
+
+/* مجموع خصومات أيام اللعب:
+   خلفية مبلغ برتقالي داكن */
+
+.gamesTotalRow .neg,
+.gamesTotalRow span.neg{
+  background:#d97706 !important;
+  color:#ffffff !important;
+  padding:4px 10px !important;
+  border-radius:999px !important;
+}
+
+/* مجموع خصومات الأسماء التي أحضرها:
+   خلفية أحمر فاتح */
+
+.card .item:has(> b:first-child){
+  background:#fff5f5 !important;
+  border:1px solid #f3c2c2 !important;
+}
+
+.card .item:has(> b:first-child) .neg,
+.card .item:has(> b:first-child) span.neg{
+  background:#f8d7da !important;
+  color:#b42318 !important;
+  padding:4px 10px !important;
+  border-radius:999px !important;
+}
