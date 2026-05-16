@@ -2263,3 +2263,47 @@ direction:ltr!important;
     padding:14px 16px !important;
   }
 }
+
+
+/* صفحة الإيداعات:
+   التاريخ + الاسم + المبلغ في نفس السطر على iPhone و iPad */
+
+#depositsList .row,
+#depositsList .depositRow,
+#depositsList .txRow,
+#depositsList li{
+  display:flex !important;
+  align-items:center !important;
+  justify-content:space-between !important;
+  flex-wrap:nowrap !important;
+  gap:8px !important;
+}
+
+#depositsList .row > *,
+#depositsList .depositRow > *,
+#depositsList .txRow > *,
+#depositsList li > *{
+  white-space:nowrap !important;
+}
+
+#depositsList .pill,
+#depositsList .amountBadge,
+#depositsList .moneyBadge{
+  flex:0 0 auto !important;
+}
+
+@media (max-width:430px){
+  #depositsList .row,
+  #depositsList .depositRow,
+  #depositsList .txRow,
+  #depositsList li{
+    gap:5px !important;
+  }
+
+  #depositsList .row > *,
+  #depositsList .depositRow > *,
+  #depositsList .txRow > *,
+  #depositsList li > *{
+    font-size:13px !important;
+  }
+}
