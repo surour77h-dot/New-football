@@ -2619,3 +2619,29 @@ direction:ltr!important;
   order:2 !important;
   background:#ffd1f3 !important;
 }
+
+
+/* تعديل فعلي لترتيب صناديق الفريقين:
+   الأصفر / الفريق الأول يمين
+   الوردي / الفريق الثاني يسار */
+.calendarTeams.teamsRTL,
+#teamsPreview .calendarTeams,
+#calendarList .calendarTeams{
+  direction:rtl !important;
+  display:grid !important;
+  grid-template-columns:1fr 1fr !important;
+}
+
+.calendarTeams.teamsRTL .teamABox,
+#teamsPreview .teamABox,
+#calendarList .teamABox{
+  order:1 !important;
+  background:#fbffb8 !important;
+}
+
+.calendarTeams.teamsRTL .teamBBox,
+#teamsPreview .teamBBox,
+#calendarList .teamBBox{
+  order:2 !important;
+  background:#ffd1f3 !important;
+}
