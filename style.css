@@ -2704,3 +2704,21 @@ direction:ltr!important;
 .fixedTeamOrder .calendarTeam{
   direction:rtl !important;
 }
+
+
+/* طريقة إجبارية: الثاني يسار، الأول يمين بناءً على ترتيب DOM بعد التصحيح */
+.calendarTeams{
+  display:grid !important;
+  grid-template-columns:1fr 1fr !important;
+  direction:ltr !important;
+  gap:18px !important;
+}
+.calendarTeams .calendarTeam{
+  direction:rtl !important;
+}
+.calendarTeams .teamBBox{
+  background:#ffd1f3 !important;
+}
+.calendarTeams .teamABox{
+  background:#fbffb8 !important;
+}

@@ -674,3 +674,74 @@ document.addEventListener('DOMContentLoaded',()=>{
 
 setInterval(fixTeamBoxesByTitle,1200);
 
+
+
+
+function forceSwapTeamBoxesByText(){
+  try{
+    document.querySelectorAll('#teamsPreview .calendarTeams, #calendarList .calendarTeams, .calendarTeams').forEach(wrap=>{
+      const boxes=[...wrap.children].filter(el=>el && el.querySelector);
+      let first=null, second=null;
+
+      boxes.forEach(el=>{
+        const t=(el.textContent||'').trim();
+        if(t.includes('الفريق الأول') || t.includes('الأول')) first=el;
+        if(t.includes('الفريق الثاني') || t.includes('الثاني')) second=el;
+      });
+
+      if(!first || !second) return;
+
+      // Physical order in DOM: second first (left), first last (right)
+      if(wrap.children[0] !== second) wrap.insertBefore(second, wrap.firstElementChild);
+      if(wrap.lastElementChild !== first) wrap.appendChild(first);
+
+      wrap.style.setProperty('display','grid','important');
+      wrap.style.setProperty('grid-template-columns','1fr 1fr','important');
+      wrap.style.setProperty('direction','ltr','important');
+      wrap.style.setProperty('gap','18px','important');
+
+      second.style.setProperty('background','#ffd1f3','important');
+      second.style.setProperty('grid-column','1','important');
+      second.style.setProperty('order','1','important');
+      second.style.setProperty('direction','rtl','important');
+
+      first.style.setProperty('background','#fbffb8','important');
+      first.style.setProperty('grid-column','2','important');
+      first.style.setProperty('order','2','important');
+      first.style.setProperty('direction','rtl','important');
+    });
+  }catch(e){
+    console.log('forceSwapTeamBoxesByText error',e);
+  }
+}
+
+const __oldRenderAllTeamSwap=typeof renderAll==='function'?renderAll:null;
+if(__oldRenderAllTeamSwap && !__oldRenderAllTeamSwap.__teamSwapWrapped){
+  renderAll=function(){
+    const r=__oldRenderAllTeamSwap.apply(this,arguments);
+    setTimeout(forceSwapTeamBoxesByText,50);
+    setTimeout(forceSwapTeamBoxesByText,250);
+    return r;
+  };
+  renderAll.__teamSwapWrapped=true;
+}
+
+['renderTeams','renderTeamsPreview','renderCalendarList'].forEach(fn=>{
+  const old=window[fn];
+  if(typeof old==='function' && !old.__teamSwapWrapped){
+    window[fn]=function(){
+      const r=old.apply(this,arguments);
+      setTimeout(forceSwapTeamBoxesByText,50);
+      setTimeout(forceSwapTeamBoxesByText,250);
+      return r;
+    };
+    window[fn].__teamSwapWrapped=true;
+  }
+});
+
+document.addEventListener('DOMContentLoaded',()=>{
+  setTimeout(forceSwapTeamBoxesByText,200);
+  setTimeout(forceSwapTeamBoxesByText,800);
+});
+setInterval(forceSwapTeamBoxesByText,1000);
+
