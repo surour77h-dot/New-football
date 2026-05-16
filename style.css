@@ -2452,3 +2452,21 @@ direction:ltr!important;
   color:#ffffff !important;
   border:none !important;
 }
+
+
+/* تصحيح نهائي:
+   مبلغ مجموع أيام اللعب فقط = برتقالي داكن */
+
+.gamesTotalRow .neg,
+.gamesTotalRow span.neg,
+.gamesTotalRow .count{
+  background:#d97706 !important;
+  color:#ffffff !important;
+  border:none !important;
+  box-shadow:none !important;
+}
+
+/* منع أي قاعدة حمراء من التأثير */
+.gamesTotalRow .negText{
+  color:#ffffff !important;
+}
