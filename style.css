@@ -2526,3 +2526,27 @@ direction:ltr!important;
   font-weight:900 !important;
   display:inline-block !important;
 }
+
+
+/* إبراز اختيار الفريق */
+#teams button.active,
+#teams .active{
+  transform:scale(1.05) !important;
+  border:2px solid #222 !important;
+  box-shadow:0 4px 12px rgba(0,0,0,.2) !important;
+  font-weight:900 !important;
+}
+
+/* الأصفر يمين والوردي يسار */
+#teams .teamBoxes,
+#teams .teamsWrap{
+  direction:rtl !important;
+}
+
+#teams .teamBoxes > *:first-child{
+  background:#fff0c2 !important;
+}
+
+#teams .teamBoxes > *:last-child{
+  background:#ffd6e7 !important;
+}

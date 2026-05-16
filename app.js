@@ -133,10 +133,10 @@ function renderPlayerFilter(){
 
  wrap.innerHTML=`
  <div class="summaryCards">
-   <div class="summaryCard"><span>الرصيد</span><b class="${(b.balance||0)<0?'negText':(b.balance||0)>0?'posText':''}">${moneyBlank(b.balance)}</b></div>
-   <div class="summaryCard"><span>عدد اللعب</span><b>${b.games||''}</b></div>
    <div class="summaryCard"><span>الإيداعات</span><b class="posText">${moneyBlank(totalDep)}</b></div>
+   <div class="summaryCard"><span>عدد اللعب</span><b>${b.games||''}</b></div>
    <div class="summaryCard"><span>الخصومات</span><b class="negText">${moneyBlank(totalDebt)}</b></div>
+   <div class="summaryCard"><span>الرصيد</span><b class="${(b.balance||0)<0?'negText':(b.balance||0)>0?'posText':''}">${moneyBlank(b.balance)}</b></div>
  </div>
 
  <div class="card">
