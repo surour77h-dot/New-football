@@ -2550,3 +2550,53 @@ direction:ltr!important;
 #teams .teamBoxes > *:last-child{
   background:#ffd6e7 !important;
 }
+
+
+/* ===== صفحة الفريقين: إبراز اختيار الأول/الثاني ===== */
+#teams .selA,
+#teams button.selA,
+#teamsPlayers .selA{
+  background:#ffe066 !important;
+  color:#111 !important;
+  border:2px solid #b08900 !important;
+  box-shadow:0 0 0 3px rgba(255,224,102,.45), 0 4px 12px rgba(0,0,0,.18) !important;
+  transform:scale(1.06) !important;
+  font-weight:900 !important;
+}
+
+#teams .selB,
+#teams button.selB,
+#teamsPlayers .selB{
+  background:#ff8ccf !important;
+  color:#111 !important;
+  border:2px solid #b83280 !important;
+  box-shadow:0 0 0 3px rgba(255,140,207,.38), 0 4px 12px rgba(0,0,0,.18) !important;
+  transform:scale(1.06) !important;
+  font-weight:900 !important;
+}
+
+#teamsPlayers .teamPick button.selA,
+#teamsPlayers .teamPick button.selB{
+  position:relative !important;
+  z-index:2 !important;
+}
+
+/* ===== أسفل صفحة الفريقين: الأصفر يمين والوردي يسار ===== */
+#teamsPreview .calendarTeams,
+#calendarList .calendarTeams{
+  direction:rtl !important;
+  display:grid !important;
+  grid-template-columns:1fr 1fr !important;
+}
+
+#teamsPreview .teamABox,
+#calendarList .teamABox{
+  background:#fbffb8 !important;
+  order:1 !important;
+}
+
+#teamsPreview .teamBBox,
+#calendarList .teamBBox{
+  background:#ffd1f3 !important;
+  order:2 !important;
+}

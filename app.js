@@ -564,3 +564,58 @@ document.addEventListener('change',function(e){
 setInterval(function(){
   try{updatePlayersGuestsCount()}catch(e){}
 },1000);
+
+
+
+function fixTeamsVisualOrderAndHighlight(){
+  try{
+    document.querySelectorAll('#teamsPreview .calendarTeams, #calendarList .calendarTeams').forEach(box=>{
+      box.style.direction='rtl';
+      box.style.display='grid';
+      box.style.gridTemplateColumns='1fr 1fr';
+      const a=box.querySelector('.teamABox');
+      const b=box.querySelector('.teamBBox');
+      if(a){a.style.order='1';a.style.background='#fbffb8'}
+      if(b){b.style.order='2';b.style.background='#ffd1f3'}
+    });
+
+    document.querySelectorAll('#teamsPlayers button.selA').forEach(btn=>{
+      btn.style.background='#ffe066';
+      btn.style.border='2px solid #b08900';
+      btn.style.fontWeight='900';
+      btn.style.transform='scale(1.06)';
+      btn.style.boxShadow='0 0 0 3px rgba(255,224,102,.45), 0 4px 12px rgba(0,0,0,.18)';
+    });
+    document.querySelectorAll('#teamsPlayers button.selB').forEach(btn=>{
+      btn.style.background='#ff8ccf';
+      btn.style.border='2px solid #b83280';
+      btn.style.fontWeight='900';
+      btn.style.transform='scale(1.06)';
+      btn.style.boxShadow='0 0 0 3px rgba(255,140,207,.38), 0 4px 12px rgba(0,0,0,.18)';
+    });
+  }catch(e){}
+}
+
+const __oldRenderTeamsFix=typeof renderTeams==='function'?renderTeams:null;
+if(__oldRenderTeamsFix && !__oldRenderTeamsFix.__fixedTeamsVisual){
+  renderTeams=function(){
+    const r=__oldRenderTeamsFix.apply(this,arguments);
+    setTimeout(fixTeamsVisualOrderAndHighlight,50);
+    return r;
+  };
+  renderTeams.__fixedTeamsVisual=true;
+}
+
+const __oldRenderTeamsPreviewFix=typeof renderTeamsPreview==='function'?renderTeamsPreview:null;
+if(__oldRenderTeamsPreviewFix && !__oldRenderTeamsPreviewFix.__fixedTeamsPreviewVisual){
+  renderTeamsPreview=function(){
+    const r=__oldRenderTeamsPreviewFix.apply(this,arguments);
+    setTimeout(fixTeamsVisualOrderAndHighlight,50);
+    return r;
+  };
+  renderTeamsPreview.__fixedTeamsPreviewVisual=true;
+}
+
+document.addEventListener('DOMContentLoaded',()=>setTimeout(fixTeamsVisualOrderAndHighlight,300));
+setInterval(fixTeamsVisualOrderAndHighlight,1500);
+
