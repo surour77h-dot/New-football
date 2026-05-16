@@ -745,3 +745,62 @@ document.addEventListener('DOMContentLoaded',()=>{
 });
 setInterval(forceSwapTeamBoxesByText,1000);
 
+
+
+/* === HARD OVERRIDE TEAM BOXES === */
+(function(){
+ function applyHardSwap(){
+   try{
+     document.querySelectorAll('.calendarTeams').forEach(function(wrap){
+
+       let firstBox=null;
+       let secondBox=null;
+
+       Array.from(wrap.children).forEach(function(el){
+         const txt=(el.innerText||'').trim();
+
+         if(txt.indexOf('الفريق الأول')>-1 || txt.indexOf('الأول')>-1){
+           firstBox=el;
+         }
+
+         if(txt.indexOf('الفريق الثاني')>-1 || txt.indexOf('الثاني')>-1){
+           secondBox=el;
+         }
+       });
+
+       if(!firstBox || !secondBox) return;
+
+       // حذف الترتيب الحالي
+       wrap.innerHTML='';
+
+       // اليسار = الثاني الوردي
+       secondBox.style.background='#efc0e5';
+       secondBox.style.order='1';
+
+       // اليمين = الأول الأصفر
+       firstBox.style.background='#f6f3b1';
+       firstBox.style.order='2';
+
+       wrap.style.display='flex';
+       wrap.style.flexDirection='row';
+       wrap.style.direction='ltr';
+       wrap.style.gap='18px';
+
+       // أضف الثاني أولاً ثم الأول
+       wrap.appendChild(secondBox);
+       wrap.appendChild(firstBox);
+     });
+   }catch(e){}
+ }
+
+ window.applyHardSwap=applyHardSwap;
+
+ setInterval(applyHardSwap,500);
+
+ document.addEventListener('DOMContentLoaded',function(){
+   setTimeout(applyHardSwap,100);
+   setTimeout(applyHardSwap,500);
+   setTimeout(applyHardSwap,1200);
+ });
+})();
+
