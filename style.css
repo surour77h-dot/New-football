@@ -2470,3 +2470,20 @@ direction:ltr!important;
 .gamesTotalRow .negText{
   color:#ffffff !important;
 }
+
+
+/* أيام اللعب - المجموع فقط */
+.card:first-of-type .gamesTotalRow span,
+.card:first-of-type .gamesTotalRow .neg,
+.card:first-of-type .gamesTotalRow span.neg{
+  background:#d97706 !important;
+  color:#ffffff !important;
+  border-radius:999px !important;
+  padding:4px 12px !important;
+  display:inline-block !important;
+}
+
+/* إزالة الأحمر */
+.card:first-of-type .gamesTotalRow span.neg{
+  background:#d97706 !important;
+}
