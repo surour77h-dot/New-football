@@ -2600,3 +2600,22 @@ direction:ltr!important;
   background:#ffd1f3 !important;
   order:2 !important;
 }
+
+
+/* تصحيح نهائي:
+   الأصفر يمين - الوردي يسار */
+.calendarTeams{
+  direction:rtl !important;
+  display:grid !important;
+  grid-template-columns:1fr 1fr !important;
+}
+
+.calendarTeams .teamABox{
+  order:1 !important;
+  background:#fbffb8 !important;
+}
+
+.calendarTeams .teamBBox{
+  order:2 !important;
+  background:#ffd1f3 !important;
+}
