@@ -2321,3 +2321,13 @@ direction:ltr!important;
   border:1px solid #f3c2c2 !important;
   font-weight:700 !important;
 }
+
+
+/* كشف لاعب: مجموع خصومات أيام اللعب أسفل قسم أيام اللعب */
+.gamesTotalRow{
+  margin-top:8px !important;
+  border-top:2px solid #eee !important;
+  background:#fff5f5 !important;
+  border-radius:10px !important;
+  font-weight:800 !important;
+}

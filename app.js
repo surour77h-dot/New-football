@@ -142,6 +142,7 @@ function renderPlayerFilter(){
  <div class="card">
    <h3>أيام اللعب</h3>
    ${(games.length?games.map(g=>`<div class="item"><span>${formatDateDisplay(g.date)}</span><span class="count">${money(g.price)}</span></div>`).join(''):'<p class="muted">لا يوجد</p>')}
+   <div class="item gamesTotalRow"><b>مجموع خصومات أيام اللعب</b><span class="neg">${money(gameDeductTotal*-1)}</span></div>
  </div>
 
  <div class="card">
