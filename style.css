@@ -2357,3 +2357,23 @@ direction:ltr!important;
 .card .item:has(> b:first-child) span.neg{
   color:#c92a2a !important;
 }
+
+
+/* توحيد لون مجموع خصومات الأسماء التي أحضرها
+   مع لون مجموع خصومات أيام اللعب */
+
+.gamesTotalRow,
+.card .item:has(> b:first-child){
+  background:#fff4e5 !important;
+  border:1px solid #ffd8a8 !important;
+  border-radius:10px !important;
+}
+
+.gamesTotalRow b,
+.gamesTotalRow .neg,
+.gamesTotalRow span.neg,
+.card .item:has(> b:first-child) b,
+.card .item:has(> b:first-child) .neg,
+.card .item:has(> b:first-child) span.neg{
+  color:#b35c00 !important;
+}
