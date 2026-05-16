@@ -2331,3 +2331,29 @@ direction:ltr!important;
   border-radius:10px !important;
   font-weight:800 !important;
 }
+
+
+/* مجموع خصومات أيام اللعب - برتقالي فاتح */
+.gamesTotalRow{
+  background:#fff4e5 !important;
+  border:1px solid #ffd8a8 !important;
+}
+
+.gamesTotalRow b,
+.gamesTotalRow .neg,
+.gamesTotalRow span.neg{
+  color:#b35c00 !important;
+}
+
+/* مجموع خصومات الأسماء التي أحضرها - أحمر فاتح */
+.card .item:has(> b:first-child){
+  background:#fff5f5 !important;
+  border:1px solid #f3c2c2 !important;
+  border-radius:10px !important;
+}
+
+.card .item:has(> b:first-child) b,
+.card .item:has(> b:first-child) .neg,
+.card .item:has(> b:first-child) span.neg{
+  color:#c92a2a !important;
+}
