@@ -2645,3 +2645,36 @@ direction:ltr!important;
   order:2 !important;
   background:#ffd1f3 !important;
 }
+
+
+/* إصلاح نهائي حسب الصورة:
+   الأصفر (الفريق الأول) يمين
+   الوردي (الفريق الثاني) يسار */
+
+.calendarTeams,
+.teamsRTL{
+  direction:ltr !important;
+  display:grid !important;
+  grid-template-columns:1fr 1fr !important;
+  gap:18px !important;
+}
+
+.calendarTeams .teamABox,
+.teamsRTL .teamABox{
+  grid-column:2 !important;   /* اليمين */
+  background:#f6f3b1 !important;
+}
+
+.calendarTeams .teamBBox,
+.teamsRTL .teamBBox{
+  grid-column:1 !important;   /* اليسار */
+  background:#efc0e5 !important;
+}
+
+
+/* دعم إضافي */
+.calendarTeams{
+  display:grid !important;
+  grid-template-columns:1fr 1fr !important;
+  direction:ltr !important;
+}

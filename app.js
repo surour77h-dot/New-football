@@ -619,3 +619,41 @@ if(__oldRenderTeamsPreviewFix && !__oldRenderTeamsPreviewFix.__fixedTeamsPreview
 document.addEventListener('DOMContentLoaded',()=>setTimeout(fixTeamsVisualOrderAndHighlight,300));
 setInterval(fixTeamsVisualOrderAndHighlight,1500);
 
+
+
+function fixTeamBoxesByTitle(){
+ try{
+   document.querySelectorAll('.calendarTeams').forEach(wrap=>{
+      const boxes=[...wrap.children];
+      let firstBox=null, secondBox=null;
+
+      boxes.forEach(b=>{
+         const txt=(b.innerText||'').trim();
+         if(txt.includes('الأول')) firstBox=b;
+         if(txt.includes('الثاني')) secondBox=b;
+      });
+
+      wrap.style.display='grid';
+      wrap.style.gridTemplateColumns='1fr 1fr';
+      wrap.style.direction='ltr';
+      wrap.style.gap='18px';
+
+      if(firstBox){
+         firstBox.style.gridColumn='2';
+         firstBox.style.background='#f6f3b1';
+      }
+
+      if(secondBox){
+         secondBox.style.gridColumn='1';
+         secondBox.style.background='#efc0e5';
+      }
+   });
+ }catch(e){}
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+ setTimeout(fixTeamBoxesByTitle,300);
+});
+
+setInterval(fixTeamBoxesByTitle,1200);
+
