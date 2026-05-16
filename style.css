@@ -2443,3 +2443,12 @@ direction:ltr!important;
   border-radius:999px !important;
   font-weight:800 !important;
 }
+
+
+/* مبلغ مجموع أيام اللعب - برتقالي داكن */
+.gamesTotalRow .neg,
+.gamesTotalRow span.neg{
+  background:#d97706 !important;
+  color:#ffffff !important;
+  border:none !important;
+}
