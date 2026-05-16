@@ -2722,3 +2722,40 @@ direction:ltr!important;
 .calendarTeams .teamABox{
   background:#fbffb8 !important;
 }
+
+
+/* إعادة بناء كاملة لصندوقي الفريقين */
+
+.newTeamsWrap{
+  display:grid !important;
+  grid-template-columns:1fr 1fr !important;
+  gap:18px !important;
+  direction:ltr !important;
+  width:100% !important;
+}
+
+.newTeamBox{
+  border-radius:18px !important;
+  padding:14px !important;
+  min-height:120px !important;
+  direction:rtl !important;
+}
+
+.firstTeamBox{
+  background:#f6f3b1 !important; /* أصفر */
+  grid-column:2 !important;      /* يمين */
+}
+
+.secondTeamBox{
+  background:#efc0e5 !important; /* وردي */
+  grid-column:1 !important;      /* يسار */
+}
+
+.newTeamBox h4{
+  margin-top:0 !important;
+  font-weight:900 !important;
+}
+
+.newTeamBox .teamName{
+  margin:6px 0 !important;
+}
