@@ -2759,3 +2759,45 @@ direction:ltr!important;
 .newTeamBox .teamName{
   margin:6px 0 !important;
 }
+
+
+/* تجربة العكس لترتيب الفريقين:
+   الوردي ينتقل للجهة الأخرى، والأصفر للجهة المقابلة */
+.newTeamsWrap{
+  display:grid !important;
+  grid-template-columns:1fr 1fr !important;
+  direction:ltr !important;
+  gap:18px !important;
+  width:100% !important;
+}
+
+.firstTeamBox{
+  background:#f6f3b1 !important;
+  grid-column:1 !important;
+  order:1 !important;
+}
+
+.secondTeamBox{
+  background:#efc0e5 !important;
+  grid-column:2 !important;
+  order:2 !important;
+}
+
+/* كذلك على الصناديق القديمة إن ظهرت */
+.calendarTeams{
+  display:grid !important;
+  grid-template-columns:1fr 1fr !important;
+  direction:ltr !important;
+}
+
+.calendarTeams .teamABox{
+  background:#f6f3b1 !important;
+  grid-column:1 !important;
+  order:1 !important;
+}
+
+.calendarTeams .teamBBox{
+  background:#efc0e5 !important;
+  grid-column:2 !important;
+  order:2 !important;
+}
