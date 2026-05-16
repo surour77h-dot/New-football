@@ -221,7 +221,17 @@ function clearMatchForm(){editingMatchId.value='';matchFormTitle.textContent='ل
 function saveMatch(){const date=getDateValue('matchDate')||today(),bc=Number(bookingCost.value||0),np=Number(neededPlayers.value||0),selected=[...document.querySelectorAll('.playerCheck:checked')].map(x=>x.value);if(!date)return alert('اكتب التاريخ بالشكل 11-5-2026');if(bc<=0||np<=0)return alert('أدخل سعر الحجز وعدد اللاعبين');if(selected.length===0&&tempGuests.length===0)return alert('اختر المشاركين أو أضف ضيوف');const s=state(),id=editingMatchId.value||uid(),match={id,date,place:place.value.trim(),bookingCost:bc,neededPlayers:np,price:bc/np,players:selected,guests:[...tempGuests]};const idx=s.matches.findIndex(m=>m.id===id);if(idx>=0)s.matches[idx]=match;else s.matches.push(match);editingMatchId.value='';tempGuests=[];save(s);clearMatchForm();alert('تم الحفظ')}
 function editMatch(id){const s=state(),m=s.matches.find(x=>x.id===id);if(!m)return;showTab('newMatch');editingMatchId.value=m.id;matchFormTitle.textContent='تعديل لعبة';setDateDisplay('matchDate',m.date);place.value=m.place||'';bookingCost.value=m.bookingCost||'';neededPlayers.value=m.neededPlayers||'';tempGuests=[...(m.guests||[])];renderAll();document.querySelectorAll('.playerCheck').forEach(x=>x.checked=(m.players||[]).includes(x.value));pricePerPlayer.textContent=money(calcPrice());renderTempGuests()}
 function deleteMatch(id){if(!confirm('حذف اللعبة؟'))return;const s=state();s.matches=s.matches.filter(m=>m.id!==id);delete s.teams[id];save(s)}
-function setDepositType(t){depositType=t;depositTypeIn.className=t==='in'?'primary':'';depositTypeOut.className=t==='out'?'danger':''}
+function setDepositType(t){
+ depositType=t;
+
+ depositTypeIn.className='';
+ depositTypeOut.className='';
+ if(typeof depositTypeLate!=='undefined' && depositTypeLate) depositTypeLate.className='';
+
+ if(t==='in') depositTypeIn.className='primary selectedDepositBtn';
+ if(t==='out'||t==='debt') depositTypeOut.className='danger selectedDepositBtn';
+ if(t==='late' && typeof depositTypeLate!=='undefined' && depositTypeLate) depositTypeLate.className='lateActive selectedDepositBtn';
+}
 function getDepositPresets(s){const saved=(s.settings.depositPresets||[]).map(Number).filter(x=>x>0),from=s.deposits.map(d=>Math.abs(Number(d.amount||0))).filter(x=>x>0),del=(s.settings.deletedDepositPresets||[]).map(Number);return[...new Set([...saved,...from])].filter(x=>!del.includes(Number(x))).sort((a,b)=>a-b)}
 function setDepositAmount(v){depositAmount.value=money(v)}
 function deleteDepositPreset(v){const s=state();v=Number(v);s.settings.deletedDepositPresets=[...new Set([...(s.settings.deletedDepositPresets||[]).map(Number),v])];s.settings.depositPresets=(s.settings.depositPresets||[]).map(Number).filter(x=>x!==v);save(s)}

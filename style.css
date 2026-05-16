@@ -2918,3 +2918,64 @@ direction:ltr!important;
     0 6px 18px rgba(0,0,0,.08),
     0 16px 42px rgba(0,0,0,.08) !important;
 }
+
+
+/* ===== تصحيح فعلي لأزرار الإيداعات حسب IDs الموجودة في الملف ===== */
+
+#depositTypeIn,
+#depositTypeOut,
+#depositTypeLate{
+  border-radius:14px !important;
+  transition:all .18s ease !important;
+  border:1.5px solid rgba(0,0,0,.12) !important;
+}
+
+/* بروز أي زر مختار */
+#depositTypeIn.selectedDepositBtn,
+#depositTypeOut.selectedDepositBtn,
+#depositTypeLate.selectedDepositBtn{
+  transform:translateY(-2px) scale(1.05) !important;
+  box-shadow:
+    0 0 0 3px rgba(0,0,0,.08),
+    0 8px 20px rgba(0,0,0,.20) !important;
+  font-weight:900 !important;
+  border-width:2px !important;
+}
+
+/* زر إيداع عند الاختيار */
+#depositTypeIn.selectedDepositBtn{
+  background:#198754 !important;
+  color:#ffffff !important;
+  border-color:#0f5132 !important;
+}
+
+/* زر خصم/مديونية عند الاختيار */
+#depositTypeOut.selectedDepositBtn{
+  background:#dc3545 !important;
+  color:#ffffff !important;
+  border-color:#842029 !important;
+}
+
+/* زر تأخير عند الاختيار - برتقالي داكن */
+#depositTypeLate.lateActive,
+#depositTypeLate.selectedDepositBtn{
+  background:#d97706 !important;
+  color:#ffffff !important;
+  border-color:#b45309 !important;
+}
+
+/* بروز أوضح لجميع مربعات الصفحات */
+.card{
+  border-radius:22px !important;
+  border:1px solid rgba(0,0,0,.08) !important;
+  box-shadow:
+    0 5px 16px rgba(0,0,0,.08),
+    0 14px 36px rgba(0,0,0,.07) !important;
+}
+
+.tab.active > .card,
+.tab.active .card:first-of-type{
+  box-shadow:
+    0 7px 20px rgba(0,0,0,.10),
+    0 18px 44px rgba(0,0,0,.08) !important;
+}
