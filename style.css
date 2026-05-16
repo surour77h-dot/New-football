@@ -2405,3 +2405,41 @@ direction:ltr!important;
   padding:4px 10px !important;
   border-radius:999px !important;
 }
+
+
+/* ===== أيام اللعب =====
+   الصف أبيض عادي
+   وخلفية المبلغ برتقالي فاتح
+   والنص برتقالي داكن */
+
+.gamesTotalRow{
+  background:#ffffff !important;
+  border:none !important;
+}
+
+.gamesTotalRow .neg,
+.gamesTotalRow span.neg{
+  background:#fff4e5 !important;
+  color:#b35c00 !important;
+  padding:4px 10px !important;
+  border-radius:999px !important;
+  font-weight:800 !important;
+}
+
+/* ===== الأسماء التي أحضرها =====
+   الصف أبيض عادي
+   وخلفية المبلغ أحمر داكن */
+
+.card .item:has(> b:first-child){
+  background:#ffffff !important;
+  border:none !important;
+}
+
+.card .item:has(> b:first-child) .neg,
+.card .item:has(> b:first-child) span.neg{
+  background:#c92a2a !important;
+  color:#ffffff !important;
+  padding:4px 10px !important;
+  border-radius:999px !important;
+  font-weight:800 !important;
+}

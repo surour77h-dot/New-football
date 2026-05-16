@@ -142,7 +142,7 @@ function renderPlayerFilter(){
  <div class="card">
    <h3>أيام اللعب</h3>
    ${(games.length?games.map(g=>`<div class="item"><span>${formatDateDisplay(g.date)}</span><span class="count">${money(g.price)}</span></div>`).join(''):'<p class="muted">لا يوجد</p>')}
-   <div class="item gamesTotalRow"><b>مجموع خصومات أيام اللعب</b><span class="neg">${money(gameDeductTotal*-1)}</span></div>
+   <div class="item gamesTotalRow"><b>المجموع</b><span class="neg">${money(gameDeductTotal*-1)}</span></div>
  </div>
 
  <div class="card">
@@ -156,7 +156,7 @@ function renderPlayerFilter(){
  <div class="card">
    <h3>الأسماء التي أحضرها</h3>
    ${(guestMatches.length?guestMatches.map(m=>(m.guests||[]).filter(g=>g.owner===player).map(g=>`<div class="item"><span>${formatDateDisplay(m.date)}</span><span style="text-align:center;flex:1;">${g.guest}</span><span class="neg">${money(Number(m.price||0)*-1)}</span></div>`).join('')).join(''):'<p class="muted">لا يوجد</p>')}
-   <div class="item"><b>مجموع الخصومات</b><span class="neg">${money(guestDeductTotal*-1)}</span></div>
+   <div class="item"><b>المجموع</b><span class="neg">${money(guestDeductTotal*-1)}</span></div>
  </div>`;
 }
 
