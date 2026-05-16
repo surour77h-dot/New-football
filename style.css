@@ -2678,3 +2678,29 @@ direction:ltr!important;
   grid-template-columns:1fr 1fr !important;
   direction:ltr !important;
 }
+
+
+/* الترتيب النهائي المباشر لصندوقي الفريقين */
+.fixedTeamOrder{
+  direction:ltr !important;
+  display:grid !important;
+  grid-template-columns:1fr 1fr !important;
+  gap:18px !important;
+}
+
+.fixedTeamOrder .teamBBox{
+  grid-column:1 !important;
+  order:1 !important;
+  background:#ffd1f3 !important;
+}
+
+.fixedTeamOrder .teamABox{
+  grid-column:2 !important;
+  order:2 !important;
+  background:#fbffb8 !important;
+}
+
+/* الحفاظ على اتجاه النص العربي داخل الصندوقين */
+.fixedTeamOrder .calendarTeam{
+  direction:rtl !important;
+}

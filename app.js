@@ -280,7 +280,24 @@ function participants(m){return[...(m.players||[]),...(m.guests||[]).map(g=>gues
 function moveMonth(n){calendarView.setMonth(calendarView.getMonth()+n);renderCalendar()}
 function renderCalendar(){const s=state(),y=calendarView.getFullYear(),mo=calendarView.getMonth(),first=new Date(y,mo,1),last=new Date(y,mo+1,0);calendarMonthTitle.textContent=calendarView.toLocaleDateString('ar-KW',{month:'long',year:'numeric'});let html=['الأحد','الإثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'].map(d=>`<div class="day"><b>${d}</b></div>`).join('');for(let i=0;i<first.getDay();i++)html+='<div></div>';for(let d=1;d<=last.getDate();d++){const mm=String(mo+1).padStart(2,'0'),dd=String(d).padStart(2,'0'),date=`${y}-${mm}-${dd}`,has=s.matches.some(x=>x.date===date);html+=`<div class="day ${has?'hasGame':''} ${selectedCalendarDate===date?'selected':''}" onclick="selectCalendarDate('${date}')"><b>${d}</b>${has?'<br><span class="small">لعب</span>':''}</div>`}monthCalendar.innerHTML=html}
 function selectCalendarDate(date){selectedCalendarDate=date;renderCalendar();renderCalendarList()}
-function teamHtml(s,m){const map=s.teams[m.id]||{},names=participants(m),a=names.filter(n=>map[n]==='A'),b=names.filter(n=>map[n]==='B'),no=names.filter(n=>!map[n]);if(a.length||b.length)return`<div class="calendarTeams teamsRTL"><div class="calendarTeam teamABox"><h4>الفريق الأول</h4>${a.map(x=>`<div class="teamName">${x}</div>`).join('')||'<p class="muted">لا يوجد</p>'}</div><div class="calendarTeam teamBBox"><h4>الفريق الثاني</h4>${b.map(x=>`<div class="teamName">${x}</div>`).join('')||'<p class="muted">لا يوجد</p>'}</div></div>`+(no.length?`<p class="muted">بدون فريق: ${no.join('، ')}</p>`:'');return names.map(n=>`<div class="item"><b>${n}</b></div>`).join('')}
+function teamHtml(s,m){
+ const map=s.teams[m.id]||{},names=participants(m),a=names.filter(n=>map[n]==='A'),b=names.filter(n=>map[n]==='B'),no=names.filter(n=>!map[n]);
+
+ if(a.length||b.length){
+   return `<div class="calendarTeams fixedTeamOrder" style="direction:ltr;display:grid;grid-template-columns:1fr 1fr;gap:18px;">
+     <div class="calendarTeam teamBBox" style="background:#ffd1f3;grid-column:1;">
+       <h4>الفريق الثاني</h4>
+       ${b.map(x=>`<div class="teamName">${x}</div>`).join('')||'<p class="muted">لا يوجد</p>'}
+     </div>
+     <div class="calendarTeam teamABox" style="background:#fbffb8;grid-column:2;">
+       <h4>الفريق الأول</h4>
+       ${a.map(x=>`<div class="teamName">${x}</div>`).join('')||'<p class="muted">لا يوجد</p>'}
+     </div>
+   </div>`+(no.length?`<p class="muted">بدون فريق: ${no.join('، ')}</p>`:'');
+ }
+
+ return names.map(n=>`<div class="item"><b>${n}</b></div>`).join('');
+}
 function renderCalendarList(){const s=state(),date=selectedCalendarDate;calendarSelectedTitle.textContent=date?'المشاركون '+formatDateDisplay(date):'المشاركون';if(!date){calendarList.innerHTML='<p class="muted">اضغط على يوم من التقويم.</p>';return}const ms=s.matches.filter(m=>m.date===date);calendarList.innerHTML=ms.length?ms.map(m=>`<h3>${formatDateDisplay(m.date)}${m.place?' - '+m.place:''}</h3>${teamHtml(s,m)}<button onclick="openEditPage('match','${m.id}','matchLog')">تعديل اللعبة</button>`).join(''):'<p class="muted">لا توجد لعبة بهذا التاريخ.</p>'}
 
 let currentEdit={type:null,id:null,back:'matchLog'};
