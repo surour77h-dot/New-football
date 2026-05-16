@@ -2307,3 +2307,17 @@ direction:ltr!important;
     font-size:13px !important;
   }
 }
+
+
+.gamesTotalRow,
+.sumRow{
+  display:flex !important;
+  align-items:center !important;
+  justify-content:space-between !important;
+  padding:10px 12px !important;
+  margin-top:8px !important;
+  border-radius:12px !important;
+  background:#fff5f5 !important;
+  border:1px solid #f3c2c2 !important;
+  font-weight:700 !important;
+}
