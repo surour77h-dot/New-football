@@ -601,25 +601,6 @@ document.addEventListener('change',function(e){
 
 
 
-function setAppLanguage(lang){
- localStorage.setItem('appLanguage', lang);
- location.reload();
-}
-
-function saveAppTitle(){
- const input = document.getElementById('appTitleInput');
- if(!input) return;
- const value = input.value.trim();
- if(!value) return;
-
- localStorage.setItem('customAppTitle', value);
-
- const titleEl = document.getElementById('appTitle');
- if(titleEl) titleEl.textContent = value;
-
- alert('تم حفظ العنوان');
-}
-
 document.addEventListener('DOMContentLoaded', function(){
 
  const savedTitle = localStorage.getItem('customAppTitle');
@@ -653,5 +634,71 @@ document.addEventListener('DOMContentLoaded', function(){
       if(map[txt]) el.textContent = map[txt];
    });
  }
+
+});
+
+
+// ===== Fixed persistent language switch =====
+function applyEnglishMode(){
+  const map = {
+    'لعبة':'Game',
+    'الفريقين':'Teams',
+    'الإيداعات':'Deposits',
+    'التقويم':'Calendar',
+    'الجدول':'Table',
+    'كشف لاعب':'Player Report',
+    'السجل':'Log',
+    'اللاعبين':'Players',
+    'الإعدادات':'Settings'
+  };
+
+  document.querySelectorAll('button,h1,h2,h3,label').forEach(el=>{
+    const txt = el.textContent.trim();
+    if(map[txt]){
+      el.textContent = map[txt];
+    }
+  });
+
+  document.body.setAttribute('dir','ltr');
+  document.documentElement.setAttribute('dir','ltr');
+}
+
+function applyArabicMode(){
+  location.reload();
+}
+
+function setAppLanguage(lang){
+  localStorage.setItem('appLanguage', lang);
+
+  if(lang === 'en'){
+    applyEnglishMode();
+  } else {
+    applyArabicMode();
+  }
+
+  const arBtn = document.getElementById('langArBtn');
+  const enBtn = document.getElementById('langEnBtn');
+
+  if(arBtn) arBtn.classList.toggle('activeLang', lang === 'ar');
+  if(enBtn) enBtn.classList.toggle('activeLang', lang === 'en');
+}
+
+document.addEventListener('DOMContentLoaded', function(){
+
+  const savedLang = localStorage.getItem('appLanguage') || 'ar';
+
+  if(savedLang === 'en'){
+    setTimeout(()=>applyEnglishMode(), 300);
+  }
+
+  const savedTitle = localStorage.getItem('customAppTitle');
+  if(savedTitle){
+    const titleEl = document.getElementById('appTitle');
+    if(titleEl) titleEl.textContent = savedTitle;
+    document.title = savedTitle;
+
+    const input = document.getElementById('appTitleInput');
+    if(input) input.value = savedTitle;
+  }
 
 });
