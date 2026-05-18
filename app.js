@@ -79,8 +79,7 @@ const defaultPages=[
  ['playerFilter','كشف لاعب'],
  ['matchLog','السجل'],
  ['players','اللاعبين'],
- ['settings','الترتيب'],
- ['backup','النسخ']
+ ['backup','الإعدادات']
 ];
 function getPageOrder(){
  return defaultPages.map(x=>x[0]);
@@ -826,78 +825,83 @@ setInterval(forceSwapTeamBoxesByText,1000);
 
 
 
+
+
 /* ===== Arabic / English language switch ===== */
 let appLanguage=localStorage.getItem('appLanguage')||'ar';
 
 const appTranslations={
-"لعبة":"Game","الفريقين":"Teams","الإيداعات":"Deposits","التقويم":"Calendar","الجدول":"Table",
-"كشف لاعب":"Player Report","السجل":"Log","اللاعبين":"Players","الترتيب":"Order","النسخ":"Backup",
-"لعبة جديدة":"New Game","تعديل لعبة":"Edit Game","تاريخ اللعب":"Game Date","المكان":"Place",
-"الحجز":"Booking","العدد":"Count","سعر اللاعب":"Player Price","المشاركون":"Participants",
-"إضافة ضيف":"Add Guest","اسم الضيف":"Guest Name","إضافة":"Add","حفظ":"Save","تفريغ":"Clear",
-"تاريخ الإيداع":"Deposit Date","اللاعب":"Player","المبلغ":"Amount","إيداع":"Deposit",
-"خصم/مديونية":"Deduction/Debt","خصم":"Deduction","تأخير":"Late","جميع العمليات":"All Transactions",
-"السابق":"Previous","التالي":"Next","الفريق الأول":"Team One","الفريق الثاني":"Team Two",
-"تقسيم عشوائي":"Random Teams","حفظ الفريقين":"Save Teams","جدول اللاعبين":"Players Table",
-"الاسم":"Name","الرصيد":"Balance","لعب":"Games","آخر لعب":"Last Game","آخر لعبة":"Last Game",
-"اختر اللاعب":"Select Player","عدد اللعب":"Games Count","الخصومات":"Deductions","أيام اللعب":"Game Days",
-"الإيداعات والمديونيات":"Deposits & Debts","الأسماء التي أحضرها":"Guests Brought","المجموع":"Total",
-"مجموع الخصومات":"Total Deductions","النسخة الاحتياطية":"Backup","تصدير":"Export","استيراد":"Import",
-"ترتيب الصفحات":"Page Order","أضف اللاعبين أولًا.":"Add players first.","لا يوجد":"None",
-"لا توجد عمليات":"No transactions","لا توجد لعبة بهذا التاريخ.":"No game on this date.",
-"اضغط على يوم من التقويم.":"Tap a day on the calendar.","إجمالي الرصيد":"Total Balance",
-"إجمالي الإيداعات":"Total Deposits","الألعاب":"Games","مجموع الرصيد":"Total Balance",
-"بدون فريق":"No Team","تعديل":"Edit","حذف":"Delete","تأكيد الحذف":"Confirm Delete",
-"حفظ التعديل":"Save Edit","الاسم الجديد":"New Name","اسم اللاعب":"Player Name","اختياري":"Optional",
-"صندوق الفريقين":"Teams Box","الرصيد":"Balance","الإيداعات":"Deposits"
+"الإعدادات":"Settings","لعبة":"Game","الفريقين":"Teams","الإيداعات":"Deposits","التقويم":"Calendar","الجدول":"Table",
+"كشف لاعب":"Player Report","السجل":"Log","اللاعبين":"Players","ترتيب الصفحات":"Page Order","النسخة الاحتياطية":"Backup",
+"لعبة جديدة":"New Game","تعديل لعبة":"Edit Game","تاريخ اللعب":"Game Date","المكان":"Place","الحجز":"Booking",
+"العدد":"Count","سعر اللاعب":"Player Price","المشاركون":"Participants","إضافة ضيف":"Add Guest","اسم الضيف":"Guest Name",
+"اسم اللاعب":"Player Name","إضافة":"Add","حفظ":"Save","تفريغ":"Clear","تاريخ الإيداع":"Deposit Date","اللاعب":"Player",
+"المبلغ":"Amount","إيداع":"Deposit","خصم/مديونية":"Deduction/Debt","خصم":"Deduction","تأخير":"Late",
+"جميع العمليات":"All Transactions","السابق":"Previous","التالي":"Next","الفريق الأول":"Team One","الفريق الثاني":"Team Two",
+"تقسيم عشوائي":"Random Teams","حفظ الفريقين":"Save Teams","جدول اللاعبين":"Players Table","الاسم":"Name",
+"الرصيد":"Balance","عدد اللعب":"Games Count","لعب":"Games","آخر لعب":"Last Game","آخر لعبة":"Last Game",
+"اختر اللاعب":"Select Player","الإيداعات والمديونيات":"Deposits & Debts","الخصومات":"Deductions","أيام اللعب":"Game Days",
+"الأسماء التي أحضرها":"Guests Brought","المجموع":"Total","مجموع الخصومات":"Total Deductions","تصدير":"Export",
+"استيراد":"Import","أضف اللاعبين أولًا.":"Add players first.","لا يوجد":"None","لا توجد عمليات":"No transactions",
+"لا توجد لعبة بهذا التاريخ.":"No game on this date.","اضغط على يوم من التقويم.":"Tap a day on the calendar.",
+"إجمالي الرصيد":"Total Balance","إجمالي الإيداعات":"Total Deposits","الألعاب":"Games","مجموع الرصيد":"Total Balance",
+"بدون فريق":"No Team","تعديل":"Edit","حذف":"Delete","تأكيد الحذف":"Confirm Delete","حفظ التعديل":"Save Edit",
+"الاسم الجديد":"New Name","اختياري":"Optional","عنوان البرنامج":"App Title","العنوان":"Title","اكتب عنوان البرنامج":"Write app title",
+"حفظ العنوان":"Save Title","اللغة":"Language","اختر الصفحة ثم حرّكها للأعلى أو للأسفل، وسيتم حفظ الترتيب تلقائيًا.":"Choose a page and move it up or down. The order will be saved automatically."
 };
 
+function translateArabicText(text){
+ let out=text;
+ Object.keys(appTranslations).sort((a,b)=>b.length-a.length).forEach(ar=>{out=out.split(ar).join(appTranslations[ar]);});
+ return out;
+}
 function setAppLanguage(lang){
  appLanguage=lang==='en'?'en':'ar';
  localStorage.setItem('appLanguage',appLanguage);
  applyAppLanguage();
 }
-
-function translateArabicText(text){
- let out=text;
- Object.keys(appTranslations).sort((a,b)=>b.length-a.length).forEach(ar=>{
-   out=out.split(ar).join(appTranslations[ar]);
- });
- return out;
+function applyAppTitle(){
+ const s=state();
+ const title=s.settings.appTitle||'🏆 سجل وحسابات ⚽️ قروب الكورة 🏆';
+ const h=document.getElementById('appTitle');
+ if(h)h.textContent=title;
+ document.title=title;
+ const input=document.getElementById('appTitleInput');
+ if(input&&document.activeElement!==input)input.value=title;
 }
-
+function saveAppTitle(){
+ const input=document.getElementById('appTitleInput');
+ if(!input)return;
+ const s=state();
+ s.settings.appTitle=(input.value||'').trim()||'🏆 سجل وحسابات ⚽️ قروب الكورة 🏆';
+ saveNoRender(s);
+ applyAppTitle();
+ alert(appLanguage==='en'?'Title saved':'تم حفظ العنوان');
+}
+function skipTranslateElement(el){
+ return !!el.closest('#playersList,#matchPlayers,#teamsPlayers,#teamsPreview,#calendarList,#playerTableWrap,#depositsList,#matchLogList,#playerFilterContent,option');
+}
+function applyStaticTranslations(){
+ document.querySelectorAll('nav button,h2,h3,h4,label,button,p.muted,th,.summaryCard span').forEach(el=>{
+   if(skipTranslateElement(el))return;
+   if(!el.dataset.arText)el.dataset.arText=el.textContent;
+   el.textContent=appLanguage==='en'?translateArabicText(el.dataset.arText):el.dataset.arText;
+ });
+}
 function applyAppLanguage(){
  document.documentElement.lang=appLanguage==='en'?'en':'ar';
  document.documentElement.dir=appLanguage==='en'?'ltr':'rtl';
  document.body.classList.toggle('englishMode',appLanguage==='en');
-
- const arBtn=document.getElementById('langArBtn');
- const enBtn=document.getElementById('langEnBtn');
+ const arBtn=document.getElementById('langArBtn'),enBtn=document.getElementById('langEnBtn');
  if(arBtn)arBtn.classList.toggle('activeLang',appLanguage==='ar');
  if(enBtn)enBtn.classList.toggle('activeLang',appLanguage==='en');
-
- const walker=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT,{
-   acceptNode(node){
-     if(!node.nodeValue||!node.nodeValue.trim())return NodeFilter.FILTER_REJECT;
-     const p=node.parentElement;
-     if(!p||['SCRIPT','STYLE','TEXTAREA'].includes(p.tagName))return NodeFilter.FILTER_REJECT;
-     return NodeFilter.FILTER_ACCEPT;
-   }
- });
- const nodes=[];
- while(walker.nextNode())nodes.push(walker.currentNode);
-
- nodes.forEach(node=>{
-   if(!node.__arOriginal)node.__arOriginal=node.nodeValue;
-   node.nodeValue=appLanguage==='en'?translateArabicText(node.__arOriginal):node.__arOriginal;
- });
-
+ applyStaticTranslations();
  document.querySelectorAll('input[placeholder]').forEach(el=>{
    if(!el.dataset.arPlaceholder)el.dataset.arPlaceholder=el.getAttribute('placeholder')||'';
    el.setAttribute('placeholder',appLanguage==='en'?translateArabicText(el.dataset.arPlaceholder):el.dataset.arPlaceholder);
  });
+ applyAppTitle();
 }
-
 const __oldRenderAllLang=typeof renderAll==='function'?renderAll:null;
 if(__oldRenderAllLang&&!__oldRenderAllLang.__langWrapped){
  renderAll=function(){
@@ -908,6 +912,15 @@ if(__oldRenderAllLang&&!__oldRenderAllLang.__langWrapped){
  };
  renderAll.__langWrapped=true;
 }
-document.addEventListener('DOMContentLoaded',()=>setTimeout(applyAppLanguage,200));
+const __oldShowTabSettings=typeof showTab==='function'?showTab:null;
+if(__oldShowTabSettings&&!__oldShowTabSettings.__settingsWrapped){
+ showTab=function(id){
+   const r=__oldShowTabSettings.apply(this,arguments);
+   if(id==='backup')setTimeout(()=>{renderPageOrder();applyAppTitle();applyAppLanguage();},120);
+   return r;
+ };
+ showTab.__settingsWrapped=true;
+}
+document.addEventListener('DOMContentLoaded',()=>setTimeout(()=>{renderPageOrder();applyAppTitle();applyAppLanguage();},250));
 setInterval(()=>{if(appLanguage==='en')applyAppLanguage()},2000);
 

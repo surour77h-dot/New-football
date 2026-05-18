@@ -10,11 +10,7 @@
 </head>
 <body>
 <header>
-<h1>🏆 سجل وحسابات ⚽️ قروب الكورة 🏆</h1>
-<div id="langToggleWrap" class="langToggleWrap">
-<button type="button" id="langArBtn" onclick="setAppLanguage('ar')">عربي</button>
-<button type="button" id="langEnBtn" onclick="setAppLanguage('en')">English</button>
-</div>
+<h1 id="appTitle">🏆 سجل وحسابات ⚽️ قروب الكورة 🏆</h1>
 </header>
 <nav>
 <button onclick="showTab('newMatch')">لعبة</button>
@@ -25,8 +21,8 @@
 <button onclick="showTab('playerFilter')">كشف لاعب</button>
 <button onclick="showTab('matchLog')">السجل</button>
 <button onclick="showTab('players')">اللاعبين</button>
-<button onclick="showTab('settings')">الترتيب</button>
-<button onclick="showTab('backup')">النسخ</button>
+
+<button onclick="showTab('backup')">الإعدادات</button>
 </nav>
 
 <main>
@@ -109,15 +105,34 @@
 <div id="playerFilterContent"></div>
 </section>
 
-<section id="settings" class="tab">
-<h2>ترتيب الصفحات</h2>
+<section id="backup" class="tab">
+<h2>الإعدادات</h2>
+
 <div class="card">
+<h3>اللغة / Language</h3>
+<div id="langToggleWrap" class="langToggleWrap">
+<button type="button" id="langArBtn" onclick="setAppLanguage('ar')">عربي</button>
+<button type="button" id="langEnBtn" onclick="setAppLanguage('en')">English</button>
+</div>
+</div>
+
+<div class="card">
+<h3>عنوان البرنامج</h3>
+<label>العنوان<input id="appTitleInput" placeholder="اكتب عنوان البرنامج"></label>
+<button class="primary wide" onclick="saveAppTitle()">حفظ العنوان</button>
+</div>
+
+<div class="card">
+<h3>ترتيب الصفحات</h3>
 <p class="muted">اختر الصفحة ثم حرّكها للأعلى أو للأسفل، وسيتم حفظ الترتيب تلقائيًا.</p>
 <div id="pageOrderList"></div>
 </div>
-</section>
 
-<section id="backup" class="tab"><h2>النسخة الاحتياطية</h2><div class="card"><button class="wide" onclick="exportData()">تصدير البيانات</button><label>استيراد<input type="file" accept=".json" onchange="importData(event)"></label></div></section>
+<div class="card">
+<h3>النسخة الاحتياطية</h3>
+<div class="card"><button class="wide" onclick="exportData()">تصدير البيانات</button><label>استيراد<input type="file" accept=".json" onchange="importData(event)"></label></div>
+</div>
+</section>
 
 <section id="editPage" class="tab editOnly">
 <h2 id="editPageTitle">تعديل</h2>
