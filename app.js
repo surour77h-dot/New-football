@@ -597,330 +597,61 @@ document.addEventListener('change',function(e){
   }
 });
 
-setInterval(function(){
-  try{updatePlayersGuestsCount()}catch(e){}
-},1000);
 
 
 
-function fixTeamsVisualOrderAndHighlight(){
-  try{
-    document.querySelectorAll('#teamsPreview .calendarTeams, #calendarList .calendarTeams').forEach(box=>{
-      box.style.direction='rtl';
-      box.style.display='grid';
-      box.style.gridTemplateColumns='1fr 1fr';
-      const a=box.querySelector('.teamABox');
-      const b=box.querySelector('.teamBBox');
-      if(a){a.style.order='1';a.style.background='#fbffb8'}
-      if(b){b.style.order='2';b.style.background='#ffd1f3'}
-    });
 
-    document.querySelectorAll('#teamsPlayers button.selA').forEach(btn=>{
-      btn.style.background='#ffe066';
-      btn.style.border='2px solid #b08900';
-      btn.style.fontWeight='900';
-      btn.style.transform='scale(1.06)';
-      btn.style.boxShadow='0 0 0 3px rgba(255,224,102,.45), 0 4px 12px rgba(0,0,0,.18)';
-    });
-    document.querySelectorAll('#teamsPlayers button.selB').forEach(btn=>{
-      btn.style.background='#ff8ccf';
-      btn.style.border='2px solid #b83280';
-      btn.style.fontWeight='900';
-      btn.style.transform='scale(1.06)';
-      btn.style.boxShadow='0 0 0 3px rgba(255,140,207,.38), 0 4px 12px rgba(0,0,0,.18)';
-    });
-  }catch(e){}
+function setAppLanguage(lang){
+ localStorage.setItem('appLanguage', lang);
+ location.reload();
 }
 
-const __oldRenderTeamsFix=typeof renderTeams==='function'?renderTeams:null;
-if(__oldRenderTeamsFix && !__oldRenderTeamsFix.__fixedTeamsVisual){
-  renderTeams=function(){
-    const r=__oldRenderTeamsFix.apply(this,arguments);
-    setTimeout(fixTeamsVisualOrderAndHighlight,50);
-    return r;
-  };
-  renderTeams.__fixedTeamsVisual=true;
+function saveAppTitle(){
+ const input = document.getElementById('appTitleInput');
+ if(!input) return;
+ const value = input.value.trim();
+ if(!value) return;
+
+ localStorage.setItem('customAppTitle', value);
+
+ const titleEl = document.getElementById('appTitle');
+ if(titleEl) titleEl.textContent = value;
+
+ alert('تم حفظ العنوان');
 }
 
-const __oldRenderTeamsPreviewFix=typeof renderTeamsPreview==='function'?renderTeamsPreview:null;
-if(__oldRenderTeamsPreviewFix && !__oldRenderTeamsPreviewFix.__fixedTeamsPreviewVisual){
-  renderTeamsPreview=function(){
-    const r=__oldRenderTeamsPreviewFix.apply(this,arguments);
-    setTimeout(fixTeamsVisualOrderAndHighlight,50);
-    return r;
-  };
-  renderTeamsPreview.__fixedTeamsPreviewVisual=true;
-}
+document.addEventListener('DOMContentLoaded', function(){
 
-document.addEventListener('DOMContentLoaded',()=>setTimeout(fixTeamsVisualOrderAndHighlight,300));
-setInterval(fixTeamsVisualOrderAndHighlight,1500);
+ const savedTitle = localStorage.getItem('customAppTitle');
+ if(savedTitle){
+   const titleEl = document.getElementById('appTitle');
+   if(titleEl) titleEl.textContent = savedTitle;
+   document.title = savedTitle;
 
-
-
-function fixTeamBoxesByTitle(){
- try{
-   document.querySelectorAll('.calendarTeams').forEach(wrap=>{
-      const boxes=[...wrap.children];
-      let firstBox=null, secondBox=null;
-
-      boxes.forEach(b=>{
-         const txt=(b.innerText||'').trim();
-         if(txt.includes('الأول')) firstBox=b;
-         if(txt.includes('الثاني')) secondBox=b;
-      });
-
-      wrap.style.display='grid';
-      wrap.style.gridTemplateColumns='1fr 1fr';
-      wrap.style.direction='ltr';
-      wrap.style.gap='18px';
-
-      if(firstBox){
-         firstBox.style.gridColumn='2';
-         firstBox.style.background='#f6f3b1';
-      }
-
-      if(secondBox){
-         secondBox.style.gridColumn='1';
-         secondBox.style.background='#efc0e5';
-      }
-   });
- }catch(e){}
-}
-
-document.addEventListener('DOMContentLoaded',()=>{
- setTimeout(fixTeamBoxesByTitle,300);
-});
-
-setInterval(fixTeamBoxesByTitle,1200);
-
-
-
-
-function forceSwapTeamBoxesByText(){
-  try{
-    document.querySelectorAll('#teamsPreview .calendarTeams, #calendarList .calendarTeams, .calendarTeams').forEach(wrap=>{
-      const boxes=[...wrap.children].filter(el=>el && el.querySelector);
-      let first=null, second=null;
-
-      boxes.forEach(el=>{
-        const t=(el.textContent||'').trim();
-        if(t.includes('الفريق الأول') || t.includes('الأول')) first=el;
-        if(t.includes('الفريق الثاني') || t.includes('الثاني')) second=el;
-      });
-
-      if(!first || !second) return;
-
-      // Physical order in DOM: second first (left), first last (right)
-      if(wrap.children[0] !== second) wrap.insertBefore(second, wrap.firstElementChild);
-      if(wrap.lastElementChild !== first) wrap.appendChild(first);
-
-      wrap.style.setProperty('display','grid','important');
-      wrap.style.setProperty('grid-template-columns','1fr 1fr','important');
-      wrap.style.setProperty('direction','ltr','important');
-      wrap.style.setProperty('gap','18px','important');
-
-      second.style.setProperty('background','#ffd1f3','important');
-      second.style.setProperty('grid-column','1','important');
-      second.style.setProperty('order','1','important');
-      second.style.setProperty('direction','rtl','important');
-
-      first.style.setProperty('background','#fbffb8','important');
-      first.style.setProperty('grid-column','2','important');
-      first.style.setProperty('order','2','important');
-      first.style.setProperty('direction','rtl','important');
-    });
-  }catch(e){
-    console.log('forceSwapTeamBoxesByText error',e);
-  }
-}
-
-const __oldRenderAllTeamSwap=typeof renderAll==='function'?renderAll:null;
-if(__oldRenderAllTeamSwap && !__oldRenderAllTeamSwap.__teamSwapWrapped){
-  renderAll=function(){
-    const r=__oldRenderAllTeamSwap.apply(this,arguments);
-    setTimeout(forceSwapTeamBoxesByText,50);
-    setTimeout(forceSwapTeamBoxesByText,250);
-    return r;
-  };
-  renderAll.__teamSwapWrapped=true;
-}
-
-['renderTeams','renderTeamsPreview','renderCalendarList'].forEach(fn=>{
-  const old=window[fn];
-  if(typeof old==='function' && !old.__teamSwapWrapped){
-    window[fn]=function(){
-      const r=old.apply(this,arguments);
-      setTimeout(forceSwapTeamBoxesByText,50);
-      setTimeout(forceSwapTeamBoxesByText,250);
-      return r;
-    };
-    window[fn].__teamSwapWrapped=true;
-  }
-});
-
-document.addEventListener('DOMContentLoaded',()=>{
-  setTimeout(forceSwapTeamBoxesByText,200);
-  setTimeout(forceSwapTeamBoxesByText,800);
-});
-setInterval(forceSwapTeamBoxesByText,1000);
-
-
-
-/* === HARD OVERRIDE TEAM BOXES === */
-(function(){
- function applyHardSwap(){
-   try{
-     document.querySelectorAll('.calendarTeams').forEach(function(wrap){
-
-       let firstBox=null;
-       let secondBox=null;
-
-       Array.from(wrap.children).forEach(function(el){
-         const txt=(el.innerText||'').trim();
-
-         if(txt.indexOf('الفريق الأول')>-1 || txt.indexOf('الأول')>-1){
-           firstBox=el;
-         }
-
-         if(txt.indexOf('الفريق الثاني')>-1 || txt.indexOf('الثاني')>-1){
-           secondBox=el;
-         }
-       });
-
-       if(!firstBox || !secondBox) return;
-
-       // حذف الترتيب الحالي
-       wrap.innerHTML='';
-
-       // اليسار = الثاني الوردي
-       secondBox.style.background='#efc0e5';
-       secondBox.style.order='1';
-
-       // اليمين = الأول الأصفر
-       firstBox.style.background='#f6f3b1';
-       firstBox.style.order='2';
-
-       wrap.style.display='flex';
-       wrap.style.flexDirection='row';
-       wrap.style.direction='ltr';
-       wrap.style.gap='18px';
-
-       // أضف الثاني أولاً ثم الأول
-       wrap.appendChild(secondBox);
-       wrap.appendChild(firstBox);
-     });
-   }catch(e){}
+   const input = document.getElementById('appTitleInput');
+   if(input) input.value = savedTitle;
  }
 
- window.applyHardSwap=applyHardSwap;
+ const lang = localStorage.getItem('appLanguage') || 'ar';
 
- setInterval(applyHardSwap,500);
+ if(lang === 'en'){
 
- document.addEventListener('DOMContentLoaded',function(){
-   setTimeout(applyHardSwap,100);
-   setTimeout(applyHardSwap,500);
-   setTimeout(applyHardSwap,1200);
- });
-})();
+   const map = {
+    'لعبة':'Game',
+    'الفريقين':'Teams',
+    'الإيداعات':'Deposits',
+    'التقويم':'Calendar',
+    'الجدول':'Table',
+    'كشف لاعب':'Player Report',
+    'السجل':'Log',
+    'اللاعبين':'Players',
+    'الإعدادات':'Settings'
+   };
 
+   document.querySelectorAll('button,h1,h2,h3,label').forEach(el=>{
+      const txt = el.textContent.trim();
+      if(map[txt]) el.textContent = map[txt];
+   });
+ }
 
-
-
-
-/* ===== Arabic / English language switch ===== */
-let appLanguage=localStorage.getItem('appLanguage')||'ar';
-
-const appTranslations={
-"الإعدادات":"Settings","لعبة":"Game","الفريقين":"Teams","الإيداعات":"Deposits","التقويم":"Calendar","الجدول":"Table",
-"كشف لاعب":"Player Report","السجل":"Log","اللاعبين":"Players","ترتيب الصفحات":"Page Order","النسخة الاحتياطية":"Backup",
-"لعبة جديدة":"New Game","تعديل لعبة":"Edit Game","تاريخ اللعب":"Game Date","المكان":"Place","الحجز":"Booking",
-"العدد":"Count","سعر اللاعب":"Player Price","المشاركون":"Participants","إضافة ضيف":"Add Guest","اسم الضيف":"Guest Name",
-"اسم اللاعب":"Player Name","إضافة":"Add","حفظ":"Save","تفريغ":"Clear","تاريخ الإيداع":"Deposit Date","اللاعب":"Player",
-"المبلغ":"Amount","إيداع":"Deposit","خصم/مديونية":"Deduction/Debt","خصم":"Deduction","تأخير":"Late",
-"جميع العمليات":"All Transactions","السابق":"Previous","التالي":"Next","الفريق الأول":"Team One","الفريق الثاني":"Team Two",
-"تقسيم عشوائي":"Random Teams","حفظ الفريقين":"Save Teams","جدول اللاعبين":"Players Table","الاسم":"Name",
-"الرصيد":"Balance","عدد اللعب":"Games Count","لعب":"Games","آخر لعب":"Last Game","آخر لعبة":"Last Game",
-"اختر اللاعب":"Select Player","الإيداعات والمديونيات":"Deposits & Debts","الخصومات":"Deductions","أيام اللعب":"Game Days",
-"الأسماء التي أحضرها":"Guests Brought","المجموع":"Total","مجموع الخصومات":"Total Deductions","تصدير":"Export",
-"استيراد":"Import","أضف اللاعبين أولًا.":"Add players first.","لا يوجد":"None","لا توجد عمليات":"No transactions",
-"لا توجد لعبة بهذا التاريخ.":"No game on this date.","اضغط على يوم من التقويم.":"Tap a day on the calendar.",
-"إجمالي الرصيد":"Total Balance","إجمالي الإيداعات":"Total Deposits","الألعاب":"Games","مجموع الرصيد":"Total Balance",
-"بدون فريق":"No Team","تعديل":"Edit","حذف":"Delete","تأكيد الحذف":"Confirm Delete","حفظ التعديل":"Save Edit",
-"الاسم الجديد":"New Name","اختياري":"Optional","عنوان البرنامج":"App Title","العنوان":"Title","اكتب عنوان البرنامج":"Write app title",
-"حفظ العنوان":"Save Title","اللغة":"Language","اختر الصفحة ثم حرّكها للأعلى أو للأسفل، وسيتم حفظ الترتيب تلقائيًا.":"Choose a page and move it up or down. The order will be saved automatically."
-};
-
-function translateArabicText(text){
- let out=text;
- Object.keys(appTranslations).sort((a,b)=>b.length-a.length).forEach(ar=>{out=out.split(ar).join(appTranslations[ar]);});
- return out;
-}
-function setAppLanguage(lang){
- appLanguage=lang==='en'?'en':'ar';
- localStorage.setItem('appLanguage',appLanguage);
- applyAppLanguage();
-}
-function applyAppTitle(){
- const s=state();
- const title=s.settings.appTitle||'🏆 سجل وحسابات ⚽️ قروب الكورة 🏆';
- const h=document.getElementById('appTitle');
- if(h)h.textContent=title;
- document.title=title;
- const input=document.getElementById('appTitleInput');
- if(input&&document.activeElement!==input)input.value=title;
-}
-function saveAppTitle(){
- const input=document.getElementById('appTitleInput');
- if(!input)return;
- const s=state();
- s.settings.appTitle=(input.value||'').trim()||'🏆 سجل وحسابات ⚽️ قروب الكورة 🏆';
- saveNoRender(s);
- applyAppTitle();
- alert(appLanguage==='en'?'Title saved':'تم حفظ العنوان');
-}
-function skipTranslateElement(el){
- return !!el.closest('#playersList,#matchPlayers,#teamsPlayers,#teamsPreview,#calendarList,#playerTableWrap,#depositsList,#matchLogList,#playerFilterContent,option');
-}
-function applyStaticTranslations(){
- document.querySelectorAll('nav button,h2,h3,h4,label,button,p.muted,th,.summaryCard span').forEach(el=>{
-   if(skipTranslateElement(el))return;
-   if(!el.dataset.arText)el.dataset.arText=el.textContent;
-   el.textContent=appLanguage==='en'?translateArabicText(el.dataset.arText):el.dataset.arText;
- });
-}
-function applyAppLanguage(){
- document.documentElement.lang=appLanguage==='en'?'en':'ar';
- document.documentElement.dir=appLanguage==='en'?'ltr':'rtl';
- document.body.classList.toggle('englishMode',appLanguage==='en');
- const arBtn=document.getElementById('langArBtn'),enBtn=document.getElementById('langEnBtn');
- if(arBtn)arBtn.classList.toggle('activeLang',appLanguage==='ar');
- if(enBtn)enBtn.classList.toggle('activeLang',appLanguage==='en');
- applyStaticTranslations();
- document.querySelectorAll('input[placeholder]').forEach(el=>{
-   if(!el.dataset.arPlaceholder)el.dataset.arPlaceholder=el.getAttribute('placeholder')||'';
-   el.setAttribute('placeholder',appLanguage==='en'?translateArabicText(el.dataset.arPlaceholder):el.dataset.arPlaceholder);
- });
- applyAppTitle();
-}
-const __oldRenderAllLang=typeof renderAll==='function'?renderAll:null;
-if(__oldRenderAllLang&&!__oldRenderAllLang.__langWrapped){
- renderAll=function(){
-   const r=__oldRenderAllLang.apply(this,arguments);
-   setTimeout(applyAppLanguage,80);
-   setTimeout(applyAppLanguage,300);
-   return r;
- };
- renderAll.__langWrapped=true;
-}
-const __oldShowTabSettings=typeof showTab==='function'?showTab:null;
-if(__oldShowTabSettings&&!__oldShowTabSettings.__settingsWrapped){
- showTab=function(id){
-   const r=__oldShowTabSettings.apply(this,arguments);
-   if(id==='backup')setTimeout(()=>{renderPageOrder();applyAppTitle();applyAppLanguage();},120);
-   return r;
- };
- showTab.__settingsWrapped=true;
-}
-document.addEventListener('DOMContentLoaded',()=>setTimeout(()=>{renderPageOrder();applyAppTitle();applyAppLanguage();},250));
-setInterval(()=>{if(appLanguage==='en')applyAppLanguage()},2000);
-
+});
