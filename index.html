@@ -9,7 +9,13 @@
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<header><h1>🏆 سجل وحسابات ⚽️ قروب الكورة 🏆</h1></header>
+<header>
+<h1>🏆 سجل وحسابات ⚽️ قروب الكورة 🏆</h1>
+<div id="langToggleWrap" class="langToggleWrap">
+<button type="button" id="langArBtn" onclick="setAppLanguage('ar')">عربي</button>
+<button type="button" id="langEnBtn" onclick="setAppLanguage('en')">English</button>
+</div>
+</header>
 <nav>
 <button onclick="showTab('newMatch')">لعبة</button>
 <button onclick="showTab('teams')">الفريقين</button>

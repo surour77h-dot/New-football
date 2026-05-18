@@ -2987,3 +2987,13 @@ direction:ltr!important;
   color:#065f46 !important;
   border-color:#86efac !important;
 }
+
+/* ===== Language toggle ===== */
+.langToggleWrap{display:flex;justify-content:center;gap:8px;margin-top:8px}
+.langToggleWrap button{background:#fff!important;color:#0f5132!important;border:1.5px solid #b9d8c7!important;border-radius:14px!important;padding:7px 14px!important;font-weight:900!important;box-shadow:0 2px 7px rgba(0,0,0,.12)!important}
+.langToggleWrap button.activeLang{background:#0f5132!important;color:#fff!important;box-shadow:0 4px 12px rgba(15,81,50,.35)!important}
+body.englishMode{direction:ltr!important;text-align:left!important}
+body.englishMode nav,body.englishMode .item,body.englishMode .two,body.englishMode .twoBtns{direction:ltr!important}
+body.englishMode table th,body.englishMode table td{direction:ltr!important}
+body.englishMode input,body.englishMode select,body.englishMode textarea{direction:ltr!important;text-align:left!important}
+body.englishMode .pos,body.englishMode .neg,body.englishMode .count,body.englishMode .gamesTotalAmount,body.englishMode .guestTotalAmount{direction:ltr!important}
