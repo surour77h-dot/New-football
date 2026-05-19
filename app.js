@@ -517,14 +517,7 @@ function renderAll(){renderNav();setActiveNavButton(currentTabId);renderPageOrde
 .sort((a,b)=>b.date.localeCompare(a.date))
 .map(m=>`<option value="${m.id}">${formatDateDisplay(m.date)} | ${m.place||m.location||''}</option>`)
 .join('');renderTempGuests();renderCalendar();renderCalendarList();renderMatchLog(s);renderTeams();renderTables(s,b);updatePrettyDates()}
-function exportData(){
- const filename=(state().settings.backupFileName||'qatia-backup').replace(/\.json$/i,'')+'.json';
- const blob=new Blob([JSON.stringify(state(),null,2)],{type:'application/json'});
- const a=document.createElement('a');
- a.href=URL.createObjectURL(blob);
- a.download=filename;
- a.click();
-}
+function exportData(){const blob=new Blob([JSON.stringify(state(),null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='qatiya-backup.json';a.click()}
 function importData(e){const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{localStorage.setItem('qatiyaState',r.result);renderAll();alert('تم الاستيراد')};r.readAsText(f)}
 if('serviceWorker'in navigator){navigator.serviceWorker.register('sw.js')}setDepositType('in');renderAll();
 setTimeout(()=>{const first=document.querySelector("nav button");if(first)first.classList.add('activeTab')},100);
@@ -832,79 +825,50 @@ setInterval(forceSwapTeamBoxesByText,1000);
 
 
 
-
-
-/* ===== Stable bilingual mode ===== */
-let appLanguage = localStorage.getItem('appLanguage') || 'ar';
-const I18N = {"الإعدادات": "Settings", "لعبة": "Game", "الفريقين": "Teams", "الإيداعات": "Deposits", "التقويم": "Calendar", "الجدول": "Table", "كشف لاعب": "Player Report", "سجل اللعب": "Games Log", "السجل": "Log", "اللاعبين": "Players", "الترتيب": "Order", "النسخ": "Backup", "لعبة جديدة": "New Game", "تعديل لعبة": "Edit Game", "تاريخ اللعب": "Game Date", "المكان": "Place", "الحجز": "Booking", "العدد": "Count", "سعر اللاعب": "Player Price", "المشاركون": "Participants", "إضافة ضيف": "Add Guest", "اسم الضيف": "Guest Name", "إضافة": "Add", "حفظ": "Save", "تفريغ": "Clear", "حفظ التعديل": "Save Changes", "تاريخ الإيداع": "Deposit Date", "اللاعب": "Player", "المبلغ": "Amount", "إيداع": "Deposit", "خصم/مديونية": "Deduction/Debt", "خصم": "Deduction", "تأخير": "Late", "احفظ أول مبلغ ليظهر كزر سريع.": "Save the first amount to show it as a quick button.", "جميع العمليات": "All Transactions", "السابق": "Previous", "التالي": "Next", "الفريق الأول": "Team One", "الفريق الثاني": "Team Two", "تقسيم عشوائي": "Random Teams", "حفظ الفريقين": "Save Teams", "جدول اللاعبين": "Players Table", "التقارير": "Reports", "الاسم": "Name", "الرصيد": "Balance", "لعب": "Games", "آخر لعب": "Last Game", "آخر لعبة": "Last Game", "اختر اللاعب": "Select Player", "اختر لاعب": "Select Player", "عدد اللعب": "Games Count", "الخصومات": "Deductions", "أيام اللعب": "Game Days", "الإيداعات والمديونيات": "Deposits & Debts", "الأسماء التي أحضرها": "Guests Brought", "المجموع": "Total", "مجموع الخصومات": "Total Deductions", "مجموع خصومات أيام اللعب": "Game Days Total", "النسخة الاحتياطية": "Backup", "تصدير البيانات": "Export Data", "استيراد البيانات": "Import Data", "استيراد": "Import", "تصدير": "Export", "ترتيب الصفحات": "Page Order", "أضف اللاعبين أولًا.": "Add players first.", "لا يوجد": "None", "لا توجد عمليات": "No transactions", "لا توجد ألعاب محفوظة.": "No saved games.", "لا توجد لعبة بهذا التاريخ.": "No game on this date.", "اضغط على يوم من التقويم.": "Tap a day on the calendar.", "إجمالي الرصيد": "Total Balance", "إجمالي الإيداعات": "Total Deposits", "الألعاب": "Games", "مجموع الرصيد": "Total Balance", "بدون فريق": "No Team", "تعديل": "Edit", "حذف": "Delete", "تأكيد الحذف": "Confirm Delete", "الاسم الجديد": "New Name", "اسم اللاعب": "Player Name", "اختياري": "Optional", "اللغة": "Language", "العربية": "Arabic", "اسم ملف النسخة الاحتياطية": "Backup File Name", "اكتب اسم الملف بدون ‎.json": "Write the file name without .json", "حفظ اسم الملف": "Save File Name", "اللعبة": "Game", "بدون فريق:": "No team:", "إيداع مبدئي": "Initial Deposit", "يناير": "January", "فبراير": "February", "مارس": "March", "أبريل": "April", "مايو": "May", "يونيو": "June", "يوليو": "July", "أغسطس": "August", "سبتمبر": "September", "أكتوبر": "October", "نوفمبر": "November", "ديسمبر": "December", "الأحد": "Sunday", "الإثنين": "Monday", "الثلاثاء": "Tuesday", "الأربعاء": "Wednesday", "الخميس": "Thursday", "الجمعة": "Friday", "السبت": "Saturday", "اختر الصفحة ثم حرّكها للأعلى أو للأسفل، وسيتم حفظ الترتيب تلقائيًا.": "Choose a page and move it up or down. The order will be saved automatically."};
-
-function trText(txt){
- if(appLanguage!=='en') return txt;
- let out=txt;
- Object.keys(I18N).sort((a,b)=>b.length-a.length).forEach(ar=>{ out=out.split(ar).join(I18N[ar]); });
- return out;
+function applyAppTitle(){
+  try{
+    const s=state();
+    const title=(s.settings&&s.settings.appTitle)||'🏆 سجل وحسابات ⚽️ قروب الكورة 🏆';
+    const h=document.getElementById('appTitle');
+    if(h) h.textContent=title;
+    document.title=title;
+    const input=document.getElementById('appTitleInput');
+    if(input && document.activeElement!==input) input.value=title;
+  }catch(e){}
 }
 
-function setAppLanguage(lang){
- appLanguage = lang==='en' ? 'en' : 'ar';
- localStorage.setItem('appLanguage', appLanguage);
- renderAll();
+function saveAppTitle(){
+  const input=document.getElementById('appTitleInput');
+  if(!input)return;
+  const s=state();
+  if(!s.settings)s.settings={};
+  s.settings.appTitle=(input.value||'').trim()||'🏆 سجل وحسابات ⚽️ قروب الكورة 🏆';
+  saveNoRender(s);
+  applyAppTitle();
+  alert('تم حفظ العنوان');
 }
 
-function saveBackupFileName(){
- const input=document.getElementById('backupFileNameInput');
- if(!input)return;
- const s=state();
- s.settings.backupFileName=(input.value||'qatia-backup').trim().replace(/\.json$/i,'')||'qatia-backup';
- saveNoRender(s);
- renderAll();
+const __oldRenderAllTitle=typeof renderAll==='function'?renderAll:null;
+if(__oldRenderAllTitle && !__oldRenderAllTitle.__titleWrapped){
+  renderAll=function(){
+    const r=__oldRenderAllTitle.apply(this,arguments);
+    applyAppTitle();
+    return r;
+  };
+  renderAll.__titleWrapped=true;
 }
 
-function applyAppLanguageNow(){
- document.documentElement.lang=appLanguage==='en'?'en':'ar';
- document.documentElement.dir=appLanguage==='en'?'ltr':'rtl';
- document.body.classList.toggle('englishMode', appLanguage==='en');
-
- const arBtn=document.getElementById('langArBtn'), enBtn=document.getElementById('langEnBtn');
- if(arBtn) arBtn.classList.toggle('activeLang', appLanguage==='ar');
- if(enBtn) enBtn.classList.toggle('activeLang', appLanguage==='en');
-
- const skipSel='.teamName,.nameOnly,.depositPlayerCell,#playersList,#matchPlayers,#teamsPlayers';
- document.querySelectorAll('nav button,h2,h3,h4,label,button,p.muted,.dateTitle,.info,th,.summaryCard span,.calendarDayName').forEach(el=>{
-   if(el.closest(skipSel)) return;
-   if(!el.dataset.arBase) el.dataset.arBase=el.textContent;
-   el.textContent = appLanguage==='en' ? trText(el.dataset.arBase) : el.dataset.arBase;
- });
-
- document.querySelectorAll('input[placeholder]').forEach(el=>{
-   if(!el.dataset.arPlaceholder) el.dataset.arPlaceholder=el.getAttribute('placeholder')||'';
-   el.setAttribute('placeholder', appLanguage==='en' ? trText(el.dataset.arPlaceholder) : el.dataset.arPlaceholder);
- });
-
- const fileInput=document.getElementById('backupFileNameInput');
- if(fileInput && document.activeElement!==fileInput) fileInput.value=state().settings.backupFileName||'qatia-backup';
+const __oldShowTabTitle=typeof showTab==='function'?showTab:null;
+if(__oldShowTabTitle && !__oldShowTabTitle.__titleWrapped){
+  showTab=function(id){
+    const r=__oldShowTabTitle.apply(this,arguments);
+    if(id==='backup'){
+      setTimeout(()=>{renderPageOrder();applyAppTitle();},50);
+    }
+    return r;
+  };
+  showTab.__titleWrapped=true;
 }
 
-const __oldRenderAllStableLang=typeof renderAll==='function'?renderAll:null;
-if(__oldRenderAllStableLang&&!__oldRenderAllStableLang.__stableLangFixed){
- renderAll=function(){
-   const r=__oldRenderAllStableLang.apply(this,arguments);
-   applyAppLanguageNow();
-   return r;
- };
- renderAll.__stableLangFixed=true;
-}
-
-const __oldShowTabStableLang=typeof showTab==='function'?showTab:null;
-if(__oldShowTabStableLang&&!__oldShowTabStableLang.__stableLangFixed){
- showTab=function(id){
-   const r=__oldShowTabStableLang.apply(this,arguments);
-   if(id==='backup') renderPageOrder();
-   applyAppLanguageNow();
-   return r;
- };
- showTab.__stableLangFixed=true;
-}
-
-document.addEventListener('DOMContentLoaded',()=>{ applyAppLanguageNow(); });
+document.addEventListener('DOMContentLoaded',()=>setTimeout(applyAppTitle,100));
 

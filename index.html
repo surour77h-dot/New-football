@@ -9,9 +9,7 @@
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<header>
-<h1 id="appTitle">🏆 سجل وحسابات ⚽️ قروب الكورة 🏆</h1>
-</header>
+<header><h1 id="appTitle">🏆 سجل وحسابات ⚽️ قروب الكورة 🏆</h1></header>
 <nav>
 <button onclick="showTab('newMatch')">لعبة</button>
 <button onclick="showTab('teams')">الفريقين</button>
@@ -110,18 +108,15 @@
 <h2>الإعدادات</h2>
 
 <div class="card">
-<h3>اللغة</h3>
-<div id="langToggleWrap" class="langToggleWrap">
-<button type="button" id="langArBtn" onclick="setAppLanguage('ar')">العربية</button>
-<button type="button" id="langEnBtn" onclick="setAppLanguage('en')">English</button>
-</div>
+<h3>عنوان البرنامج</h3>
+<input id="appTitleInput" type="text" placeholder="اكتب الاسم الجديد للبرنامج">
+<button class="primary wide" onclick="saveAppTitle()">حفظ العنوان</button>
 </div>
 
 <div class="card">
-<h3>اسم ملف النسخة الاحتياطية</h3>
-<input id="backupFileNameInput" type="text" placeholder="qatia-backup">
-<p class="muted">اكتب اسم الملف بدون ‎.json</p>
-<button class="primary wide" onclick="saveBackupFileName()">حفظ اسم الملف</button>
+<h3>النسخة الاحتياطية</h3>
+<button class="wide" onclick="exportData()">تصدير البيانات</button>
+<label class="wide importBtn">استيراد البيانات<input type="file" accept=".json" onchange="importData(event)" style="display:none"></label>
 </div>
 
 <div class="card">
@@ -132,10 +127,6 @@
 
 </div>
 
-<div class="card">
-<h3>النسخة الاحتياطية</h3>
-<div class="card"><button class="wide" onclick="exportData()">تصدير البيانات</button><label class="wide importBtn">استيراد البيانات<input type="file" accept=".json" onchange="importData(event)" style="display:none"></label></div>
-</div>
 </section>
 
 
