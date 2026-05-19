@@ -10,18 +10,7 @@
 </head>
 <body>
 <header><h1>🏆 سجل وحسابات ⚽️ قروب الكورة 🏆</h1></header>
-<nav>
-<button onclick="showTab('newMatch')">لعبة</button>
-<button onclick="showTab('teams')">الفريقين</button>
-<button onclick="showTab('deposits')">الإيداعات</button>
-<button onclick="showTab('calendar')">التقويم</button>
-<button onclick="showTab('playerTable')">الجدول</button>
-<button onclick="showTab('playerFilter')">كشف لاعب</button>
-<button onclick="showTab('matchLog')">السجل</button>
-<button onclick="showTab('players')">اللاعبين</button>
-<button onclick="showTab('settings')">الترتيب</button>
-<button onclick="showTab('backup')">النسخ</button>
-</nav>
+<nav id="mainNav"></nav>
 
 <main>
 <section id="newMatch" class="tab active">
@@ -31,7 +20,10 @@
 <input type="date" id="matchDate">
 <label>سعر الملعب</label>
 <input type="number" id="matchPrice" value="0">
-<label>المشاركين</label>
+<label>الضيوف / المدرب (إن وجد)</label>
+<div id="guestsContainer" style="margin-bottom:15px;"></div>
+<button type="button" onclick="addGuestInput()" style="margin-bottom:15px; background:#e2e8f0; color:#1a202c;">+ إضافة ضيف / كابتن</button>
+<label>المشاركين من القروب</label>
 <div id="matchPlayersList"></div>
 <button class="primary wide" onclick="saveMatch()">حفظ اللعبة</button>
 </div>
@@ -54,7 +46,7 @@
 <div class="card">
 <label>اللاعب</label>
 <select id="depositPlayerSelect"></select>
-<label>المبلغ</label>
+<label>المبلغ (د.ك)</label>
 <input type="number" id="depositAmount" value="0">
 <label>نوع العملية</label>
 <div class="deposit-buttons-container" style="display:flex; gap:10px; margin-bottom:15px;">
@@ -69,20 +61,58 @@
 
 <section id="calendar" class="tab"><h2>التقويم</h2><div id="calendarWrap"></div></section>
 <section id="playerTable" class="tab"><h2>جدول اللاعبين</h2><div id="playerTableWrap"></div></section>
+<section id="reports" class="tab"><h2>التقارير</h2><div id="reportSummary"></div><div id="reportsList"></div></section>
+
 <section id="playerFilter" class="tab">
 <h2>كشف لاعب</h2>
-<div class="card"><select id="playerFilterSelect" onchange="renderPlayerFilter()"></select></div>
+<div class="card">
+<label>اختر اللاعب</label>
+<select id="playerFilterSelect" onchange="renderPlayerFilter()"></select>
+</div>
 <div id="playerFilterContent"></div>
 </section>
+
 <section id="matchLog" class="tab"><h2>سجل الألعاب</h2><div id="matchLogList"></div></section>
+
 <section id="players" class="tab">
 <h2>إدارة اللاعبين</h2>
-<div class="card"><input type="text" id="newPlayerName" placeholder="اسم اللاعب الجديد"><button class="primary wide" onclick="addPlayer()">إضافة لاعب</button></div>
-<div id="playersList"></div>
+<div class="card">
+<input type="text" id="newPlayerName" placeholder="اسم اللاعب الجديد">
+<button class="primary wide" onclick="addPlayer()">إضافة لاعب</button>
+</div>
+<div id="playersList" style="margin-top:15px;"></div>
 </section>
-<section id="settings" class="tab"><h2>الترتيب</h2><div id="pageOrderList"></div></section>
-<section id="backup" class="tab"><h2>النسخة الاحتياطية</h2><div class="card"><button class="wide" onclick="exportData()">تصدير البيانات</button><br><br><label>استيراد<input type="file" accept=".json" onchange="importData(event)"></label></div></section>
+
+<section id="settings" class="tab">
+<h2>ترتيب الصفحات</h2>
+<div class="card">
+<p class="muted">اختر الصفحة ثم حرّكها للأعلى أو للأسفل، وسيتم حفظ الترتيب تلقائيًا.</p>
+<div id="pageOrderList"></div>
+</div>
+</section>
+
+<section id="backup" class="tab">
+<h2>النسخة الاحتياطية</h2>
+<div class="card">
+<button class="wide primary" onclick="exportData()" style="background:#0f5132; color:white; margin-bottom:15px;">تصدير واستخراج نسخة البيانات (Export)</button>
+<div style="border: 2px dashed #cbd5e1; padding: 15px; border-radius: 12px; text-align: center;">
+<label style="display:block; font-weight:bold; margin-bottom:10px;">استيراد واستعادة البيانات السابقة (Import)</label>
+<input type="file" id="importFileInput" accept=".json" onchange="importData(event)" style="min-height:auto; border:none; background:transparent;">
+</div>
+</div>
+</section>
+
+<section id="editPage" class="tab editOnly">
+<h2 id="editPageTitle">تعديل لعبة</h2>
+<div id="editPageContent"></div>
+</section>
 </main>
+
 <script src="app.js"></script>
+<script>
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js').catch(e=>console.log(e));
+}
+</script>
 </body>
 </html>
