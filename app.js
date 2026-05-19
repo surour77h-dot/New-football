@@ -638,67 +638,137 @@ document.addEventListener('DOMContentLoaded', function(){
 });
 
 
-// ===== Fixed persistent language switch =====
-function applyEnglishMode(){
-  const map = {
-    'لعبة':'Game',
-    'الفريقين':'Teams',
-    'الإيداعات':'Deposits',
-    'التقويم':'Calendar',
-    'الجدول':'Table',
-    'كشف لاعب':'Player Report',
-    'السجل':'Log',
-    'اللاعبين':'Players',
-    'الإعدادات':'Settings'
-  };
 
-  document.querySelectorAll('button,h1,h2,h3,label').forEach(el=>{
-    const txt = el.textContent.trim();
-    if(map[txt]){
-      el.textContent = map[txt];
-    }
-  });
+// ===== FINAL STABLE LANGUAGE SYSTEM =====
 
-  document.body.setAttribute('dir','ltr');
-  document.documentElement.setAttribute('dir','ltr');
-}
+const translations = {
+'لعبة':'Game',
+'الفريقين':'Teams',
+'الإيداعات':'Deposits',
+'التقويم':'Calendar',
+'الجدول':'Table',
+'كشف لاعب':'Player Report',
+'السجل':'Log',
+'اللاعبين':'Players',
+'الإعدادات':'Settings',
+'حفظ':'Save',
+'تفريغ':'Clear',
+'إضافة':'Add',
+'تعديل':'Edit',
+'حذف':'Delete',
+'إضافة ضيف':'Add Guest',
+'اسم الضيف':'Guest Name',
+'المشاركون':'Participants',
+'النسخة الاحتياطية':'Backup',
+'ترتيب الصفحات':'Page Order',
+'اللغة':'Language',
+'عنوان البرنامج':'App Title',
+'تصدير':'Export',
+'استيراد':'Import',
+'المبلغ':'Amount',
+'اللاعب':'Player',
+'تاريخ الإيداع':'Deposit Date',
+'تاريخ اللعب':'Game Date',
+'المكان':'Place',
+'الحجز':'Booking',
+'العدد':'Count',
+'سعر اللاعب':'Player Price',
+'حفظ الفريقين':'Save Teams',
+'تقسيم عشوائي':'Random Teams',
+'اختر اللاعب':'Select Player',
+'الرصيد':'Balance',
+'عدد اللعب':'Games',
+'آخر لعب':'Last Game',
+'الإيداعات والمديونيات':'Deposits & Debts',
+'أيام اللعب':'Game Days',
+'المجموع':'Total',
+'السابق':'Previous',
+'التالي':'Next'
+};
 
-function applyArabicMode(){
-  location.reload();
+function translatePage(){
+
+ const lang = localStorage.getItem('appLanguage') || 'ar';
+
+ if(lang !== 'en'){
+   document.documentElement.dir = 'rtl';
+   return;
+ }
+
+ document.documentElement.dir = 'ltr';
+
+ document.querySelectorAll('*').forEach(el=>{
+
+   if(el.children.length === 0){
+
+      const txt = el.textContent.trim();
+
+      if(translations[txt]){
+         el.textContent = translations[txt];
+      }
+
+   }
+
+   if(el.placeholder && translations[el.placeholder]){
+      el.placeholder = translations[el.placeholder];
+   }
+
+ });
+
+ const arBtn = document.getElementById('langArBtn');
+ const enBtn = document.getElementById('langEnBtn');
+
+ if(arBtn) arBtn.classList.remove('activeLang');
+ if(enBtn) enBtn.classList.add('activeLang');
+
 }
 
 function setAppLanguage(lang){
-  localStorage.setItem('appLanguage', lang);
-
-  if(lang === 'en'){
-    applyEnglishMode();
-  } else {
-    applyArabicMode();
-  }
-
-  const arBtn = document.getElementById('langArBtn');
-  const enBtn = document.getElementById('langEnBtn');
-
-  if(arBtn) arBtn.classList.toggle('activeLang', lang === 'ar');
-  if(enBtn) enBtn.classList.toggle('activeLang', lang === 'en');
+ localStorage.setItem('appLanguage', lang);
+ location.reload();
 }
 
-document.addEventListener('DOMContentLoaded', function(){
+function saveAppTitle(){
 
-  const savedLang = localStorage.getItem('appLanguage') || 'ar';
+ const input = document.getElementById('appTitleInput');
 
-  if(savedLang === 'en'){
-    setTimeout(()=>applyEnglishMode(), 300);
-  }
+ if(!input) return;
 
-  const savedTitle = localStorage.getItem('customAppTitle');
-  if(savedTitle){
-    const titleEl = document.getElementById('appTitle');
-    if(titleEl) titleEl.textContent = savedTitle;
-    document.title = savedTitle;
+ const val = input.value.trim();
 
-    const input = document.getElementById('appTitleInput');
-    if(input) input.value = savedTitle;
-  }
+ if(!val) return;
+
+ localStorage.setItem('customAppTitle', val);
+
+ const title = document.getElementById('appTitle');
+
+ if(title) title.textContent = val;
+
+ document.title = val;
+
+}
+
+document.addEventListener('DOMContentLoaded', ()=>{
+
+ const title = localStorage.getItem('customAppTitle');
+
+ if(title){
+
+   const t = document.getElementById('appTitle');
+
+   if(t) t.textContent = title;
+
+   document.title = title;
+
+   const input = document.getElementById('appTitleInput');
+
+   if(input) input.value = title;
+
+ }
+
+ translatePage();
+
+ setTimeout(translatePage, 500);
+ setTimeout(translatePage, 1200);
 
 });
