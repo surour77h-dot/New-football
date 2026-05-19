@@ -2998,33 +2998,15 @@ body.englishMode table th,body.englishMode table td{direction:ltr!important}
 body.englishMode input,body.englishMode select,body.englishMode textarea{direction:ltr!important;text-align:left!important}
 body.englishMode .pos,body.englishMode .neg,body.englishMode .count,body.englishMode .gamesTotalAmount,body.englishMode .guestTotalAmount{direction:ltr!important}
 
-/* Settings page language/title */
-#backup .langToggleWrap{display:flex;justify-content:center;gap:8px;margin-top:8px}
-#backup .langToggleWrap button,.langToggleWrap button{background:#fff!important;color:#0f5132!important;border:1.5px solid #b9d8c7!important;border-radius:14px!important;padding:8px 16px!important;font-weight:900!important;box-shadow:0 2px 7px rgba(0,0,0,.12)!important}
-#backup .langToggleWrap button.activeLang,.langToggleWrap button.activeLang{background:#0f5132!important;color:#fff!important;box-shadow:0 4px 12px rgba(15,81,50,.35)!important}
+#backup .langToggleWrap,.langToggleWrap{display:flex;justify-content:center;gap:8px;margin:8px 0 12px}
+#backup .langToggleWrap button,.langToggleWrap button{
+  background:#fff!important;color:#0f5132!important;border:1.5px solid #b9d8c7!important;border-radius:14px!important;
+  padding:8px 16px!important;font-weight:900!important;box-shadow:0 2px 7px rgba(0,0,0,.12)!important;
+}
+#backup .langToggleWrap button.activeLang,.langToggleWrap button.activeLang{background:#0f5132!important;color:#fff!important}
+.importBtn{display:flex!important;align-items:center!important;justify-content:center!important;cursor:pointer!important}
 body.englishMode{direction:ltr!important;text-align:left!important}
 body.englishMode nav{direction:ltr!important}
 body.englishMode .item,body.englishMode .two,body.englishMode .twoBtns{direction:ltr!important}
 body.englishMode table th,body.englishMode table td{direction:ltr!important}
-body.englishMode input,body.englishMode select,body.englishMode textarea{direction:ltr!important;text-align:left!important}
-
-
-.langToggleWrap{
-display:flex;
-justify-content:center;
-gap:10px;
-margin:20px 0;
-}
-
-.langToggleWrap button{
-padding:10px 16px;
-border-radius:14px;
-font-weight:bold;
-}
-
-.importBtn{
-display:flex;
-align-items:center;
-justify-content:center;
-cursor:pointer;
-}
+body.englishMode input,body.englishMode select,body.englishMode textarea{text-align:left!important;direction:ltr!important}
