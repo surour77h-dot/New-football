@@ -3,129 +3,17 @@ html,body{overflow-x:hidden;-webkit-text-size-adjust:100%;touch-action:manipulat
 body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Tahoma,Arial,sans-serif;margin:0;background:#f7f7f7;color:#222;font-size:14px}
 header{background:#0f5132;color:white;text-align:center;padding:12px 8px}header h1{font-size:18px;margin:0;line-height:1.35}
 nav{display:flex;gap:5px;overflow-x:auto;padding:7px;background:white;position:sticky;top:0;z-index:10;border-bottom:1px solid #ddd;scrollbar-width:none}nav::-webkit-scrollbar{display:none}
-button{border:0;border-radius:10px;padding:8px 9px;background:#e9ecef;font-weight:700;font-size:13px}
+button{border:0;border-radius:10px;padding:12px;background:#e9ecef;font-weight:700;font-size:13px;cursor:pointer;min-height:44px;}
 button.primary{background:#0f5132;color:white}button.danger{background:#f8d7da;color:#842029}.wide{width:100%}
 main{padding:8px;width:100%}h2{font-size:18px;margin:8px 0}.tab{display:none}.tab.active{display:block}
-.card{background:white;border:1px solid #ddd;border-radius:22px !important;padding:12px;margin-bottom:10px;box-shadow:0 4px 15px rgba(0,0,0,0.05) !important}
-.two{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px}
-label{display:block;font-weight:700;margin-bottom:8px;font-size:12px;color:#555}
-input,select{width:100%;padding:9px;border:1px solid #ccc;border-radius:10px;background:#fff;font-size:14px;margin-top:3px;font-weight:700}
-.checks{display:grid;grid-template-columns:1fr 1fr;gap:6px;max-height:220px;overflow-y:auto;padding:2px}
-.checks label{display:flex;align-items:center;background:#f8f9fa;padding:8px;border-radius:10px;margin:0;cursor:pointer;border:1px solid #eee}
-.checks input{width:auto;margin:0 0 0 8px;transform:scale(1.15)}
-.twoBtns{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
-.twoBtns button{width:100%;padding:11px}
-.item{display:flex;justify-content:between;align-items:center;padding:10px;border-bottom:1px solid #eee;font-weight:700}
-.item:last-child{border:0}
-.pos{color:#198754}.neg{color:#dc3545}
-.plainList{max-height:200px;overflow-y:auto}
-.nameOnly{padding:6px 0;font-weight:700;border-bottom:1px solid #eee}
-.addRow{display:flex;gap:6px}.addRow input{margin:0}
-.addRow button{padding:0 18px}
-.calHead{display:flex;justify-content:space-between;align-items:center;padding:6px 12px}
-.month{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;background:white;border:1px solid #ddd;border-radius:14px;padding:6px;margin-bottom:10px}
-.day{text-align:center;padding:8px 2px;font-size:11px;border-radius:8px}
-.hasGame{background:#e8f5e9;color:#2e7d32;cursor:pointer}
-.day.selected{background:#0f5132 !important;color:white !important}
-.teamPick{display:flex;align-items:center;gap:4px;padding:5px 0;border-bottom:1px solid #eee}
-.teamPick b{flex:1}
-.teamPick button{padding:5px 10px;font-size:12px}
-.teamName{padding:4px 0;border-bottom:1px solid rgba(0,0,0,0.05);font-size:13px;font-weight:700}
-.teamName:last-child{border:0}
-table{width:100%;border-collapse:collapse;margin-top:5px}
-th,td{padding:8px 6px;text-align:center;border-bottom:1px solid #eee;font-size:13px;font-weight:700}
-th{background:#f8f9fa;color:#555;font-size:11px}
-.summaryCards{display:grid;grid-template-columns:repeat(auto-fit,minmax(75px,1fr));gap:6px;margin-bottom:10px}
-.summaryCard{background:white;border:1px solid #ddd;border-radius:12px;padding:8px;text-align:center}
-.summaryCard span{display:block;font-size:10px;color:#666;font-weight:700}
-.summaryCard b{font-size:13px;display:block;margin-top:2px}
-.info{background:#e8f4fd;color:#1d4ed8;padding:9px;border-radius:10px;margin:8px 0;font-weight:700;text-align:center;font-size:13px}
-.actionBox{background:#f8f9fa;padding:10px;border-radius:12px;margin-top:10px;border:1px solid #e9ecef}
-.bottom{margin-top:5px}
-.depositRow{cursor:pointer;transition:background 0.1s;display:flex;justify-content:space-between;align-items:center}
-.depositRow:active{background:#f1f3f5}
-.quickButtons{display:flex;gap:6px;overflow-x:auto;padding:4px 0;margin-bottom:4px;scrollbar-width:none}
-.quickButtons::-webkit-scrollbar{display:none}
-.quick{background:#f1f3f5;padding:4px 8px;border-radius:8px;font-size:12px;font-weight:700;display:inline-flex;align-items:center;gap:4px;white-space:nowrap;border:1px solid #e2e8f0}
-.quick button.x{background:transparent;border:0;padding:0 2px;color:#94a3b8;cursor:pointer;font-size:14px;font-weight:400}
-.editOnly{background:#fff9db}
-.editCheck{display:flex;align-items:center;background:#fff;padding:8px;border-radius:10px;border:1px solid #ddd;margin:0}
-.editCheck input{width:auto;margin:0 0 0 6px}
-.editPlayersGrid{display:grid;grid-template-columns:1fr 1fr;gap:6px;max-height:200px;overflow-y:auto;margin-bottom:10px}
-.guestEditRow{display:flex;gap:4px;margin-bottom:4px}
-.guestEditRow input, .guestEditRow select{margin:0;padding:6px}
-.guestEditRow button{padding:0 10px}
-.participantsPreview{margin-top:10px;padding-top:5px}
-.chipGrid{display:flex;flex-wrap:wrap;gap:4px;margin-top:4px}
-.chip{padding:4px 8px;border-radius:8px;font-size:12px;font-weight:700}
-.memberChip{background:#e0f2fe;color:#0369a1}
-.guestChip{background:#fef3c7;color:#b45309}
-.tableWrap{overflow-x:auto;background:white;border:1px solid #ddd;border-radius:14px}
-.tablePlayerLink{color:#0f5132;text-decoration:underline;cursor:pointer}
-.inactiveName{text-decoration:line-through !important;opacity:0.65}
-.latestPlayedCell{background:#e8f5e9 !important;color:#1b5e20 !important;font-weight:900 !important}
-.posText{color:#198754 !important}.negText{color:#dc3545 !important}
-.gamesTotalRow, .guestTotalRow{background:#f8f9fa;border-top:2px solid #ddd;margin-top:4px}
-.gamesTotalAmount{color:#dc3545;font-weight:900}
-.guestTotalAmount{color:#dc3545;font-weight:900}
-.depoAmountGroup{display:inline-flex;align-items:center;gap:4px}
-.depoAmountGroup b{font-size:10px;opacity:0.75;padding:1px 4px;border-radius:4px;background:rgba(0,0,0,0.05)}
-.depositDateNameRow{display:inline-flex;flex-direction:column;gap:1px}
-.depositDateCell{font-size:10px;color:#666;font-weight:400}
-.depositPlayerCell{font-size:13px}
-.liveCount{font-size:13px;color:#666;font-weight:400}
-.pageOrderItem{display:flex;justify-content:space-between;align-items:center}
-.pageOrderItem .actions{display:flex;gap:4px}
-.pageOrderItem .actions button{padding:4px 10px}
-.activeTab{background:#0f5132 !important;color:#ffffff !important}
-
-/* تخصيص مميز للأزرار الثلاثة لتبدو واضحة جداً وبألوانها الصحيحة عند الخمول */
-#depositTypeIn{
-  background:#e8f5e9 !important;
-  color:#198754 !important;
-  border:1.5px solid rgba(0,0,0,.12) !important;
+.card{background:white;border:1px solid #ddd;border-radius:22px;padding:15px;margin-bottom:15px;box-shadow:0 4px 12px rgba(0,0,0,0.05)}
+label{display:block;font-weight:bold;margin-bottom:5px;margin-top:10px;}
+input[type="text"], input[type="number"], input[type="date"], select {
+  width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 10px; margin-bottom: 12px; font-size: 14px; min-height: 44px;
 }
-#depositTypeOut{
-  background:#f8d7da !important;
-  color:#dc3545 !important;
-  border:1.5px solid rgba(0,0,0,.12) !important;
-}
-#depositTypeLate{
-  background:#fef3c7 !important;
-  color:#d97706 !important;
-  border:1.5px solid rgba(0,0,0,.12) !important;
-}
-
-/* بروز أي زر مختار */
-#depositTypeIn.selectedDepositBtn,
-#depositTypeOut.selectedDepositBtn,
-#depositTypeLate.selectedDepositBtn{
-  transform:translateY(-2px) scale(1.05) !important;
-  box-shadow:
-    0 0 0 3px rgba(0,0,0,.08),
-    0 8px 20px rgba(0,0,0,.20) !important;
-  font-weight:900 !important;
-  border-width:2px !important;
-}
-
-/* زر إيداع عند الاختيار */
-#depositTypeIn.selectedDepositBtn{
-  background:#198754 !important;
-  color:#ffffff !important;
-  border-color:#0f5132 !important;
-}
-
-/* زر خصم/مديونية عند الاختيار */
-#depositTypeOut.selectedDepositBtn{
-  background:#dc3545 !important;
-  color:#ffffff !important;
-  border-color:#842029 !important;
-}
-
-/* زر تأخير عند الاختيار - برتقالي داكن */
-#depositTypeLate.lateActive,
-#depositTypeLate.selectedDepositBtn{
-  background:#d97706 !important;
-  color:#ffffff !important;
-  border-color:#b45309 !important;
-}
+.deposit-buttons-container button { flex: 1; text-align: center; border: 1.5px solid rgba(0,0,0,.12) !important; }
+#depositTypeIn.selectedDepositBtn{background:#198754 !important; color:#fff !important;}
+#depositTypeOut.selectedDepositBtn{background:#dc3545 !important; color:#fff !important;}
+#depositTypeLate.selectedDepositBtn{background:#d97706 !important; color:#fff !important;}
+.calendarTeams { display: flex; gap: 15px; direction: ltr; margin-top: 10px; }
+.calendarTeams > div { flex: 1; padding: 10px; border-radius: 12px; text-align: center; }
