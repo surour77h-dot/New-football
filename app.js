@@ -1,3 +1,308 @@
+// ==================== نظام اللغتين والترجمة ====================
+let currentLang = localStorage.getItem('qatiyaLang') || 'ar';
+
+const i18n = {
+  ar: {
+    pageTitle: "🏆 سجل وحسابات ⚽️ قروب الكورة 🏆",
+    mainHeader: "🏆 سجل وحسابات ⚽️ قروب الكورة 🏆",
+    langBtn: "English",
+    tab_newMatch: "لعبة",
+    tab_teams: "الفريقين",
+    tab_deposits: "الإيداعات",
+    tab_calendar: "التقويم",
+    tab_playerTable: "الجدول",
+    tab_playerFilter: "كشف لاعب",
+    tab_matchLog: "السجل",
+    tab_players: "اللاعبين",
+    tab_settings: "الترتيب",
+    tab_backup: "النسخ",
+    matchFormTitle: "لعبة جديدة",
+    matchFormTitleEdit: "تعديل لعبة",
+    lblMatchDate: "تاريخ اللعب",
+    lblPlace: "المكان",
+    lblBookingCost: "الحجز",
+    lblNeededPlayers: "العدد",
+    lblPricePerPlayer: "سعر اللاعب:",
+    lblParticipants: "المشاركون",
+    lblAddGuest: "إضافة ضيف",
+    btnBtnAddGuest: "إضافة ضيف",
+    btnSaveMatch: "حفظ",
+    btnClearMatch: "تفريغ",
+    lblPlayersTitle: "اللاعبين",
+    btnAddPlayer: "إضافة",
+    btnEditPlayer: "تعديل",
+    btnDeletePlayer: "حذف",
+    lblDepositsTitle: "الإيداعات",
+    lblDepositDate: "تاريخ الإيداع",
+    lblDepositPlayer: "اللاعب",
+    lblDepositAmount: "المبلغ",
+    btnSaveDeposit: "حفظ",
+    btnClearDeposit: "تفريغ",
+    lblCalendarTitle: "التقويم",
+    btnPrevMonth: "السابق",
+    btnNextMonth: "التالي",
+    calendarSelectedTitle: "المشاركون",
+    lblMatchLogTitle: "سجل اللعب",
+    lblAllOperations: "جميع العمليات",
+    lblTeamsTitle: "الفريقين",
+    lblTeamsMatchSelect: "اللعبة",
+    btnRandomTeams: "تقسيم عشوائي",
+    btnSaveTeams: "حفظ الفريقين",
+    lblPlayerTableTitle: "جدول اللاعبين",
+    lblReportsTitle: "التقارير",
+    lblPlayerFilterTitle: "كشف لاعب",
+    lblSelectPlayer: "اختر اللاعب",
+    lblSettingsTitle: "ترتيب الصفحات",
+    lblSettingsDesc: "اختر الصفحة ثم حرّكها للأعلى أو للأسفل، وسيتم حفظ الترتيب تلقائيًا.",
+    lblBackupTitle: "النسخة الاحتياطية",
+    btnExportData: "تصدير البيانات",
+    lblImportData: "استيراد",
+    btnSaveEditPage: "حفظ التعديل",
+    btnCancelEditPage: "إلغاء",
+    editPageTitleMatch: "تعديل اللعبة",
+    editPageTitleDeposit: "تعديل الإيداع",
+    // نصوص ديناميكية وتنبيهات
+    initialDeposit: "إيداع مبدئي",
+    lateDeposit: "تأخير",
+    debtDeposit: "خصم",
+    inDeposit: "إيداع",
+    noData: "لا يوجد",
+    noGames: "لا توجد ألعاب محفوظة.",
+    noOps: "لا توجد عمليات",
+    total: "المجموع",
+    summary_deposits: "الإيداعات",
+    summary_gamesCount: "عدد اللعب",
+    summary_deductions: "الخصومات",
+    summary_balance: "الرصيد",
+    summary_players: "اللاعبين",
+    summary_matches: "الألعاب",
+    summary_totalBalance: "إجمالي الرصيد",
+    daysPlayed: "أيام اللعب",
+    depAndDebts: "الإيداعات والمديونيات",
+    broughtNames: "الأسماء التي أحضرها",
+    addedNames: "الأسماء المضافة",
+    editParticipantsAndGuests: "تعديل المشاركين والأسماء المضافة",
+    teamFirst: "الفريق الأول",
+    teamSecond: "الفريق الثاني",
+    noTeam: "بدون فريق",
+    clickCalendar: "اضغط على يوم من التقويم.",
+    noGameDate: "لا توجد لعبة بهذا التاريخ.",
+    gamePrice: "السعر",
+    gamePlayers: "المشاركين",
+    gamePlay: "لعب",
+    choosePlayer: "اختر لاعب",
+    firstSavePreset: "احفظ أول مبلغ ليظهر كزر سريع.",
+    alertWriteName: "اكتب اسم اللاعب",
+    alertPlayerExists: "اللاعب موجود",
+    alertNewName: "اكتب الاسم الجديد",
+    alertNameExists: "الاسم موجود",
+    alertDeleteConfirm: "حذف ؟",
+    alertChooseMember: "اكتب اسم الواختر العضو",
+    alertWriteDate: "اكتب التاريخ بالشكل 11-5-2026",
+    alertEnterCost: "أدخل سعر الحجز وعدد اللاعبين",
+    alertSelectParticipants: "اختر المشاركين أو أضف ضيوف",
+    alertSaved: "تم الحفظ",
+    alertDeleteMatch: "حذف اللعبة؟",
+    alertChoosePlayerAmount: "اختر اللاعب واكتب مبلغ صحيح",
+    alertDeleteDeposit: "حذف الإيداع؟",
+    alertSavedTeams: "تم حفظ الفريقين",
+    alertImported: "تم الاستيراد",
+    placePlaceholder: "اختياري",
+    guestNamePlaceholder: "اسم الضيف",
+    playerNamePlaceholder: "اسم اللاعب",
+    thM: "م",
+    thName: "الاسم",
+    thBalance: "الرصيد",
+    thGames: "لعب",
+    thLastGame: "آخر لعب",
+    thLastGameReport: "آخر لعبة",
+    thDepositsReport: "الإيداعات",
+    depositTypeInBtn: "إيداع",
+    depositTypeOutBtn: "خصم/مديونية",
+    depositTypeLateBtn: "تأخير"
+  },
+  en: {
+    pageTitle: "🏆 Log & Accounts ⚽️ Football Group 🏆",
+    mainHeader: "🏆 Log & Accounts ⚽️ Football Group 🏆",
+    langBtn: "العربية",
+    tab_newMatch: "Game",
+    tab_teams: "Teams",
+    tab_deposits: "Deposits",
+    tab_calendar: "Calendar",
+    tab_playerTable: "Table",
+    tab_playerFilter: "Player Sheet",
+    tab_matchLog: "Log",
+    tab_players: "Players",
+    tab_settings: "Order",
+    tab_backup: "Backup",
+    matchFormTitle: "New Game",
+    matchFormTitleEdit: "Edit Game",
+    lblMatchDate: "Match Date",
+    lblPlace: "Location",
+    lblBookingCost: "Booking Cost",
+    lblNeededPlayers: "Players Needed",
+    lblPricePerPlayer: "Price per Player:",
+    lblParticipants: "Participants",
+    lblAddGuest: "Add Guest",
+    btnBtnAddGuest: "Add Guest",
+    btnSaveMatch: "Save",
+    btnClearMatch: "Clear",
+    lblPlayersTitle: "Players",
+    btnAddPlayer: "Add",
+    btnEditPlayer: "Edit",
+    btnDeletePlayer: "Delete",
+    lblDepositsTitle: "Deposits",
+    lblDepositDate: "Deposit Date",
+    lblDepositPlayer: "Player",
+    lblDepositAmount: "Amount",
+    btnSaveDeposit: "Save",
+    btnClearDeposit: "Clear",
+    lblCalendarTitle: "Calendar",
+    btnPrevMonth: "Prev",
+    btnNextMonth: "Next",
+    calendarSelectedTitle: "Participants",
+    lblMatchLogTitle: "Match Log",
+    lblAllOperations: "All Operations",
+    lblTeamsTitle: "Teams",
+    lblTeamsMatchSelect: "Game",
+    btnRandomTeams: "Random Split",
+    btnSaveTeams: "Save Teams",
+    lblPlayerTableTitle: "Players Table",
+    lblReportsTitle: "Reports",
+    lblPlayerFilterTitle: "Player Sheet",
+    lblSelectPlayer: "Select Player",
+    lblSettingsTitle: "Page Order",
+    lblSettingsDesc: "Select page then move up or down. Order is auto-saved.",
+    lblBackupTitle: "Backup",
+    btnExportData: "Export Data",
+    lblImportData: "Import",
+    btnSaveEditPage: "Save Changes",
+    btnCancelEditPage: "Cancel",
+    editPageTitleMatch: "Edit Match",
+    editPageTitleDeposit: "Edit Deposit",
+    initialDeposit: "Initial Deposit",
+    lateDeposit: "Late fee",
+    debtDeposit: "Deduction",
+    inDeposit: "Deposit",
+    noData: "None",
+    noGames: "No saved games.",
+    noOps: "No operations found",
+    total: "Total",
+    summary_deposits: "Deposits",
+    summary_gamesCount: "Games Played",
+    summary_deductions: "Deductions",
+    summary_balance: "Balance",
+    summary_players: "Players",
+    summary_matches: "Games",
+    summary_totalBalance: "Total Balance",
+    daysPlayed: "Days Played",
+    depAndDebts: "Deposits & Debts",
+    broughtNames: "Brought Guests",
+    addedNames: "Added Names",
+    editParticipantsAndGuests: "Edit Participants & Guests",
+    teamFirst: "First Team",
+    teamSecond: "Second Team",
+    noTeam: "No Team",
+    clickCalendar: "Click on a calendar day.",
+    noGameDate: "No game on this date.",
+    gamePrice: "Price",
+    gamePlayers: "Participants",
+    gamePlay: "Play",
+    choosePlayer: "Choose Player",
+    firstSavePreset: "Save first amount to show quick button.",
+    alertWriteName: "Please write player name",
+    alertPlayerExists: "Player already exists",
+    alertNewName: "Please write the new name",
+    alertNameExists: "Name already exists",
+    alertDeleteConfirm: "Delete ",
+    alertChooseMember: "Write name and choose member",
+    alertWriteDate: "Write date format as 11-5-2026",
+    alertEnterCost: "Enter booking cost and players count",
+    alertSelectParticipants: "Select participants or add guests",
+    alertSaved: "Saved successfully",
+    alertDeleteMatch: "Delete this game?",
+    alertChoosePlayerAmount: "Select player and enter a valid amount",
+    alertDeleteDeposit: "Delete this deposit?",
+    alertSavedTeams: "Teams saved successfully",
+    alertImported: "Imported successfully",
+    placePlaceholder: "Optional",
+    guestNamePlaceholder: "Guest Name",
+    playerNamePlaceholder: "Player Name",
+    thM: "No.",
+    thName: "Name",
+    thBalance: "Balance",
+    thGames: "Played",
+    thLastGame: "Last Match",
+    thLastGameReport: "Last Match",
+    thDepositsReport: "Deposits",
+    depositTypeInBtn: "Deposit",
+    depositTypeOutBtn: "Deduction/Debt",
+    depositTypeLateBtn: "Late"
+  }
+};
+
+function msg(key) {
+  return i18n[currentLang][key] || key;
+}
+
+function toggleLanguage() {
+  currentLang = currentLang === 'ar' ? 'en' : 'ar';
+  localStorage.setItem('qatiyaLang', currentLang);
+  applyLanguageHTML();
+  renderAll();
+}
+
+function applyLanguageHTML() {
+  document.documentElement.lang = currentLang;
+  document.documentElement.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
+  
+  // ترجمة العناصر الثابتة التي تملك ID
+  Object.keys(i18n[currentLang]).forEach(key => {
+    const el = document.getElementById(key);
+    if (el) {
+      if (el.tagName === 'INPUT') {
+        el.placeholder = msg(key);
+      } else {
+        el.textContent = msg(key);
+      }
+    }
+  });
+
+  // ترجمة الـ Placeholders يدوياً للأشياء الديناميكية
+  const placeEl = document.getElementById('place');
+  if (placeEl) placeEl.placeholder = msg('placePlaceholder');
+  const guestNameEl = document.getElementById('guestName');
+  if (guestNameEl) guestNameEl.placeholder = msg('guestNamePlaceholder');
+  const playerNameEl = document.getElementById('playerName');
+  if (playerNameEl) playerNameEl.placeholder = msg('playerNamePlaceholder');
+  
+  // تحديث أزرار الإيداع الثابتة نصوصها
+  const depIn = document.getElementById('depositTypeIn');
+  if (depIn) depIn.textContent = msg('depositTypeInBtn');
+  const depOut = document.getElementById('depositTypeOut');
+  if (depOut) depOut.textContent = msg('depositTypeOutBtn');
+  const depLate = document.getElementById('depositTypeLate');
+  if (depLate) depLate.textContent = msg('depositTypeLateBtn');
+}
+
+// تعديل أسماء التبويبات الافتراضية لتعتمد على اللغة
+const defaultPages = [
+ ['newMatch', 'tab_newMatch'],
+ ['teams', 'tab_teams'],
+ ['deposits', 'tab_deposits'],
+ ['calendar', 'tab_calendar'],
+ ['playerTable', 'tab_playerTable'],
+ ['playerFilter', 'tab_playerFilter'],
+ ['matchLog', 'tab_matchLog'],
+ ['players', 'tab_players'],
+ ['settings', 'tab_settings'],
+ ['backup', 'tab_backup']
+];
+
+function getPageOrder(){
+ const s=state();
+ return s.settings.pageOrder || defaultPages.map(x=>x[0]);
+}
 
 function latestPlayedDateOnly(b){
   return Object.values(b||{}).map(x=>x.last||'').filter(Boolean).sort().pop()||'';
@@ -9,23 +314,38 @@ function isLatestPlayedDate(b,lastDate){
   return latest===lastDate;
 }
 
-
 function depositTypeLabel(d){
  const dt=(d.date||'').replace(/-/g,'/');
- if(dt==='2026/01/01'||dt==='1/1/2026') return 'إيداع مبدئي';
- if(d.type==='initial') return 'إيداع مبدئي';
-  if(d.type==='late') return 'تأخير';
- if(d.type==='debt') return 'خصم';
- return 'إيداع';
+ if(dt==='2026/01/01'||dt==='1/1/2026') return msg('initialDeposit');
+ if(d.type==='initial') return msg('initialDeposit');
+ if(d.type==='late') return msg('lateDeposit');
+ if(d.type==='debt') return msg('debtDeposit');
+ return msg('inDeposit');
 }
-let currentTabId='newMatch';
-const FREE_START='2026-05-01';let tempGuests=[];let selectedCalendarDate='';let depositType='in';let tempTeamMap={};let calendarView=new Date();
-function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,8)}
-function state(){const r=JSON.parse(localStorage.getItem('qatiyaState')||'{"players":[],"matches":[],"deposits":[],"teams":{},"settings":{}}');r.players=r.players||[];r.matches=r.matches||[];r.deposits=r.deposits||[];r.teams=r.teams||{};r.settings=r.settings||{};r.matches.forEach(m=>{if(!m.id)m.id=uid()});r.deposits.forEach(d=>{if(!d.id)d.id=uid()});r.players.sort((a,b)=>a.localeCompare(b,'ar'));return r}
-function save(s){s.players.sort((a,b)=>a.localeCompare(b,'ar'));localStorage.setItem('qatiyaState',JSON.stringify(s));renderAll()}
-function saveNoRender(s){localStorage.setItem('qatiyaState',JSON.stringify(s))}
-function today(){return new Date().toISOString().slice(0,10)}function money(n){return Number(n||0).toFixed(3)}
 
+let currentTabId='newMatch';
+const FREE_START='2026-05-01'; let tempGuests=[]; let selectedCalendarDate=''; let depositType='in'; let tempTeamMap={}; let calendarView=new Date();
+
+function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,8)}
+
+function state(){
+  const r=JSON.parse(localStorage.getItem('qatiyaState')||'{"players":[],"matches":[],"deposits":[],"teams":{},"settings":{}}');
+  r.players=r.players||[]; r.matches=r.matches||[]; r.deposits=r.deposits||[]; r.teams=r.teams||{}; r.settings=r.settings||{};
+  r.matches.forEach(m=>{if(!m.id)m.id=uid()});
+  r.deposits.forEach(d=>{if(!d.id)d.id=uid()});
+  r.players.sort((a,b)=>a.localeCompare(b, currentLang==='ar'?'ar':'en'));
+  return r;
+}
+
+function save(s){
+  s.players.sort((a,b)=>a.localeCompare(b, currentLang==='ar'?'ar':'en'));
+  localStorage.setItem('qatiyaState',JSON.stringify(s));
+  renderAll();
+}
+
+function saveNoRender(s){localStorage.setItem('qatiyaState',JSON.stringify(s))}
+function today(){return new Date().toISOString().slice(0,10)}
+function money(n){return Number(n||0).toFixed(3)}
 
 function parseDisplayDate(value){
   if(!value)return '';
@@ -38,10 +358,12 @@ function parseDisplayDate(value){
   if(y<100)y+=2000;
   return `${y}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
 }
+
 function setDateDisplay(id,iso){
   const el=document.getElementById(id);
   if(el)el.value=formatDateDisplay(iso||today());
 }
+
 function getDateValue(id){
   const el=document.getElementById(id);
   return parseDisplayDate(el?.value||'');
@@ -53,10 +375,12 @@ function formatDateDisplay(dateStr){
   if(parts.length!==3)return dateStr;
   return `${Number(parts[2])}-${Number(parts[1])}-${parts[0]}`;
 }
+
 function moneyHideZero(n){
   n=Number(n||0);
   return n===0?'':money(n);
 }
+
 function isInactiveFiveMonths(lastDate){
   if(!lastDate)return true;
   const last=new Date(lastDate+'T00:00:00');
@@ -64,27 +388,13 @@ function isInactiveFiveMonths(lastDate){
   const limit=new Date(now.getFullYear(), now.getMonth()-5, now.getDate());
   return last<=limit;
 }
+
 function guestLabel(g){
   return `${g.guest} (${g.owner})`;
 }
 
-
 function moneyBlank(n){n=Number(n||0);return n===0?'':money(n)}
-const defaultPages=[
- ['newMatch','لعبة'],
- ['teams','الفريقين'],
- ['deposits','الإيداعات'],
- ['calendar','التقويم'],
- ['playerTable','الجدول'],
- ['playerFilter','كشف لاعب'],
- ['matchLog','السجل'],
- ['players','اللاعبين'],
- ['settings','الترتيب'],
- ['backup','النسخ']
-];
-function getPageOrder(){
- return defaultPages.map(x=>x[0]);
-}
+
 function savePageOrder(order){
  const s=state();
  s.settings.pageOrder=order;
@@ -102,11 +412,13 @@ function setActiveNavButton(id){
 }
 
 function renderNav(){
- const labels=Object.fromEntries(defaultPages);
  const order=getPageOrder();
- const nav=document.querySelector('nav');
+ const nav=document.getElementById('mainNav');
  if(!nav)return;
- nav.innerHTML=order.map(id=>`<button class=\"${id===currentTabId?'activeTab':''}\" onclick=\"showTab('${id}')\">${labels[id]}</button>`).join('');
+ nav.innerHTML=order.map(id=>{
+   const pageKey = defaultPages.find(p => p[0] === id)[1];
+   return `<button class="${id===currentTabId?'activeTab':''}" onclick="showTab('${id}')">${msg(pageKey)}</button>`;
+ }).join('');
 }
 
 function renderPlayerFilter(){
@@ -133,40 +445,43 @@ function renderPlayerFilter(){
 
  wrap.innerHTML=`
  <div class="summaryCards">
-   <div class="summaryCard"><span>الإيداعات</span><b class="posText">${moneyBlank(totalDep)}</b></div>
-   <div class="summaryCard"><span>عدد اللعب</span><b>${b.games||''}</b></div>
-   <div class="summaryCard"><span>الخصومات</span><b class="negText">${moneyBlank(totalDebt)}</b></div>
-   <div class="summaryCard"><span>الرصيد</span><b class="${(b.balance||0)<0?'negText':(b.balance||0)>0?'posText':''}">${moneyBlank(b.balance)}</b></div>
+   <div class="summaryCard"><span>${msg('summary_deposits')}</span><b class="posText">${moneyBlank(totalDep)}</b></div>
+   <div class="summaryCard"><span>${msg('summary_gamesCount')}</span><b>${b.games||''}</b></div>
+   <div class="summaryCard"><span>${msg('summary_deductions')}</span><b class="negText">${moneyBlank(totalDebt)}</b></div>
+   <div class="summaryCard"><span>${msg('summary_balance')}</span><b class="${(b.balance||0)<0?'negText':(b.balance||0)>0?'posText':''}">${moneyBlank(b.balance)}</b></div>
  </div>
 
  <div class="card">
-   <h3>أيام اللعب</h3>
-   ${(games.length?games.map(g=>`<div class="item"><span>${formatDateDisplay(g.date)}</span><span class="count">${money(g.price)}</span></div>`).join(''):'<p class="muted">لا يوجد</p>')}
-   <div class="item gamesTotalRow"><b>المجموع</b><span class="gamesTotalAmount">${money(gameDeductTotal*-1)}</span></div>
+   <h3>${msg('daysPlayed')}</h3>
+   ${(games.length?games.map(g=>`<div class="item"><span>${formatDateDisplay(g.date)}</span><span class="count">${money(g.price)}</span></div>`).join(''):`<p class="muted">${msg('noData')}</p>`)}
+   <div class="item gamesTotalRow"><b>${msg('total')}</b><span class="gamesTotalAmount">${money(gameDeductTotal*-1)}</span></div>
  </div>
 
  <div class="card">
-   <h3>الإيداعات والمديونيات</h3>
+   <h3>${msg('depAndDebts')}</h3>
    ${(deposits.length?deposits.map(d=>`<div class="item">
      <span>${formatDateDisplay(d.date)}</span>
      <span class="${clsMoney(d.amount)} depoAmountGroup"><b>${depositTypeLabel(d)}</b>&nbsp;&nbsp;${money(d.amount)}</span>
-   </div>`).join(''):'<p class="muted">لا يوجد</p>')}
+   </div>`).join(''):`<p class="muted">${msg('noData')}</p>`)}
  </div>
 
  <div class="card">
-   <h3>الأسماء التي أحضرها</h3>
-   ${(guestMatches.length?guestMatches.map(m=>(m.guests||[]).filter(g=>g.owner===player).map(g=>`<div class="item"><span>${formatDateDisplay(m.date)}</span><span style="text-align:center;flex:1;">${g.guest}</span><span class="neg">${money(Number(m.price||0)*-1)}</span></div>`).join('')).join(''):'<p class="muted">لا يوجد</p>')}
-   <div class="item guestTotalRow"><b>المجموع</b><span class="guestTotalAmount">${money(guestDeductTotal*-1)}</span></div>
+   <h3>${msg('broughtNames')}</h3>
+   ${(guestMatches.length?guestMatches.map(m=>(m.guests||[]).filter(g=>g.owner===player).map(g=>`<div class="item"><span>${formatDateDisplay(m.date)}</span><span style="text-align:center;flex:1;">${g.guest}</span><span class="neg">${money(Number(m.price||0)*-1)}</span></div>`).join('')).join(''):`<p class="muted">${msg('noData')}</p>`)}
+   <div class="item guestTotalRow"><b>${msg('total')}</b><span class="guestTotalAmount">${money(guestDeductTotal*-1)}</span></div>
  </div>`;
 }
 
 function renderPageOrder(){
  const el=document.getElementById('pageOrderList');
  if(!el)return;
- const labels=Object.fromEntries(defaultPages);
  const order=getPageOrder();
- el.innerHTML=order.map((id,i)=>`<div class="item pageOrderItem"><b>${labels[id]}</b><div class="actions"><button onclick="movePage('${id}',-1)">↑</button><button onclick="movePage('${id}',1)">↓</button></div></div>`).join('');
+ el.innerHTML=order.map((id,i)=>{
+   const pageKey = defaultPages.find(p => p[0] === id)[1];
+   return `<div class="item pageOrderItem"><b>${msg(pageKey)}</b><div class="actions"><button onclick="movePage('${id}',-1)">↑</button><button onclick="movePage('${id}',1)">↓</button></div></div>`;
+ }).join('');
 }
+
 function movePage(id,dir){
  const order=getPageOrder();
  const i=order.indexOf(id);
@@ -179,9 +494,6 @@ function movePage(id,dir){
 function clsMoney(n){n=Number(n||0);return n<0?'neg':n>0?'pos':''}
 
 function updatePrettyDates(){}
-document.addEventListener('change',e=>{
-  if(e.target&&['matchDate','depositDate'].includes(e.target.id))updatePrettyDates();
-});
 
 function showTab(id){
 currentTabId=id;
@@ -191,15 +503,61 @@ if(tab)tab.classList.add('active');
 renderAll();
 setActiveNavButton(id);
 }
+
 function calcPrice(){const c=Number(bookingCost.value||0),n=Number(neededPlayers.value||0);return n>0?c/n:0}
 document.addEventListener('change',e=>{if(e.target&&e.target.classList&&e.target.classList.contains('playerCheck'))renderMatchParticipantsPreview();});
 document.addEventListener('input',e=>{if(['bookingCost','neededPlayers'].includes(e.target.id))pricePerPlayer.textContent=money(calcPrice())})
-function addPlayer(){const name=playerName.value.trim();if(!name)return alert('اكتب اسم اللاعب');const s=state();if(s.players.includes(name))return alert('اللاعب موجود');s.players.push(name);playerName.value='';save(s)}
-function showPlayerEditBox(){const s=state();playerActionBox.innerHTML=`<div class="actionBox"><label>اختر اللاعب<select id="editOld">${s.players.map(p=>`<option>${p}</option>`).join('')}</select></label><label>الاسم الجديد<input id="editNew"></label><button class="primary wide" onclick="confirmPlayerEdit()">حفظ التعديل</button></div>`}
-function confirmPlayerEdit(){const oldName=editOld.value,newName=editNew.value.trim();if(!newName)return alert('اكتب الاسم الجديد');const s=state();if(s.players.includes(newName))return alert('الاسم موجود');s.players=s.players.map(x=>x===oldName?newName:x);s.matches.forEach(m=>{m.players=(m.players||[]).map(x=>x===oldName?newName:x);(m.guests||[]).forEach(g=>{if(g.owner===oldName)g.owner=newName})});s.deposits.forEach(d=>{if(d.player===oldName)d.player=newName});Object.values(s.teams||{}).forEach(t=>Object.keys(t).forEach(k=>{if(k===oldName){t[newName]=t[k];delete t[k]}}));playerActionBox.innerHTML='';save(s)}
-function showPlayerDeleteBox(){const s=state();playerActionBox.innerHTML=`<div class="actionBox"><label>اختر اللاعب<select id="deletePlayer">${s.players.map(p=>`<option>${p}</option>`).join('')}</select></label><button class="danger wide" onclick="confirmPlayerDelete()">تأكيد الحذف</button></div>`}
-function confirmPlayerDelete(){const name=deletePlayer.value;if(!confirm('حذف '+name+'؟'))return;const s=state();s.players=s.players.filter(x=>x!==name);playerActionBox.innerHTML='';save(s)}
-function addGuestTemp(){const guest=guestName.value.trim(),owner=guestOwner.value;if(!guest||!owner)return alert('اكتب اسم الواختر العضو');tempGuests.push({guest,owner});guestName.value='';renderTempGuests()}
+
+function addPlayer(){
+  const name=playerName.value.trim();
+  if(!name)return alert(msg('alertWriteName'));
+  const s=state();
+  if(s.players.includes(name))return alert(msg('alertPlayerExists'));
+  s.players.push(name);
+  playerName.value='';
+  save(s);
+}
+
+function showPlayerEditBox(){
+  const s=state();
+  playerActionBox.innerHTML=`<div class="actionBox"><label>${msg('lblSelectPlayer')}<select id="editOld">${s.players.map(p=>`<option>${p}</option>`).join('')}</select></label><label>${msg('lblNewName') || 'New Name'}<input id="editNew"></label><button class="primary wide" onclick="confirmPlayerEdit()">${msg('btnSaveEditPage')}</button></div>`;
+}
+
+function confirmPlayerEdit(){
+  const oldName=editOld.value,newName=editNew.value.trim();
+  if(!newName)return alert(msg('alertNewName'));
+  const s=state();
+  if(s.players.includes(newName))return alert(msg('alertNameExists'));
+  s.players=s.players.map(x=>x===oldName?newName:x);
+  s.matches.forEach(m=>{m.players=(m.players||[]).map(x=>x===oldName?newName:x);(m.guests||[]).forEach(g=>{if(g.owner===oldName)g.owner=newName})});
+  s.deposits.forEach(d=>{if(d.player===oldName)d.player=newName});
+  Object.values(s.teams||{}).forEach(t=>Object.keys(t).forEach(k=>{if(k===oldName){t[newName]=t[k];delete t[k]}}));
+  playerActionBox.innerHTML='';
+  save(s);
+}
+
+function showPlayerDeleteBox(){
+  const s=state();
+  playerActionBox.innerHTML=`<div class="actionBox"><label>${msg('lblSelectPlayer')}<select id="deletePlayer">${s.players.map(p=>`<option>${p}</option>`).join('')}</select></label><button class="danger wide" onclick="confirmPlayerDelete()">${msg('btnDeletePlayer')}</button></div>`;
+}
+
+function confirmPlayerDelete(){
+  const name=deletePlayer.value;
+  if(!confirm(msg('alertDeleteConfirm') + name + '؟'))return;
+  const s=state();
+  s.players=s.players.filter(x=>x!==name);
+  playerActionBox.innerHTML='';
+  save(s);
+}
+
+function addGuestTemp(){
+  const guest=guestName.value.trim(),owner=guestOwner.value;
+  if(!guest||!owner)return alert(msg('alertChooseMember'));
+  tempGuests.push({guest,owner});
+  guestName.value='';
+  renderTempGuests();
+}
+
 function removeGuestTemp(i){tempGuests.splice(i,1);renderTempGuests()}
 
 function renderMatchParticipantsPreview(){
@@ -210,86 +568,141 @@ function renderMatchParticipantsPreview(){
     ...selected.map(n=>`<div class="chip memberChip">${n}</div>`),
     ...tempGuests.map(g=>`<div class="chip guestChip">${guestLabel(g)}</div>`)
   ];
-  el.innerHTML=rows.length?`<h3>المشاركون <span id="livePlayersGuestsCount" class="liveCount"></span> المسجلون</h3><div class="chipGrid">${rows.join('')}</div>`:'';
+  el.innerHTML=rows.length?`<h3>${msg('lblParticipants')} <span id="livePlayersGuestsCount" class="liveCount"></span></h3><div class="chipGrid">${rows.join('')}</div>`:'';
 }
 
 function renderTempGuests(){
-  tempGuests.innerHTML=tempGuests.length?`<table><thead><tr><th>الاسم</th><th>العضو</th></tr></thead><tbody>${tempGuests.map((g,i)=>`<tr><td>${g.guest}</td><td>${g.owner} <button onclick="removeGuestTemp(${i})">×</button></td></tr>`).join('')}</tbody></table>`:'';
+  const el=document.getElementById('tempGuests');
+  if(!el) return;
+  el.innerHTML=tempGuests.length?`<table><thead><tr><th>${msg('thName')}</th><th>${msg('lblDepositPlayer')}</th></tr></thead><tbody>${tempGuests.map((g,i)=>`<tr><td>${g.guest}</td><td>${g.owner} <button onclick="removeGuestTemp(${i})">×</button></td></tr>`).join('')}</tbody></table>`:'';
   renderMatchParticipantsPreview();
 }
-function clearMatchForm(){editingMatchId.value='';matchFormTitle.textContent='لعبة جديدة';setDateDisplay('matchDate',today());place.value='';bookingCost.value='';neededPlayers.value='';tempGuests=[];document.querySelectorAll('.playerCheck').forEach(x=>x.checked=false);renderTempGuests();pricePerPlayer.textContent='0.000'}
-function saveMatch(){const date=getDateValue('matchDate')||today(),bc=Number(bookingCost.value||0),np=Number(neededPlayers.value||0),selected=[...document.querySelectorAll('.playerCheck:checked')].map(x=>x.value);if(!date)return alert('اكتب التاريخ بالشكل 11-5-2026');if(bc<=0||np<=0)return alert('أدخل سعر الحجز وعدد اللاعبين');if(selected.length===0&&tempGuests.length===0)return alert('اختر المشاركين أو أضف ضيوف');const s=state(),id=editingMatchId.value||uid(),match={id,date,place:place.value.trim(),bookingCost:bc,neededPlayers:np,price:bc/np,players:selected,guests:[...tempGuests]};const idx=s.matches.findIndex(m=>m.id===id);if(idx>=0)s.matches[idx]=match;else s.matches.push(match);editingMatchId.value='';tempGuests=[];save(s);clearMatchForm();alert('تم الحفظ')}
-function editMatch(id){const s=state(),m=s.matches.find(x=>x.id===id);if(!m)return;showTab('newMatch');editingMatchId.value=m.id;matchFormTitle.textContent='تعديل لعبة';setDateDisplay('matchDate',m.date);place.value=m.place||'';bookingCost.value=m.bookingCost||'';neededPlayers.value=m.neededPlayers||'';tempGuests=[...(m.guests||[])];renderAll();document.querySelectorAll('.playerCheck').forEach(x=>x.checked=(m.players||[]).includes(x.value));pricePerPlayer.textContent=money(calcPrice());renderTempGuests()}
-function deleteMatch(id){if(!confirm('حذف اللعبة؟'))return;const s=state();s.matches=s.matches.filter(m=>m.id!==id);delete s.teams[id];save(s)}
+
+function clearMatchForm(){
+  editingMatchId.value='';
+  document.getElementById('matchFormTitle').textContent=msg('matchFormTitle');
+  setDateDisplay('matchDate',today());
+  place.value='';bookingCost.value='';neededPlayers.value='';tempGuests=[];
+  document.querySelectorAll('.playerCheck').forEach(x=>x.checked=false);
+  renderTempGuests();
+  pricePerPlayer.textContent='0.000';
+}
+
+function saveMatch(){
+  const date=getDateValue('matchDate')||today(),bc=Number(bookingCost.value||0),np=Number(neededPlayers.value||0),selected=[...document.querySelectorAll('.playerCheck:checked')].map(x=>x.value);
+  if(!date)return alert(msg('alertWriteDate'));
+  if(bc<=0||np<=0)return alert(msg('alertEnterCost'));
+  if(selected.length===0&&tempGuests.length===0)return alert(msg('alertSelectParticipants'));
+  const s=state(),id=editingMatchId.value||uid(),match={id,date,place:place.value.trim(),bookingCost:bc,neededPlayers:np,price:bc/np,players:selected,guests:[...tempGuests]};
+  const idx=s.matches.findIndex(m=>m.id===id);
+  if(idx>=0)s.matches[idx]=match;else s.matches.push(match);
+  editingMatchId.value='';tempGuests=[];
+  save(s);clearMatchForm();alert(msg('alertSaved'));
+}
+
+function editMatch(id){
+  const s=state(),m=s.matches.find(x=>x.id===id);if(!m)return;
+  showTab('newMatch');
+  editingMatchId.value=m.id;
+  document.getElementById('matchFormTitle').textContent=msg('matchFormTitleEdit');
+  setDateDisplay('matchDate',m.date);
+  place.value=m.place||'';bookingCost.value=m.bookingCost||'';neededPlayers.value=m.neededPlayers||'';
+  tempGuests=[...(m.guests||[])];
+  renderAll();
+  document.querySelectorAll('.playerCheck').forEach(x=>x.checked=(m.players||[]).includes(x.value));
+  pricePerPlayer.textContent=money(calcPrice());
+  renderTempGuests();
+}
+
+function deleteMatch(id){
+  if(!confirm(msg('alertDeleteMatch')))return;
+  const s=state();s.matches=s.matches.filter(m=>m.id!==id);delete s.teams[id];save(s);
+}
+
 function setDepositType(t){
  depositType=t;
-
  depositTypeIn.className='';
  depositTypeOut.className='';
- if(typeof depositTypeLate!=='undefined' && depositTypeLate) depositTypeLate.className='';
+ const depositTypeLate = document.getElementById('depositTypeLate');
+ if(depositTypeLate) depositTypeLate.className='';
 
  if(t==='in') depositTypeIn.className='primary selectedDepositBtn';
  if(t==='out'||t==='debt') depositTypeOut.className='danger selectedDepositBtn';
- if(t==='late' && typeof depositTypeLate!=='undefined' && depositTypeLate) depositTypeLate.className='lateActive selectedDepositBtn';
+ if(t==='late' && depositTypeLate) depositTypeLate.className='lateActive selectedDepositBtn';
 }
+
 function getDepositPresets(s){const saved=(s.settings.depositPresets||[]).map(Number).filter(x=>x>0),from=s.deposits.map(d=>Math.abs(Number(d.amount||0))).filter(x=>x>0),del=(s.settings.deletedDepositPresets||[]).map(Number);return[...new Set([...saved,...from])].filter(x=>!del.includes(Number(x))).sort((a,b)=>a-b)}
 function setDepositAmount(v){depositAmount.value=money(v)}
 function deleteDepositPreset(v){const s=state();v=Number(v);s.settings.deletedDepositPresets=[...new Set([...(s.settings.deletedDepositPresets||[]).map(Number),v])];s.settings.depositPresets=(s.settings.depositPresets||[]).map(Number).filter(x=>x!==v);save(s)}
 function addDepositPresetAmount(s,a){a=Math.abs(Number(a||0));if(a<=0)return;s.settings.deletedDepositPresets=(s.settings.deletedDepositPresets||[]).map(Number).filter(x=>x!==a);const p=(s.settings.depositPresets||[]).map(Number);if(!p.includes(a))p.push(a);s.settings.depositPresets=p.sort((x,y)=>x-y)}
-function clearDepositForm(){editingDepositId.value='';depositAmount.value='';const s=state();setDateDisplay('depositDate',s.settings.lastDepositDate||today());setDepositType('in')}
-function saveDeposit(){
-const player=depositPlayer.value;
-let raw=String(depositAmount.value||'').trim();
-let amount=Number(raw);
-const date=getDateValue('depositDate')||today();
-if(!date)return alert('اكتب التاريخ بالشكل 11-5-2026');if(!player||isNaN(amount)||amount===0)return alert('اختر اللاعب واكتب مبلغ صحيح');
-if((depositType==='out'||depositType==='debt'||depositType==='late') && amount>0) amount=-amount;
-if(depositType==='in' && amount<0) amount=Math.abs(amount);
-const s=state(),id=editingDepositId.value||uid(),dep={id,player,amount,date,type:depositType,createdAt:Date.now()};
-const idx=s.deposits.findIndex(d=>d.id===id);
-if(idx>=0){ dep.createdAt=s.deposits[idx].createdAt||Date.now(); s.deposits[idx]=dep; }
-else s.deposits.push(dep);
-s.settings.lastDepositDate=date;
-addDepositPresetAmount(s,Math.abs(amount));
-editingDepositId.value='';
-depositAmount.value='';
-save(s)
+
+function clearDepositForm(){
+  editingDepositId.value='';depositAmount.value='';const s=state();
+  setDateDisplay('depositDate',s.settings.lastDepositDate||today());setDepositType('in');
 }
+
+function saveDeposit(){
+  const player=depositPlayer.value;
+  let raw=String(depositAmount.value||'').trim();
+  let amount=Number(raw);
+  const date=getDateValue('depositDate')||today();
+  if(!date)return alert(msg('alertWriteDate'));
+  if(!player||isNaN(amount)||amount===0)return alert(msg('alertChoosePlayerAmount'));
+  if((depositType==='out'||depositType==='debt'||depositType==='late') && amount>0) amount=-amount;
+  if(depositType==='in' && amount<0) amount=Math.abs(amount);
+  const s=state(),id=editingDepositId.value||uid(),dep={id,player,amount,date,type:depositType,createdAt:Date.now()};
+  const idx=s.deposits.findIndex(d=>d.id===id);
+  if(idx>=0){ dep.createdAt=s.deposits[idx].createdAt||Date.now(); s.deposits[idx]=dep; }
+  else s.deposits.push(dep);
+  s.settings.lastDepositDate=date;
+  addDepositPresetAmount(s,Math.abs(amount));
+  editingDepositId.value='';depositAmount.value='';
+  save(s);
+}
+
 function editDeposit(id){const s=state(),d=s.deposits.find(x=>x.id===id);if(!d)return;showTab('deposits');editingDepositId.value=d.id;depositPlayer.value=d.player;depositAmount.value=money(Math.abs(d.amount));setDateDisplay('depositDate',d.date);setDepositType(d.amount<0?'out':'in')}
-function deleteDeposit(id){if(!confirm('حذف الإيداع؟'))return;const s=state();s.deposits=s.deposits.filter(d=>d.id!==id);save(s)}
+function deleteDeposit(id){if(!confirm(msg('alertDeleteDeposit')))return;const s=state();s.deposits=s.deposits.filter(d=>d.id!==id);save(s)}
+
 function depositOptions(id){
 const s=state();
 const d=s.deposits.find(x=>x.id===id);
 if(!d)return;
-const msg=`عملية الإيداع / المديونية
+const msgBody=`${msg('lblDepositsTitle')}
 
-اللاعب: ${d.player}
-التاريخ: ${d.date}
-المبلغ: <div class="depositRow">
-<span class="depositTypeText">${depositTypeLabel(d)}</span>
-<span class="depositAmountText">${money(d.amount)}</span>
-</div>
-
-اضغط موافق للتعديل.
-اضغط إلغاء للانتقال لخيار الحذف.`;
-const act=confirm(msg);
+${msg('lblDepositPlayer')}: ${d.player}
+${msg('lblDepositDate')}: ${d.date}
+${msg('lblDepositAmount')}: ${money(d.amount)}`;
+const act=confirm(msgBody);
 if(act){openEditPage('deposit',id,'deposits')}
 else{
- if(confirm(`هل تريد حذف هذه العملية؟
+ if(confirm(msg('alertDeleteDeposit'))) deleteDeposit(id);
+}
+}
 
-${d.player}
-${d.date}
-<div class="depositRow">
-<span class="depositTypeText">${depositTypeLabel(d)}</span>
-<span class="depositAmountText">${money(d.amount)}</span>
-</div>`)) deleteDeposit(id);
-}
-}
 function balances(s){const r={};s.players.forEach(p=>r[p]={balance:0,games:0,free:0,streak:0,guestFreeCredits:0,last:'',deposits:0});s.deposits.forEach(d=>{if(r[d.player]){r[d.player].balance+=Number(d.amount||0);if(Number(d.amount)>0)r[d.player].deposits+=Number(d.amount)}});const ms=[...s.matches].sort((a,b)=>a.date.localeCompare(b.date));ms.forEach((m,idx)=>{const present=new Set(m.players||[]);Object.keys(r).forEach(name=>{if(present.has(name)){let free=false;if(m.date>=FREE_START&&r[name].streak>=5){free=true;r[name].streak=0;r[name].free++}if(!free&&r[name].guestFreeCredits>0){free=true;r[name].guestFreeCredits--;r[name].free++}r[name].games++;r[name].last=m.date;if(!free)r[name].balance-=Number(m.price||0);r[name].streak++}else r[name].streak=0});(m.guests||[]).forEach(g=>{if(r[g.owner])r[g.owner].balance-=Number(m.price||0);const count=ms.slice(0,idx+1).reduce((n,mm)=>n+(mm.guests||[]).filter(x=>x.guest===g.guest&&x.owner===g.owner).length,0);if(count>0&&count%3===0&&r[g.owner])r[g.owner].guestFreeCredits++})});return r}
 function participants(m){return[...(m.players||[]),...(m.guests||[]).map(g=>guestLabel(g))]}
 function moveMonth(n){calendarView.setMonth(calendarView.getMonth()+n);renderCalendar()}
-function renderCalendar(){const s=state(),y=calendarView.getFullYear(),mo=calendarView.getMonth(),first=new Date(y,mo,1),last=new Date(y,mo+1,0);calendarMonthTitle.textContent=calendarView.toLocaleDateString('ar-KW',{month:'long',year:'numeric'});let html=['الأحد','الإثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'].map(d=>`<div class="day"><b>${d}</b></div>`).join('');for(let i=0;i<first.getDay();i++)html+='<div></div>';for(let d=1;d<=last.getDate();d++){const mm=String(mo+1).padStart(2,'0'),dd=String(d).padStart(2,'0'),date=`${y}-${mm}-${dd}`,has=s.matches.some(x=>x.date===date);html+=`<div class="day ${has?'hasGame':''} ${selectedCalendarDate===date?'selected':''}" onclick="selectCalendarDate('${date}')"><b>${d}</b>${has?'<br><span class="small">لعب</span>':''}</div>`}monthCalendar.innerHTML=html}
+
+function renderCalendar(){
+  const s=state(),y=calendarView.getFullYear(),mo=calendarView.getMonth(),first=new Date(y,mo,1),last=new Date(y,mo+1,0);
+  const localeStr = currentLang === 'ar' ? 'ar-KW' : 'en-US';
+  calendarMonthTitle.textContent=calendarView.toLocaleDateString(localeStr,{month:'long',year:'numeric'});
+  
+  const daysAr = ['الأحد','الإثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'];
+  const daysEn = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  const days = currentLang === 'ar' ? daysAr : daysEn;
+  
+  let html=days.map(d=>`<div class="day"><b>${d}</b></div>`).join('');
+  for(let i=0;i<first.getDay();i++)html+='<div></div>';
+  for(let d=1;d<=last.getDate();d++){
+    const mm=String(mo+1).padStart(2,'0'),dd=String(d).padStart(2,'0'),date=`${y}-${mm}-${dd}`,has=s.matches.some(x=>x.date===date);
+    html+=`<div class="day ${has?'hasGame':''} ${selectedCalendarDate===date?'selected':''}" onclick="selectCalendarDate('${date}')"><b>${d}</b>${has?`<br><span class="small">${msg('gamePlay')}</span>`:''}</div>`
+  }
+  monthCalendar.innerHTML=html;
+}
+
 function selectCalendarDate(date){selectedCalendarDate=date;renderCalendar();renderCalendarList()}
+
 function teamHtml(s,m){
  const map=s.teams[m.id]||{};
  const names=participants(m);
@@ -297,28 +710,34 @@ function teamHtml(s,m){
  const b=names.filter(n=>map[n]==='B');
  const no=names.filter(n=>!map[n]);
 
- const aHtml=a.map(x=>`<div class="teamName">${x}</div>`).join('')||'<p class="muted">لا يوجد</p>';
- const bHtml=b.map(x=>`<div class="teamName">${x}</div>`).join('')||'<p class="muted">لا يوجد</p>';
+ const aHtml=a.map(x=>`<div class="teamName">${x}</div>`).join('')||`<p class="muted">${msg('noData')}</p>`;
+ const bHtml=b.map(x=>`<div class="teamName">${x}</div>`).join('')||`<p class="muted">${msg('noData')}</p>`;
 
  if(a.length||b.length){
    return `
-   <div class="newTeamsWrap">
-      <div class="newTeamBox secondTeamBox">
-         <h4>الفريق الثاني</h4>
+   <div class="calendarTeams">
+      <div class="teamBBox">
+         <h4>${msg('teamSecond')}</h4>
          ${bHtml}
       </div>
-
-      <div class="newTeamBox firstTeamBox">
-         <h4>الفريق الأول</h4>
+      <div class="teamABox">
+         <h4>${msg('teamFirst')}</h4>
          ${aHtml}
       </div>
    </div>
-   `+(no.length?`<p class="muted">بدون فريق: ${no.join('، ')}</p>`:'');
+   `+(no.length?`<p class="muted">${msg('noTeam')}: ${no.join('، ')}</p>`:'');
  }
 
  return names.map(n=>`<div class="item"><b>${n}</b></div>`).join('');
 }
-function renderCalendarList(){const s=state(),date=selectedCalendarDate;calendarSelectedTitle.textContent=date?'المشاركون '+formatDateDisplay(date):'المشاركون';if(!date){calendarList.innerHTML='<p class="muted">اضغط على يوم من التقويم.</p>';return}const ms=s.matches.filter(m=>m.date===date);calendarList.innerHTML=ms.length?ms.map(m=>`<h3>${formatDateDisplay(m.date)}${m.place?' - '+m.place:''}</h3>${teamHtml(s,m)}<button onclick="openEditPage('match','${m.id}','matchLog')">تعديل اللعبة</button>`).join(''):'<p class="muted">لا توجد لعبة بهذا التاريخ.</p>'}
+
+function renderCalendarList(){
+  const s=state(),date=selectedCalendarDate;
+  calendarSelectedTitle.textContent=date?msg('calendarSelectedTitle')+' '+formatDateDisplay(date):msg('calendarSelectedTitle');
+  if(!date){calendarList.innerHTML=`<p class="muted">${msg('clickCalendar')}</p>`;return}
+  const ms=s.matches.filter(m=>m.date===date);
+  calendarList.innerHTML=ms.length?ms.map(m=>`<h3>${formatDateDisplay(m.date)}${m.place?' - '+m.place:''}</h3>${teamHtml(s,m)}<button onclick="openEditPage('match','${m.id}','matchLog')">${msg('btnEditPlayer')}</button>`).join(''):`<p class="muted">${msg('noGameDate')}</p>`;
+}
 
 let currentEdit={type:null,id:null,back:'matchLog'};
 
@@ -330,23 +749,24 @@ function openEditPage(type,id,back){
     const m=s.matches.find(x=>x.id===id);
     if(!m)return;
     const players=s.players.map(p=>`<label class="editCheck"><input type="checkbox" class="editPlayerCheck" value="${p}" ${(m.players||[]).includes(p)?'checked':''}> ${p}</label>`).join('');
-    const guests=(m.guests||[]).map((g,i)=>`<div class="guestEditRow"><input data-guest-index="${i}" data-field="guest" value="${g.guest}"><select data-guest-index="${i}" data-field="owner">${s.players.map(p=>`<option ${p===g.owner?'selected':''}>${p}</option>`).join('')}</select><button class="danger" onclick="this.closest('.guestEditRow').remove()">حذف</button></div>`).join('');
-    html=`<label>تاريخ اللعب<input type="text" inputmode="numeric" id="editMatchDate" value="${formatDateDisplay(m.date)||''}"></label>
-    <label>مكان اللعب<input id="editMatchPlace" value="${m.place||''}"></label>
-    <div class="two"><label>سعر الحجز<input type="number" step="0.001" id="editMatchCost" value="${m.bookingCost||''}"></label><label>عدد اللاعبين<input type="number" id="editMatchNeeded" value="${m.neededPlayers||''}"></label></div>
-    <h3>المشاركون</h3><div class="editPlayersGrid">${players}</div>
-    <h3>الأسماء المضافة</h3><div id="editGuestsList">${guests||'<p class="muted">لا يوجد</p>'}</div>
-    <div class="two"><input id="newEditGuestName" placeholder="اسم الشخص المضاف"><select id="newEditGuestOwner">${s.players.map(p=>`<option>${p}</option>`).join('')}</select></div>
-    <button onclick="addEditGuest()">إضافة</button>`;
+    const guests=(m.guests||[]).map((g,i)=>`<div class="guestEditRow"><input data-guest-index="${i}" data-field="guest" value="${g.guest}"><select data-guest-index="${i}" data-field="owner">${s.players.map(p=>`<option ${p===g.owner?'selected':''}>${p}</option>`).join('')}</select><button class="danger" onclick="this.closest('.guestEditRow').remove()">${msg('btnDeletePlayer')}</button></div>`).join('');
+    html=`<label>${msg('lblMatchDate')}<input type="text" inputmode="numeric" id="editMatchDate" value="${formatDateDisplay(m.date)||''}"></label>
+    <label>${msg('lblPlace')}<input id="editMatchPlace" value="${m.place||''}"></label>
+    <div class="two"><label>${msg('lblBookingCost')}<input type="number" step="0.001" id="editMatchCost" value="${m.bookingCost||''}"></label><label>${msg('lblNeededPlayers')}<input type="number" id="editMatchNeeded" value="${m.neededPlayers||''}"></label></div>
+    <h3>${msg('lblParticipants')}</h3><div class="editPlayersGrid">${players}</div>
+    <h3>${msg('addedNames')}</h3><div id="editGuestsList">${guests||`<p class="muted">${msg('noData')}</p>`}</div>
+    <div class="two"><input id="newEditGuestName" placeholder="${msg('guestNamePlaceholder')}"><select id="newEditGuestOwner">${s.players.map(p=>`<option>${p}</option>`).join('')}</select></div>
+    <button onclick="addEditGuest()">${msg('btnAddPlayer')}</button>`;
+    document.getElementById('editPageTitle').textContent=msg('editPageTitleMatch');
   }
   if(type==='deposit'){
     const d=s.deposits.find(x=>x.id===id);
     if(!d)return;
-    html=`<label>التاريخ<input type="text" inputmode="numeric" id="editDepositDate" value="${formatDateDisplay(d.date)||''}"></label>
-    <label>اللاعب<select id="editDepositPlayer">${s.players.map(p=>`<option ${p===d.player?'selected':''}>${p}</option>`).join('')}</select></label>
-    <label>المبلغ<input type="number" step="0.001" id="editDepositAmount" value="${d.amount||0}"></label>`;
+    html=`<label>${msg('lblDepositDate')}<input type="text" inputmode="numeric" id="editDepositDate" value="${formatDateDisplay(d.date)||''}"></label>
+    <label>${msg('lblDepositPlayer')}<select id="editDepositPlayer">${s.players.map(p=>`<option ${p===d.player?'selected':''}>${p}</option>`).join('')}</select></label>
+    <label>${msg('lblDepositAmount')}<input type="number" step="0.001" id="editDepositAmount" value="${d.amount||0}"></label>`;
+    document.getElementById('editPageTitle').textContent=msg('editPageTitleDeposit');
   }
-  document.getElementById('editPageTitle').textContent=type==='match'?'تعديل اللعبة':'تعديل الإيداع';
   document.getElementById('editPageContent').innerHTML=html;
   showTab('editPage');
 }
@@ -359,13 +779,13 @@ function closeEditPage(){
 function addEditGuest(){
   const name=document.getElementById('newEditGuestName')?.value.trim();
   const owner=document.getElementById('newEditGuestOwner')?.value;
-  if(!name||!owner)return alert('اكتب الاسم واختر العضو');
+  if(!name||!owner)return alert(msg('alertChooseMember'));
   const list=document.getElementById('editGuestsList');
   const s=state();
   const index=document.querySelectorAll('.guestEditRow').length+1000;
   const row=document.createElement('div');
   row.className='guestEditRow';
-  row.innerHTML=`<input data-guest-index="${index}" data-field="guest" value="${name}"><select data-guest-index="${index}" data-field="owner">${s.players.map(p=>`<option ${p===owner?'selected':''}>${p}</option>`).join('')}</select><button class="danger" onclick="this.closest('.guestEditRow').remove()">حذف</button>`;
+  row.innerHTML=`<input data-guest-index="${index}" data-field="guest" value="${name}"><select data-guest-index="${index}" data-field="owner">${s.players.map(p=>`<option ${p===owner?'selected':''}>${p}</option>`).join('')}</select><button class="danger" onclick="this.closest('.guestEditRow').remove()">${msg('btnDeletePlayer')}</button>`;
   if(list.querySelector('.muted'))list.innerHTML='';
   list.appendChild(row);
   document.getElementById('newEditGuestName').value='';
@@ -384,9 +804,7 @@ function saveEditPage(){
     m.players=[...document.querySelectorAll('.editPlayerCheck:checked')].map(x=>x.value);
     const rows=[...document.querySelectorAll('.guestEditRow')];
     m.guests=rows.map(r=>({guest:r.querySelector('[data-field="guest"]').value.trim(),owner:r.querySelector('[data-field="owner"]').value})).filter(g=>g.guest&&g.owner);
-    save(s);
-    closeEditPage();
-    return;
+    save(s);closeEditPage();return;
   }
   if(currentEdit.type==='deposit'){
     const d=s.deposits.find(x=>x.id===currentEdit.id);
@@ -394,19 +812,14 @@ function saveEditPage(){
     d.date=parseDisplayDate(document.getElementById('editDepositDate').value)||d.date;
     d.player=document.getElementById('editDepositPlayer').value;
     d.amount=Number(document.getElementById('editDepositAmount').value||0);
-    save(s);
-    closeEditPage();
-    return;
+    save(s);closeEditPage();return;
   }
 }
 
-
-function guestsEditorHtml(m){
-  const gs=m.guests||[];
-  return `<div class="guestEditor"><b>الأسماء المضافة</b>${gs.length?gs.map(g=>`<div class="item"><span>${guestLabel(g)}</span></div>`).join(''):'<p class="muted">لا يوجد</p>'}<button onclick="openEditPage('match','${m.id}','matchLog')">تعديل المشاركين والأسماء المضافة</button></div>`;
+function renderMatchLog(s){
+  matchLogList.innerHTML=[...s.matches].sort((a,b)=>b.date.localeCompare(a.date)).map(m=>`<div class="card"><b>${formatDateDisplay(m.date)}${m.place?' - '+m.place:''}</b><p>${msg('gamePrice')}: <span class="count">${money(m.price)}</span> | ${msg('gamePlayers')}: <span class="count">${(m.players||[]).length+(m.guests||[]).length}</span></p>${teamHtml(s,m)}<div class="actions"><button onclick="openEditPage('match','${m.id}','matchLog')">${msg('btnEditPlayer')}</button><button class="danger" onclick="deleteMatch('${m.id}')">${msg('btnDeletePlayer')}</button></div></div>`).join('')||`<p class="muted">${msg('noGames')}</p>`
 }
 
-function renderMatchLog(s){matchLogList.innerHTML=[...s.matches].sort((a,b)=>b.date.localeCompare(a.date)).map(m=>`<div class="card"><b>${formatDateDisplay(m.date)}${m.place?' - '+m.place:''}</b><p>السعر: <span class="count">${money(m.price)}</span> | المشاركين: <span class="count">${(m.players||[]).length+(m.guests||[]).length}</span></p>${teamHtml(s,m)}<div class="actions"><button onclick="openEditPage('match','${m.id}','matchLog')">تعديل</button><button class="danger" onclick="deleteMatch('${m.id}')">حذف</button></div></div>`).join('')||'<p class="muted">لا توجد ألعاب محفوظة.</p>'}
 function renderTeams(){
   const s=state(),id=teamsMatchSelect.value,m=s.matches.find(x=>x.id===id);
   if(!m){teamsPlayers.innerHTML='';renderTeamsPreview();return}
@@ -414,87 +827,63 @@ function renderTeams(){
     tempTeamMap={...(s.teams[id]||{}),__matchId:id};
   }
   const names=participants(m);
-  teamsPlayers.innerHTML=names.map(n=>`<div class="teamPick"><b>${n}</b><button class="${tempTeamMap[n]==='A'?'selA':''}" onclick="pickTeam('${n.replace(/'/g,"\\'")}','A')">الأول</button><button class="${tempTeamMap[n]==='B'?'selB':''}" onclick="pickTeam('${n.replace(/'/g,"\\'")}','B')">الثاني</button></div>`).join('');
+  
+  const lblFirst = currentLang === 'ar' ? 'الأول' : '1st';
+  const lblSecond = currentLang === 'ar' ? 'الثاني' : '2nd';
+  
+  teamsPlayers.innerHTML=names.map(n=>`<div class="teamPick"><b>${n}</b><button class="${tempTeamMap[n]==='A'?'selA':''}" onclick="pickTeam('${n.replace(/'/g,"\'")}','A')">${lblFirst}</button><button class="${tempTeamMap[n]==='B'?'selB':''}" onclick="pickTeam('${n.replace(/'/g,"\'")}','B')">${lblSecond}</button></div>`).join('');
   renderTeamsPreview();
 }
+
 function pickTeam(n,t){tempTeamMap[n]=t;renderTeamsPreview();renderTeams()}
 function randomTeams(){const s=state(),id=teamsMatchSelect.value,m=s.matches.find(x=>x.id===id);if(!m)return;const arr=participants(m).sort(()=>Math.random()-.5);tempTeamMap={__matchId:id};arr.forEach((n,i)=>tempTeamMap[n]=i%2?'B':'A');renderTeamsPreview();renderTeams()}
-function saveTeams(){const s=state(),id=teamsMatchSelect.value;if(!id)return;const clean={...tempTeamMap};delete clean.__matchId;s.teams[id]=clean;save(s);alert('تم حفظ الفريقين');renderTeamsPreview()}
-
-function teamPreviewSameAsCalendar(id){
-  const s=state();
-  const m=s.matches.find(x=>x.id===id);
-  if(!m)return '<p class="muted">اختر لعبة أولًا.</p>';
-  let html=teamHtml(s,m);
-  html=html.replace(/<button[^>]*>تعديل اللعبة<\/button>/g,'');
-  return `<div class="card teamCalendarClone"><h3>المشاركون</h3>${html}</div>`;
-}
+function saveTeams(){const s=state(),id=teamsMatchSelect.value;if(!id)return;const clean={...tempTeamMap};delete clean.__matchId;s.teams[id]=clean;save(s);alert(msg('alertSavedTeams'));renderTeamsPreview()}
 
 function renderTeamsPreview(){
-  const s=state();
-  const id=teamsMatchSelect.value;
-  const m=s.matches.find(x=>x.id===id);
-  const el=document.getElementById('teamsPreview');
-  if(!el)return;
-  if(!m){el.innerHTML='';return;}
+  const s=state();const id=teamsMatchSelect.value;const m=s.matches.find(x=>x.id===id);const el=document.getElementById('teamsPreview');if(!el)return;if(!m){el.innerHTML='';return;}
+  let map={};if(tempTeamMap && tempTeamMap.__matchId===id){map={...tempTeamMap};delete map.__matchId;}else{map={...(s.teams[id]||{})};}
+  const names=participants(m);const teamA=names.filter(n=>map[n]==='A');const teamB=names.filter(n=>map[n]==='B');
 
-  // Use current unsaved choices if they belong to selected match; otherwise saved teams
-  let map={};
-  if(tempTeamMap && tempTeamMap.__matchId===id){
-    map={...tempTeamMap};
-    delete map.__matchId;
-  }else{
-    map={...(s.teams[id]||{})};
-  }
-
-  const names=participants(m);
-  const teamA=names.filter(n=>map[n]==='A');
-  const teamB=names.filter(n=>map[n]==='B');
-
-  el.innerHTML=`<div class="ftCalendarBox">
-    <h3>المشاركون ${formatDateDisplay(m.date)||''}</h3>
-    <div class="ftMatchInfo">${m.place?formatDateDisplay(m.date)+' - '+m.place:formatDateDisplay(m.date)}</div>
-    <div class="ftTeams">
-      <div class="ftTeam ftTeamB">
-        <h4>الفريق الثاني</h4>
-        ${teamB.length?teamB.map(n=>`<div class="ftName">${n}</div>`).join(''):'<p class="muted">لا يوجد</p>'}
+  el.innerHTML=`<div class="calendarTeams">
+      <div class="teamBBox">
+        <h4>${msg('teamSecond')}</h4>
+        ${teamB.length?teamB.map(n=>`<div class="teamName">${n}</div>`).join(''):`<p class="muted">${msg('noData')}</p>`}
       </div>
-      <div class="ftTeam ftTeamA">
-        <h4>الفريق الأول</h4>
-        ${teamA.length?teamA.map(n=>`<div class="ftName">${n}</div>`).join(''):'<p class="muted">لا يوجد</p>'}
+      <div class="teamABox">
+        <h4>${msg('teamFirst')}</h4>
+        ${teamA.length?teamA.map(n=>`<div class="teamName">${n}</div>`).join(''):`<p class="muted">${msg('noData')}</p>`}
       </div>
-    </div>
-  </div>`;
+    </div>`;
 }
+
 function renderTables(s,b){
   const latestDate=latestPlayedDateOnly(b);
 
   playerTableWrap.innerHTML=reportSummary.innerHTML+`<div class="tableWrap"><table>
-    <thead><tr><th>م</th><th>الاسم</th><th>الرصيد</th><th>لعب</th><th>آخر لعب</th></tr></thead>
+    <thead><tr><th>${msg('thM')}</th><th>${msg('thName')}</th><th>${msg('thBalance')}</th><th>${msg('thGames')}</th><th>${msg('thLastGame')}</th></tr></thead>
     <tbody>${s.players.map((p,i)=>`<tr>
       <td>${i+1}</td>
-      <td class="${isInactiveFiveMonths(b[p]?.last)?'inactiveName':''}" style="${isInactiveFiveMonths(b[p]?.last)?'background:#f8d7da;color:#842029;font-weight:900;':''}"><span class="tablePlayerLink" onclick="openPlayerProfileDirect('${String(p).replace(/'/g,"\\'")}')">${p}</span></td>
+      <td class="${isInactiveFiveMonths(b[p]?.last)?'inactiveName':''}" style="${isInactiveFiveMonths(b[p]?.last)?'background:#f8d7da;color:#842029;font-weight:900;':''}"><span class="tablePlayerLink" onclick="openPlayerProfileDirect('${String(p).replace(/'/g,"\'")}')">${p}</span></td>
       <td class="${clsMoney(b[p]?.balance)}">${moneyBlank(b[p]?.balance)}</td>
       <td>${b[p]?.games||''}</td>
       <td class="${b[p]?.last && b[p]?.last===latestDate ? 'latestPlayedCell' : ''}">${formatDateDisplay(b[p]?.last)||''}</td>
     </tr>`).join('')}</tbody>
   </table></div>`;
 
-  const debt=s.players.filter(p=>(b[p]?.balance||0)<0).length;
   const total=s.players.reduce((sum,p)=>sum+(b[p]?.balance||0),0);
 
   reportSummary.innerHTML=`<div class="summaryCards">
-    <div class="summaryCard"><span>اللاعبين</span><b>${s.players.length}</b></div>
-    <div class="summaryCard"><span>الألعاب</span><b>${s.matches.length}</b></div>
-    <div class="summaryCard"><span>إجمالي الرصيد</span><b class="${total<0?'negText':total>0?'posText':''}">${moneyBlank(total)}</b></div>
+    <div class="summaryCard"><span>${msg('summary_players')}</span><b>${s.players.length}</b></div>
+    <div class="summaryCard"><span>${msg('summary_matches')}</span><b>${s.matches.length}</b></div>
+    <div class="summaryCard"><span>${msg('summary_totalBalance')}</span><b class="${total<0?'negText':total>0?'posText':''}">${moneyBlank(total)}</b></div>
   </div>`;
 
   reportsList.innerHTML=`<div class="tableWrap"><table>
-    <thead><tr><th>الاسم</th><th>الرصيد</th><th>لعب</th><th>آخر لعبة</th><th>الإيداعات</th></tr></thead>
+    <thead><tr><th>${msg('thName')}</th><th>${msg('thBalance')}</th><th>${msg('thGames')}</th><th>${msg('thLastGameReport')}</th><th>${msg('thDepositsReport')}</th></tr></thead>
     <tbody>${s.players.map(p=>{
       const r=b[p]||{};
       return `<tr>
-        <td><span class="tablePlayerLink" onclick="openPlayerProfileDirect('${String(p).replace(/'/g,"\\'")}')">${p}</span></td>
+        <td><span class="tablePlayerLink" onclick="openPlayerProfileDirect('${String(p).replace(/'/g,"\'")}')">${p}</span></td>
         <td class="${clsMoney(r.balance)}">${moneyBlank(r.balance)}</td>
         <td>${r.games||''}</td>
         <td class="${r.last && r.last===latestDate ? 'latestPlayedCell' : ''}">${formatDateDisplay(r.last)||''}</td>
@@ -503,50 +892,70 @@ function renderTables(s,b){
     }).join('')}</tbody>
   </table></div>`;
 }
-function renderAll(){renderNav();setActiveNavButton(currentTabId);renderPageOrder();const s=state();saveNoRender(s);if(!matchDate.value)setDateDisplay('matchDate',today());if(!depositDate.value)setDateDisplay('depositDate',s.settings.lastDepositDate||today());pricePerPlayer.textContent=money(calcPrice());const b=balances(s);playersList.innerHTML=s.players.map(p=>`<div class="nameOnly">${p}</div>`).join('')||'<p class="muted">أضف اللاعبين أولًا.</p>';const opts=s.players.map(p=>`<option>${p}</option>`).join('');guestOwner.innerHTML=opts;depositPlayer.innerHTML=opts;const pf=document.getElementById('playerFilterSelect');if(pf){pf.innerHTML='<option value="">اختر لاعب</option>'+opts; if(!pf.value&&s.players[0])pf.value=s.players[0]; renderPlayerFilter();renderDepositHistory();}matchPlayers.innerHTML=s.players.map(p=>`<label><input class="playerCheck" type="checkbox" value="${p}"> <span>${p}</span></label>`).join('');renderMatchParticipantsPreview();depositQuickButtons.innerHTML=getDepositPresets(s).map(v=>`<span class="quick"><button class="x" type="button" onclick="event.stopPropagation();deleteDepositPreset('${v}')">×</button><span onclick="setDepositAmount('${v}')">${money(v)}</span></span>`).join('')||'<span class="muted">احفظ أول مبلغ ليظهر كزر سريع.</span>';depositsList.innerHTML=[...s.deposits]
-.map((d,i)=>({...d,_i:i,type:(String(d.date||'').replace(/-/g,'/')==='2026/01/01'||String(d.date||'').replace(/-/g,'/')==='1/1/2026')&&!d.type?'initial':d.type}))
-.sort((a,b)=>{
- const da=(a.date?new Date(a.date).getTime():0)||0;
- const db=(b.date?new Date(b.date).getTime():0)||0;
- if(db!==da)return db-da;
- return (b.createdAt||b._i||0)-(a.createdAt||a._i||0);
-})
-.map(d=>`<div class="item depositRow" onclick="depositOptions('${d.id}')">
-<span class="depositDateNameRow"><span class="depositDateCell">${formatDateDisplay(d.date)}</span><span class="depositPlayerCell">${d.player}</span></span>
-<span class="${clsMoney(d.amount)} depoAmountGroup"><b>${depositTypeLabel(d)}</b>&nbsp;&nbsp;${money(d.amount)}</span>
-</div>`).join('');teamsMatchSelect.innerHTML=s.matches
-.sort((a,b)=>b.date.localeCompare(a.date))
-.map(m=>`<option value="${m.id}">${formatDateDisplay(m.date)} | ${m.place||m.location||''}</option>`)
-.join('');renderTempGuests();renderCalendar();renderCalendarList();renderMatchLog(s);renderTeams();renderTables(s,b);updatePrettyDates()}
+
+function renderAll(){
+  applyLanguageHTML();
+  renderNav();
+  setActiveNavButton(currentTabId);
+  renderPageOrder();
+  const s=state();
+  saveNoRender(s);
+  if(!matchDate.value)setDateDisplay('matchDate',today());
+  if(!depositDate.value)setDateDisplay('depositDate',s.settings.lastDepositDate||today());
+  pricePerPlayer.textContent=money(calcPrice());
+  const b=balances(s);
+  playersList.innerHTML=s.players.map(p=>`<div class="nameOnly">${p}</div>`).join('')||`<p class="muted">${msg('noGames')}</p>`;
+  const opts=s.players.map(p=>`<option>${p}</option>`).join('');
+  guestOwner.innerHTML=opts;depositPlayer.innerHTML=opts;
+  const pf=document.getElementById('playerFilterSelect');
+  if(pf){
+    pf.innerHTML=`<option value="">${msg('choosePlayer')}</option>`+opts; 
+    if(!pf.value&&s.players[0])pf.value=s.players[0]; 
+    renderPlayerFilter();renderDepositHistory();
+  }
+  matchPlayers.innerHTML=s.players.map(p=>`<label><input class="playerCheck" type="checkbox" value="${p}"> <span>${p}</span></label>`).join('');
+  renderMatchParticipantsPreview();
+  depositQuickButtons.innerHTML=getDepositPresets(s).map(v=>`<span class="quick"><button class="x" type="button" onclick="event.stopPropagation();deleteDepositPreset('${v}')">×</button><span onclick="setDepositAmount('${v}')">${money(v)}</span></span>`).join('')||`<span class="muted">${msg('firstSavePreset')}</span>`;
+  
+  depositsList.innerHTML=[...s.deposits]
+  .map((d,i)=>({...d,_i:i,type:(String(d.date||'').replace(/-/g,'/')==='2026/01/01'||String(d.date||'').replace(/-/g,'/')==='1/1/2026')&&!d.type?'initial':d.type}))
+  .sort((a,b)=>{
+   const da=(a.date?new Date(a.date).getTime():0)||0;const db=(b.date?new Date(b.date).getTime():0)||0;
+   if(db!==da)return db-da;return (b.createdAt||b._i||0)-(a.createdAt||a._i||0);
+  })
+  .map(d=>`<div class="item depositRow" onclick="depositOptions('${d.id}')">
+  <span class="depositDateNameRow"><span class="depositDateCell">${formatDateDisplay(d.date)}</span><span class="depositPlayerCell">${d.player}</span></span>
+  <span class="${clsMoney(d.amount)} depoAmountGroup"><b>${depositTypeLabel(d)}</b>&nbsp;&nbsp;${money(d.amount)}</span>
+  </div>`).join('');
+  
+  teamsMatchSelect.innerHTML=s.matches
+  .sort((a,b)=>b.date.localeCompare(a.date))
+  .map(m=>`<option value="${m.id}">${formatDateDisplay(m.date)} | ${m.place||''}</option>`)
+  .join('');
+  renderTempGuests();renderCalendar();renderCalendarList();renderMatchLog(s);renderTeams();renderTables(s,b);
+}
+
 function exportData(){const blob=new Blob([JSON.stringify(state(),null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='qatiya-backup.json';a.click()}
-function importData(e){const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{localStorage.setItem('qatiyaState',r.result);renderAll();alert('تم الاستيراد')};r.readAsText(f)}
-if('serviceWorker'in navigator){navigator.serviceWorker.register('sw.js')}setDepositType('in');renderAll();
+function importData(e){const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{localStorage.setItem('qatiyaState',r.result);renderAll();alert(msg('alertImported'))};r.readAsText(f)}
+
+if('serviceWorker'in navigator){navigator.serviceWorker.register('sw.js')}
+setDepositType('in');
+renderAll();
 setTimeout(()=>{const first=document.querySelector("nav button");if(first)first.classList.add('activeTab')},100);
 
-
 function renderDepositHistory(){
-  const box=document.getElementById('depositHistoryList') || document.getElementById('depositsList');
+  const box=document.getElementById('depositHistoryList');
   if(!box)return;
-
   const s=state();
   const list=[...(s.deposits||[])].map(d=>{
     const raw=String(d.date||'').replace(/-/g,'/');
-    if((raw==='2026/01/01'||raw==='1/1/2026') && !d.type){
-      return {...d,type:'initial'};
-    }
+    if((raw==='2026/01/01'||raw==='1/1/2026') && !d.type){ return {...d,type:'initial'}; }
     return d;
   }).sort((a,b)=>{
-    const da=new Date(a.date||'1900-01-01').getTime();
-    const db=new Date(b.date||'1900-01-01').getTime();
-    if(db!==da)return db-da;
-    return (b.createdAt||0)-(a.createdAt||0);
+    const da=new Date(a.date||'1900-01-01').getTime();const db=new Date(b.date||'1900-01-01').getTime();
+    if(db!==da)return db-da;return (b.createdAt||0)-(a.createdAt||0);
   });
-
-  if(!list.length){
-    box.innerHTML='<p class="muted">لا توجد عمليات</p>';
-    return;
-  }
-
+  if(!list.length){ box.innerHTML=`<p class="muted">${msg('noOps')}</p>`; return; }
   box.innerHTML=list.map(d=>`
     <div class="item depositHistoryRow">
       <span>${formatDateDisplay(d.date)}</span>
@@ -558,356 +967,93 @@ function renderDepositHistory(){
   `).join('');
 }
 
-
-
 function openPlayerProfileDirect(playerName){
   currentTabId='playerFilter';
   document.querySelectorAll('section').forEach(s=>s.classList.remove('active'));
   const sec=document.getElementById('playerFilter');
   if(sec) sec.classList.add('active');
-
   setTimeout(()=>{
     const select=document.getElementById('playerFilterSelect');
-    if(select){
-      select.value=playerName;
-      renderPlayerFilter();
-    }
+    if(select){ select.value=playerName; renderPlayerFilter(); }
   },150);
 }
 
-
 function updatePlayersGuestsCount(){
-  const el=document.getElementById('livePlayersGuestsCount');
-  if(!el)return;
-
+  const el=document.getElementById('livePlayersGuestsCount');if(!el)return;
   const players=document.querySelectorAll('#matchPlayers input.playerCheck:checked').length;
-
-  let guests=0;
-
-  const guestWrap=document.getElementById('guestList');
-  if(guestWrap){
-    guests=guestWrap.querySelectorAll('.item').length;
-  }
-
-  el.textContent='('+(players+guests)+')';
+  el.textContent='('+players+')';
 }
-
-document.addEventListener('change',function(e){
-  if(e.target && e.target.classList.contains('playerCheck')){
-    updatePlayersGuestsCount();
-  }
-});
-
-setInterval(function(){
-  try{updatePlayersGuestsCount()}catch(e){}
-},1000);
-
-
+document.addEventListener('change',function(e){ if(e.target && e.target.classList.contains('playerCheck')){ updatePlayersGuestsCount(); } });
+setInterval(function(){ try{updatePlayersGuestsCount()}catch(e){} },1000);
 
 function fixTeamsVisualOrderAndHighlight(){
   try{
-    document.querySelectorAll('#teamsPreview .calendarTeams, #calendarList .calendarTeams').forEach(box=>{
-      box.style.direction='rtl';
-      box.style.display='grid';
-      box.style.gridTemplateColumns='1fr 1fr';
-      const a=box.querySelector('.teamABox');
-      const b=box.querySelector('.teamBBox');
-      if(a){a.style.order='1';a.style.background='#fbffb8'}
-      if(b){b.style.order='2';b.style.background='#ffd1f3'}
+    document.querySelectorAll('.calendarTeams').forEach(box=>{
+      box.style.direction= 'ltr';
+      box.style.display='flex';
+      box.style.gap='18px';
+      const a=box.querySelector('.teamABox');const b=box.querySelector('.teamBBox');
+      if(a){a.style.order=currentLang==='ar'?'2':'1'; a.style.flex='1';}
+      if(b){b.style.order=currentLang==='ar'?'1':'2'; b.style.flex='1';}
     });
-
     document.querySelectorAll('#teamsPlayers button.selA').forEach(btn=>{
-      btn.style.background='#ffe066';
-      btn.style.border='2px solid #b08900';
-      btn.style.fontWeight='900';
-      btn.style.transform='scale(1.06)';
-      btn.style.boxShadow='0 0 0 3px rgba(255,224,102,.45), 0 4px 12px rgba(0,0,0,.18)';
+      btn.style.background='#ffe066';btn.style.border='2px solid #b08900';btn.style.fontWeight='900';btn.style.transform='scale(1.06)';
     });
     document.querySelectorAll('#teamsPlayers button.selB').forEach(btn=>{
-      btn.style.background='#ff8ccf';
-      btn.style.border='2px solid #b83280';
-      btn.style.fontWeight='900';
-      btn.style.transform='scale(1.06)';
-      btn.style.boxShadow='0 0 0 3px rgba(255,140,207,.38), 0 4px 12px rgba(0,0,0,.18)';
+      btn.style.background='#ff8ccf';btn.style.border='2px solid #b83280';btn.style.fontWeight='900';btn.style.transform='scale(1.06)';
     });
   }catch(e){}
 }
 
 const __oldRenderTeamsFix=typeof renderTeams==='function'?renderTeams:null;
 if(__oldRenderTeamsFix && !__oldRenderTeamsFix.__fixedTeamsVisual){
-  renderTeams=function(){
-    const r=__oldRenderTeamsFix.apply(this,arguments);
-    setTimeout(fixTeamsVisualOrderAndHighlight,50);
-    return r;
-  };
+  renderTeams=function(){ const r=__oldRenderTeamsFix.apply(this,arguments); setTimeout(fixTeamsVisualOrderAndHighlight,50); return r; };
   renderTeams.__fixedTeamsVisual=true;
 }
-
 const __oldRenderTeamsPreviewFix=typeof renderTeamsPreview==='function'?renderTeamsPreview:null;
 if(__oldRenderTeamsPreviewFix && !__oldRenderTeamsPreviewFix.__fixedTeamsPreviewVisual){
-  renderTeamsPreview=function(){
-    const r=__oldRenderTeamsPreviewFix.apply(this,arguments);
-    setTimeout(fixTeamsVisualOrderAndHighlight,50);
-    return r;
-  };
+  renderTeamsPreview=function(){ const r=__oldRenderTeamsPreviewFix.apply(this,arguments); setTimeout(fixTeamsVisualOrderAndHighlight,50); return r; };
   renderTeamsPreview.__fixedTeamsPreviewVisual=true;
 }
-
-document.addEventListener('DOMContentLoaded',()=>setTimeout(fixTeamsVisualOrderAndHighlight,300));
-setInterval(fixTeamsVisualOrderAndHighlight,1500);
-
-
-
-function fixTeamBoxesByTitle(){
- try{
-   document.querySelectorAll('.calendarTeams').forEach(wrap=>{
-      const boxes=[...wrap.children];
-      let firstBox=null, secondBox=null;
-
-      boxes.forEach(b=>{
-         const txt=(b.innerText||'').trim();
-         if(txt.includes('الأول')) firstBox=b;
-         if(txt.includes('الثاني')) secondBox=b;
-      });
-
-      wrap.style.display='grid';
-      wrap.style.gridTemplateColumns='1fr 1fr';
-      wrap.style.direction='ltr';
-      wrap.style.gap='18px';
-
-      if(firstBox){
-         firstBox.style.gridColumn='2';
-         firstBox.style.background='#f6f3b1';
-      }
-
-      if(secondBox){
-         secondBox.style.gridColumn='1';
-         secondBox.style.background='#efc0e5';
-      }
-   });
- }catch(e){}
-}
-
-document.addEventListener('DOMContentLoaded',()=>{
- setTimeout(fixTeamBoxesByTitle,300);
-});
-
-setInterval(fixTeamBoxesByTitle,1200);
-
-
-
-
-function forceSwapTeamBoxesByText(){
-  try{
-    document.querySelectorAll('#teamsPreview .calendarTeams, #calendarList .calendarTeams, .calendarTeams').forEach(wrap=>{
-      const boxes=[...wrap.children].filter(el=>el && el.querySelector);
-      let first=null, second=null;
-
-      boxes.forEach(el=>{
-        const t=(el.textContent||'').trim();
-        if(t.includes('الفريق الأول') || t.includes('الأول')) first=el;
-        if(t.includes('الفريق الثاني') || t.includes('الثاني')) second=el;
-      });
-
-      if(!first || !second) return;
-
-      // Physical order in DOM: second first (left), first last (right)
-      if(wrap.children[0] !== second) wrap.insertBefore(second, wrap.firstElementChild);
-      if(wrap.lastElementChild !== first) wrap.appendChild(first);
-
-      wrap.style.setProperty('display','grid','important');
-      wrap.style.setProperty('grid-template-columns','1fr 1fr','important');
-      wrap.style.setProperty('direction','ltr','important');
-      wrap.style.setProperty('gap','18px','important');
-
-      second.style.setProperty('background','#ffd1f3','important');
-      second.style.setProperty('grid-column','1','important');
-      second.style.setProperty('order','1','important');
-      second.style.setProperty('direction','rtl','important');
-
-      first.style.setProperty('background','#fbffb8','important');
-      first.style.setProperty('grid-column','2','important');
-      first.style.setProperty('order','2','important');
-      first.style.setProperty('direction','rtl','important');
-    });
-  }catch(e){
-    console.log('forceSwapTeamBoxesByText error',e);
-  }
-}
-
-const __oldRenderAllTeamSwap=typeof renderAll==='function'?renderAll:null;
-if(__oldRenderAllTeamSwap && !__oldRenderAllTeamSwap.__teamSwapWrapped){
-  renderAll=function(){
-    const r=__oldRenderAllTeamSwap.apply(this,arguments);
-    setTimeout(forceSwapTeamBoxesByText,50);
-    setTimeout(forceSwapTeamBoxesByText,250);
-    return r;
-  };
-  renderAll.__teamSwapWrapped=true;
-}
-
-['renderTeams','renderTeamsPreview','renderCalendarList'].forEach(fn=>{
-  const old=window[fn];
-  if(typeof old==='function' && !old.__teamSwapWrapped){
-    window[fn]=function(){
-      const r=old.apply(this,arguments);
-      setTimeout(forceSwapTeamBoxesByText,50);
-      setTimeout(forceSwapTeamBoxesByText,250);
-      return r;
-    };
-    window[fn].__teamSwapWrapped=true;
-  }
-});
-
-document.addEventListener('DOMContentLoaded',()=>{
-  setTimeout(forceSwapTeamBoxesByText,200);
-  setTimeout(forceSwapTeamBoxesByText,800);
-});
-setInterval(forceSwapTeamBoxesByText,1000);
-
-
 
 /* === HARD OVERRIDE TEAM BOXES === */
 (function(){
  function applyHardSwap(){
    try{
      document.querySelectorAll('.calendarTeams').forEach(function(wrap){
-
-       let firstBox=null;
-       let secondBox=null;
-
+       let firstBox=null; let secondBox=null;
        Array.from(wrap.children).forEach(function(el){
          const txt=(el.innerText||'').trim();
-
-         if(txt.indexOf('الفريق الأول')>-1 || txt.indexOf('الأول')>-1){
-           firstBox=el;
-         }
-
-         if(txt.indexOf('الفريق الثاني')>-1 || txt.indexOf('الثاني')>-1){
-           secondBox=el;
-         }
+         if(txt.indexOf('الفريق الأول')>-1 || txt.indexOf('الأول')>-1 || txt.indexOf('First')>-1 || txt.indexOf('1st')>-1){ firstBox=el; }
+         if(txt.indexOf('الفريق الثاني')>-1 || txt.indexOf('الثاني')>-1 || txt.indexOf('Second')>-1 || txt.indexOf('2nd')>-1){ secondBox=el; }
        });
-
        if(!firstBox || !secondBox) return;
-
-       // حذف الترتيب الحالي
        wrap.innerHTML='';
-
-       // اليسار = الثاني الوردي
        secondBox.style.background='#efc0e5';
-       secondBox.style.order='1';
-
-       // اليمين = الأول الأصفر
+       secondBox.style.order=currentLang==='ar'?'1':'2';
+       secondBox.style.flex='1';
+       secondBox.style.padding='10px';
+       secondBox.style.borderRadius='12px';
+       
        firstBox.style.background='#f6f3b1';
-       firstBox.style.order='2';
+       firstBox.style.order=currentLang==='ar'?'2':'1';
+       firstBox.style.flex='1';
+       firstBox.style.padding='10px';
+       firstBox.style.borderRadius='12px';
 
        wrap.style.display='flex';
        wrap.style.flexDirection='row';
        wrap.style.direction='ltr';
        wrap.style.gap='18px';
 
-       // أضف الثاني أولاً ثم الأول
-       wrap.appendChild(secondBox);
-       wrap.appendChild(firstBox);
+       if(currentLang === 'ar') {
+         wrap.appendChild(secondBox); wrap.appendChild(firstBox);
+       } else {
+         wrap.appendChild(firstBox); wrap.appendChild(secondBox);
+       }
      });
    }catch(e){}
  }
-
  window.applyHardSwap=applyHardSwap;
-
- setInterval(applyHardSwap,500);
-
- document.addEventListener('DOMContentLoaded',function(){
-   setTimeout(applyHardSwap,100);
-   setTimeout(applyHardSwap,500);
-   setTimeout(applyHardSwap,1200);
- });
+ setInterval(applyHardSwap,400);
 })();
-
-
-
-/* ===== Arabic / English language switch ===== */
-let appLanguage=localStorage.getItem('appLanguage')||'ar';
-
-const appTranslations={
-"لعبة":"Game","الفريقين":"Teams","الإيداعات":"Deposits","التقويم":"Calendar","الجدول":"Table",
-"كشف لاعب":"Player Report","السجل":"Log","اللاعبين":"Players","الترتيب":"Order","النسخ":"Backup",
-"لعبة جديدة":"New Game","تعديل لعبة":"Edit Game","تاريخ اللعب":"Game Date","المكان":"Place",
-"الحجز":"Booking","العدد":"Count","سعر اللاعب":"Player Price","المشاركون":"Participants",
-"إضافة ضيف":"Add Guest","اسم الضيف":"Guest Name","إضافة":"Add","حفظ":"Save","تفريغ":"Clear",
-"تاريخ الإيداع":"Deposit Date","اللاعب":"Player","المبلغ":"Amount","إيداع":"Deposit",
-"خصم/مديونية":"Deduction/Debt","خصم":"Deduction","تأخير":"Late","جميع العمليات":"All Transactions",
-"السابق":"Previous","التالي":"Next","الفريق الأول":"Team One","الفريق الثاني":"Team Two",
-"تقسيم عشوائي":"Random Teams","حفظ الفريقين":"Save Teams","جدول اللاعبين":"Players Table",
-"الاسم":"Name","الرصيد":"Balance","لعب":"Games","آخر لعب":"Last Game","آخر لعبة":"Last Game",
-"اختر اللاعب":"Select Player","عدد اللعب":"Games Count","الخصومات":"Deductions","أيام اللعب":"Game Days",
-"الإيداعات والمديونيات":"Deposits & Debts","الأسماء التي أحضرها":"Guests Brought","المجموع":"Total",
-"مجموع الخصومات":"Total Deductions","النسخة الاحتياطية":"Backup","تصدير":"Export","استيراد":"Import",
-"ترتيب الصفحات":"Page Order","أضف اللاعبين أولًا.":"Add players first.","لا يوجد":"None",
-"لا توجد عمليات":"No transactions","لا توجد لعبة بهذا التاريخ.":"No game on this date.",
-"اضغط على يوم من التقويم.":"Tap a day on the calendar.","إجمالي الرصيد":"Total Balance",
-"إجمالي الإيداعات":"Total Deposits","الألعاب":"Games","مجموع الرصيد":"Total Balance",
-"بدون فريق":"No Team","تعديل":"Edit","حذف":"Delete","تأكيد الحذف":"Confirm Delete",
-"حفظ التعديل":"Save Edit","الاسم الجديد":"New Name","اسم اللاعب":"Player Name","اختياري":"Optional",
-"صندوق الفريقين":"Teams Box","الرصيد":"Balance","الإيداعات":"Deposits"
-};
-
-function setAppLanguage(lang){
- appLanguage=lang==='en'?'en':'ar';
- localStorage.setItem('appLanguage',appLanguage);
- applyAppLanguage();
-}
-
-function translateArabicText(text){
- let out=text;
- Object.keys(appTranslations).sort((a,b)=>b.length-a.length).forEach(ar=>{
-   out=out.split(ar).join(appTranslations[ar]);
- });
- return out;
-}
-
-function applyAppLanguage(){
- document.documentElement.lang=appLanguage==='en'?'en':'ar';
- document.documentElement.dir=appLanguage==='en'?'ltr':'rtl';
- document.body.classList.toggle('englishMode',appLanguage==='en');
-
- const arBtn=document.getElementById('langArBtn');
- const enBtn=document.getElementById('langEnBtn');
- if(arBtn)arBtn.classList.toggle('activeLang',appLanguage==='ar');
- if(enBtn)enBtn.classList.toggle('activeLang',appLanguage==='en');
-
- const walker=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT,{
-   acceptNode(node){
-     if(!node.nodeValue||!node.nodeValue.trim())return NodeFilter.FILTER_REJECT;
-     const p=node.parentElement;
-     if(!p||['SCRIPT','STYLE','TEXTAREA'].includes(p.tagName))return NodeFilter.FILTER_REJECT;
-     return NodeFilter.FILTER_ACCEPT;
-   }
- });
- const nodes=[];
- while(walker.nextNode())nodes.push(walker.currentNode);
-
- nodes.forEach(node=>{
-   if(!node.__arOriginal)node.__arOriginal=node.nodeValue;
-   node.nodeValue=appLanguage==='en'?translateArabicText(node.__arOriginal):node.__arOriginal;
- });
-
- document.querySelectorAll('input[placeholder]').forEach(el=>{
-   if(!el.dataset.arPlaceholder)el.dataset.arPlaceholder=el.getAttribute('placeholder')||'';
-   el.setAttribute('placeholder',appLanguage==='en'?translateArabicText(el.dataset.arPlaceholder):el.dataset.arPlaceholder);
- });
-}
-
-const __oldRenderAllLang=typeof renderAll==='function'?renderAll:null;
-if(__oldRenderAllLang&&!__oldRenderAllLang.__langWrapped){
- renderAll=function(){
-   const r=__oldRenderAllLang.apply(this,arguments);
-   setTimeout(applyAppLanguage,80);
-   setTimeout(applyAppLanguage,300);
-   return r;
- };
- renderAll.__langWrapped=true;
-}
-document.addEventListener('DOMContentLoaded',()=>setTimeout(applyAppLanguage,200));
-setInterval(()=>{if(appLanguage==='en')applyAppLanguage()},2000);
-
