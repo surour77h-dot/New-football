@@ -3012,6 +3012,19 @@ direction:ltr!important;
   font-weight:900 !important;
 }
 
-@media only screen and (min-width:768px) and (max-width:1366px){
-#teamsGameSelect, select{white-space:nowrap !important;overflow:hidden !important;text-overflow:ellipsis !important;height:44px !important;}
+
+/* iPad dropdown single line fix */
+@media only screen and (min-width: 768px) and (max-width: 1366px){
+
+select{
+white-space: nowrap !important;
+overflow: hidden !important;
+text-overflow: ellipsis !important;
 }
+
+option{
+white-space: nowrap !important;
+}
+
+}
+
