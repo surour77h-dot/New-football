@@ -1,0 +1,68 @@
+
+function exportToExcel() {
+  try {
+    const s = state();
+    const b = typeof balances === 'function' ? balances(s) : {};
+    let csvContent = "\ufeff"; 
+
+    csvContent += "=== جدول أرصدة اللاعبين وحالتهم المالية ===\n";
+    csvContent += "اسم اللاعب,الرصيد الحالي,عدد المباريات المشتركة,إجمالي الإيداعات,آخر تاريخ لعب,الحالة\n";
+    
+    s.players.forEach(p => {
+      const r = b[p] || {};
+      const balanceVal = Number(r.balance || 0).toFixed(3);
+      const lastDate = r.last ? (typeof formatDateDisplay === 'function' ? formatDateDisplay(r.last) : r.last) : "لم يلعب بعد";
+      const isInactive = typeof isInactiveFiveMonths === 'function' ? isInactiveFiveMonths(r.last) : false;
+      const statusLabel = isInactive ? "غائب (منقطع)" : "نشط";
+      csvContent += `"${p}",${balanceVal},${r.games || 0},${Number(r.deposits || 0).toFixed(3)},"${lastDate}","${statusLabel}"\n`;
+    });
+    
+    csvContent += "\n\n";
+
+    csvContent += "=== سجل اللقاءات والمباريات والتفاصيل ===\n";
+    csvContent += "التاريخ,المكان/الملعب,سعر الحجز,اللاعبين المطلوبين,سعر الحسبة للاعب,إجمالي الحضور (أعضاء + ضيوف),أسماء الأعضاء المشاركين,أسماء الضيوف ومستضيفهم\n";
+    
+    const sortedMatches = [...s.matches].sort((a, b) => (b.date || '').localeCompare(a.date || ''));
+    sortedMatches.forEach(m => {
+      const dateStr = m.date ? (typeof formatDateDisplay === 'function' ? formatDateDisplay(m.date) : m.date) : '';
+      const members = (m.players || []).join(" - ");
+      const guests = (m.guests || []).map(g => `${g.guest} (مستضيفه: ${g.owner})`).join(" - ");
+      const totalAttendance = (m.players || []).length + (m.guests || []).length;
+      const matchPrice = Number(m.price || 0).toFixed(3);
+      csvContent += `"${dateStr}","${m.place || 'غير محدد'}",${m.bookingCost || 0},${m.neededPlayers || 0},${matchPrice},${totalAttendance},"${members}","${guests}"\n`;
+    });
+
+    csvContent += "\n\n";
+
+    csvContent += "=== كشف سجل الحركة المالية بالتفصيل ===\n";
+    csvContent += "التاريخ,اسم اللاعب,نوع العملية,المبلغ\n";
+    
+    const sortedDeposits = [...s.deposits].sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
+    sortedDeposits.forEach(d => {
+      const dateStr = d.date ? (typeof formatDateDisplay === 'function' ? formatDateDisplay(d.date) : d.date) : '';
+      let typeLabel = "إيداع";
+      if (typeof depositTypeLabel === 'function') {
+        typeLabel = depositTypeLabel(d);
+      } else {
+        if (d.type === 'initial') typeLabel = 'إيداع مبدئي';
+        else if (d.type === 'late') typeLabel = 'تأخير';
+        else if (d.type === 'debt') typeLabel = 'خصم';
+      }
+      csvContent += `"${dateStr}","${d.player}","${typeLabel}",${Number(d.amount || 0).toFixed(3)}
+`;
+    });
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    const fileDate = typeof today === 'function' ? today() : new Date().toISOString().split('T')[0];
+    a.href = url;
+    a.download = `تقرير_حسابات_قروب_الكورة_${fileDate}.csv`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  } catch (error) {
+    alert("تعذر استخراج ملف Excel، تأكد من وجود بيانات.");
+  }
+}
