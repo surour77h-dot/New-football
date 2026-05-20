@@ -3004,3 +3004,10 @@ direction:ltr!important;
   box-sizing:border-box !important;
   margin-bottom:10px !important;
 }
+
+.excelExportBtn{
+  margin-top:8px !important;
+  background:#217346 !important;
+  color:#ffffff !important;
+  font-weight:900 !important;
+}
