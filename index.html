@@ -3,146 +3,316 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
-<meta name="theme-color" content="#0f5132">
-<title>🏆 سجل وحسابات ⚽️ قروب الكورة 🏆</title>
+<meta name="theme-color" content="#0b4629">
+<title>إدارة قروب الكرة</title>
 <link rel="manifest" href="manifest.json">
 <link rel="stylesheet" href="style.css">
+<!-- FontAwesome or beautiful unicode icons used throughout -->
 </head>
 <body>
-<header><h1 id="appTitle">🏆 سجل وحسابات ⚽️ قروب الكورة 🏆</h1></header>
-<nav>
-<button onclick="showTab('newMatch')">لعبة</button>
-<button onclick="showTab('teams')">الفريقين</button>
-<button onclick="showTab('deposits')">الإيداعات</button>
-<button onclick="showTab('calendar')">التقويم</button>
-<button onclick="showTab('playerTable')">الجدول</button>
-<button onclick="showTab('playerFilter')">كشف لاعب</button>
-<button onclick="showTab('matchLog')">السجل</button>
-<button onclick="showTab('players')">اللاعبين</button>
 
-<button onclick="showTab('backup')">الإعدادات</button>
-</nav>
+<!-- شاشة الترحيب الاحترافية Splash Screen -->
+<div id="splashScreen">
+  <div class="splash-content">
+    <div class="splash-logo">⚽🏆</div>
+    <h1>إدارة قروب الكرة</h1>
+    <p>النسخة العربية المستقرة الاحترافية</p>
+    <div class="spinner"></div>
+  </div>
+</div>
+
+<header>
+  <div class="header-container">
+    <h1 id="appTitle">🏆 إدارة قروب الكرة 🏆</h1>
+    <button class="theme-toggle-btn" onclick="toggleDarkMode()" title="تغيير المظهر">🌓</button>
+  </div>
+</header>
 
 <main>
-<section id="newMatch" class="tab active">
-<h2 id="matchFormTitle">لعبة جديدة</h2>
-<div class="card">
-<input type="hidden" id="editingMatchId">
-<div class="two">
-<label class="dateCard dateCompact"><span class="dateTitle">تاريخ اللعب</span><span class="dateInputBox"><input type="date" id="matchDate"></span></label>
-<label>المكان<input id="place" placeholder="اختياري"></label>
-<label>الحجز<input type="number" id="bookingCost" step="0.001" inputmode="decimal"></label>
-<label>العدد<input type="number" id="neededPlayers" inputmode="numeric"></label>
-</div>
-<p class="info">سعر اللاعب: <b id="pricePerPlayer">0.000</b></p>
-<h3>المشاركون</h3>
-<div class="card inner"><div id="matchPlayers" class="checks"></div></div>
-<h3>إضافة ضيف</h3>
-<div class="two"><input id="guestName" placeholder="اسم الضيف"><select id="guestOwner"></select></div>
-<button onclick="addGuestTemp()">إضافة ضيف</button>
-<div id="tempGuests"></div>
-<div id="matchParticipantsPreview" class="participantsPreview"></div>
-<div class="twoBtns"><button class="primary" onclick="saveMatch()">حفظ</button><button onclick="clearMatchForm()">تفريغ</button></div>
-</div>
-</section>
+  <!-- صفحة اللعبة -->
+  <section id="newMatch" class="tab active">
+    <h2>⚽ إنشاء لعبة جديدة</h2>
+    <div class="card form-card">
+      <input type="hidden" id="editingMatchId">
+      
+      <div class="form-group">
+        <label>📅 تاريخ المباراة</label>
+        <input id="matchDate" type="date">
+      </div>
+      
+      <div class="form-group">
+        <label>📍 مكان اللعب (الملعب)</label>
+        <input id="matchLocation" type="text" placeholder="مثال: ملعب السد، صالة لوسيل...">
+      </div>
+      
+      <div class="form-grid">
+        <div class="form-group">
+          <label>💰 سعر الحجز الإجمالي</label>
+          <input id="matchPrice" type="number" placeholder="0" oninput="calculatePlayerPrice()">
+        </div>
+        <div class="form-group">
+          <label>👥 عدد اللاعبين المطلوب</label>
+          <input id="matchTotalPlayers" type="number" placeholder="12" oninput="calculatePlayerPrice()">
+        </div>
+      </div>
+      
+      <div class="price-callout">
+        <span>سعر اللاعب التلقائي:</span>
+        <strong id="calcPlayerPriceResult">0</strong> <span>QAR</span>
+      </div>
+      
+      <div class="form-group font-bold-label">
+        <label>👥 اختر اللاعبين المشاركين</label>
+        <div id="playersCheckboxList" class="checkbox-grid"></div>
+      </div>
 
-<section id="players" class="tab">
-<h2>اللاعبين</h2>
-<div class="card"><div class="addRow"><input id="playerName" placeholder="اسم اللاعب"><button onclick="addPlayer()">إضافة</button></div></div>
-<div class="card"><div id="playersList" class="plainList"></div><div class="twoBtns bottom"><button onclick="showPlayerEditBox()">تعديل</button><button class="danger" onclick="showPlayerDeleteBox()">حذف</button></div><div id="playerActionBox"></div></div>
-</section>
+      <div class="form-group guest-section">
+        <label>➕ إضافة ضيوف للعبة</label>
+        <div class="guest-inputs">
+          <input id="guestName" type="text" placeholder="اسم الضيف">
+          <select id="guestBringerSelect">
+            <option value="">اختر اللاعب الأساسي المستضيف</option>
+          </select>
+          <button type="button" class="btn-secondary" onclick="addGuestToList()">إضافة ضيف</button>
+        </div>
+        <div id="tempGuestsContainer" class="tag-container"></div>
+      </div>
 
-<section id="deposits" class="tab">
-<h2>الإيداعات</h2>
-<div class="card depositBox">
-<input type="hidden" id="editingDepositId">
-<label class="dateCard dateCompact"><span class="dateTitle">تاريخ الإيداع</span><span class="dateInputBox"><input type="date" id="depositDate"></span></label>
-<div class="two"><label>اللاعب<select id="depositPlayer"></select></label><label>المبلغ<input type="number" id="depositAmount" step="0.001" inputmode="decimal" placeholder="0.000"></label></div>
-<div class="twoBtns"><button id="depositTypeIn" class="primary" onclick="setDepositType('in')">إيداع</button><button id="depositTypeOut" onclick="setDepositType('out')">خصم/مديونية</button><button id="depositTypeLate" type="button" onclick="setDepositType('late')">تأخير</button></div>
-<div id="depositQuickButtons" class="quickButtons"></div>
-<div class="twoBtns"><button class="primary" onclick="saveDeposit()">حفظ</button><button onclick="clearDepositForm()">تفريغ</button></div>
-</div>
-<div id="depositsList"></div>
-</section>
+      <button class="primary wide main-action-btn" onclick="saveMatch()">💾 حفظ اللعبة وتحديث البيانات</button>
+    </div>
+  </section>
 
-<section id="calendar" class="tab">
-<h2>التقويم</h2>
-<div class="card calHead"><button onclick="moveMonth(-1)">السابق</button><b id="calendarMonthTitle"></b><button onclick="moveMonth(1)">التالي</button></div>
-<div id="monthCalendar" class="month"></div>
-<div class="card"><h3 id="calendarSelectedTitle">المشاركون</h3><div id="calendarList"></div></div>
-</section>
+  <!-- صفحة الفريقين -->
+  <section id="teams" class="tab">
+    <h2>🔀 تنظيم وتقسيم الفريقين</h2>
+    <div class="card">
+      <div class="form-group">
+        <label>اختر مباراة قائمة أو قسّم اللاعبين الحاليين</label>
+        <div class="flex-buttons">
+          <button class="btn-accent" onclick="autoDivideTeams()">🎲 تقسيم عشوائي تلقائي</button>
+          <button class="btn-secondary" onclick="clearTeams()">🧹 تفريغ الفرق</button>
+        </div>
+      </div>
 
-<section id="matchLog" class="tab"><h2>سجل اللعب</h2><div id="matchLogList"><div class="card">
-<h3>جميع العمليات</h3>
-<div id="depositHistoryList"></div>
-</div>
+      <div class="teams-container-grid">
+        <!-- الفريق الأول -->
+        <div class="team-card yellow-team">
+          <h3>🟡 الفريق الأول (أصفر) <span id="team1Count">(0)</span></h3>
+          <div id="team1List" class="team-drop-zone"></div>
+        </div>
+        
+        <!-- الفريق الثاني -->
+        <div class="team-card pink-team">
+          <h3>💗 الفريق الثاني (وردي) <span id="team2Count">(0)</span></h3>
+          <div id="team2List" class="team-drop-zone"></div>
+        </div>
+      </div>
 
-</div></section>
+      <div class="form-group" style="margin-top:20px;">
+        <label>التقسيم اليدوي السريع لجميع المشاركين:</label>
+        <div id="manualTeamsAssignmentList" class="manual-assignment-list"></div>
+      </div>
 
-<section id="teams" class="tab">
-<h2>الفريقين</h2>
-<div class="card">
-<label>اللعبة<select id="teamsMatchSelect" onchange="renderTeams();renderTeamsPreview()"></select></label>
-<button onclick="randomTeams()">تقسيم عشوائي</button>
-<div id="teamsPlayers"></div>
-<button class="primary wide" onclick="saveTeams()">حفظ الفريقين</button>
-<div id="teamsPreview"></div>
-</div>
-</section>
+      <button class="primary wide" onclick="saveTeams()">💾 حفظ الفريقين الحاليين</button>
+    </div>
+  </section>
 
-<section id="playerTable" class="tab"><h2>جدول اللاعبين</h2><div id="playerTableWrap"></div></section>
-<section id="reports" class="tab"><h2>التقارير</h2><div id="reportSummary"></div><div id="reportsList"></div></section>
+  <!-- صفحة الإيداعات والعمليات المالية -->
+  <section id="deposits" class="tab">
+    <h2>💵 إدارة العمليات المالية والحسابات</h2>
+    <div class="card">
+      <div class="form-group">
+        <label>📅 التاريخ</label>
+        <input id="depositDate" type="date">
+      </div>
+      
+      <div class="form-group">
+        <label>👤 اختر اللاعب</label>
+        <select id="depositPlayerSelect"></select>
+      </div>
+      
+      <div class="form-group">
+        <label>💰 المبلغ (QAR)</label>
+        <input id="depositAmount" type="number" placeholder="0">
+      </div>
 
+      <div class="form-group">
+        <label>⚙️ نوع العملية المالية</label>
+        <div class="deposit-type-toggle-group">
+          <button id="depositTypeIn" class="type-btn selectedDepositBtn" onclick="setDepositType('in')">🟢 إيداع (رصيد+)</button>
+          <button id="depositTypeOut" class="type-btn" onclick="setDepositType('out')">🔴 خصم / مديونية (-)</button>
+          <button id="depositTypeLate" class="type-btn" onclick="setDepositType('late')">🟠 تأخير (غرامة)</button>
+        </div>
+      </div>
 
-<section id="playerFilter" class="tab">
-<h2>كشف لاعب</h2>
-<div class="card">
-<label>اختر اللاعب</label>
-<select id="playerFilterSelect" onchange="renderPlayerFilter()"></select>
-</div>
-<div id="playerFilterContent"></div>
-</section>
+      <!-- الأزرار السريعة لتسهيل الإدخال المتكرر -->
+      <div class="form-group">
+        <label>⚡ إدخال سريع للمبالغ المتكررة</label>
+        <div id="quickAmountButtons" class="tag-container">
+          <button class="btn-chip" onclick="applyQuickAmount(10)">10 QAR</button>
+          <button class="btn-chip" onclick="applyQuickAmount(20)">20 QAR</button>
+          <button class="btn-chip" onclick="applyQuickAmount(50)">50 QAR</button>
+          <button class="btn-chip" onclick="applyQuickAmount(100)">100 QAR</button>
+        </div>
+      </div>
 
+      <button class="primary wide" onclick="saveDeposit()">💾 حفظ العملية المالية فوراً</button>
+    </div>
 
-<section id="backup" class="tab">
-<h2>الإعدادات</h2>
+    <!-- كشف العمليات الأخيرة بالأسفل -->
+    <div class="card">
+      <h3>📋 آخر العمليات المالية المسجلة</h3>
+      <div class="table-responsive">
+        <table class="styled-table">
+          <thead>
+            <tr>
+              <th>التاريخ</th>
+              <th>اللاعب</th>
+              <th>المبلغ</th>
+              <th>النوع</th>
+              <th>إجراء</th>
+            </tr>
+          </thead>
+          <tbody id="recentDepositsTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
 
-<div class="card">
-<h3>عنوان البرنامج</h3>
-<input id="appTitleInput" type="text" placeholder="اكتب الاسم الجديد للبرنامج">
-<button class="primary wide" onclick="saveAppTitle()">حفظ العنوان</button>
-</div>
+  <!-- صفحة التقويم -->
+  <section id="calendar" class="tab">
+    <h2>📅 التقويم الشهري للمباريات</h2>
+    <div class="card">
+      <div class="calendar-header-nav">
+        <button class="btn-chip" onclick="prevMonth()">◀ الشهر السابق</button>
+        <h3 id="calendarMonthTitle">الشهر</h3>
+        <button class="btn-chip" onclick="nextMonth()">الشهر التالي ▶</button>
+      </div>
+      <div id="calendarGrid" class="calendar-grid"></div>
+    </div>
+    
+    <div id="calendarDayDetails" class="card" style="display:none;">
+      <h3>🔍 تفاصيل مباراة اليوم المختار</h3>
+      <div id="calendarDayDetailsContent"></div>
+    </div>
+  </section>
 
-<div class="card">
-<h3>النسخة الاحتياطية</h3>
-<button class="wide" onclick="exportData()">تصدير البيانات</button>
-<button class="wide excelExportBtn" onclick="exportExcelData()">تصدير Excel</button>
-<label class="wide importBtn">استيراد البيانات<input type="file" accept=".json" onchange="importData(event)" style="display:none"></label>
-</div>
+  <!-- صفحة الجدول والترتيب -->
+  <section id="playerTable" class="tab">
+    <h2>🏆 جدول ترتيب الحضور والأرصدة</h2>
+    <div class="card">
+      <p class="muted-text">انقر على اسم أي لاعب لفتح كشف حسابه التفصيلي كاملاً.</p>
+      <div class="table-responsive">
+        <table class="styled-table searchable-table">
+          <thead>
+            <tr>
+              <th>اللاعب</th>
+              <th>💰 الرصيد الحالي</th>
+              <th>⚽ عدد الحضور</th>
+              <th>📅 آخر لعب</th>
+            </tr>
+          </thead>
+          <tbody id="playerTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
 
-<div class="card">
-<h3>ترتيب الصفحات</h3>
+  <!-- صفحة كشف لاعب -->
+  <section id="playerFilter" class="tab">
+    <h2>🔍 كشف حساب اللاعب التفصيلي</h2>
+    <div class="card">
+      <div class="form-group">
+        <label>اختر اللاعب لعرض سجله الكامل</label>
+        <select id="playerFilterSelect" onchange="renderPlayerFilter()"></select>
+      </div>
+    </div>
+    <div id="playerFilterContent"></div>
+  </section>
 
-<p class="muted">اختر الصفحة ثم حرّكها للأعلى أو للأسفل، وسيتم حفظ الترتيب تلقائيًا.</p>
-<div id="pageOrderList"></div>
+  <!-- صفحة السجل -->
+  <section id="matchLog" class="tab">
+    <h2>📜 سجل المباريات والألعاب السابقة</h2>
+    <div id="matchLogContainer"></div>
+  </section>
 
-</div>
+  <!-- صفحة اللاعبين -->
+  <section id="players" class="tab">
+    <h2>👥 إدارة قائمة اللاعبين بالقروب</h2>
+    <div class="card">
+      <h3>➕ إضافة لاعب جديد للقروب</h3>
+      <div class="guest-inputs">
+        <input id="newPlayerName" type="text" placeholder="اكتب اسم اللاعب الثلاثي...">
+        <button class="primary" onclick="addPlayer()">إضافة لاعب</button>
+      </div>
+    </div>
 
-</section>
+    <div class="card">
+      <h3>👥 قائمة اللاعبين الحاليين</h3>
+      <div class="table-responsive">
+        <table class="styled-table">
+          <thead>
+            <tr>
+              <th>اسم اللاعب</th>
+              <th>إجراءات الإدارة</th>
+            </tr>
+          </thead>
+          <tbody id="managePlayersTableBody"></tbody>
+        </table>
+      </div>
+      <p class="muted-text text-danger" style="margin-top:10px;">⚠️ ملاحظة مهمة: حذف اللاعب لا يحذف بيانات السجل القديم تلقائياً للحفاظ على سلامة الحسابات.</p>
+    </div>
+  </section>
 
+  <!-- صفحة الإعدادات وتصدير Excel -->
+  <section id="backup" class="tab">
+    <h2>⚙️ الإعدادات العامة وتصدير البيانات</h2>
+    
+    <div class="card">
+      <h3>✏️ تخصيص وتغيير اسم البرنامج</h3>
+      <div class="form-group">
+        <input id="appTitleInput" type="text" placeholder="مثال: قروب شباب الدوحة، دوري الجمعة...">
+        <button class="primary wide" style="margin-top:8px;" onclick="saveAppTitle()">💾 حفظ الاسم الجديد</button>
+      </div>
+    </div>
 
-<section id="editPage" class="tab editOnly">
-<h2 id="editPageTitle">تعديل</h2>
-<div class="card">
-<div id="editPageContent"></div>
-<div class="twoBtns">
-<button class="primary" onclick="saveEditPage()">حفظ التعديل</button>
-<button onclick="closeEditPage()">إلغاء</button>
-</div>
-</div>
-</section>
+    <div class="card">
+      <h3>📊 تصدير واستيراد النسخ الاحتياطية</h3>
+      <div class="grid-buttons">
+        <button class="btn-secondary wide" onclick="exportData()">📤 تصدير نسخة احتياطية كاملة (JSON)</button>
+        <label class="wide importBtn btn-accent" style="display:inline-flex; align-items:center; justify-content:center; cursor:pointer; padding:12px; border-radius:12px; font-weight:700;">
+          📥 استيراد نسخة احتياطية
+          <input type="file" accept=".json" onchange="importData(event)" style="display:none">
+        </label>
+      </div>
+    </div>
 
+    <div class="card excel-card">
+      <h3>🟢 تصدير الملف الاحترافي Excel</h3>
+      <p class="muted-text">يقوم النظام بإنشاء وتنزيل ملف Excel متكامل ومقسم إلى تابات منفصلة تشمل: الملخص، اللاعبين، الإيداعات، أيام اللعب، المشاركون والضيوف.</p>
+      <button class="btn-success wide" onclick="exportToExcelMock()">📊 تصدير كشف Excel احترافي كامل</button>
+    </div>
+
+    <div class="card">
+      <h3>🔄 إعادة ترتيب تبويبات التطبيق</h3>
+      <p class="muted-text">قم بتخصيص ترتيب الصفحات كما تفضل، وسيتم حفظ التفضيل تلقائياً لجهازك.</p>
+      <div id="pageOrderList" class="order-list-container"></div>
+    </div>
+  </section>
 </main>
+
+<nav id="appBottomNav">
+  <button onclick="showTab('newMatch')">⚽ لعبة</button>
+  <button onclick="showTab('teams')">🔀 الفريقين</button>
+  <button onclick="showTab('deposits')">💵 الإيداعات</button>
+  <button onclick="showTab('calendar')">📅 التقويم</button>
+  <button onclick="showTab('playerTable')">🏆 الجدول</button>
+  <button onclick="showTab('playerFilter')">🔍 كشف لاعب</button>
+  <button onclick="showTab('matchLog')">📜 السجل</button>
+  <button onclick="showTab('players')">👥 اللاعبين</button>
+  <button onclick="showTab('backup')">⚙️ الإعدادات</button>
+</nav>
+
 <script src="app.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
-</body></html>
+</body>
+</html>
