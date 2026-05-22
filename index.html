@@ -116,6 +116,7 @@
 <div class="card">
 <h3>النسخة الاحتياطية</h3>
 <button class="wide" onclick="exportData()">تصدير البيانات</button>
+<button class="wide excelExportBtn" onclick="exportExcelData()">تصدير Excel</button>
 <label class="wide importBtn">استيراد البيانات<input type="file" accept=".json" onchange="importData(event)" style="display:none"></label>
 </div>
 
@@ -143,4 +144,5 @@
 
 </main>
 <script src="app.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 </body></html>

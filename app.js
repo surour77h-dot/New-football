@@ -872,3 +872,189 @@ if(__oldShowTabTitle && !__oldShowTabTitle.__titleWrapped){
 
 document.addEventListener('DOMContentLoaded',()=>setTimeout(applyAppTitle,100));
 
+
+
+/* ===== Excel Export Full Workbook ===== */
+function moneyExcel(v){
+  const n = Number(v || 0);
+  return Number.isFinite(n) ? Number(n.toFixed(3)) : 0;
+}
+
+function excelParticipants(match){
+  try {
+    const p = participants(match);
+    if (Array.isArray(p)) return p.filter(Boolean);
+  } catch(e) {}
+  const arr = [];
+  (match.players || match.participants || []).forEach(x => arr.push(typeof x === 'string' ? x : (x && x.name) || ''));
+  (match.guests || []).forEach(g => arr.push(g.name || g.guest || g.guestName || g.player || ''));
+  return arr.filter(Boolean);
+}
+
+function excelGuestName(g){
+  return g.name || g.guest || g.guestName || g.player || '';
+}
+
+function excelGuestOwner(g){
+  return g.owner || g.by || g.member || g.playerOwner || g.addedBy || '';
+}
+
+function appendExcelSheet(wb, rows, sheetName){
+  const safeRows = rows && rows.length ? rows : [{'لا توجد بيانات':''}];
+  const ws = Array.isArray(safeRows[0]) ? XLSX.utils.aoa_to_sheet(safeRows) : XLSX.utils.json_to_sheet(safeRows);
+  const data = XLSX.utils.sheet_to_json(ws, {header:1});
+  const widths = [];
+  data.forEach(row => (row || []).forEach((cell, i) => {
+    widths[i] = Math.max(widths[i] || 10, Math.min(String(cell || '').length + 2, 55));
+  }));
+  ws['!cols'] = widths.map(w => ({wch:w}));
+  XLSX.utils.book_append_sheet(wb, ws, sheetName);
+}
+
+function exportExcelData(){
+  try{
+    if (typeof XLSX === 'undefined'){
+      alert('مكتبة Excel لم يتم تحميلها. تأكد من الاتصال بالإنترنت ثم حاول مرة أخرى.');
+      return;
+    }
+
+    const s = state();
+    const wb = XLSX.utils.book_new();
+
+    const players = s.players || [];
+    const matches = s.matches || [];
+    const deposits = s.deposits || [];
+    const settings = s.settings || {};
+    const balanceData = balances(s);
+
+    const totalDeposits = deposits.filter(d => Number(d.amount || 0) > 0).reduce((a,d)=>a+Number(d.amount||0),0);
+    const totalDeductions = Math.abs(deposits.filter(d => Number(d.amount || 0) < 0).reduce((a,d)=>a+Number(d.amount||0),0));
+    const totalBooking = matches.reduce((a,m)=>a+Number(m.bookingCost || m.cost || 0),0);
+
+    appendExcelSheet(wb, [
+      ['البند','القيمة'],
+      ['عدد اللاعبين', players.length],
+      ['عدد أيام اللعب / المباريات', matches.length],
+      ['عدد الإيداعات والمديونيات', deposits.length],
+      ['إجمالي الإيداعات', moneyExcel(totalDeposits)],
+      ['إجمالي الخصومات / المديونيات', moneyExcel(totalDeductions)],
+      ['إجمالي أسعار الحجوزات', moneyExcel(totalBooking)],
+      ['تاريخ التصدير', new Date().toLocaleString('ar-KW')]
+    ], 'الملخص');
+
+    appendExcelSheet(wb, players.map((p, i) => ({
+      'م': i + 1,
+      'اسم اللاعب': p,
+      'الرصيد': moneyExcel((balanceData[p] || {}).balance),
+      'عدد اللعب': (balanceData[p] || {}).games || 0,
+      'آخر لعب': (balanceData[p] || {}).last ? formatDateDisplay((balanceData[p] || {}).last) : '',
+      'إجمالي الإيداعات': moneyExcel((balanceData[p] || {}).deposits || 0)
+    })), 'اللاعبين');
+
+    appendExcelSheet(wb, deposits
+      .slice()
+      .sort((a,b)=>String(a.date||'').localeCompare(String(b.date||'')))
+      .map((d,i)=>({
+        'م': i + 1,
+        'التاريخ': d.date || '',
+        'التاريخ المعروض': d.date ? formatDateDisplay(d.date) : '',
+        'اللاعب': d.player || '',
+        'النوع': typeof depositTypeLabel === 'function' ? depositTypeLabel(d) : (Number(d.amount||0) >= 0 ? 'إيداع' : 'خصم/مديونية'),
+        'المبلغ': moneyExcel(d.amount),
+        'ملاحظة': d.note || d.notes || ''
+      })), 'الإيداعات');
+
+    appendExcelSheet(wb, matches
+      .slice()
+      .sort((a,b)=>String(a.date||'').localeCompare(String(b.date||'')))
+      .map((m,i)=>{
+        const ps = excelParticipants(m);
+        return {
+          'م': i + 1,
+          'التاريخ': m.date || '',
+          'التاريخ المعروض': m.date ? formatDateDisplay(m.date) : '',
+          'مكان اللعب': m.place || m.location || '',
+          'سعر الحجز': moneyExcel(m.bookingCost || m.cost || 0),
+          'عدد اللاعبين المطلوب': m.neededPlayers || m.count || '',
+          'سعر اللاعب': moneyExcel(m.pricePerPlayer || m.playerPrice || (ps.length ? Number(m.bookingCost || m.cost || 0) / ps.length : 0)),
+          'عدد المشاركين الفعلي': ps.length,
+          'المشاركون': ps.join('، ')
+        };
+      }), 'أيام اللعب');
+
+    const participantRows = [];
+    matches.forEach(m => {
+      const teamMap = (s.teams && s.teams[m.id]) || {};
+      excelParticipants(m).forEach((p, i) => {
+        participantRows.push({
+          'تاريخ اللعب': m.date || '',
+          'التاريخ المعروض': m.date ? formatDateDisplay(m.date) : '',
+          'مكان اللعب': m.place || m.location || '',
+          'الاسم': p,
+          'الترتيب': i + 1,
+          'الفريق': teamMap[p] === 'A' ? 'الفريق الأول' : teamMap[p] === 'B' ? 'الفريق الثاني' : '',
+          'النوع': players.includes(p) ? 'لاعب أساسي' : 'ضيف'
+        });
+      });
+    });
+    appendExcelSheet(wb, participantRows, 'المشاركون');
+
+    const guestRows = [];
+    matches.forEach(m => {
+      (m.guests || []).forEach((g, i) => {
+        guestRows.push({
+          'تاريخ اللعب': m.date || '',
+          'التاريخ المعروض': m.date ? formatDateDisplay(m.date) : '',
+          'مكان اللعب': m.place || m.location || '',
+          'اسم الضيف': excelGuestName(g),
+          'أحضره اللاعب': excelGuestOwner(g),
+          'قيمة الخصم / القطية': moneyExcel(g.amount || g.price || g.cost || m.pricePerPlayer || 0),
+          'ملاحظة': g.note || ''
+        });
+      });
+    });
+    appendExcelSheet(wb, guestRows, 'الضيوف');
+
+    appendExcelSheet(wb, matches
+      .slice()
+      .sort((a,b)=>String(a.date||'').localeCompare(String(b.date||'')))
+      .map(m => {
+        const d = new Date(m.date);
+        const ps = excelParticipants(m);
+        return {
+          'الشهر': m.date && !isNaN(d) ? `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}` : '',
+          'اليوم': m.date || '',
+          'التاريخ المعروض': m.date ? formatDateDisplay(m.date) : '',
+          'مكان اللعب': m.place || m.location || '',
+          'سعر الحجز': moneyExcel(m.bookingCost || m.cost || 0),
+          'عدد المشاركين': ps.length,
+          'أسماء المشاركين': ps.join('، ')
+        };
+      }), 'التقويم');
+
+    const teamRows = [];
+    matches.forEach(m => {
+      const teamMap = (s.teams && s.teams[m.id]) || {};
+      Object.keys(teamMap).forEach(name => {
+        teamRows.push({
+          'تاريخ اللعب': m.date || '',
+          'مكان اللعب': m.place || m.location || '',
+          'الاسم': name,
+          'الفريق': teamMap[name] === 'A' ? 'الفريق الأول' : teamMap[name] === 'B' ? 'الفريق الثاني' : teamMap[name]
+        });
+      });
+    });
+    appendExcelSheet(wb, teamRows, 'الفريقين');
+
+    appendExcelSheet(wb, Object.keys(settings).map(k => ({
+      'الإعداد': k,
+      'القيمة': String(settings[k])
+    })), 'الإعدادات');
+
+    XLSX.writeFile(wb, 'football-data-' + new Date().toISOString().slice(0,10) + '.xlsx');
+  } catch(err){
+    console.error(err);
+    alert('حدث خطأ أثناء تصدير ملف Excel.');
+  }
+}
+
