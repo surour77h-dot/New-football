@@ -3039,3 +3039,19 @@ direction:ltr!important;
 #accounts .amountCell{font-weight:900;direction:ltr;white-space:nowrap}
 #accounts .amountExtra{color:#15803d}
 #accounts .amountDiscount{color:#b91c1c}
+
+
+/* إصلاح معادلة ومربعات صفحة الحسابات */
+#accounts .accountsSummary{grid-template-columns:1fr 1fr;gap:10px}
+#accounts .summaryCard{min-height:78px;border-radius:16px;border:1px solid #e5e7eb;background:#ffffff;box-shadow:0 6px 18px rgba(15,23,42,.06);display:flex;flex-direction:column;justify-content:center;gap:4px}
+#accounts .summaryCard span{font-size:12px;font-weight:900;color:#334155}
+#accounts .summaryCard b{font-size:20px;font-weight:1000;direction:ltr}
+#accounts .summaryCard small{font-size:10px;color:#64748b;font-weight:800}
+#accounts .debtCard{background:#fff1f3;border-color:#f0b7bd}
+#accounts .lateCard{background:#fff4e5;border-color:#f0c27b}
+#accounts .discountCard{background:#fff1f3;border-color:#f0b7bd}
+#accounts .debtTotalCard{grid-column:1 / -1;background:linear-gradient(180deg,#fff7ed,#ffffff);border-color:#fdba74}
+#accounts .extraCard{background:#f0fdf4;border-color:#86efac}
+#accounts .finalTotalCard{grid-column:1 / -1;background:linear-gradient(180deg,#ecfeff,#ffffff);border-color:#67e8f9}
+#accounts .finalTotalCard b{font-size:24px}
+@media(max-width:430px){#accounts .accountsSummary{grid-template-columns:1fr 1fr}#accounts .summaryCard b{font-size:17px}#accounts .summaryCard span{font-size:11px}}

@@ -530,7 +530,12 @@ function renderAccounts(){
   const extraTotal=getExtraTotal(s);
   const discountTotal=getExtraDiscountTotal(s);
   const lateTotal=getLateTotal(s);
-  const allTotal=extraTotal+lateTotal-discountTotal;
+  const negativeTotal=negative.reduce((sum,p)=>sum+Math.abs(Number(b[p]?.balance||0)),0);
+  // المعادلة المعتمدة في صفحة الحسابات:
+  // إجمالي المديونية = اللاعبين بالسالب + التأخير + الخصم الإضافي
+  // الإجمالي النهائي = إجمالي المديونية + مبالغ الإضافة
+  const debtTotal=negativeTotal+lateTotal+discountTotal;
+  const finalTotal=debtTotal+extraTotal;
 
   const matchOptions=[...s.matches].sort((a,b)=>b.date.localeCompare(a.date)).map(m=>{
     const label=`${formatDateDisplay(m.date)}${m.place?' - '+m.place:''} | ${money(m.bookingCost||m.price||0)} د.ك`;
@@ -555,10 +560,12 @@ function renderAccounts(){
 
   wrap.innerHTML=`
     <div class="summaryCards accountsSummary">
-      <div class="summaryCard"><span>مجموع المبالغ الإضافية</span><b class="posText">${money(extraTotal)}</b></div>
-      <div class="summaryCard"><span>مبالغ التأخير</span><b class="lateText">${money(lateTotal)}</b></div>
-      <div class="summaryCard"><span>الخصم الإضافي</span><b class="negText">-${money(discountTotal)}</b></div>
-      <div class="summaryCard wideSummary"><span>الإجمالي بعد الخصم</span><b>${money(allTotal)}</b></div>
+      <div class="summaryCard debtCard"><span>اللاعبين بالسالب</span><b class="negText">${money(negativeTotal)}</b></div>
+      <div class="summaryCard lateCard"><span>مبالغ التأخير</span><b class="lateText">${money(lateTotal)}</b></div>
+      <div class="summaryCard discountCard"><span>إضافة مبالغ خصم</span><b class="negText">${money(discountTotal)}</b></div>
+      <div class="summaryCard debtTotalCard"><span>إجمالي المديونية</span><b>${money(debtTotal)}</b><small>السالب + التأخير + الخصم</small></div>
+      <div class="summaryCard extraCard"><span>مبالغ الإضافة</span><b class="posText">${money(extraTotal)}</b></div>
+      <div class="summaryCard finalTotalCard wideSummary"><span>الإجمالي النهائي</span><b>${money(finalTotal)}</b><small>إجمالي المديونية + مبالغ الإضافة</small></div>
     </div>
 
     <div class="card">
@@ -595,7 +602,7 @@ function renderAccounts(){
         <label>قيمة الخصم<input id="discountAmount" type="number" step="0.001" inputmode="decimal" placeholder="0.000"></label>
       </div>
       <button class="primary wide" onclick="saveExtraDiscount()">حفظ الخصم</button>
-      <p class="muted">يتم طرح الخصم من إجمالي صفحة الحسابات.</p>
+      <p class="muted">يتم احتساب الخصم الإضافي ضمن إجمالي المديونية وليس طرحه من الصفحة.</p>
     </div>
 
     <div class="card">
