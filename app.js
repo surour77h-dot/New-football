@@ -551,12 +551,16 @@ function renderAccounts(){
   const combinedRows=[
     ...(s.extraCharges||[]).map(x=>({...x,_type:'extra'})),
     ...(s.extraDiscounts||[]).map(x=>({...x,_type:'discount'}))
-  ].sort((a,b)=>(b.date||'').localeCompare(a.date||'') || (b.createdAt||0)-(a.createdAt||0)).map(x=>`<tr>
-    <td>${formatDateDisplay(x.date)}</td>
-    <td>${escapeHtml(x.place||'')}</td>
-    <td class="amountCell ${x._type==='extra'?'amountExtra':'amountDiscount'}">${money(x.amount)}</td>
-    <td><button class="danger" onclick="${x._type==='extra'?'deleteExtraCharge':'deleteExtraDiscount'}('${x.id}')">حذف</button></td>
-  </tr>`).join('');
+  ].sort((a,b)=>(b.date||'').localeCompare(a.date||'') || (b.createdAt||0)-(a.createdAt||0)).map(x=>{
+    const isExtra=x._type==='extra';
+    const shownAmount=isExtra?Number(x.amount||0):-Math.abs(Number(x.amount||0));
+    return `<div class="accountsTxRow ${isExtra?'accountsTxExtra':'accountsTxDiscount'}">
+      <span class="accountsTxDate">${formatDateDisplay(x.date)}</span>
+      <span class="accountsTxPlace">${escapeHtml(x.place||'')}</span>
+      <span class="accountsTxAmount ${isExtra?'amountExtra':'amountDiscount'}"><b>${isExtra?'إضافة':'خصم'}</b>&nbsp;&nbsp;${money(shownAmount)}</span>
+      <button class="accountsTxDelete" onclick="${isExtra?'deleteExtraCharge':'deleteExtraDiscount'}('${x.id}')">×</button>
+    </div>`;
+  }).join('');
 
   wrap.innerHTML=`
     <div class="summaryCards accountsSummary">
@@ -607,10 +611,7 @@ function renderAccounts(){
 
     <div class="card">
       <h3>جدول المبالغ الإضافية والخصم الإضافي</h3>
-      <div class="tableWrap"><table>
-        <thead><tr><th>تاريخ اللعب</th><th>المكان</th><th>المبلغ</th><th>إجراء</th></tr></thead>
-        <tbody>${combinedRows||'<tr><td colspan="4" class="muted">لا توجد مبالغ إضافية أو خصومات محفوظة.</td></tr>'}</tbody>
-      </table></div>
+      <div id="accountsExtraList" class="accountsTxList">${combinedRows||'<p class="muted">لا توجد مبالغ إضافية أو خصومات محفوظة.</p>'}</div>
     </div>`;
 }
 function fillExtraFromMatch(){
