@@ -21,7 +21,7 @@ function depositTypeLabel(d){
 let currentTabId='newMatch';
 const FREE_START='2026-05-01';let tempGuests=[];let selectedCalendarDate='';let depositType='in';let tempTeamMap={};let calendarView=new Date();
 function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,8)}
-function state(){const r=JSON.parse(localStorage.getItem('qatiyaState')||'{"players":[],"matches":[],"deposits":[],"teams":{},"settings":{}}');r.players=r.players||[];r.matches=r.matches||[];r.deposits=r.deposits||[];r.teams=r.teams||{};r.settings=r.settings||{};r.matches.forEach(m=>{if(!m.id)m.id=uid()});r.deposits.forEach(d=>{if(!d.id)d.id=uid()});r.players.sort((a,b)=>a.localeCompare(b,'ar'));return r}
+function state(){const r=JSON.parse(localStorage.getItem('qatiyaState')||'{"players":[],"matches":[],"deposits":[],"teams":{},"settings":{}}');r.players=r.players||[];r.matches=r.matches||[];r.deposits=r.deposits||[];r.extraCharges=r.extraCharges||[];r.teams=r.teams||{};r.settings=r.settings||{};r.matches.forEach(m=>{if(!m.id)m.id=uid()});r.deposits.forEach(d=>{if(!d.id)d.id=uid()});r.extraCharges.forEach(x=>{if(!x.id)x.id=uid()});r.players.sort((a,b)=>a.localeCompare(b,'ar'));return r}
 function save(s){s.players.sort((a,b)=>a.localeCompare(b,'ar'));localStorage.setItem('qatiyaState',JSON.stringify(s));renderAll()}
 function saveNoRender(s){localStorage.setItem('qatiyaState',JSON.stringify(s))}
 function today(){return new Date().toISOString().slice(0,10)}function money(n){return Number(n||0).toFixed(3)}
@@ -79,6 +79,7 @@ const defaultPages=[
  ['playerFilter','كشف لاعب'],
  ['matchLog','السجل'],
  ['players','اللاعبين'],
+ ['accounts','الحسابات'],
  ['backup','الإعدادات']
 ];
 function getPageOrder(){
@@ -502,6 +503,109 @@ function renderTables(s,b){
     }).join('')}</tbody>
   </table></div>`;
 }
+
+function escapeHtml(v){
+  return String(v??'').replace(/[&<>"']/g, ch=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[ch]));
+}
+function clsMoney(n){
+  n=Number(n||0);
+  return n<0?'neg':n>0?'pos':'';
+}
+function getLateTotal(s){
+  return (s.deposits||[]).filter(d=>d.type==='late').reduce((sum,d)=>sum+Math.abs(Number(d.amount||0)),0);
+}
+function getExtraTotal(s){
+  return (s.extraCharges||[]).reduce((sum,x)=>sum+Number(x.amount||0),0);
+}
+function renderAccounts(){
+  const wrap=document.getElementById('accountsContent');
+  if(!wrap)return;
+  const s=state();
+  const b=balances(s);
+  const negative=s.players.filter(p=>Number(b[p]?.balance||0)<0).sort((a,c)=>Number(b[a]?.balance||0)-Number(b[c]?.balance||0));
+  const extraTotal=getExtraTotal(s);
+  const lateTotal=getLateTotal(s);
+  const allTotal=extraTotal+lateTotal;
+
+  const matchOptions=[...s.matches].sort((a,b)=>b.date.localeCompare(a.date)).map(m=>{
+    const label=`${formatDateDisplay(m.date)}${m.place?' - '+m.place:''} | ${money(m.bookingCost||m.price||0)} د.ك`;
+    return `<option value="${escapeHtml(m.id)}">${escapeHtml(label)}</option>`;
+  }).join('');
+
+  const negHtml=negative.length?`<div class="negativePlayersGrid">${negative.map(p=>`<div class="negativePlayer"><b>${escapeHtml(p)}</b><span>${money(b[p].balance)}</span></div>`).join('')}</div>`:'<p class="muted">لا يوجد لاعبون رصيدهم بالسالب.</p>';
+
+  const rows=[...(s.extraCharges||[])].sort((a,b)=>(b.date||'').localeCompare(a.date||'')).map(x=>`<tr>
+    <td>${formatDateDisplay(x.date)}</td>
+    <td>${escapeHtml(x.place||'')}</td>
+    <td class="pos">${money(x.amount)}</td>
+    <td><button class="danger" onclick="deleteExtraCharge('${x.id}')">حذف</button></td>
+  </tr>`).join('');
+
+  wrap.innerHTML=`
+    <div class="summaryCards accountsSummary">
+      <div class="summaryCard"><span>مجموع المبالغ الإضافية</span><b class="posText">${money(extraTotal)}</b></div>
+      <div class="summaryCard"><span>مبالغ التأخير</span><b class="negText">${money(lateTotal)}</b></div>
+      <div class="summaryCard wideSummary"><span>الإجمالي</span><b>${money(allTotal)}</b></div>
+    </div>
+
+    <div class="card">
+      <h3>اللاعبين الذين رصيدهم بالسالب</h3>
+      ${negHtml}
+    </div>
+
+    <div class="card">
+      <h3>إضافة مبلغ إضافي</h3>
+      <label>تاريخ اللعب من الألعاب المسجلة
+        <select id="extraMatchSelect" onchange="fillExtraFromMatch()">
+          <option value="">اختر تاريخ اللعب</option>
+          ${matchOptions}
+        </select>
+      </label>
+      <div class="two">
+        <label>المكان<input id="extraPlace" readonly placeholder="يظهر تلقائياً"></label>
+        <label>المبلغ الإضافي<input id="extraAmount" type="number" step="0.001" inputmode="decimal" placeholder="0.000"></label>
+      </div>
+      <button class="primary wide" onclick="saveExtraCharge()">حفظ</button>
+      <p class="muted">عند اختيار تاريخ اللعب يتم تعبئة المكان وسعر الحجز كمبلغ إضافي، وتقدر تعدل المبلغ قبل الحفظ.</p>
+    </div>
+
+    <div class="card">
+      <h3>جدول المبالغ الإضافية</h3>
+      <div class="tableWrap"><table>
+        <thead><tr><th>تاريخ اللعب</th><th>المكان</th><th>المبلغ الإضافي</th><th>إجراء</th></tr></thead>
+        <tbody>${rows||'<tr><td colspan="4" class="muted">لا توجد مبالغ إضافية محفوظة.</td></tr>'}</tbody>
+      </table></div>
+    </div>`;
+}
+function fillExtraFromMatch(){
+  const s=state();
+  const id=document.getElementById('extraMatchSelect')?.value;
+  const m=s.matches.find(x=>x.id===id);
+  const placeEl=document.getElementById('extraPlace');
+  const amountEl=document.getElementById('extraAmount');
+  if(!m){ if(placeEl)placeEl.value=''; if(amountEl)amountEl.value=''; return; }
+  if(placeEl)placeEl.value=m.place||'';
+  if(amountEl)amountEl.value=money(m.bookingCost||0);
+}
+function saveExtraCharge(){
+  const s=state();
+  const id=document.getElementById('extraMatchSelect')?.value;
+  const m=s.matches.find(x=>x.id===id);
+  const amount=Number(document.getElementById('extraAmount')?.value||0);
+  if(!m)return alert('اختر تاريخ اللعب أولاً');
+  if(!amount || amount<=0)return alert('اكتب المبلغ الإضافي بشكل صحيح');
+  s.extraCharges=s.extraCharges||[];
+  s.extraCharges.push({id:uid(),matchId:m.id,date:m.date,place:m.place||'',amount,createdAt:Date.now()});
+  save(s);
+  alert('تم حفظ المبلغ الإضافي');
+}
+function deleteExtraCharge(id){
+  if(!confirm('حذف هذا المبلغ الإضافي؟'))return;
+  const s=state();
+  s.extraCharges=(s.extraCharges||[]).filter(x=>x.id!==id);
+  save(s);
+}
+
 function renderAll(){renderNav();setActiveNavButton(currentTabId);renderPageOrder();const s=state();saveNoRender(s);if(!matchDate.value)setDateDisplay('matchDate',today());if(!depositDate.value)setDateDisplay('depositDate',s.settings.lastDepositDate||today());pricePerPlayer.textContent=money(calcPrice());const b=balances(s);playersList.innerHTML=s.players.map(p=>`<div class="nameOnly">${p}</div>`).join('')||'<p class="muted">أضف اللاعبين أولًا.</p>';const opts=s.players.map(p=>`<option>${p}</option>`).join('');guestOwner.innerHTML=opts;depositPlayer.innerHTML=opts;const pf=document.getElementById('playerFilterSelect');if(pf){pf.innerHTML='<option value="">اختر لاعب</option>'+opts; if(!pf.value&&s.players[0])pf.value=s.players[0]; renderPlayerFilter();renderDepositHistory();}matchPlayers.innerHTML=s.players.map(p=>`<label><input class="playerCheck" type="checkbox" value="${p}"> <span>${p}</span></label>`).join('');renderMatchParticipantsPreview();depositQuickButtons.innerHTML=getDepositPresets(s).map(v=>`<span class="quick"><button class="x" type="button" onclick="event.stopPropagation();deleteDepositPreset('${v}')">×</button><span onclick="setDepositAmount('${v}')">${money(v)}</span></span>`).join('')||'<span class="muted">احفظ أول مبلغ ليظهر كزر سريع.</span>';depositsList.innerHTML=[...s.deposits]
 .map((d,i)=>({...d,_i:i,type:(String(d.date||'').replace(/-/g,'/')==='2026/01/01'||String(d.date||'').replace(/-/g,'/')==='1/1/2026')&&!d.type?'initial':d.type}))
 .sort((a,b)=>{
@@ -516,7 +620,7 @@ function renderAll(){renderNav();setActiveNavButton(currentTabId);renderPageOrde
 </div>`).join('');teamsMatchSelect.innerHTML=s.matches
 .sort((a,b)=>b.date.localeCompare(a.date))
 .map(m=>`<option value="${m.id}">${formatDateDisplay(m.date)} | ${m.place||m.location||''}</option>`)
-.join('');renderTempGuests();renderCalendar();renderCalendarList();renderMatchLog(s);renderTeams();renderTables(s,b);updatePrettyDates()}
+.join('');renderTempGuests();renderCalendar();renderCalendarList();renderMatchLog(s);renderTeams();renderTables(s,b);renderAccounts();updatePrettyDates()}
 function exportData(){const blob=new Blob([JSON.stringify(state(),null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='qatiya-backup.json';a.click()}
 function importData(e){const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{localStorage.setItem('qatiyaState',r.result);renderAll();alert('تم الاستيراد')};r.readAsText(f)}
 if('serviceWorker'in navigator){navigator.serviceWorker.register('sw.js')}setDepositType('in');renderAll();

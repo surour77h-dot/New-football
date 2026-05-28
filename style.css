@@ -3011,3 +3011,16 @@ direction:ltr!important;
   color:#ffffff !important;
   font-weight:900 !important;
 }
+
+
+/* صفحة الحسابات */
+.accountsSummary .wideSummary{grid-column:1 / -1;background:linear-gradient(180deg,#fff8db,#ffffff);border-color:#eadf9c}
+.negativePlayersGrid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.negativePlayer{display:flex;justify-content:space-between;align-items:center;gap:6px;border:1px solid #f0b7bd;background:#fff1f3;color:#842029;border-radius:12px;padding:8px;font-weight:800}
+.negativePlayer span{background:#842029;color:#fff;border-radius:9px;padding:3px 7px;direction:ltr}
+#accounts .tableWrap th:nth-child(1),#accounts .tableWrap td:nth-child(1){width:25%}
+#accounts .tableWrap th:nth-child(2),#accounts .tableWrap td:nth-child(2){width:35%}
+#accounts .tableWrap th:nth-child(3),#accounts .tableWrap td:nth-child(3){width:25%}
+#accounts .tableWrap th:nth-child(4),#accounts .tableWrap td:nth-child(4){width:15%}
+#accounts .summaryCards{grid-template-columns:1fr 1fr}
+@media(max-width:430px){.negativePlayersGrid{grid-template-columns:1fr}#accounts .tableWrap th,#accounts .tableWrap td{font-size:9px}}
