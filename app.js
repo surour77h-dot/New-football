@@ -533,9 +533,9 @@ function renderAccounts(){
   const negativeTotal=negative.reduce((sum,p)=>sum+Math.abs(Number(b[p]?.balance||0)),0);
   // المعادلة المعتمدة في صفحة الحسابات:
   // إجمالي المديونية = اللاعبين بالسالب + التأخير + الخصم الإضافي
-  // الإجمالي النهائي = إجمالي المديونية + مبالغ الإضافة
+  // الإجمالي النهائي = إجمالي المديونية - مبالغ الإضافة
   const debtTotal=negativeTotal+lateTotal+discountTotal;
-  const finalTotal=debtTotal+extraTotal;
+  const finalTotal=debtTotal-extraTotal;
 
   const matchOptions=[...s.matches].sort((a,b)=>b.date.localeCompare(a.date)).map(m=>{
     const label=`${formatDateDisplay(m.date)}${m.place?' - '+m.place:''} | ${money(m.bookingCost||m.price||0)} د.ك`;
@@ -565,7 +565,7 @@ function renderAccounts(){
       <div class="summaryCard discountCard"><span>إضافة مبالغ خصم</span><b class="negText">${money(discountTotal)}</b></div>
       <div class="summaryCard debtTotalCard"><span>إجمالي المديونية</span><b>${money(debtTotal)}</b><small>السالب + التأخير + الخصم</small></div>
       <div class="summaryCard extraCard"><span>مبالغ الإضافة</span><b class="posText">${money(extraTotal)}</b></div>
-      <div class="summaryCard finalTotalCard wideSummary"><span>الإجمالي النهائي</span><b>${money(finalTotal)}</b><small>إجمالي المديونية + مبالغ الإضافة</small></div>
+      <div class="summaryCard finalTotalCard wideSummary"><span>الإجمالي النهائي</span><b>${money(finalTotal)}</b><small>إجمالي المديونية - المبالغ الإضافية</small></div>
     </div>
 
     <div class="card">
@@ -602,7 +602,7 @@ function renderAccounts(){
         <label>قيمة الخصم<input id="discountAmount" type="number" step="0.001" inputmode="decimal" placeholder="0.000"></label>
       </div>
       <button class="primary wide" onclick="saveExtraDiscount()">حفظ الخصم</button>
-      <p class="muted">يتم احتساب الخصم الإضافي ضمن إجمالي المديونية وليس طرحه من الصفحة.</p>
+      <p class="muted">يتم احتساب الخصم الإضافي ضمن إجمالي المديونية، أما المبلغ الإضافي فيُخصم من الإجمالي النهائي.</p>
     </div>
 
     <div class="card">

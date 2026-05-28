@@ -3055,3 +3055,134 @@ direction:ltr!important;
 #accounts .finalTotalCard{grid-column:1 / -1;background:linear-gradient(180deg,#ecfeff,#ffffff);border-color:#67e8f9}
 #accounts .finalTotalCard b{font-size:24px}
 @media(max-width:430px){#accounts .accountsSummary{grid-template-columns:1fr 1fr}#accounts .summaryCard b{font-size:17px}#accounts .summaryCard span{font-size:11px}}
+
+
+/* تحديث نهائي لصفحة الحسابات: معادلة، تكبير خطوط الجدول، وتصغير الارتفاع */
+#accounts .accountsSummary{
+  grid-template-columns:1fr 1fr !important;
+  gap:7px !important;
+  margin-bottom:10px !important;
+}
+#accounts .summaryCard{
+  min-height:52px !important;
+  padding:7px 9px !important;
+  border-radius:14px !important;
+  gap:1px !important;
+}
+#accounts .summaryCard span{
+  font-size:12.5px !important;
+  line-height:1.2 !important;
+}
+#accounts .summaryCard b{
+  font-size:20px !important;
+  line-height:1.1 !important;
+}
+#accounts .summaryCard small{
+  font-size:9.5px !important;
+  line-height:1.15 !important;
+}
+#accounts .finalTotalCard b{
+  font-size:23px !important;
+}
+#accounts .card h3{
+  font-size:25px !important;
+  line-height:1.25 !important;
+  margin-bottom:12px !important;
+}
+#accounts .tableWrap table{
+  table-layout:fixed !important;
+  width:100% !important;
+  border-collapse:separate !important;
+  border-spacing:0 !important;
+}
+#accounts .tableWrap th{
+  font-size:20px !important;
+  line-height:1.15 !important;
+  padding:9px 6px !important;
+  white-space:nowrap !important;
+}
+#accounts .tableWrap td{
+  font-size:18px !important;
+  line-height:1.15 !important;
+  padding:8px 6px !important;
+  height:44px !important;
+  vertical-align:middle !important;
+}
+#accounts .tableWrap td:nth-child(1),
+#accounts .tableWrap td:nth-child(2){
+  font-weight:850 !important;
+}
+#accounts .amountCell{
+  font-size:22px !important;
+  font-weight:1000 !important;
+}
+#accounts .tableWrap th:nth-child(1),#accounts .tableWrap td:nth-child(1){width:24% !important}
+#accounts .tableWrap th:nth-child(2),#accounts .tableWrap td:nth-child(2){width:34% !important}
+#accounts .tableWrap th:nth-child(3),#accounts .tableWrap td:nth-child(3){width:24% !important}
+#accounts .tableWrap th:nth-child(4),#accounts .tableWrap td:nth-child(4){width:18% !important}
+#accounts .tableWrap button.danger{
+  font-size:17px !important;
+  font-weight:1000 !important;
+  line-height:1 !important;
+  padding:8px 10px !important;
+  min-height:34px !important;
+  border-radius:12px !important;
+  white-space:nowrap !important;
+  width:auto !important;
+  min-width:68px !important;
+}
+#accounts .negativePlayersGrid,
+#accounts .accountAlertsGrid{
+  display:grid !important;
+  grid-template-columns:1fr 1fr !important;
+  gap:8px !important;
+}
+#accounts .accountAlertItem,
+#accounts .negativePlayer,
+#accounts .latePlayer{
+  display:flex !important;
+  justify-content:space-between !important;
+  align-items:center !important;
+  gap:6px !important;
+  border-radius:12px !important;
+  padding:8px 9px !important;
+  font-size:15px !important;
+  font-weight:900 !important;
+  line-height:1.15 !important;
+}
+#accounts .accountAlertItem b,
+#accounts .negativePlayer b,
+#accounts .latePlayer b{
+  font-size:15px !important;
+  font-weight:900 !important;
+}
+#accounts .accountAlertItem span,
+#accounts .negativePlayer span,
+#accounts .latePlayer span{
+  border-radius:9px !important;
+  padding:4px 8px !important;
+  font-size:15px !important;
+  font-weight:1000 !important;
+  direction:ltr !important;
+}
+#accounts .latePlayer{
+  border-color:#f0c27b !important;
+  background:#fff4e5 !important;
+  color:#b45309 !important;
+}
+#accounts .latePlayer span{
+  background:#fff4e5 !important;
+  color:#9a3412 !important;
+  border:1px solid #f59e0b !important;
+}
+@media(max-width:430px){
+  #accounts .summaryCard{min-height:48px !important;padding:6px 7px !important}
+  #accounts .summaryCard b{font-size:17px !important}
+  #accounts .summaryCard span{font-size:11px !important}
+  #accounts .card h3{font-size:22px !important}
+  #accounts .tableWrap th{font-size:17px !important;padding:8px 4px !important}
+  #accounts .tableWrap td{font-size:15px !important;padding:7px 4px !important;height:38px !important}
+  #accounts .amountCell{font-size:18px !important}
+  #accounts .tableWrap button.danger{font-size:15px !important;min-width:54px !important;padding:7px 6px !important}
+  #accounts .accountAlertsGrid{grid-template-columns:1fr !important}
+}
