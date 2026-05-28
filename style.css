@@ -3024,3 +3024,18 @@ direction:ltr!important;
 #accounts .tableWrap th:nth-child(4),#accounts .tableWrap td:nth-child(4){width:15%}
 #accounts .summaryCards{grid-template-columns:1fr 1fr}
 @media(max-width:430px){.negativePlayersGrid{grid-template-columns:1fr}#accounts .tableWrap th,#accounts .tableWrap td{font-size:9px}}
+
+
+/* تعديلات صفحة الحسابات: مربع واحد للتأخير والأرصدة السالبة + جدول موحد */
+.accountAlertsGrid{grid-template-columns:1fr 1fr;gap:8px}
+.accountAlertItem{display:flex;justify-content:space-between;align-items:center;gap:6px;border-radius:12px;padding:8px;font-weight:800}
+.accountAlertItem small{font-size:10px;opacity:.85;margin-inline-start:auto}
+.latePlayer{border:1px solid #f0c27b;background:#fff4e5;color:#9a4b00}
+.latePlayer span{background:#9a4b00;color:#fff;border-radius:9px;padding:3px 7px;direction:ltr}
+.lateText{color:#f59e0b!important}
+#accounts .tableWrap th:nth-child(5),#accounts .tableWrap td:nth-child(5){width:12%}
+@media(max-width:430px){.accountAlertsGrid{grid-template-columns:1fr}.accountAlertItem small{display:block;margin-inline-start:0}}
+
+#accounts .amountCell{font-weight:900;direction:ltr;white-space:nowrap}
+#accounts .amountExtra{color:#15803d}
+#accounts .amountDiscount{color:#b91c1c}

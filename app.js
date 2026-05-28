@@ -540,7 +540,7 @@ function renderAccounts(){
   const negativeCards=negative.map(p=>`<div class="accountAlertItem negativePlayer"><b>${escapeHtml(p)}</b><span>${money(b[p].balance)}</span></div>`).join('');
 
   const lateItems=[...(s.deposits||[])].filter(d=>d.type==='late').sort((a,b)=>(b.date||'').localeCompare(a.date||'') || (b.createdAt||0)-(a.createdAt||0));
-  const lateCards=lateItems.map(d=>`<div class="accountAlertItem latePlayer"><b>${escapeHtml(d.player||'')}</b><small>${formatDateDisplay(d.date)}</small><span>${money(Math.abs(Number(d.amount||0)))}</span></div>`).join('');
+  const lateCards=lateItems.map(d=>`<div class="accountAlertItem latePlayer"><b>${escapeHtml(d.player||'')}</b><span>${money(Math.abs(Number(d.amount||0)))}</span></div>`).join('');
   const alertsHtml=(negativeCards||lateCards)?`<div class="negativePlayersGrid accountAlertsGrid">${negativeCards}${lateCards}</div>`:'<p class="muted">لا توجد أرصدة سالبة أو مبالغ تأخير.</p>';
 
   const combinedRows=[
@@ -549,8 +549,7 @@ function renderAccounts(){
   ].sort((a,b)=>(b.date||'').localeCompare(a.date||'') || (b.createdAt||0)-(a.createdAt||0)).map(x=>`<tr>
     <td>${formatDateDisplay(x.date)}</td>
     <td>${escapeHtml(x.place||'')}</td>
-    <td class="${x._type==='extra'?'pos':'muted'}">${x._type==='extra'?money(x.amount):'—'}</td>
-    <td class="${x._type==='discount'?'neg':'muted'}">${x._type==='discount'?money(x.amount):'—'}</td>
+    <td class="amountCell ${x._type==='extra'?'amountExtra':'amountDiscount'}">${money(x.amount)}</td>
     <td><button class="danger" onclick="${x._type==='extra'?'deleteExtraCharge':'deleteExtraDiscount'}('${x.id}')">حذف</button></td>
   </tr>`).join('');
 
@@ -602,8 +601,8 @@ function renderAccounts(){
     <div class="card">
       <h3>جدول المبالغ الإضافية والخصم الإضافي</h3>
       <div class="tableWrap"><table>
-        <thead><tr><th>تاريخ اللعب</th><th>المكان</th><th>المبلغ الإضافي</th><th>الخصم الإضافي</th><th>إجراء</th></tr></thead>
-        <tbody>${combinedRows||'<tr><td colspan="5" class="muted">لا توجد مبالغ إضافية أو خصومات محفوظة.</td></tr>'}</tbody>
+        <thead><tr><th>تاريخ اللعب</th><th>المكان</th><th>المبلغ</th><th>إجراء</th></tr></thead>
+        <tbody>${combinedRows||'<tr><td colspan="4" class="muted">لا توجد مبالغ إضافية أو خصومات محفوظة.</td></tr>'}</tbody>
       </table></div>
     </div>`;
 }
