@@ -21,7 +21,7 @@ function depositTypeLabel(d){
 let currentTabId='newMatch';
 const FREE_START='2026-05-01';let tempGuests=[];let selectedCalendarDate='';let depositType='in';let tempTeamMap={};let calendarView=new Date();
 function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,8)}
-function state(){const r=JSON.parse(localStorage.getItem('qatiyaState')||'{"players":[],"matches":[],"deposits":[],"teams":{},"settings":{}}');r.players=r.players||[];r.matches=r.matches||[];r.deposits=r.deposits||[];r.extraCharges=r.extraCharges||[];r.teams=r.teams||{};r.settings=r.settings||{};r.matches.forEach(m=>{if(!m.id)m.id=uid()});r.deposits.forEach(d=>{if(!d.id)d.id=uid()});r.extraCharges.forEach(x=>{if(!x.id)x.id=uid()});r.players.sort((a,b)=>a.localeCompare(b,'ar'));return r}
+function state(){const r=JSON.parse(localStorage.getItem('qatiyaState')||'{"players":[],"matches":[],"deposits":[],"teams":{},"settings":{}}');r.players=r.players||[];r.matches=r.matches||[];r.deposits=r.deposits||[];r.extraCharges=r.extraCharges||[];r.extraDiscounts=r.extraDiscounts||[];r.teams=r.teams||{};r.settings=r.settings||{};r.matches.forEach(m=>{if(!m.id)m.id=uid()});r.deposits.forEach(d=>{if(!d.id)d.id=uid()});r.extraCharges.forEach(x=>{if(!x.id)x.id=uid()});r.extraDiscounts.forEach(x=>{if(!x.id)x.id=uid()});r.players.sort((a,b)=>a.localeCompare(b,'ar'));return r}
 function save(s){s.players.sort((a,b)=>a.localeCompare(b,'ar'));localStorage.setItem('qatiyaState',JSON.stringify(s));renderAll()}
 function saveNoRender(s){localStorage.setItem('qatiyaState',JSON.stringify(s))}
 function today(){return new Date().toISOString().slice(0,10)}function money(n){return Number(n||0).toFixed(3)}
@@ -517,15 +517,20 @@ function getLateTotal(s){
 function getExtraTotal(s){
   return (s.extraCharges||[]).reduce((sum,x)=>sum+Number(x.amount||0),0);
 }
+function getExtraDiscountTotal(s){
+  return (s.extraDiscounts||[]).reduce((sum,x)=>sum+Number(x.amount||0),0);
+}
 function renderAccounts(){
   const wrap=document.getElementById('accountsContent');
   if(!wrap)return;
   const s=state();
+  s.extraDiscounts=s.extraDiscounts||[];
   const b=balances(s);
   const negative=s.players.filter(p=>Number(b[p]?.balance||0)<0).sort((a,c)=>Number(b[a]?.balance||0)-Number(b[c]?.balance||0));
   const extraTotal=getExtraTotal(s);
+  const discountTotal=getExtraDiscountTotal(s);
   const lateTotal=getLateTotal(s);
-  const allTotal=extraTotal+lateTotal;
+  const allTotal=extraTotal+lateTotal-discountTotal;
 
   const matchOptions=[...s.matches].sort((a,b)=>b.date.localeCompare(a.date)).map(m=>{
     const label=`${formatDateDisplay(m.date)}${m.place?' - '+m.place:''} | ${money(m.bookingCost||m.price||0)} د.ك`;
@@ -534,23 +539,42 @@ function renderAccounts(){
 
   const negHtml=negative.length?`<div class="negativePlayersGrid">${negative.map(p=>`<div class="negativePlayer"><b>${escapeHtml(p)}</b><span>${money(b[p].balance)}</span></div>`).join('')}</div>`:'<p class="muted">لا يوجد لاعبون رصيدهم بالسالب.</p>';
 
-  const rows=[...(s.extraCharges||[])].sort((a,b)=>(b.date||'').localeCompare(a.date||'')).map(x=>`<tr>
+  const lateItems=[...(s.deposits||[])].filter(d=>d.type==='late').sort((a,b)=>(b.date||'').localeCompare(a.date||'') || (b.createdAt||0)-(a.createdAt||0));
+  const lateHtml=lateItems.length?`<div class="tableWrap"><table>
+    <thead><tr><th>التاريخ</th><th>اسم اللاعب</th><th>مبلغ التأخير</th></tr></thead>
+    <tbody>${lateItems.map(d=>`<tr><td>${formatDateDisplay(d.date)}</td><td>${escapeHtml(d.player||'')}</td><td class="neg">${money(Math.abs(Number(d.amount||0)))}</td></tr>`).join('')}</tbody>
+  </table></div>`:'<p class="muted">لا توجد مبالغ تأخير محفوظة.</p>';
+
+  const extraRows=[...(s.extraCharges||[])].sort((a,b)=>(b.date||'').localeCompare(a.date||'')).map(x=>`<tr>
     <td>${formatDateDisplay(x.date)}</td>
     <td>${escapeHtml(x.place||'')}</td>
     <td class="pos">${money(x.amount)}</td>
     <td><button class="danger" onclick="deleteExtraCharge('${x.id}')">حذف</button></td>
   </tr>`).join('');
 
+  const discountRows=[...(s.extraDiscounts||[])].sort((a,b)=>(b.date||'').localeCompare(a.date||'')).map(x=>`<tr>
+    <td>${formatDateDisplay(x.date)}</td>
+    <td>${escapeHtml(x.place||'')}</td>
+    <td class="neg">${money(x.amount)}</td>
+    <td><button class="danger" onclick="deleteExtraDiscount('${x.id}')">حذف</button></td>
+  </tr>`).join('');
+
   wrap.innerHTML=`
     <div class="summaryCards accountsSummary">
       <div class="summaryCard"><span>مجموع المبالغ الإضافية</span><b class="posText">${money(extraTotal)}</b></div>
       <div class="summaryCard"><span>مبالغ التأخير</span><b class="negText">${money(lateTotal)}</b></div>
-      <div class="summaryCard wideSummary"><span>الإجمالي</span><b>${money(allTotal)}</b></div>
+      <div class="summaryCard"><span>الخصم الإضافي</span><b class="negText">-${money(discountTotal)}</b></div>
+      <div class="summaryCard wideSummary"><span>الإجمالي بعد الخصم</span><b>${money(allTotal)}</b></div>
     </div>
 
     <div class="card">
       <h3>اللاعبين الذين رصيدهم بالسالب</h3>
       ${negHtml}
+    </div>
+
+    <div class="card">
+      <h3>مبالغ التأخير وأسماء اللاعبين</h3>
+      ${lateHtml}
     </div>
 
     <div class="card">
@@ -570,10 +594,34 @@ function renderAccounts(){
     </div>
 
     <div class="card">
+      <h3>إضافة خصم إضافي</h3>
+      <label>تاريخ اللعب من الألعاب المسجلة
+        <select id="discountMatchSelect" onchange="fillDiscountFromMatch()">
+          <option value="">اختر تاريخ اللعب</option>
+          ${matchOptions}
+        </select>
+      </label>
+      <div class="two">
+        <label>المكان<input id="discountPlace" readonly placeholder="يظهر تلقائياً"></label>
+        <label>قيمة الخصم<input id="discountAmount" type="number" step="0.001" inputmode="decimal" placeholder="0.000"></label>
+      </div>
+      <button class="primary wide" onclick="saveExtraDiscount()">حفظ الخصم</button>
+      <p class="muted">يتم طرح الخصم من إجمالي صفحة الحسابات.</p>
+    </div>
+
+    <div class="card">
       <h3>جدول المبالغ الإضافية</h3>
       <div class="tableWrap"><table>
         <thead><tr><th>تاريخ اللعب</th><th>المكان</th><th>المبلغ الإضافي</th><th>إجراء</th></tr></thead>
-        <tbody>${rows||'<tr><td colspan="4" class="muted">لا توجد مبالغ إضافية محفوظة.</td></tr>'}</tbody>
+        <tbody>${extraRows||'<tr><td colspan="4" class="muted">لا توجد مبالغ إضافية محفوظة.</td></tr>'}</tbody>
+      </table></div>
+    </div>
+
+    <div class="card">
+      <h3>جدول الخصم الإضافي</h3>
+      <div class="tableWrap"><table>
+        <thead><tr><th>تاريخ اللعب</th><th>المكان</th><th>قيمة الخصم</th><th>إجراء</th></tr></thead>
+        <tbody>${discountRows||'<tr><td colspan="4" class="muted">لا توجد خصومات إضافية محفوظة.</td></tr>'}</tbody>
       </table></div>
     </div>`;
 }
@@ -603,6 +651,34 @@ function deleteExtraCharge(id){
   if(!confirm('حذف هذا المبلغ الإضافي؟'))return;
   const s=state();
   s.extraCharges=(s.extraCharges||[]).filter(x=>x.id!==id);
+  save(s);
+}
+function fillDiscountFromMatch(){
+  const s=state();
+  const id=document.getElementById('discountMatchSelect')?.value;
+  const m=s.matches.find(x=>x.id===id);
+  const placeEl=document.getElementById('discountPlace');
+  const amountEl=document.getElementById('discountAmount');
+  if(!m){ if(placeEl)placeEl.value=''; if(amountEl)amountEl.value=''; return; }
+  if(placeEl)placeEl.value=m.place||'';
+  if(amountEl)amountEl.value='';
+}
+function saveExtraDiscount(){
+  const s=state();
+  const id=document.getElementById('discountMatchSelect')?.value;
+  const m=s.matches.find(x=>x.id===id);
+  const amount=Number(document.getElementById('discountAmount')?.value||0);
+  if(!m)return alert('اختر تاريخ اللعب أولاً');
+  if(!amount || amount<=0)return alert('اكتب قيمة الخصم بشكل صحيح');
+  s.extraDiscounts=s.extraDiscounts||[];
+  s.extraDiscounts.push({id:uid(),matchId:m.id,date:m.date,place:m.place||'',amount,createdAt:Date.now()});
+  save(s);
+  alert('تم حفظ الخصم الإضافي');
+}
+function deleteExtraDiscount(id){
+  if(!confirm('حذف هذا الخصم الإضافي؟'))return;
+  const s=state();
+  s.extraDiscounts=(s.extraDiscounts||[]).filter(x=>x.id!==id);
   save(s);
 }
 
