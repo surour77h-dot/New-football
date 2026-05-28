@@ -537,44 +537,34 @@ function renderAccounts(){
     return `<option value="${escapeHtml(m.id)}">${escapeHtml(label)}</option>`;
   }).join('');
 
-  const negHtml=negative.length?`<div class="negativePlayersGrid">${negative.map(p=>`<div class="negativePlayer"><b>${escapeHtml(p)}</b><span>${money(b[p].balance)}</span></div>`).join('')}</div>`:'<p class="muted">لا يوجد لاعبون رصيدهم بالسالب.</p>';
+  const negativeCards=negative.map(p=>`<div class="accountAlertItem negativePlayer"><b>${escapeHtml(p)}</b><span>${money(b[p].balance)}</span></div>`).join('');
 
   const lateItems=[...(s.deposits||[])].filter(d=>d.type==='late').sort((a,b)=>(b.date||'').localeCompare(a.date||'') || (b.createdAt||0)-(a.createdAt||0));
-  const lateHtml=lateItems.length?`<div class="tableWrap"><table>
-    <thead><tr><th>التاريخ</th><th>اسم اللاعب</th><th>مبلغ التأخير</th></tr></thead>
-    <tbody>${lateItems.map(d=>`<tr><td>${formatDateDisplay(d.date)}</td><td>${escapeHtml(d.player||'')}</td><td class="neg">${money(Math.abs(Number(d.amount||0)))}</td></tr>`).join('')}</tbody>
-  </table></div>`:'<p class="muted">لا توجد مبالغ تأخير محفوظة.</p>';
+  const lateCards=lateItems.map(d=>`<div class="accountAlertItem latePlayer"><b>${escapeHtml(d.player||'')}</b><small>${formatDateDisplay(d.date)}</small><span>${money(Math.abs(Number(d.amount||0)))}</span></div>`).join('');
+  const alertsHtml=(negativeCards||lateCards)?`<div class="negativePlayersGrid accountAlertsGrid">${negativeCards}${lateCards}</div>`:'<p class="muted">لا توجد أرصدة سالبة أو مبالغ تأخير.</p>';
 
-  const extraRows=[...(s.extraCharges||[])].sort((a,b)=>(b.date||'').localeCompare(a.date||'')).map(x=>`<tr>
+  const combinedRows=[
+    ...(s.extraCharges||[]).map(x=>({...x,_type:'extra'})),
+    ...(s.extraDiscounts||[]).map(x=>({...x,_type:'discount'}))
+  ].sort((a,b)=>(b.date||'').localeCompare(a.date||'') || (b.createdAt||0)-(a.createdAt||0)).map(x=>`<tr>
     <td>${formatDateDisplay(x.date)}</td>
     <td>${escapeHtml(x.place||'')}</td>
-    <td class="pos">${money(x.amount)}</td>
-    <td><button class="danger" onclick="deleteExtraCharge('${x.id}')">حذف</button></td>
-  </tr>`).join('');
-
-  const discountRows=[...(s.extraDiscounts||[])].sort((a,b)=>(b.date||'').localeCompare(a.date||'')).map(x=>`<tr>
-    <td>${formatDateDisplay(x.date)}</td>
-    <td>${escapeHtml(x.place||'')}</td>
-    <td class="neg">${money(x.amount)}</td>
-    <td><button class="danger" onclick="deleteExtraDiscount('${x.id}')">حذف</button></td>
+    <td class="${x._type==='extra'?'pos':'muted'}">${x._type==='extra'?money(x.amount):'—'}</td>
+    <td class="${x._type==='discount'?'neg':'muted'}">${x._type==='discount'?money(x.amount):'—'}</td>
+    <td><button class="danger" onclick="${x._type==='extra'?'deleteExtraCharge':'deleteExtraDiscount'}('${x.id}')">حذف</button></td>
   </tr>`).join('');
 
   wrap.innerHTML=`
     <div class="summaryCards accountsSummary">
       <div class="summaryCard"><span>مجموع المبالغ الإضافية</span><b class="posText">${money(extraTotal)}</b></div>
-      <div class="summaryCard"><span>مبالغ التأخير</span><b class="negText">${money(lateTotal)}</b></div>
+      <div class="summaryCard"><span>مبالغ التأخير</span><b class="lateText">${money(lateTotal)}</b></div>
       <div class="summaryCard"><span>الخصم الإضافي</span><b class="negText">-${money(discountTotal)}</b></div>
       <div class="summaryCard wideSummary"><span>الإجمالي بعد الخصم</span><b>${money(allTotal)}</b></div>
     </div>
 
     <div class="card">
-      <h3>اللاعبين الذين رصيدهم بالسالب</h3>
-      ${negHtml}
-    </div>
-
-    <div class="card">
-      <h3>مبالغ التأخير وأسماء اللاعبين</h3>
-      ${lateHtml}
+      <h3>الأرصدة السالبة ومبالغ التأخير</h3>
+      ${alertsHtml}
     </div>
 
     <div class="card">
@@ -610,18 +600,10 @@ function renderAccounts(){
     </div>
 
     <div class="card">
-      <h3>جدول المبالغ الإضافية</h3>
+      <h3>جدول المبالغ الإضافية والخصم الإضافي</h3>
       <div class="tableWrap"><table>
-        <thead><tr><th>تاريخ اللعب</th><th>المكان</th><th>المبلغ الإضافي</th><th>إجراء</th></tr></thead>
-        <tbody>${extraRows||'<tr><td colspan="4" class="muted">لا توجد مبالغ إضافية محفوظة.</td></tr>'}</tbody>
-      </table></div>
-    </div>
-
-    <div class="card">
-      <h3>جدول الخصم الإضافي</h3>
-      <div class="tableWrap"><table>
-        <thead><tr><th>تاريخ اللعب</th><th>المكان</th><th>قيمة الخصم</th><th>إجراء</th></tr></thead>
-        <tbody>${discountRows||'<tr><td colspan="4" class="muted">لا توجد خصومات إضافية محفوظة.</td></tr>'}</tbody>
+        <thead><tr><th>تاريخ اللعب</th><th>المكان</th><th>المبلغ الإضافي</th><th>الخصم الإضافي</th><th>إجراء</th></tr></thead>
+        <tbody>${combinedRows||'<tr><td colspan="5" class="muted">لا توجد مبالغ إضافية أو خصومات محفوظة.</td></tr>'}</tbody>
       </table></div>
     </div>`;
 }
