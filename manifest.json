@@ -1,10 +1,10 @@
 {
-  "name": "🏆 سجل وحسابات ⚽️ قروب الكورة 🏆",
+  "name": "قروب الكورة - Apple Sports Ultra",
   "short_name": "قروب الكورة",
   "start_url": "index.html",
   "display": "standalone",
-  "background_color": "#f7f7f7",
-  "theme_color": "#0f5132",
+  "background_color": "#edf6ff",
+  "theme_color": "#0A84FF",
   "orientation": "any",
   "icons": []
 }

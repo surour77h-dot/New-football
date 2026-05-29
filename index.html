@@ -5,28 +5,16 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <meta name="theme-color" content="#0f5132">
 <title>🏆 سجل وحسابات ⚽️ قروب الكورة 🏆</title>
-<link rel="manifest" href="manifest.json">
-<link rel="stylesheet" href="style.css">
+<link rel="manifest" href="manifest.json?v=apple-full-redesign-20260529">
+<link rel="stylesheet" href="style.css?v=apple-full-redesign-20260529">
 </head>
-<body>
-<header><h1 id="appTitle">🏆 سجل وحسابات ⚽️ قروب الكورة 🏆</h1></header>
-<nav>
-<button onclick="showTab('newMatch')">لعبة</button>
-<button onclick="showTab('teams')">الفريقين</button>
-<button onclick="showTab('deposits')">الإيداعات</button>
-<button onclick="showTab('calendar')">التقويم</button>
-<button onclick="showTab('playerTable')">الجدول</button>
-<button onclick="showTab('playerFilter')">كشف لاعب</button>
-<button onclick="showTab('matchLog')">السجل</button>
-<button onclick="showTab('players')">اللاعبين</button>
-<button onclick="showTab('accounts')">الحسابات</button>
-
-<button onclick="showTab('backup')">الإعدادات</button>
-</nav>
+<body class="apple-redesign modern-shell">
+<header class="app-shell-hero"><div class="hero-card"><div class="hero-icon">⚽️</div><div class="hero-copy"><span class="eyebrow">Apple Sports Ultra</span><h1 id="appTitle">قروب الكورة</h1><p>لوحة تحكم حديثة لإدارة اللعبات، اللاعبين، الحسابات والإيداعات</p></div></div><div class="hero-metrics"><div><b id="dashPlayers">0</b><span>لاعب</span></div><div><b id="dashBalance">0.000</b><span>الرصيد</span></div><div><b id="dashDebt">0.000</b><span>المديونية</span></div></div></header>
+<nav class="top-tabs original-tabs" aria-label="كل الصفحات"><button onclick="showTab('newMatch')">⚽ لعبة</button><button onclick="showTab('teams')">👥 الفريقين</button><button onclick="showTab('deposits')">💳 الإيداعات</button><button onclick="showTab('calendar')">📅 التقويم</button><button onclick="showTab('playerTable')">📊 الجدول</button><button onclick="showTab('playerFilter')">🔎 كشف لاعب</button><button onclick="showTab('matchLog')">🧾 السجل</button><button onclick="showTab('players')">🏃‍♂️ اللاعبين</button><button onclick="showTab('accounts')">💰 الحسابات</button><button onclick="showTab('backup')">⚙️ الإعدادات</button></nav><nav class="bottom-tabs" aria-label="التنقل الرئيسي"><button data-target-tab="newMatch" onclick="showTab('newMatch')"><span>🏠</span><b>الرئيسية</b></button><button data-target-tab="calendar" onclick="showTab('calendar')"><span>📅</span><b>اللعبات</b></button><button data-target-tab="players" onclick="showTab('players')"><span>👥</span><b>اللاعبين</b></button><button data-target-tab="accounts" onclick="showTab('accounts')"><span>💰</span><b>الحسابات</b></button><button data-target-tab="backup" onclick="showTab('backup')"><span>☰</span><b>المزيد</b></button></nav>
 
 <main>
 <section id="newMatch" class="tab active">
-<h2 id="matchFormTitle">لعبة جديدة</h2>
+<h2 id="matchFormTitle">الرئيسية واللعبة القادمة</h2><div class="dashboard-panel"><div class="dash-main"><span>ملخص القروب</span><strong id="dashNextGame">جاهز للعبة القادمة</strong><small>كل بيانات التطبيق محفوظة كما هي — التغيير في الشكل والترتيب فقط</small></div><div class="dash-grid"><div class="dash-tile"><span>عدد اللاعبين</span><b id="dashPlayers2">0</b></div><div class="dash-tile"><span>إجمالي الإيداعات</span><b id="dashDeposits">0.000</b></div><div class="dash-tile danger"><span>المديونية</span><b id="dashDebt2">0.000</b></div><div class="dash-tile warn"><span>التأخير</span><b id="dashLate">0.000</b></div></div></div>
 <div class="card">
 <input type="hidden" id="editingMatchId">
 <div class="two">
@@ -149,6 +137,6 @@
 </section>
 
 </main>
-<script src="app.js"></script>
+<script src="app.js?v=apple-full-redesign-20260529"></script>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 </body></html>
