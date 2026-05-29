@@ -533,9 +533,9 @@ function renderAccounts(){
   const lateTotal=getLateTotal(s);
   const negativeTotal=negative.reduce((sum,p)=>sum+Math.abs(Number(b[p]?.balance||0)),0);
   // المعادلة المعتمدة في صفحة الحسابات:
-  // مجموع المديونية = اللاعبين المدانين والمتأخرين + مشتريات + مجموع التأخير
+  // مجموع المديونية = اللاعبين المدانين + مشتريات
   // الإجمالي النهائي = الباقي + مجموع التأخير
-  const debtTotal=negativeTotal+lateTotal+discountTotal;
+  const debtTotal=negativeTotal+discountTotal;
   const finalTotal=extraTotal+lateTotal;
 
   const matchOptions=[...s.matches].sort((a,b)=>b.date.localeCompare(a.date)).map(m=>{
@@ -543,11 +543,18 @@ function renderAccounts(){
     return `<option value="${escapeHtml(m.id)}">${escapeHtml(label)}</option>`;
   }).join('');
 
-  const negativeCards=negative.map(p=>`<div class="accountAlertItem negativePlayer" onclick="openPlayerAccount(\'${escapeHtml(p)}\')"><b>${escapeHtml(p)}</b><span>${money(b[p].balance)}</span></div>`).join('');
+  const negativeCards=negative.map(p=>{
+    const safeName=String(p).replace(/\\/g,'\\\\').replace(/'/g,"\\'");
+    return `<div class="accountAlertItem negativePlayer clickableAlert" onclick="openPlayerProfileDirect('${safeName}')"><b>${escapeHtml(p)}</b><span>${money(b[p].balance)}</span></div>`;
+  }).join('');
 
   const lateItems=[...(s.deposits||[])].filter(d=>d.type==='late').sort((a,b)=>(b.date||'').localeCompare(a.date||'') || (b.createdAt||0)-(a.createdAt||0));
-  const lateCards=lateItems.map(d=>`<div class="accountAlertItem latePlayer" onclick="openPlayerAccount(\'${escapeHtml(d.player||\'\')}\')"><b>${escapeHtml(d.player||'')}</b><span>${money(Math.abs(Number(d.amount||0)))}</span></div>`).join('');
-  const alertsHtml=(negativeCards||lateCards)?`<div class="negativePlayersGrid accountAlertsGrid">${negativeCards}${lateCards}</div>`:'<p class="muted">لا توجد أرصدة سالبة أو مبالغ تأخير.</p>';
+  const lateCards=lateItems.map(d=>{
+    const player=d.player||'';
+    const safeName=String(player).replace(/\\/g,'\\\\').replace(/'/g,"\\'");
+    return `<div class="accountAlertItem latePlayer clickableAlert" onclick="openPlayerProfileDirect('${safeName}')"><b>${escapeHtml(player)}</b><span>${money(Math.abs(Number(d.amount||0)))}</span></div>`;
+  }).join('');
+  const alertsHtml=(negativeCards||lateCards)?`<div class="negativePlayersGrid accountAlertsGrid">${negativeCards}${lateCards}</div>`:'<p class="muted">لا يوجد لاعبين مدانين أو متأخرين.</p>';
 
   const combinedRows=[
     ...(s.extraCharges||[]).map(x=>({...x,_type:'extra'})),
@@ -565,16 +572,16 @@ function renderAccounts(){
 
   wrap.innerHTML=`
     <div class="summaryCards accountsSummary">
-      <div class="summaryCard debtCard summaryMini"><span>اللاعبين المدانين والمتأخرين</span><b class="negText">${moneyNeg(negativeTotal)}</b></div>
+      <div class="summaryCard debtCard summaryMini"><span>اللاعبين المدانين</span><b class="negText">${moneyNeg(negativeTotal)}</b></div>
       <div class="summaryCard discountCard summaryMini"><span>مشتريات</span><b class="negText">${moneyNeg(discountTotal)}</b></div>
-      <div class="summaryCard debtTotalCard"><span>مجموع المديونية</span><b class="negText">${moneyNeg(debtTotal)}</b><small>المدانين + مشتريات + التأخير</small></div>
+      <div class="summaryCard debtTotalCard"><span>مجموع المديونية</span><b class="negText">${moneyNeg(debtTotal)}</b></div>
       <div class="summaryCard extraCard"><span>الباقي</span><b class="posText">${money(extraTotal)}</b></div>
       <div class="summaryCard lateCard summaryMini"><span>مجموع التأخير</span><b class="lateText">${money(lateTotal)}</b></div>
-      <div class="summaryCard finalTotalCard ${finalTotal<0?'finalNegativeCard':finalTotal>0?'finalPositiveCard':'finalNeutralCard'}"><span>الإجمالي النهائي</span><b class="${finalTotal<0?'negText':finalTotal>0?'posText':''}">${money(finalTotal)}</b><small>مجموع المديونية - الباقي</small></div>
+      <div class="summaryCard finalTotalCard ${finalTotal<0?'finalNegativeCard':finalTotal>0?'finalPositiveCard':'finalNeutralCard'}"><span>الإجمالي النهائي</span><b class="${finalTotal<0?'negText':finalTotal>0?'posText':''}">${money(finalTotal)}</b></div>
     </div>
 
     <div class="card">
-      <h3>الأرصدة السالبة ومبالغ التأخير</h3>
+      <h3>اللاعبين المدانين والمتأخرين</h3>
       ${alertsHtml}
     </div>
 
@@ -1228,12 +1235,3 @@ function exportExcelData(){
   }
 }
 
-
-
-function openPlayerAccount(name){
-  try{
-    showTab('accounts');
-    const el=[...document.querySelectorAll('[data-player-row]')].find(x=>x.dataset.playerRow===name);
-    if(el){el.scrollIntoView({behavior:'smooth',block:'center'});}
-  }catch(e){console.log(e);}
-}
