@@ -533,8 +533,8 @@ function renderAccounts(){
   const lateTotal=getLateTotal(s);
   const negativeTotal=negative.reduce((sum,p)=>sum+Math.abs(Number(b[p]?.balance||0)),0);
   // المعادلة المعتمدة في صفحة الحسابات:
-  // إجمالي المديونية = اللاعبين بالسالب + التأخير + الخصم الإضافي
-  // الإجمالي النهائي = إجمالي المديونية - مبالغ الإضافة
+  // مجموع المديونية = اللاعبين المدانين + مشتريات + مجموع التأخير
+  // الإجمالي النهائي = مجموع المديونية - الباقي، ويعرض بإشارة صحيحة
   const debtTotal=negativeTotal+lateTotal+discountTotal;
   const finalTotal=extraTotal-debtTotal;
 
@@ -546,7 +546,7 @@ function renderAccounts(){
   const negativeCards=negative.map(p=>`<div class="accountAlertItem negativePlayer"><b>${escapeHtml(p)}</b><span>${money(b[p].balance)}</span></div>`).join('');
 
   const lateItems=[...(s.deposits||[])].filter(d=>d.type==='late').sort((a,b)=>(b.date||'').localeCompare(a.date||'') || (b.createdAt||0)-(a.createdAt||0));
-  const lateCards=lateItems.map(d=>`<div class="accountAlertItem latePlayer"><b>${escapeHtml(d.player||'')}</b><span>${moneyNeg(d.amount)}</span></div>`).join('');
+  const lateCards=lateItems.map(d=>`<div class="accountAlertItem latePlayer"><b>${escapeHtml(d.player||'')}</b><span>${money(Math.abs(Number(d.amount||0)))}</span></div>`).join('');
   const alertsHtml=(negativeCards||lateCards)?`<div class="negativePlayersGrid accountAlertsGrid">${negativeCards}${lateCards}</div>`:'<p class="muted">لا توجد أرصدة سالبة أو مبالغ تأخير.</p>';
 
   const combinedRows=[
@@ -565,12 +565,12 @@ function renderAccounts(){
 
   wrap.innerHTML=`
     <div class="summaryCards accountsSummary">
-      <div class="summaryCard debtCard summaryMini"><span>اللاعبين بالسالب</span><b class="negText">${moneyNeg(negativeTotal)}</b></div>
-      <div class="summaryCard lateCard summaryMini"><span>مبالغ التأخير</span><b class="lateText">${moneyNeg(lateTotal)}</b></div>
-      <div class="summaryCard discountCard summaryMini"><span>إضافة مبالغ خصم</span><b class="negText">${moneyNeg(discountTotal)}</b></div>
-      <div class="summaryCard debtTotalCard"><span>إجمالي المديونية</span><b class="negText">${moneyNeg(debtTotal)}</b><small>السالب + التأخير + الخصم</small></div>
-      <div class="summaryCard extraCard"><span>مبالغ الإضافة</span><b class="posText">${money(extraTotal)}</b></div>
-      <div class="summaryCard finalTotalCard ${finalTotal<0?'finalNegativeCard':finalTotal>0?'finalPositiveCard':'finalNeutralCard'}"><span>الإجمالي النهائي</span><b class="${finalTotal<0?'negText':finalTotal>0?'posText':''}">${money(finalTotal)}</b><small>إجمالي المديونية + مبالغ الإضافة</small></div>
+      <div class="summaryCard debtCard summaryMini"><span>اللاعبين المدانين</span><b class="negText">${moneyNeg(negativeTotal)}</b></div>
+      <div class="summaryCard discountCard summaryMini"><span>مشتريات</span><b class="negText">${moneyNeg(discountTotal)}</b></div>
+      <div class="summaryCard debtTotalCard"><span>مجموع المديونية</span><b class="negText">${moneyNeg(debtTotal)}</b><small>المدانين + مشتريات + التأخير</small></div>
+      <div class="summaryCard extraCard"><span>الباقي</span><b class="posText">${money(extraTotal)}</b></div>
+      <div class="summaryCard lateCard summaryMini"><span>مجموع التأخير</span><b class="lateText">${money(lateTotal)}</b></div>
+      <div class="summaryCard finalTotalCard ${finalTotal<0?'finalNegativeCard':finalTotal>0?'finalPositiveCard':'finalNeutralCard'}"><span>الإجمالي النهائي</span><b class="${finalTotal<0?'negText':finalTotal>0?'posText':''}">${money(finalTotal)}</b><small>مجموع المديونية - الباقي</small></div>
     </div>
 
     <div class="card">

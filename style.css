@@ -3698,3 +3698,35 @@ direction:ltr!important;
 #accounts .finalTotalCard.finalPositiveCard span{
   color:#15803d !important;
 }
+
+
+/* ===== Applied final accounts requested order and labels ===== */
+#accounts .accountsSummary{
+  display:grid !important;
+  grid-template-columns:repeat(3,minmax(0,1fr)) !important;
+  gap:6px !important;
+}
+#accounts .accountsSummary .debtCard{grid-column:1 / 2 !important;}
+#accounts .accountsSummary .discountCard{grid-column:2 / 3 !important;}
+#accounts .accountsSummary .debtTotalCard{grid-column:3 / 4 !important;min-height:46px !important;}
+#accounts .accountsSummary .extraCard{grid-column:1 / 2 !important;}
+#accounts .accountsSummary .lateCard{grid-column:2 / 4 !important;}
+#accounts .accountsSummary .finalTotalCard{grid-column:1 / -1 !important;min-height:54px !important;}
+#accounts .accountsSummary .summaryCard span{font-size:10px !important;line-height:1.15 !important;}
+#accounts .accountsSummary .summaryCard b{font-size:14.5px !important;line-height:1.05 !important;}
+#accounts .accountsSummary .finalTotalCard b{font-size:18px !important;}
+#accounts .latePlayer{border-color:#fdba74 !important;background:#fff7ed !important;color:#9a3412 !important;}
+#accounts .latePlayer b{color:#9a3412 !important;}
+#accounts .latePlayer span{background:#f97316 !important;color:#fff !important;border:0 !important;box-shadow:none !important;}
+#accounts .lateText{color:#ea580c !important;}
+#accounts .finalTotalCard.finalNegativeCard{background:#fff1f3 !important;border-color:#f0b7bd !important;}
+#accounts .finalTotalCard.finalNegativeCard b,#accounts .finalTotalCard.finalNegativeCard span{color:#842029 !important;}
+#accounts .finalTotalCard.finalPositiveCard{background:#f0fdf4 !important;border-color:#86efac !important;}
+#accounts .finalTotalCard.finalPositiveCard b,#accounts .finalTotalCard.finalPositiveCard span{color:#15803d !important;}
+@media(max-width:370px){
+  #accounts .accountsSummary{gap:5px !important;}
+  #accounts .accountsSummary .summaryCard{padding:5px 4px !important;}
+  #accounts .accountsSummary .summaryCard span{font-size:9px !important;}
+  #accounts .accountsSummary .summaryCard b{font-size:12.5px !important;}
+  #accounts .accountsSummary .finalTotalCard b{font-size:16px !important;}
+}
