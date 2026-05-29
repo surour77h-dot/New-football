@@ -1238,95 +1238,94 @@ function exportExcelData(){
 
 
 
-/* Apple Sports Ultra Safe UI - visual dashboard only */
+/* ===== New App Shell Enhancements ===== */
 (function(){
   function safeMoney(n){
     n = Number(n || 0);
-    if (!isFinite(n)) n = 0;
-    try { return n.toFixed(3); } catch(e) { return '0.000'; }
+    if(!isFinite(n)) n = 0;
+    return n.toFixed(3);
   }
   function setText(id, value){
     var el = document.getElementById(id);
-    if (el) el.textContent = value;
+    if(el) el.textContent = value;
   }
-  function getAmount(x){
+  function amountOf(x){
     return Number((x && (x.amount ?? x.value ?? x.total ?? 0)) || 0) || 0;
   }
-  window.updateAppleUltraDashboard = function(){
+  window.updateNewAppDashboard = function(){
     try{
-      if (typeof state !== 'function') return;
+      if(typeof state !== 'function') return;
       var s = state() || {};
       var players = s.players || [];
       var matches = s.matches || [];
       var deposits = s.deposits || [];
-      var lateTotal = deposits.filter(function(d){return d && d.type === 'late'}).reduce(function(a,d){return a + getAmount(d)}, 0);
+      var lateTotal = deposits.filter(function(d){return d && d.type === 'late'}).reduce(function(a,d){return a + amountOf(d)}, 0);
       var debtTotal = 0;
       try{
-        if (typeof computeBalances === 'function'){
-          var b = computeBalances(s) || {};
-          Object.keys(b).forEach(function(k){
-            var v = b[k];
+        if(typeof computeBalances === 'function'){
+          var balances = computeBalances(s) || {};
+          Object.keys(balances).forEach(function(k){
+            var v = balances[k];
             var n = 0;
-            if (typeof v === 'number') n = v;
-            else if (v && typeof v === 'object') n = Number(v.balance ?? v.total ?? v.remaining ?? 0) || 0;
-            if (n < 0) debtTotal += Math.abs(n);
+            if(typeof v === 'number') n = v;
+            else if(v && typeof v === 'object') n = Number(v.balance ?? v.total ?? v.remaining ?? 0) || 0;
+            if(n < 0) debtTotal += Math.abs(n);
           });
         }
       }catch(e){}
-      if (!debtTotal){
-        debtTotal = deposits.filter(function(d){return d && d.type === 'debt'}).reduce(function(a,d){return a + getAmount(d)}, 0);
+      if(!debtTotal){
+        debtTotal = deposits.filter(function(d){return d && d.type === 'debt'}).reduce(function(a,d){return a + amountOf(d)}, 0);
       }
-      var latest = matches.slice().sort(function(a,b){return String(b.date || '').localeCompare(String(a.date || ''))})[0];
-      setText('uiPlayersCount', players.length);
-      setText('uiPlayersCount2', players.length);
-      setText('uiMatchesCount', matches.length);
-      setText('uiMatchesCount2', matches.length);
-      setText('uiDebtTotal', safeMoney(debtTotal));
-      setText('uiDebtTotal2', safeMoney(debtTotal));
-      setText('uiLateTotal', safeMoney(lateTotal));
-      setText('uiLastMatch', latest ? ((latest.date || '') + (latest.place ? ' • ' + latest.place : '')) : 'جاهز للعبة القادمة');
+      var latest = matches.slice().sort(function(a,b){return String(b.date||'').localeCompare(String(a.date||''))})[0];
+      ['topPlayersNew','dashPlayersNew'].forEach(function(id){setText(id, players.length)});
+      ['topMatchesNew','dashMatchesNew'].forEach(function(id){setText(id, matches.length)});
+      ['topDebtNew','dashDebtNew'].forEach(function(id){setText(id, safeMoney(debtTotal))});
+      setText('dashLateNew', safeMoney(lateTotal));
+      setText('dashLatestGame', latest ? ((latest.date || '') + (latest.place ? ' • ' + latest.place : '')) : 'جاهز للعبة القادمة');
     }catch(e){}
   };
-
+  function markNav(id){
+    document.querySelectorAll('[data-tab]').forEach(function(btn){
+      btn.classList.toggle('activeTab', btn.getAttribute('data-tab') === id);
+    });
+    document.body.dataset.page = id || 'newMatch';
+  }
+  var oldSetActive = window.setActiveNavButton;
+  window.setActiveNavButton = function(id){
+    if(typeof oldSetActive === 'function'){
+      try{ oldSetActive(id); }catch(e){}
+    }
+    markNav(id);
+    setTimeout(window.updateNewAppDashboard, 0);
+  };
   var oldShowTab = window.showTab;
-  if (typeof oldShowTab === 'function' && !oldShowTab.__appleUltraWrapped){
+  if(typeof oldShowTab === 'function'){
     window.showTab = function(id){
-      var result = oldShowTab.apply(this, arguments);
-      document.body.dataset.page = id;
-      document.querySelectorAll('.ultraBottomNav button').forEach(function(btn){
-        btn.classList.toggle('activeTab', btn.getAttribute('data-target') === id);
-      });
-      setTimeout(window.updateAppleUltraDashboard, 0);
-      return result;
+      var r = oldShowTab.apply(this, arguments);
+      markNav(id);
+      setTimeout(window.updateNewAppDashboard, 0);
+      return r;
     };
-    window.showTab.__appleUltraWrapped = true;
   }
-
   var oldRenderAll = window.renderAll;
-  if (typeof oldRenderAll === 'function' && !oldRenderAll.__appleUltraWrapped){
+  if(typeof oldRenderAll === 'function'){
     window.renderAll = function(){
-      var result = oldRenderAll.apply(this, arguments);
-      setTimeout(window.updateAppleUltraDashboard, 0);
-      return result;
+      var r = oldRenderAll.apply(this, arguments);
+      setTimeout(window.updateNewAppDashboard, 0);
+      return r;
     };
-    window.renderAll.__appleUltraWrapped = true;
   }
-
   document.addEventListener('DOMContentLoaded', function(){
     setTimeout(function(){
       try{
-        window.updateAppleUltraDashboard();
-        var current = window.currentTabId || 'newMatch';
-        document.body.dataset.page = current;
-        document.querySelectorAll('.ultraBottomNav button').forEach(function(btn){
-          btn.classList.toggle('activeTab', btn.getAttribute('data-target') === current);
-        });
+        markNav(window.currentTabId || 'newMatch');
+        window.updateNewAppDashboard();
       }catch(e){}
-      if ('serviceWorker' in navigator){
-        navigator.serviceWorker.getRegistrations().then(function(regs){
-          regs.forEach(function(r){ if (r.update) r.update(); });
-        }).catch(function(){});
-      }
-    }, 300);
+    }, 250);
+    if('serviceWorker' in navigator){
+      navigator.serviceWorker.getRegistrations().then(function(regs){
+        regs.forEach(function(r){ if(r.update) r.update(); });
+      }).catch(function(){});
+    }
   });
 })();

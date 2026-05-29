@@ -1,10 +1,10 @@
 {
-  "name": "قروب الكورة - Apple Sports Ultra Safe",
+  "name": "قروب الكورة - New App",
   "short_name": "قروب الكورة",
   "start_url": "index.html",
   "display": "standalone",
-  "background_color": "#edf6ff",
+  "background_color": "#eef6ff",
   "theme_color": "#0A84FF",
-  "orientation": "any",
+  "orientation": "portrait",
   "icons": []
 }
