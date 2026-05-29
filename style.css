@@ -3442,3 +3442,195 @@ direction:ltr!important;
   #accountsExtraList .accountsTxAmount{font-size:14px !important;max-width:94px !important;}
   #accountsExtraList .accountsTxAmount b{font-size:14px !important;}
 }
+
+/* ===== FINAL REAL FIXES: accounts cards + accounts/deposits responsive tables ===== */
+#accounts .accountsSummary{
+  display:grid !important;
+  grid-template-columns:repeat(3,minmax(0,1fr)) !important;
+  gap:6px !important;
+  align-items:stretch !important;
+}
+#accounts .accountsSummary .summaryCard{
+  min-height:46px !important;
+  padding:6px 5px !important;
+  border-radius:12px !important;
+  box-sizing:border-box !important;
+  overflow:hidden !important;
+}
+#accounts .accountsSummary .summaryCard span{
+  font-size:10.5px !important;
+  line-height:1.15 !important;
+  white-space:normal !important;
+}
+#accounts .accountsSummary .summaryCard b{
+  font-size:15px !important;
+  line-height:1.05 !important;
+  direction:ltr !important;
+  white-space:nowrap !important;
+}
+#accounts .accountsSummary .summaryCard small{
+  font-size:8.5px !important;
+  line-height:1.1 !important;
+}
+#accounts .accountsSummary .summaryMini{grid-column:auto !important;}
+#accounts .accountsSummary .debtTotalCard{grid-column:1 / -1 !important;min-height:48px !important;}
+#accounts .accountsSummary .extraCard{grid-column:1 / 2 !important;}
+#accounts .accountsSummary .finalTotalCard{grid-column:2 / 4 !important;}
+#accounts .accountsSummary .finalTotalCard b{font-size:17px !important;}
+
+#accounts .accountAlertsGrid{
+  display:grid !important;
+  grid-template-columns:1fr 1fr !important;
+  gap:7px !important;
+}
+#accounts .accountAlertItem,
+#accounts .negativePlayer,
+#accounts .latePlayer{
+  min-height:38px !important;
+  padding:7px 8px !important;
+  border-radius:12px !important;
+  font-size:14px !important;
+  line-height:1.1 !important;
+  box-sizing:border-box !important;
+}
+#accounts .accountAlertItem b,
+#accounts .negativePlayer b,
+#accounts .latePlayer b{
+  font-size:14px !important;
+  line-height:1.1 !important;
+  overflow:hidden !important;
+  text-overflow:ellipsis !important;
+  white-space:nowrap !important;
+}
+#accounts .accountAlertItem span,
+#accounts .negativePlayer span,
+#accounts .latePlayer span{
+  font-size:14px !important;
+  padding:3px 7px !important;
+  border-radius:9px !important;
+  font-weight:1000 !important;
+  direction:ltr !important;
+  white-space:nowrap !important;
+}
+#accounts .latePlayer{
+  border:1px solid #f59e0b !important;
+  background:#fff7ed !important;
+  color:#9a3412 !important;
+}
+#accounts .latePlayer span{
+  background:#fff7ed !important;
+  color:#9a3412 !important;
+  border:1px solid #f59e0b !important;
+}
+
+/* Accounts lower amount table: keep date one line and fit iPhone */
+#accountsExtraList.accountsTxList{overflow:hidden !important;width:100% !important;max-width:100% !important;}
+#accountsExtraList .accountsTxRow{
+  display:grid !important;
+  grid-template-columns:74px minmax(0,1fr) 82px 24px !important;
+  gap:3px !important;
+  padding:6px 4px !important;
+  min-height:42px !important;
+  align-items:center !important;
+  box-sizing:border-box !important;
+}
+#accountsExtraList .accountsTxDate{
+  max-width:74px !important;
+  font-size:12px !important;
+  line-height:1 !important;
+  font-weight:900 !important;
+  white-space:nowrap !important;
+  overflow:hidden !important;
+  text-overflow:clip !important;
+  direction:ltr !important;
+  text-align:center !important;
+}
+#accountsExtraList .accountsTxPlace{
+  font-size:12.5px !important;
+  line-height:1.12 !important;
+  font-weight:850 !important;
+  white-space:normal !important;
+  overflow-wrap:anywhere !important;
+  text-align:center !important;
+}
+#accountsExtraList .accountsTxAmount{
+  max-width:82px !important;
+  font-size:11.5px !important;
+  padding:4px 4px !important;
+  gap:2px !important;
+  white-space:nowrap !important;
+  overflow:hidden !important;
+}
+#accountsExtraList .accountsTxAmount b{font-size:11px !important;}
+#accountsExtraList .accountsTxDelete{
+  width:22px !important;height:22px !important;min-width:22px !important;font-size:16px !important;
+}
+
+/* Deposits page: compact, flexible and no overflow on iPhone */
+#depositsList{overflow:hidden !important;width:100% !important;max-width:100% !important;}
+#depositsList .depositRow,
+#depositHistoryList .depositHistoryRow{
+  display:grid !important;
+  grid-template-columns:74px minmax(0,1fr) 86px !important;
+  gap:4px !important;
+  align-items:center !important;
+  padding:7px 5px !important;
+  min-height:42px !important;
+  box-sizing:border-box !important;
+  overflow:hidden !important;
+}
+#depositsList .depositDateNameRow{display:contents !important;}
+#depositsList .depositDateCell,
+#depositHistoryList .depositHistoryRow > span:first-child{
+  grid-column:1 !important;
+  font-size:12px !important;
+  line-height:1 !important;
+  font-weight:900 !important;
+  white-space:nowrap !important;
+  overflow:hidden !important;
+  text-overflow:clip !important;
+  direction:ltr !important;
+  text-align:center !important;
+}
+#depositsList .depositPlayerCell,
+#depositHistoryList .depositHistoryRow > span:nth-child(2){
+  grid-column:2 !important;
+  min-width:0 !important;
+  font-size:13px !important;
+  line-height:1.1 !important;
+  font-weight:850 !important;
+  white-space:nowrap !important;
+  overflow:hidden !important;
+  text-overflow:ellipsis !important;
+  text-align:center !important;
+}
+#depositsList .depoAmountGroup,
+#depositHistoryList .depoAmountGroup{
+  grid-column:3 !important;
+  justify-self:end !important;
+  max-width:86px !important;
+  font-size:11.5px !important;
+  line-height:1 !important;
+  padding:4px 4px !important;
+  gap:2px !important;
+  white-space:nowrap !important;
+  overflow:hidden !important;
+  box-sizing:border-box !important;
+}
+#depositsList .depoAmountGroup b,
+#depositHistoryList .depoAmountGroup b{font-size:11px !important;}
+
+@media(max-width:370px){
+  #accounts .accountsSummary .summaryCard span{font-size:9.5px !important;}
+  #accounts .accountsSummary .summaryCard b{font-size:13px !important;}
+  #accountsExtraList .accountsTxRow{grid-template-columns:68px minmax(0,1fr) 76px 22px !important;}
+  #accountsExtraList .accountsTxDate{max-width:68px !important;font-size:11px !important;}
+  #accountsExtraList .accountsTxPlace{font-size:11.5px !important;}
+  #accountsExtraList .accountsTxAmount{max-width:76px !important;font-size:10.5px !important;}
+  #accountsExtraList .accountsTxAmount b{font-size:10px !important;}
+  #depositsList .depositRow,#depositHistoryList .depositHistoryRow{grid-template-columns:68px minmax(0,1fr) 78px !important;gap:3px !important;padding:6px 4px !important;}
+  #depositsList .depositDateCell,#depositHistoryList .depositHistoryRow > span:first-child{font-size:11px !important;}
+  #depositsList .depositPlayerCell,#depositHistoryList .depositHistoryRow > span:nth-child(2){font-size:12px !important;}
+  #depositsList .depoAmountGroup,#depositHistoryList .depoAmountGroup{max-width:78px !important;font-size:10.5px !important;}
+  #depositsList .depoAmountGroup b,#depositHistoryList .depoAmountGroup b{font-size:10px !important;}
+}
