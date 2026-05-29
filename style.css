@@ -3634,3 +3634,31 @@ direction:ltr!important;
   #depositsList .depoAmountGroup,#depositHistoryList .depoAmountGroup{max-width:78px !important;font-size:10.5px !important;}
   #depositsList .depoAmountGroup b,#depositHistoryList .depoAmountGroup b{font-size:10px !important;}
 }
+
+/* Final requested accounts fixes: late amount badge without border + dynamic final total colors */
+#accounts .latePlayer span{
+  background:#c2410c !important;
+  color:#ffffff !important;
+  border:0 !important;
+  box-shadow:none !important;
+}
+#accounts .finalTotalCard.finalNegativeCard{
+  background:#fff1f3 !important;
+  border-color:#f0b7bd !important;
+}
+#accounts .finalTotalCard.finalNegativeCard b,
+#accounts .finalTotalCard.finalNegativeCard span{
+  color:#842029 !important;
+}
+#accounts .finalTotalCard.finalPositiveCard{
+  background:#f0fdf4 !important;
+  border-color:#86efac !important;
+}
+#accounts .finalTotalCard.finalPositiveCard b,
+#accounts .finalTotalCard.finalPositiveCard span{
+  color:#15803d !important;
+}
+#accounts .finalTotalCard.finalNeutralCard{
+  background:#ffffff !important;
+  border-color:#e5e7eb !important;
+}

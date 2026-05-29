@@ -570,7 +570,7 @@ function renderAccounts(){
       <div class="summaryCard discountCard summaryMini"><span>إضافة مبالغ خصم</span><b class="negText">${moneyNeg(discountTotal)}</b></div>
       <div class="summaryCard debtTotalCard"><span>إجمالي المديونية</span><b class="negText">${moneyNeg(debtTotal)}</b><small>السالب + التأخير + الخصم</small></div>
       <div class="summaryCard extraCard"><span>مبالغ الإضافة</span><b class="posText">${money(extraTotal)}</b></div>
-      <div class="summaryCard finalTotalCard"><span>الإجمالي النهائي</span><b>${money(finalTotal)}</b><small>إجمالي المديونية - المبالغ الإضافية</small></div>
+      <div class="summaryCard finalTotalCard ${finalTotal<0?'finalNegativeCard':finalTotal>0?'finalPositiveCard':'finalNeutralCard'}"><span>الإجمالي النهائي</span><b class="${finalTotal<0?'negText':finalTotal>0?'posText':''}">${money(finalTotal)}</b><small>إجمالي المديونية - المبالغ الإضافية</small></div>
     </div>
 
     <div class="card">
