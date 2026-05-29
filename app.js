@@ -1236,96 +1236,30 @@ function exportExcelData(){
 }
 
 
-
-
-/* ===== New App Shell Enhancements ===== */
+/* Football Manager Pro dashboard + nav */
 (function(){
-  function safeMoney(n){
-    n = Number(n || 0);
-    if(!isFinite(n)) n = 0;
-    return n.toFixed(3);
-  }
-  function setText(id, value){
-    var el = document.getElementById(id);
-    if(el) el.textContent = value;
-  }
-  function amountOf(x){
-    return Number((x && (x.amount ?? x.value ?? x.total ?? 0)) || 0) || 0;
-  }
-  window.updateNewAppDashboard = function(){
+  function safeMoney(n){n=Number(n||0); if(!isFinite(n)) n=0; return n.toFixed(3);}
+  function setText(id,v){var el=document.getElementById(id); if(el) el.textContent=v;}
+  function amountOf(x){return Number((x && (x.amount ?? x.value ?? x.total ?? 0)) || 0) || 0;}
+  window.updateFootballManagerDashboard=function(){
     try{
-      if(typeof state !== 'function') return;
-      var s = state() || {};
-      var players = s.players || [];
-      var matches = s.matches || [];
-      var deposits = s.deposits || [];
-      var lateTotal = deposits.filter(function(d){return d && d.type === 'late'}).reduce(function(a,d){return a + amountOf(d)}, 0);
-      var debtTotal = 0;
-      try{
-        if(typeof computeBalances === 'function'){
-          var balances = computeBalances(s) || {};
-          Object.keys(balances).forEach(function(k){
-            var v = balances[k];
-            var n = 0;
-            if(typeof v === 'number') n = v;
-            else if(v && typeof v === 'object') n = Number(v.balance ?? v.total ?? v.remaining ?? 0) || 0;
-            if(n < 0) debtTotal += Math.abs(n);
-          });
-        }
-      }catch(e){}
-      if(!debtTotal){
-        debtTotal = deposits.filter(function(d){return d && d.type === 'debt'}).reduce(function(a,d){return a + amountOf(d)}, 0);
-      }
-      var latest = matches.slice().sort(function(a,b){return String(b.date||'').localeCompare(String(a.date||''))})[0];
-      ['topPlayersNew','dashPlayersNew'].forEach(function(id){setText(id, players.length)});
-      ['topMatchesNew','dashMatchesNew'].forEach(function(id){setText(id, matches.length)});
-      ['topDebtNew','dashDebtNew'].forEach(function(id){setText(id, safeMoney(debtTotal))});
-      setText('dashLateNew', safeMoney(lateTotal));
-      setText('dashLatestGame', latest ? ((latest.date || '') + (latest.place ? ' • ' + latest.place : '')) : 'جاهز للعبة القادمة');
+      if(typeof state!=='function') return;
+      var s=state()||{}, players=s.players||[], matches=s.matches||[], deposits=s.deposits||[];
+      var late=deposits.filter(function(d){return d&&d.type==='late'}).reduce(function(a,d){return a+amountOf(d)},0);
+      var debt=0;
+      try{ if(typeof computeBalances==='function'){ var b=computeBalances(s)||{}; Object.keys(b).forEach(function(k){ var v=b[k], n=0; if(typeof v==='number') n=v; else if(v&&typeof v==='object') n=Number(v.balance ?? v.total ?? v.remaining ?? 0)||0; if(n<0) debt+=Math.abs(n); }); } }catch(e){}
+      if(!debt){debt=deposits.filter(function(d){return d&&d.type==='debt'}).reduce(function(a,d){return a+amountOf(d)},0);}
+      var latest=matches.slice().sort(function(a,b){return String(b.date||'').localeCompare(String(a.date||''))})[0];
+      ['fmTopPlayers','fmPlayers'].forEach(function(id){setText(id,players.length)});
+      ['fmTopMatches','fmMatches'].forEach(function(id){setText(id,matches.length)});
+      ['fmTopDebt','fmDebt'].forEach(function(id){setText(id,safeMoney(debt))});
+      setText('fmLate',safeMoney(late));
+      setText('fmLatestGame', latest ? ((latest.date||'')+(latest.place?' • '+latest.place:'')) : 'جاهز للعبة القادمة');
     }catch(e){}
   };
-  function markNav(id){
-    document.querySelectorAll('[data-tab]').forEach(function(btn){
-      btn.classList.toggle('activeTab', btn.getAttribute('data-tab') === id);
-    });
-    document.body.dataset.page = id || 'newMatch';
-  }
-  var oldSetActive = window.setActiveNavButton;
-  window.setActiveNavButton = function(id){
-    if(typeof oldSetActive === 'function'){
-      try{ oldSetActive(id); }catch(e){}
-    }
-    markNav(id);
-    setTimeout(window.updateNewAppDashboard, 0);
-  };
-  var oldShowTab = window.showTab;
-  if(typeof oldShowTab === 'function'){
-    window.showTab = function(id){
-      var r = oldShowTab.apply(this, arguments);
-      markNav(id);
-      setTimeout(window.updateNewAppDashboard, 0);
-      return r;
-    };
-  }
-  var oldRenderAll = window.renderAll;
-  if(typeof oldRenderAll === 'function'){
-    window.renderAll = function(){
-      var r = oldRenderAll.apply(this, arguments);
-      setTimeout(window.updateNewAppDashboard, 0);
-      return r;
-    };
-  }
-  document.addEventListener('DOMContentLoaded', function(){
-    setTimeout(function(){
-      try{
-        markNav(window.currentTabId || 'newMatch');
-        window.updateNewAppDashboard();
-      }catch(e){}
-    }, 250);
-    if('serviceWorker' in navigator){
-      navigator.serviceWorker.getRegistrations().then(function(regs){
-        regs.forEach(function(r){ if(r.update) r.update(); });
-      }).catch(function(){});
-    }
-  });
+  function mark(id){document.querySelectorAll('[data-tab]').forEach(function(btn){btn.classList.toggle('activeTab',btn.getAttribute('data-tab')===id);});document.body.dataset.page=id||'newMatch';}
+  var oldSet=window.setActiveNavButton; window.setActiveNavButton=function(id){if(typeof oldSet==='function'){try{oldSet(id)}catch(e){}} mark(id); setTimeout(window.updateFootballManagerDashboard,0);};
+  var oldShow=window.showTab; if(typeof oldShow==='function'){window.showTab=function(id){var r=oldShow.apply(this,arguments); mark(id); setTimeout(window.updateFootballManagerDashboard,0); return r;};}
+  var oldRender=window.renderAll; if(typeof oldRender==='function'){window.renderAll=function(){var r=oldRender.apply(this,arguments); setTimeout(window.updateFootballManagerDashboard,0); return r;};}
+  document.addEventListener('DOMContentLoaded',function(){setTimeout(function(){mark(window.currentTabId||'newMatch');window.updateFootballManagerDashboard();},250);});
 })();
