@@ -3730,3 +3730,20 @@ direction:ltr!important;
   #accounts .accountsSummary .summaryCard b{font-size:12.5px !important;}
   #accounts .accountsSummary .finalTotalCard b{font-size:16px !important;}
 }
+
+
+/* ===== آخر تعليمات صفحة الحسابات: أسماء قابلة للضغط + معادلة الإجمالي + إزالة الشرح ===== */
+#accounts .clickableAlert{cursor:pointer !important;}
+#accounts .clickableAlert:active{transform:scale(.99);}
+#accounts .debtTotalCard small,
+#accounts .finalTotalCard small{display:none !important;}
+#accounts .latePlayer span{
+  background:#f97316 !important;
+  color:#ffffff !important;
+  border:0 !important;
+  box-shadow:none !important;
+}
+#accounts .latePlayer,
+#accounts .latePlayer b{
+  color:#9a3412 !important;
+}
