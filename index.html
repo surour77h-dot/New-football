@@ -5,20 +5,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <meta name="theme-color" content="#08111f">
 <title>قروب الكورة - Football Manager Pro</title>
-<link rel="manifest" href="manifest.json?v=fmpro2navfix">
-<link rel="stylesheet" href="style.css?v=fmpro2navfix">
+<link rel="manifest" href="manifest.json?v=fmpro3">
+<link rel="stylesheet" href="style.css?v=fmpro3">
 </head>
 <body class="fmShell">
 
 <div id="drawerOverlay" class="drawerOverlay" onclick="closeDrawer()"></div>
-<aside id="sideDrawer" class="sideDrawer" aria-label="القائمة الجانبية">
-  <div class="drawerHead">
-    <div class="drawerLogo">⚽️</div>
-    <div>
-      <b>قروب الكورة</b>
-      <span>Football Manager Luxury</span>
-    </div>
-  </div>
+<aside id="sideDrawer" class="sideDrawer">
+  <div class="drawerHead"><div class="drawerLogo">⚽️</div><div><b>قروب الكورة</b><span>Football Manager Luxury V2</span></div></div>
   <button type="button" data-tab="newMatch" onclick="fmNavigate('newMatch')"><span>🏠</span><div><b>الرئيسية</b><small>اللعبة القادمة</small></div></button>
   <button type="button" data-tab="accounts" onclick="fmNavigate('accounts')"><span>💰</span><div><b>الحسابات</b><small>الأرصدة والمديونية</small></div></button>
   <button type="button" data-tab="players" onclick="fmNavigate('players')"><span>👥</span><div><b>اللاعبين</b><small>إدارة اللاعبين</small></div></button>
@@ -35,10 +29,7 @@
 <header class="fmHeader">
   <div class="fmHeaderTop">
     <button class="fmMenuBtn" type="button" onclick="openDrawer()">☰</button>
-    <div class="fmTitle">
-      <h1 id="appTitle">قروب الكورة</h1>
-      <p>إدارة اللعبات • الحسابات • اللاعبين</p>
-    </div>
+    <div class="fmTitle"><h1 id="appTitle">قروب الكورة</h1><p>إدارة اللعبات • الحسابات • اللاعبين</p></div>
     <div class="fmLogo">⚽️</div>
   </div>
   <div class="currentPageBox" id="currentPageBox">الرئيسية</div>
@@ -68,10 +59,10 @@
 <div class="card inner"><div id="matchPlayers" class="checks"></div></div>
 <h3>إضافة ضيف</h3>
 <div class="two"><input id="guestName" placeholder="اسم الضيف"><select id="guestOwner"></select></div>
-<button type="button" onclick="addGuestTemp()">إضافة ضيف</button>
+<button onclick="addGuestTemp()">إضافة ضيف</button>
 <div id="tempGuests"></div>
 <div id="matchParticipantsPreview" class="participantsPreview"></div>
-<div class="twoBtns"><button type="button" class="primary" onclick="saveMatch()">حفظ</button><button type="button" onclick="clearMatchForm()">تفريغ</button></div>
+<div class="twoBtns"><button class="primary" onclick="saveMatch()">حفظ</button><button onclick="clearMatchForm()">تفريغ</button></div>
 </div>
 </section>
 <section id="accounts" class="tab">
@@ -80,8 +71,8 @@
 </section>
 <section id="players" class="tab">
 <h2>اللاعبين</h2>
-<div class="card"><div class="addRow"><input id="playerName" placeholder="اسم اللاعب"><button type="button" onclick="addPlayer()">إضافة</button></div></div>
-<div class="card"><div id="playersList" class="plainList"></div><div class="twoBtns bottom"><button type="button" onclick="showPlayerEditBox()">تعديل</button><button type="button" class="danger" onclick="showPlayerDeleteBox()">حذف</button></div><div id="playerActionBox"></div></div>
+<div class="card"><div class="addRow"><input id="playerName" placeholder="اسم اللاعب"><button onclick="addPlayer()">إضافة</button></div></div>
+<div class="card"><div id="playersList" class="plainList"></div><div class="twoBtns bottom"><button onclick="showPlayerEditBox()">تعديل</button><button class="danger" onclick="showPlayerDeleteBox()">حذف</button></div><div id="playerActionBox"></div></div>
 </section>
 <section id="playerFilter" class="tab">
 <h2>كشف لاعب</h2>
@@ -93,7 +84,7 @@
 </section>
 <section id="calendar" class="tab">
 <h2>التقويم</h2>
-<div class="card calHead"><button type="button" onclick="moveMonth(-1)">السابق</button><b id="calendarMonthTitle"></b><button type="button" onclick="moveMonth(1)">التالي</button></div>
+<div class="card calHead"><button onclick="moveMonth(-1)">السابق</button><b id="calendarMonthTitle"></b><button onclick="moveMonth(1)">التالي</button></div>
 <div id="monthCalendar" class="month"></div>
 <div class="card"><h3 id="calendarSelectedTitle">المشاركون</h3><div id="calendarList"></div></div>
 </section>
@@ -101,9 +92,9 @@
 <h2>الفريقين</h2>
 <div class="card">
 <label>اللعبة<select id="teamsMatchSelect" onchange="renderTeams();renderTeamsPreview()"></select></label>
-<button type="button" onclick="randomTeams()">تقسيم عشوائي</button>
+<button onclick="randomTeams()">تقسيم عشوائي</button>
 <div id="teamsPlayers"></div>
-<button type="button" class="primary wide" onclick="saveTeams()">حفظ الفريقين</button>
+<button class="primary wide" onclick="saveTeams()">حفظ الفريقين</button>
 <div id="teamsPreview"></div>
 </div>
 </section>
@@ -113,9 +104,9 @@
 <input type="hidden" id="editingDepositId">
 <label class="dateCard dateCompact"><span class="dateTitle">تاريخ الإيداع</span><span class="dateInputBox"><input type="date" id="depositDate"></span></label>
 <div class="two"><label>اللاعب<select id="depositPlayer"></select></label><label>المبلغ<input type="number" id="depositAmount" step="0.001" inputmode="decimal" placeholder="0.000"></label></div>
-<div class="twoBtns"><button type="button" id="depositTypeIn" class="primary" onclick="setDepositType('in')">إيداع</button><button type="button" id="depositTypeOut" onclick="setDepositType('out')">خصم/مديونية</button><button id="depositTypeLate" type="button" onclick="setDepositType('late')">تأخير</button></div>
+<div class="twoBtns"><button id="depositTypeIn" class="primary" onclick="setDepositType('in')">إيداع</button><button id="depositTypeOut" onclick="setDepositType('out')">خصم/مديونية</button><button id="depositTypeLate" type="button" onclick="setDepositType('late')">تأخير</button></div>
 <div id="depositQuickButtons" class="quickButtons"></div>
-<div class="twoBtns"><button type="button" class="primary" onclick="saveDeposit()">حفظ</button><button type="button" onclick="clearDepositForm()">تفريغ</button></div>
+<div class="twoBtns"><button class="primary" onclick="saveDeposit()">حفظ</button><button onclick="clearDepositForm()">تفريغ</button></div>
 </div>
 <div id="depositsList"></div>
 </section>
@@ -133,13 +124,13 @@
 <div class="card">
 <h3>عنوان البرنامج</h3>
 <input id="appTitleInput" type="text" placeholder="اكتب الاسم الجديد للبرنامج">
-<button type="button" class="primary wide" onclick="saveAppTitle()">حفظ العنوان</button>
+<button class="primary wide" onclick="saveAppTitle()">حفظ العنوان</button>
 </div>
 
 <div class="card">
 <h3>النسخة الاحتياطية</h3>
-<button type="button" class="wide" onclick="exportData()">تصدير البيانات</button>
-<button type="button" class="wide excelExportBtn" onclick="exportExcelData()">تصدير Excel</button>
+<button class="wide" onclick="exportData()">تصدير البيانات</button>
+<button class="wide excelExportBtn" onclick="exportExcelData()">تصدير Excel</button>
 <label class="wide importBtn">استيراد البيانات<input type="file" accept=".json" onchange="importData(event)" style="display:none"></label>
 </div>
 
@@ -157,8 +148,8 @@
 <div class="card">
 <div id="editPageContent"></div>
 <div class="twoBtns">
-<button type="button" class="primary" onclick="saveEditPage()">حفظ التعديل</button>
-<button type="button" onclick="closeEditPage()">إلغاء</button>
+<button class="primary" onclick="saveEditPage()">حفظ التعديل</button>
+<button onclick="closeEditPage()">إلغاء</button>
 </div>
 </div>
 </section></main>
@@ -167,15 +158,12 @@
 
 <div id="adjustEditModal" class="editModal">
   <div class="editModalCard">
-    <div class="editModalHead">
-      <b>تعديل الخصم / الإضافة</b>
-      <button type="button" onclick="closeAdjustEditor()">إغلاق</button>
-    </div>
+    <div class="editModalHead"><b>تعديل الخصم / الإضافة</b><button type="button" onclick="closeAdjustEditor()">إغلاق</button></div>
     <p class="editHint">اضغط على أي سطر لإزالته، ثم اضغط حفظ.</p>
     <div id="adjustEditTable" class="compactTable"></div>
     <button class="primary wide" type="button" onclick="saveAdjustEditor()">حفظ</button>
   </div>
 </div>
 
-<script src="app.js?v=fmpro2navfix"></script>
+<script src="app.js?v=fmpro3"></script>
 </body></html>
