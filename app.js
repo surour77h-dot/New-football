@@ -536,7 +536,7 @@ function renderAccounts(){
   // مجموع المديونية = اللاعبين المدانين + مشتريات
   // الإجمالي النهائي = الباقي + مجموع التأخير
   const debtTotal=negativeTotal+discountTotal;
-  const finalTotal=(extraTotal+lateTotal)-debtTotal;
+  const finalTotal=extraTotal+lateTotal;
 
   const matchOptions=[...s.matches].sort((a,b)=>b.date.localeCompare(a.date)).map(m=>{
     const label=`${formatDateDisplay(m.date)}${m.place?' - '+m.place:''} | ${money(m.bookingCost||m.price||0)} د.ك`;
@@ -572,7 +572,7 @@ function renderAccounts(){
 
   wrap.innerHTML=`
     <div class="summaryCards accountsSummary">
-      <div class="summaryCard debtCard summaryMini"><span>اللاعبين المدانين والمتأخرين</span><b class="negText">${moneyNeg(negativeTotal)}</b></div>
+      <div class="summaryCard debtCard summaryMini"><span>اللاعبين المدانين</span><b class="negText">${moneyNeg(negativeTotal)}</b></div>
       <div class="summaryCard discountCard summaryMini"><span>مشتريات</span><b class="negText">${moneyNeg(discountTotal)}</b></div>
       <div class="summaryCard debtTotalCard"><span>مجموع المديونية</span><b class="negText">${moneyNeg(debtTotal)}</b></div>
       <div class="summaryCard extraCard"><span>الباقي</span><b class="posText">${money(extraTotal)}</b></div>
