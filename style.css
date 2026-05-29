@@ -3662,3 +3662,39 @@ direction:ltr!important;
   background:#ffffff !important;
   border-color:#e5e7eb !important;
 }
+
+
+/* تطبيق طلب الحسابات: التأخير برتقالي أوضح بدون إطار للمبلغ + إصلاح إشارة الإجمالي النهائي */
+#accounts .latePlayer{
+  border-color:#fb923c !important;
+  background:#fff7ed !important;
+  color:#9a3412 !important;
+}
+#accounts .latePlayer b{
+  color:#9a3412 !important;
+}
+#accounts .latePlayer span{
+  background:#ea580c !important;
+  color:#ffffff !important;
+  border:0 !important;
+  box-shadow:none !important;
+}
+#accounts .lateText{
+  color:#ea580c !important;
+}
+#accounts .finalTotalCard.finalNegativeCard{
+  background:#fff1f3 !important;
+  border-color:#f0b7bd !important;
+}
+#accounts .finalTotalCard.finalNegativeCard b,
+#accounts .finalTotalCard.finalNegativeCard span{
+  color:#842029 !important;
+}
+#accounts .finalTotalCard.finalPositiveCard{
+  background:#f0fdf4 !important;
+  border-color:#86efac !important;
+}
+#accounts .finalTotalCard.finalPositiveCard b,
+#accounts .finalTotalCard.finalPositiveCard span{
+  color:#15803d !important;
+}
