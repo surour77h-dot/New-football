@@ -1,1 +1,18 @@
-const CACHE='football-apple-full-redesign-20260529';const ASSETS=['./','index.html','style.css?v=apple-full-redesign-20260529','app.js?v=apple-full-redesign-20260529','manifest.json?v=apple-full-redesign-20260529'];self.addEventListener('install',e=>{self.skipWaiting();e.waitUntil(caches.open(CACHE).then(c=>c.addAll(ASSETS).catch(()=>null)))});self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim()))});self.addEventListener('fetch',e=>{if(e.request.method!=='GET')return;e.respondWith(fetch(e.request).then(r=>{const copy=r.clone();caches.open(CACHE).then(c=>c.put(e.request,copy)).catch(()=>null);return r}).catch(()=>caches.match(e.request).then(r=>r||caches.match('./'))))});
+
+const CACHE='football-apple-safe-20260529-v1';
+const ASSETS=['./','index.html','style.css?v=apple-safe-20260529-v1','app.js?v=apple-safe-20260529-v1','manifest.json?v=apple-safe-20260529-v1'];
+self.addEventListener('install', e => {
+  self.skipWaiting();
+  e.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS).catch(()=>null)));
+});
+self.addEventListener('activate', e => {
+  e.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k)))).then(() => self.clients.claim()));
+});
+self.addEventListener('fetch', e => {
+  if(e.request.method !== 'GET') return;
+  e.respondWith(fetch(e.request).then(r => {
+    const copy = r.clone();
+    caches.open(CACHE).then(c => c.put(e.request, copy)).catch(()=>null);
+    return r;
+  }).catch(() => caches.match(e.request).then(r => r || caches.match('./'))));
+});

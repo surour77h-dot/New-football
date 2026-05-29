@@ -1238,4 +1238,95 @@ function exportExcelData(){
 
 
 
-(function(){const old=window.showTab;window.showTab=function(id){if(typeof old==='function')old(id);document.body.dataset.page=id;document.querySelectorAll('.bottom-tabs button').forEach(b=>b.classList.toggle('activeTab',b.dataset.targetTab===id));document.querySelectorAll('.original-tabs button').forEach(b=>b.classList.toggle('activeTab',(b.getAttribute('onclick')||'').includes("'"+id+"'")));setTimeout(updateModernDashboard,0)};window.updateModernDashboard=function(){try{const s=state();const players=s.players||[],deps=s.deposits||[],matches=s.matches||[];let balances={};if(typeof computeBalances==='function')balances=computeBalances(s)||{};const vals=Object.values(balances||{});const debt=vals.reduce((a,x)=>{let n=Number((x&&x.balance)??(x&&x.total)??x)||0;return a+(n<0?Math.abs(n):0)},0);const pos=vals.reduce((a,x)=>{let n=Number((x&&x.balance)??(x&&x.total)??x)||0;return a+Math.max(n,0)},0);const late=deps.filter(d=>d.type==='late').reduce((a,d)=>a+Number(d.amount||0),0);const dep=deps.filter(d=>d.type!=='debt').reduce((a,d)=>a+Number(d.amount||0),0);const latest=matches.slice().sort((a,b)=>String(b.date||'').localeCompare(String(a.date||'')))[0];const set=(id,v)=>{let e=document.getElementById(id);if(e)e.textContent=v};set('dashPlayers',players.length);set('dashPlayers2',players.length);set('dashBalance',money(pos));set('dashDebt',money(debt));set('dashDebt2',money(debt));set('dashDeposits',money(dep));set('dashLate',money(late));set('dashNextGame',latest?((latest.date||'')+' • '+(latest.place||'بدون مكان')):'جاهز للعبة القادمة')}catch(e){}};document.addEventListener('DOMContentLoaded',()=>{document.body.dataset.page=window.currentTabId||'newMatch';setTimeout(()=>{if(window.showTab)window.showTab(window.currentTabId||'newMatch');updateModernDashboard()},150);if('serviceWorker'in navigator)navigator.serviceWorker.getRegistrations().then(rs=>rs.forEach(r=>r.update&&r.update()))})})();
+/* Apple Sports Ultra Safe UI - visual dashboard only */
+(function(){
+  function safeMoney(n){
+    n = Number(n || 0);
+    if (!isFinite(n)) n = 0;
+    try { return n.toFixed(3); } catch(e) { return '0.000'; }
+  }
+  function setText(id, value){
+    var el = document.getElementById(id);
+    if (el) el.textContent = value;
+  }
+  function getAmount(x){
+    return Number((x && (x.amount ?? x.value ?? x.total ?? 0)) || 0) || 0;
+  }
+  window.updateAppleUltraDashboard = function(){
+    try{
+      if (typeof state !== 'function') return;
+      var s = state() || {};
+      var players = s.players || [];
+      var matches = s.matches || [];
+      var deposits = s.deposits || [];
+      var lateTotal = deposits.filter(function(d){return d && d.type === 'late'}).reduce(function(a,d){return a + getAmount(d)}, 0);
+      var debtTotal = 0;
+      try{
+        if (typeof computeBalances === 'function'){
+          var b = computeBalances(s) || {};
+          Object.keys(b).forEach(function(k){
+            var v = b[k];
+            var n = 0;
+            if (typeof v === 'number') n = v;
+            else if (v && typeof v === 'object') n = Number(v.balance ?? v.total ?? v.remaining ?? 0) || 0;
+            if (n < 0) debtTotal += Math.abs(n);
+          });
+        }
+      }catch(e){}
+      if (!debtTotal){
+        debtTotal = deposits.filter(function(d){return d && d.type === 'debt'}).reduce(function(a,d){return a + getAmount(d)}, 0);
+      }
+      var latest = matches.slice().sort(function(a,b){return String(b.date || '').localeCompare(String(a.date || ''))})[0];
+      setText('uiPlayersCount', players.length);
+      setText('uiPlayersCount2', players.length);
+      setText('uiMatchesCount', matches.length);
+      setText('uiMatchesCount2', matches.length);
+      setText('uiDebtTotal', safeMoney(debtTotal));
+      setText('uiDebtTotal2', safeMoney(debtTotal));
+      setText('uiLateTotal', safeMoney(lateTotal));
+      setText('uiLastMatch', latest ? ((latest.date || '') + (latest.place ? ' • ' + latest.place : '')) : 'جاهز للعبة القادمة');
+    }catch(e){}
+  };
+
+  var oldShowTab = window.showTab;
+  if (typeof oldShowTab === 'function' && !oldShowTab.__appleUltraWrapped){
+    window.showTab = function(id){
+      var result = oldShowTab.apply(this, arguments);
+      document.body.dataset.page = id;
+      document.querySelectorAll('.ultraBottomNav button').forEach(function(btn){
+        btn.classList.toggle('activeTab', btn.getAttribute('data-target') === id);
+      });
+      setTimeout(window.updateAppleUltraDashboard, 0);
+      return result;
+    };
+    window.showTab.__appleUltraWrapped = true;
+  }
+
+  var oldRenderAll = window.renderAll;
+  if (typeof oldRenderAll === 'function' && !oldRenderAll.__appleUltraWrapped){
+    window.renderAll = function(){
+      var result = oldRenderAll.apply(this, arguments);
+      setTimeout(window.updateAppleUltraDashboard, 0);
+      return result;
+    };
+    window.renderAll.__appleUltraWrapped = true;
+  }
+
+  document.addEventListener('DOMContentLoaded', function(){
+    setTimeout(function(){
+      try{
+        window.updateAppleUltraDashboard();
+        var current = window.currentTabId || 'newMatch';
+        document.body.dataset.page = current;
+        document.querySelectorAll('.ultraBottomNav button').forEach(function(btn){
+          btn.classList.toggle('activeTab', btn.getAttribute('data-target') === current);
+        });
+      }catch(e){}
+      if ('serviceWorker' in navigator){
+        navigator.serviceWorker.getRegistrations().then(function(regs){
+          regs.forEach(function(r){ if (r.update) r.update(); });
+        }).catch(function(){});
+      }
+    }, 300);
+  });
+})();
