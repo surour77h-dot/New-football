@@ -1236,38 +1236,15 @@ function exportExcelData(){
 }
 
 
-/* Football Manager Pro dashboard + nav */
-(function(){
-  function safeMoney(n){n=Number(n||0); if(!isFinite(n)) n=0; return n.toFixed(3);}
-  function setText(id,v){var el=document.getElementById(id); if(el) el.textContent=v;}
-  function amountOf(x){return Number((x && (x.amount ?? x.value ?? x.total ?? 0)) || 0) || 0;}
-  window.updateFootballManagerDashboard=function(){
-    try{
-      if(typeof state!=='function') return;
-      var s=state()||{}, players=s.players||[], matches=s.matches||[], deposits=s.deposits||[];
-      var late=deposits.filter(function(d){return d&&d.type==='late'}).reduce(function(a,d){return a+amountOf(d)},0);
-      var debt=0;
-      try{ if(typeof computeBalances==='function'){ var b=computeBalances(s)||{}; Object.keys(b).forEach(function(k){ var v=b[k], n=0; if(typeof v==='number') n=v; else if(v&&typeof v==='object') n=Number(v.balance ?? v.total ?? v.remaining ?? 0)||0; if(n<0) debt+=Math.abs(n); }); } }catch(e){}
-      if(!debt){debt=deposits.filter(function(d){return d&&d.type==='debt'}).reduce(function(a,d){return a+amountOf(d)},0);}
-      var latest=matches.slice().sort(function(a,b){return String(b.date||'').localeCompare(String(a.date||''))})[0];
-      ['fmTopPlayers','fmPlayers'].forEach(function(id){setText(id,players.length)});
-      ['fmTopMatches','fmMatches'].forEach(function(id){setText(id,matches.length)});
-      ['fmTopDebt','fmDebt'].forEach(function(id){setText(id,safeMoney(debt))});
-      setText('fmLate',safeMoney(late));
-      setText('fmLatestGame', latest ? ((latest.date||'')+(latest.place?' • '+latest.place:'')) : 'جاهز للعبة القادمة');
-    }catch(e){}
-  };
-  function mark(id){document.querySelectorAll('[data-tab]').forEach(function(btn){btn.classList.toggle('activeTab',btn.getAttribute('data-tab')===id);});document.body.dataset.page=id||'newMatch';}
-  var oldSet=window.setActiveNavButton; window.setActiveNavButton=function(id){if(typeof oldSet==='function'){try{oldSet(id)}catch(e){}} mark(id); setTimeout(window.updateFootballManagerDashboard,0);};
-  var oldShow=window.showTab; if(typeof oldShow==='function'){window.showTab=function(id){var r=oldShow.apply(this,arguments); mark(id); setTimeout(window.updateFootballManagerDashboard,0); return r;};}
-  var oldRender=window.renderAll; if(typeof oldRender==='function'){window.renderAll=function(){var r=oldRender.apply(this,arguments); setTimeout(window.updateFootballManagerDashboard,0); return r;};}
-  document.addEventListener('DOMContentLoaded',function(){setTimeout(function(){mark(window.currentTabId||'newMatch');window.updateFootballManagerDashboard();},250);});
-})();
+
+
+
+
 
 
 
 /* =========================================================
-   Football Manager Luxury V2 patches
+   Football Manager Luxury V2 - Fixed Tabs Patch
    ========================================================= */
 
 const FM_PAGE_TITLES = {
@@ -1288,6 +1265,36 @@ const FM_PAGE_TITLES = {
 function openDrawer(){ document.body.classList.add('drawerOpen'); }
 function closeDrawer(){ document.body.classList.remove('drawerOpen'); }
 
+function fmSetActivePage(id){
+  currentTabId = id || 'newMatch';
+  document.querySelectorAll('.tab').forEach(function(t){
+    t.classList.remove('active');
+    t.style.display = 'none';
+  });
+  var tab = document.getElementById(currentTabId);
+  if(tab){
+    tab.classList.add('active');
+    tab.style.display = 'block';
+  }
+  document.querySelectorAll('[data-tab]').forEach(function(btn){
+    btn.classList.toggle('activeTab', btn.getAttribute('data-tab') === currentTabId);
+  });
+  var box = document.getElementById('currentPageBox');
+  if(box) box.textContent = FM_PAGE_TITLES[currentTabId] || currentTabId;
+  document.body.dataset.page = currentTabId;
+}
+
+function fmGo(id){
+  fmSetActivePage(id);
+  try{
+    if(typeof renderAll === 'function') renderAll();
+  }catch(e){}
+  setTimeout(function(){
+    fmSetActivePage(id);
+    applyLuxuryV2DomFixes();
+  },0);
+}
+
 function fmMoneyText(n){
   n = Number(n || 0);
   if(!isFinite(n)) n = 0;
@@ -1307,44 +1314,22 @@ function fmFormatDate(d){
   if(!d) return '';
   const s = String(d);
   if(/^\d{4}-\d{2}-\d{2}$/.test(s)){
-    const [y,m,day]=s.split('-');
-    return `${day}/${m}/${String(y).slice(2)}`;
+    const parts=s.split('-');
+    return `${parts[2]}/${parts[1]}/${String(parts[0]).slice(2)}`;
   }
   return s;
 }
 
-(function(){
-  const oldShowTab = window.showTab;
-  window.showTab = function(id){
-    const r = oldShowTab ? oldShowTab.apply(this, arguments) : undefined;
-    document.body.dataset.page = id;
-    document.querySelectorAll('[data-tab]').forEach(btn=>btn.classList.toggle('activeTab', btn.getAttribute('data-tab')===id));
-    const box = document.getElementById('currentPageBox');
-    if(box) box.textContent = FM_PAGE_TITLES[id] || id;
-    setTimeout(applyLuxuryV2DomFixes, 0);
-    return r;
-  };
-  const oldRenderAll = window.renderAll;
-  if(typeof oldRenderAll === 'function'){
-    window.renderAll = function(){
-      const r = oldRenderAll.apply(this, arguments);
-      setTimeout(applyLuxuryV2DomFixes, 0);
-      return r;
-    };
-  }
-})();
-
 function applyLuxuryV2DomFixes(){
   try{
-    document.querySelectorAll('.pos,.neg,.count').forEach(el=>{
+    document.querySelectorAll('.pos,.neg,.count').forEach(function(el){
       el.classList.add('textOnlyAmount');
     });
-    document.querySelectorAll('td,span,b').forEach(el=>{
+    document.querySelectorAll('td,span,b').forEach(function(el){
       const t=(el.textContent||'').trim();
-      if(/^0\.000$/.test(t) && !el.closest('.info')) el.textContent='';
+      if(/^0\.000$/.test(t) && !el.closest('.info') && !el.closest('.summaryCard')) el.textContent='';
     });
-    // remove edit/save buttons from match log cards visually when labels match
-    document.querySelectorAll('#matchLog button').forEach(btn=>{
+    document.querySelectorAll('#matchLog button').forEach(function(btn){
       const t=(btn.textContent||'').trim();
       if(t==='تعديل' || t==='حفظ') btn.style.display='none';
     });
@@ -1367,7 +1352,7 @@ function closeAdjustEditor(){ document.getElementById('adjustEditModal')?.classL
 function removeAdjustRow(type,id){
   if(!adjustEditorDraft) return;
   const key = type === 'discount' ? 'extraDiscounts' : 'extraCharges';
-  adjustEditorDraft[key] = (adjustEditorDraft[key]||[]).filter(x=>x.id!==id);
+  adjustEditorDraft[key] = (adjustEditorDraft[key]||[]).filter(function(x){return x.id!==id});
   renderAdjustEditTable();
 }
 function saveAdjustEditor(){
@@ -1377,49 +1362,67 @@ function saveAdjustEditor(){
   s.extraDiscounts = adjustEditorDraft.extraDiscounts || [];
   save(s);
   closeAdjustEditor();
-  showTab('accounts');
+  fmGo('accounts');
 }
 function renderAdjustEditTable(){
   const box = document.getElementById('adjustEditTable');
   if(!box || !adjustEditorDraft) return;
   const rows = [];
-  (adjustEditorDraft.extraCharges||[]).forEach(x=>rows.push({...x,_type:'add',_label:'إضافة'}));
-  (adjustEditorDraft.extraDiscounts||[]).forEach(x=>rows.push({...x,_type:'discount',_label:'خصم'}));
-  rows.sort((a,b)=>String(b.date||'').localeCompare(String(a.date||'')));
+  (adjustEditorDraft.extraCharges||[]).forEach(function(x){rows.push({...x,_type:'add',_label:'إضافة'})});
+  (adjustEditorDraft.extraDiscounts||[]).forEach(function(x){rows.push({...x,_type:'discount',_label:'خصم'})});
+  rows.sort(function(a,b){return String(b.date||'').localeCompare(String(a.date||''))});
   box.innerHTML = `
     <div class="tHead"><span>التاريخ</span><span>العملية</span><span>المبلغ</span></div>
-    ${rows.map(r=>`<div class="tRow" onclick="removeAdjustRow('${r._type}','${r.id}')">
+    ${rows.map(function(r){return `<div class="tRow" onclick="removeAdjustRow('${r._type}','${r.id}')">
       <span>${fmFormatDate(r.date||'')}</span>
       <span>${r._label}</span>
       <span class="${r._type==='discount'?'moneyNeg':'moneyPos'}">${Number(r.amount||0).toFixed(3)}</span>
-    </div>`).join('') || '<div class="emptyState">لا توجد عمليات</div>'}
+    </div>`}).join('') || '<div class="emptyState">لا توجد عمليات</div>'}
   `;
 }
 
-// Try to override account adjustment render if original uses known ids. This is safe visual fallback.
 function renderLuxuryAdjustmentsBox(){
-  const accounts = document.getElementById('accounts');
-  if(!accounts) return;
-  const existing = document.getElementById('luxuryAdjustBox');
-  if(existing) existing.remove();
-  const s = state();
-  const charges = s.extraCharges || [];
-  const discounts = s.extraDiscounts || [];
-  if(!charges.length && !discounts.length) return;
-  const rows = [];
-  charges.forEach(x=>rows.push({...x,_label:'إضافة',_cls:'moneyPos'}));
-  discounts.forEach(x=>rows.push({...x,_label:'خصم',_cls:'moneyNeg'}));
-  rows.sort((a,b)=>String(b.date||'').localeCompare(String(a.date||'')));
-  const div=document.createElement('div');
-  div.id='luxuryAdjustBox';
-  div.className='card luxuryAdjustBox';
-  div.innerHTML = `<div class="sectionTitleLine"><b>الخصم / الإضافة</b><button type="button" onclick="openAdjustEditor()">تعديل</button></div>
-    <div class="compactTable">
-      <div class="tHead"><span>التاريخ</span><span>العملية</span><span>المبلغ</span></div>
-      ${rows.map(r=>`<div class="tRow"><span>${fmFormatDate(r.date||'')}</span><span>${r._label}</span><span class="${r._cls}">${Number(r.amount||0).toFixed(3)}</span></div>`).join('')}
-    </div>`;
-  accounts.appendChild(div);
+  try{
+    const accounts = document.getElementById('accounts');
+    if(!accounts) return;
+    const existing = document.getElementById('luxuryAdjustBox');
+    if(existing) existing.remove();
+    const s = state();
+    const charges = s.extraCharges || [];
+    const discounts = s.extraDiscounts || [];
+    if(!charges.length && !discounts.length) return;
+    const rows = [];
+    charges.forEach(function(x){rows.push({...x,_label:'إضافة',_cls:'moneyPos'})});
+    discounts.forEach(function(x){rows.push({...x,_label:'خصم',_cls:'moneyNeg'})});
+    rows.sort(function(a,b){return String(b.date||'').localeCompare(String(a.date||''))});
+    const div=document.createElement('div');
+    div.id='luxuryAdjustBox';
+    div.className='card luxuryAdjustBox';
+    div.innerHTML = `<div class="sectionTitleLine"><b>الخصم / الإضافة</b><button type="button" onclick="openAdjustEditor()">تعديل</button></div>
+      <div class="compactTable">
+        <div class="tHead"><span>التاريخ</span><span>العملية</span><span>المبلغ</span></div>
+        ${rows.map(function(r){return `<div class="tRow"><span>${fmFormatDate(r.date||'')}</span><span>${r._label}</span><span class="${r._cls}">${Number(r.amount||0).toFixed(3)}</span></div>`}).join('')}
+      </div>`;
+    accounts.appendChild(div);
+  }catch(e){}
 }
 
-setInterval(()=>{try{applyLuxuryV2DomFixes(); renderLuxuryAdjustmentsBox();}catch(e){}}, 800);
-document.addEventListener('DOMContentLoaded',()=>setTimeout(()=>{showTab(window.currentTabId||'newMatch'); applyLuxuryV2DomFixes();},300));
+// Replace original showTab with a safer version after original app is loaded.
+window.showTab = function(id){ fmGo(id); };
+
+document.addEventListener('DOMContentLoaded', function(){
+  setTimeout(function(){
+    try{
+      fmGo(window.currentTabId || 'newMatch');
+      applyLuxuryV2DomFixes();
+    }catch(e){}
+  },300);
+});
+
+setInterval(function(){
+  try{
+    applyLuxuryV2DomFixes();
+    renderLuxuryAdjustmentsBox();
+    fmSetActivePage(window.currentTabId || 'newMatch');
+  }catch(e){}
+}, 1000);

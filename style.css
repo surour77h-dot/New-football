@@ -293,3 +293,11 @@ table{border-spacing:0 4px!important}
 @media(max-width:360px){
   .compactTable .tHead,.compactTable .tRow{grid-template-columns:minmax(0,1fr) 58px 88px!important}
 }
+
+
+
+/* Fixed tab display */
+.tab{display:none!important}
+.tab.active{display:block!important}
+.drawerOpen .tab.active{display:block!important}
+.sideDrawer .activeTab{background:rgba(215,169,67,.12)!important}
