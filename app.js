@@ -533,20 +533,20 @@ function renderAccounts(){
   const lateTotal=getLateTotal(s);
   const negativeTotal=negative.reduce((sum,p)=>sum+Math.abs(Number(b[p]?.balance||0)),0);
   // المعادلة المعتمدة في صفحة الحسابات:
-  // مجموع المديونية = اللاعبين المدانين + مشتريات + مجموع التأخير
-  // الإجمالي النهائي = مجموع المديونية - الباقي، ويعرض بإشارة صحيحة
+  // مجموع المديونية = اللاعبين المدانين والمتأخرين + مشتريات + مجموع التأخير
+  // الإجمالي النهائي = الباقي + مجموع التأخير
   const debtTotal=negativeTotal+lateTotal+discountTotal;
-  const finalTotal=extraTotal-debtTotal;
+  const finalTotal=extraTotal+lateTotal;
 
   const matchOptions=[...s.matches].sort((a,b)=>b.date.localeCompare(a.date)).map(m=>{
     const label=`${formatDateDisplay(m.date)}${m.place?' - '+m.place:''} | ${money(m.bookingCost||m.price||0)} د.ك`;
     return `<option value="${escapeHtml(m.id)}">${escapeHtml(label)}</option>`;
   }).join('');
 
-  const negativeCards=negative.map(p=>`<div class="accountAlertItem negativePlayer"><b>${escapeHtml(p)}</b><span>${money(b[p].balance)}</span></div>`).join('');
+  const negativeCards=negative.map(p=>`<div class="accountAlertItem negativePlayer" onclick="openPlayerAccount(\'${escapeHtml(p)}\')"><b>${escapeHtml(p)}</b><span>${money(b[p].balance)}</span></div>`).join('');
 
   const lateItems=[...(s.deposits||[])].filter(d=>d.type==='late').sort((a,b)=>(b.date||'').localeCompare(a.date||'') || (b.createdAt||0)-(a.createdAt||0));
-  const lateCards=lateItems.map(d=>`<div class="accountAlertItem latePlayer"><b>${escapeHtml(d.player||'')}</b><span>${money(Math.abs(Number(d.amount||0)))}</span></div>`).join('');
+  const lateCards=lateItems.map(d=>`<div class="accountAlertItem latePlayer" onclick="openPlayerAccount(\'${escapeHtml(d.player||\'\')}\')"><b>${escapeHtml(d.player||'')}</b><span>${money(Math.abs(Number(d.amount||0)))}</span></div>`).join('');
   const alertsHtml=(negativeCards||lateCards)?`<div class="negativePlayersGrid accountAlertsGrid">${negativeCards}${lateCards}</div>`:'<p class="muted">لا توجد أرصدة سالبة أو مبالغ تأخير.</p>';
 
   const combinedRows=[
@@ -565,7 +565,7 @@ function renderAccounts(){
 
   wrap.innerHTML=`
     <div class="summaryCards accountsSummary">
-      <div class="summaryCard debtCard summaryMini"><span>اللاعبين المدانين</span><b class="negText">${moneyNeg(negativeTotal)}</b></div>
+      <div class="summaryCard debtCard summaryMini"><span>اللاعبين المدانين والمتأخرين</span><b class="negText">${moneyNeg(negativeTotal)}</b></div>
       <div class="summaryCard discountCard summaryMini"><span>مشتريات</span><b class="negText">${moneyNeg(discountTotal)}</b></div>
       <div class="summaryCard debtTotalCard"><span>مجموع المديونية</span><b class="negText">${moneyNeg(debtTotal)}</b><small>المدانين + مشتريات + التأخير</small></div>
       <div class="summaryCard extraCard"><span>الباقي</span><b class="posText">${money(extraTotal)}</b></div>
@@ -1228,3 +1228,12 @@ function exportExcelData(){
   }
 }
 
+
+
+function openPlayerAccount(name){
+  try{
+    showTab('accounts');
+    const el=[...document.querySelectorAll('[data-player-row]')].find(x=>x.dataset.playerRow===name);
+    if(el){el.scrollIntoView({behavior:'smooth',block:'center'});}
+  }catch(e){console.log(e);}
+}
