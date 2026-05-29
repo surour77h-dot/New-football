@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <meta name="theme-color" content="#08111f">
 <title>قروب الكورة - Football Manager Pro</title>
-<link rel="manifest" href="manifest.json?v=fmpro2fix">
-<link rel="stylesheet" href="style.css?v=fmpro2fix">
+<link rel="manifest" href="manifest.json?v=fmpro2navfix">
+<link rel="stylesheet" href="style.css?v=fmpro2navfix">
 </head>
 <body class="fmShell">
 
@@ -19,16 +19,16 @@
       <span>Football Manager Luxury</span>
     </div>
   </div>
-  <button type="button" data-tab="newMatch" onclick="fmGo(\'newMatch\');closeDrawer()"><span>🏠</span><div><b>الرئيسية</b><small>اللعبة القادمة</small></div></button>
-  <button type="button" data-tab="accounts" onclick="fmGo(\'accounts\');closeDrawer()"><span>💰</span><div><b>الحسابات</b><small>الأرصدة والمديونية</small></div></button>
-  <button type="button" data-tab="players" onclick="fmGo(\'players\');closeDrawer()"><span>👥</span><div><b>اللاعبين</b><small>إدارة اللاعبين</small></div></button>
-  <button type="button" data-tab="playerFilter" onclick="fmGo(\'playerFilter\');closeDrawer()"><span>🔎</span><div><b>كشف لاعب</b><small>تقرير فردي</small></div></button>
-  <button type="button" data-tab="calendar" onclick="fmGo(\'calendar\');closeDrawer()"><span>📅</span><div><b>التقويم</b><small>اللعبات الشهرية</small></div></button>
-  <button type="button" data-tab="teams" onclick="fmGo(\'teams\');closeDrawer()"><span>🟨</span><div><b>الفريقين</b><small>تقسيم الفرق</small></div></button>
-  <button type="button" data-tab="deposits" onclick="fmGo(\'deposits\');closeDrawer()"><span>💳</span><div><b>الإيداعات</b><small>الحركات المالية</small></div></button>
-  <button type="button" data-tab="playerTable" onclick="fmGo(\'playerTable\');closeDrawer()"><span>📊</span><div><b>جدول اللاعبين</b><small>الأرصدة واللعبات</small></div></button>
-  <button type="button" data-tab="matchLog" onclick="fmGo(\'matchLog\');closeDrawer()"><span>🧾</span><div><b>السجل</b><small>سجل اللعبات</small></div></button>
-  <button type="button" data-tab="backup" onclick="fmGo(\'backup\');closeDrawer()"><span>⚙️</span><div><b>الإعدادات</b><small>التصدير والاستيراد</small></div></button>
+  <button type="button" data-tab="newMatch" onclick="fmNavigate('newMatch')"><span>🏠</span><div><b>الرئيسية</b><small>اللعبة القادمة</small></div></button>
+  <button type="button" data-tab="accounts" onclick="fmNavigate('accounts')"><span>💰</span><div><b>الحسابات</b><small>الأرصدة والمديونية</small></div></button>
+  <button type="button" data-tab="players" onclick="fmNavigate('players')"><span>👥</span><div><b>اللاعبين</b><small>إدارة اللاعبين</small></div></button>
+  <button type="button" data-tab="playerFilter" onclick="fmNavigate('playerFilter')"><span>🔎</span><div><b>كشف لاعب</b><small>تقرير فردي</small></div></button>
+  <button type="button" data-tab="calendar" onclick="fmNavigate('calendar')"><span>📅</span><div><b>التقويم</b><small>اللعبات الشهرية</small></div></button>
+  <button type="button" data-tab="teams" onclick="fmNavigate('teams')"><span>🟨</span><div><b>الفريقين</b><small>تقسيم الفرق</small></div></button>
+  <button type="button" data-tab="deposits" onclick="fmNavigate('deposits')"><span>💳</span><div><b>الإيداعات</b><small>الحركات المالية</small></div></button>
+  <button type="button" data-tab="playerTable" onclick="fmNavigate('playerTable')"><span>📊</span><div><b>جدول اللاعبين</b><small>الأرصدة واللعبات</small></div></button>
+  <button type="button" data-tab="matchLog" onclick="fmNavigate('matchLog')"><span>🧾</span><div><b>السجل</b><small>سجل اللعبات</small></div></button>
+  <button type="button" data-tab="backup" onclick="fmNavigate('backup')"><span>⚙️</span><div><b>الإعدادات</b><small>التصدير والاستيراد</small></div></button>
 </aside>
 
 <div class="fmApp">
@@ -177,5 +177,5 @@
   </div>
 </div>
 
-<script src="app.js?v=fmpro2fix"></script>
+<script src="app.js?v=fmpro2navfix"></script>
 </body></html>

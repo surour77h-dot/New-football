@@ -1243,8 +1243,11 @@ function exportExcelData(){
 
 
 
+
+
+
 /* =========================================================
-   Football Manager Luxury V2 - Fixed Tabs Patch
+   Football Manager Luxury V2 - Clean Navigation Patch
    ========================================================= */
 
 const FM_PAGE_TITLES = {
@@ -1265,51 +1268,61 @@ const FM_PAGE_TITLES = {
 function openDrawer(){ document.body.classList.add('drawerOpen'); }
 function closeDrawer(){ document.body.classList.remove('drawerOpen'); }
 
-function fmSetActivePage(id){
-  currentTabId = id || 'newMatch';
-  document.querySelectorAll('.tab').forEach(function(t){
-    t.classList.remove('active');
-    t.style.display = 'none';
+function fmNavigate(id){
+  id = id || 'newMatch';
+  currentTabId = id;
+
+  document.querySelectorAll('.tab').forEach(function(tab){
+    tab.classList.remove('active');
+    tab.hidden = true;
+    tab.style.display = 'none';
   });
-  var tab = document.getElementById(currentTabId);
-  if(tab){
-    tab.classList.add('active');
-    tab.style.display = 'block';
+
+  var selected = document.getElementById(id);
+  if(selected){
+    selected.hidden = false;
+    selected.style.display = 'block';
+    selected.classList.add('active');
   }
+
   document.querySelectorAll('[data-tab]').forEach(function(btn){
-    btn.classList.toggle('activeTab', btn.getAttribute('data-tab') === currentTabId);
+    btn.classList.toggle('activeTab', btn.getAttribute('data-tab') === id);
   });
-  var box = document.getElementById('currentPageBox');
-  if(box) box.textContent = FM_PAGE_TITLES[currentTabId] || currentTabId;
-  document.body.dataset.page = currentTabId;
-}
 
-function fmGo(id){
-  fmSetActivePage(id);
+  var title = document.getElementById('currentPageBox');
+  if(title) title.textContent = FM_PAGE_TITLES[id] || id;
+
+  document.body.dataset.page = id;
+  closeDrawer();
+
+  // Render content without letting old showTab override the chosen tab.
   try{
-    if(typeof renderAll === 'function') renderAll();
+    if(typeof renderAll === 'function'){
+      renderAll();
+    }
   }catch(e){}
+
+  // Enforce selected tab again after renderAll.
   setTimeout(function(){
-    fmSetActivePage(id);
+    document.querySelectorAll('.tab').forEach(function(tab){
+      tab.classList.remove('active');
+      tab.hidden = true;
+      tab.style.display = 'none';
+    });
+    var chosen = document.getElementById(id);
+    if(chosen){
+      chosen.hidden = false;
+      chosen.style.display = 'block';
+      chosen.classList.add('active');
+    }
     applyLuxuryV2DomFixes();
-  },0);
+    renderLuxuryAdjustmentsBox();
+  }, 0);
 }
 
-function fmMoneyText(n){
-  n = Number(n || 0);
-  if(!isFinite(n)) n = 0;
-  if(Math.abs(n) < 0.0005) return '';
-  return n.toFixed(3);
-}
-function fmMoneyClass(n, kind){
-  n = Number(n || 0);
-  if(kind === 'late') return 'moneyLate';
-  if(kind === 'deposit' || kind === 'add') return 'moneyPos';
-  if(kind === 'debt' || kind === 'discount') return 'moneyNeg';
-  if(n > 0) return 'moneyPos';
-  if(n < 0) return 'moneyNeg';
-  return 'moneyZero';
-}
+// Replace old showTab with direct safe navigation.
+window.showTab = fmNavigate;
+
 function fmFormatDate(d){
   if(!d) return '';
   const s = String(d);
@@ -1362,7 +1375,7 @@ function saveAdjustEditor(){
   s.extraDiscounts = adjustEditorDraft.extraDiscounts || [];
   save(s);
   closeAdjustEditor();
-  fmGo('accounts');
+  fmNavigate('accounts');
 }
 function renderAdjustEditTable(){
   const box = document.getElementById('adjustEditTable');
@@ -1380,7 +1393,6 @@ function renderAdjustEditTable(){
     </div>`}).join('') || '<div class="emptyState">لا توجد عمليات</div>'}
   `;
 }
-
 function renderLuxuryAdjustmentsBox(){
   try{
     const accounts = document.getElementById('accounts');
@@ -1407,22 +1419,16 @@ function renderLuxuryAdjustmentsBox(){
   }catch(e){}
 }
 
-// Replace original showTab with a safer version after original app is loaded.
-window.showTab = function(id){ fmGo(id); };
-
 document.addEventListener('DOMContentLoaded', function(){
+  // Ensure initial state has only one page visible.
   setTimeout(function(){
-    try{
-      fmGo(window.currentTabId || 'newMatch');
-      applyLuxuryV2DomFixes();
-    }catch(e){}
-  },300);
+    fmNavigate(currentTabId || 'newMatch');
+  }, 250);
 });
 
 setInterval(function(){
   try{
     applyLuxuryV2DomFixes();
     renderLuxuryAdjustmentsBox();
-    fmSetActivePage(window.currentTabId || 'newMatch');
   }catch(e){}
-}, 1000);
+}, 1200);

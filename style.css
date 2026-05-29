@@ -301,3 +301,12 @@ table{border-spacing:0 4px!important}
 .tab.active{display:block!important}
 .drawerOpen .tab.active{display:block!important}
 .sideDrawer .activeTab{background:rgba(215,169,67,.12)!important}
+
+
+/* Navigation Fix v2 */
+.tab{display:none!important}
+.tab.active{display:block!important}
+.sideDrawer{pointer-events:auto!important}
+.drawerOverlay{pointer-events:none}
+.drawerOpen .drawerOverlay{pointer-events:auto}
+button[data-tab]{cursor:pointer}
