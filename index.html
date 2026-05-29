@@ -5,11 +5,23 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <meta name="theme-color" content="#0f5132">
 <title>🏆 سجل وحسابات ⚽️ قروب الكورة 🏆</title>
-<link rel="manifest" href="manifest.json">
-<link rel="stylesheet" href="style.css">
+<link rel="manifest" href="manifest.json?v=20260529-redesign-3">
+<link rel="stylesheet" href="style.css?v=20260529-redesign-3">
 </head>
-<body>
-<header><h1 id="appTitle">🏆 سجل وحسابات ⚽️ قروب الكورة 🏆</h1></header>
+<body class="premium-redesign">
+<header class="premiumHero">
+  <div class="heroGlass">
+    <div class="ballMark">⚽️</div>
+    <div>
+      <h1 id="appTitle">قروب الكورة</h1>
+      <p>سجل اللعبات • الإيداعات • الحسابات</p>
+    </div>
+  </div>
+  <div class="scoreStrip">
+    <span>Apple Sports UI</span>
+    <span>نسخة تجريبية</span>
+  </div>
+</header>
 <nav>
 <button onclick="showTab('newMatch')">لعبة</button>
 <button onclick="showTab('teams')">الفريقين</button>
@@ -149,6 +161,18 @@
 </section>
 
 </main>
-<script src="app.js"></script>
+<script src="app.js?v=20260529-redesign-3"></script>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+
+<script>
+(function(){
+  window.__REDESIGN_VERSION__='20260529-redesign-3';
+  if('serviceWorker' in navigator){
+    navigator.serviceWorker.getRegistrations().then(function(regs){
+      regs.forEach(function(r){ r.update && r.update(); });
+    });
+  }
+})();
+</script>
+
 </body></html>
