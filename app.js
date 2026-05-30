@@ -1394,3 +1394,90 @@ document.addEventListener('DOMContentLoaded',()=>setTimeout(()=>fmNavigate(curre
     isolateSections(window.currentTabId || 'newMatch');
   }, 800);
 })();
+
+
+
+/* ===== SIMPLE PAGES MENU FIX ===== */
+(function(){
+  const titles = {
+    newMatch:'الرئيسية',
+    accounts:'الحسابات',
+    players:'اللاعبين',
+    playerFilter:'كشف لاعب',
+    calendar:'التقويم',
+    teams:'الفريقين',
+    deposits:'الإيداعات',
+    playerTable:'جدول اللاعبين',
+    matchLog:'السجل',
+    backup:'الإعدادات',
+    reports:'التقارير',
+    editPage:'ترتيب الصفحات'
+  };
+
+  function setOnlyPage(id){
+    id = id || 'newMatch';
+    window.currentTabId = id;
+
+    document.querySelectorAll('section.tab, main > section, .tab').forEach(function(sec){
+      const active = sec.id === id;
+      sec.classList.toggle('active', active);
+      sec.hidden = !active;
+      sec.style.setProperty('display', active ? 'block' : 'none', 'important');
+      sec.style.setProperty('visibility', active ? 'visible' : 'hidden', 'important');
+      sec.style.setProperty('height', active ? 'auto' : '0', 'important');
+      sec.style.setProperty('overflow', active ? 'visible' : 'hidden', 'important');
+    });
+
+    document.querySelectorAll('[data-tab]').forEach(function(btn){
+      btn.classList.toggle('activeTab', btn.getAttribute('data-tab') === id);
+    });
+
+    const box = document.getElementById('currentPageBox');
+    if(box) box.textContent = titles[id] || id;
+  }
+
+  window.toggleSimplePagesMenu = function(ev){
+    if(ev){ev.preventDefault(); ev.stopPropagation();}
+    const menu = document.getElementById('simplePagesMenu');
+    if(menu) menu.classList.toggle('open');
+    return false;
+  };
+
+  window.goSimplePage = function(id){
+    const menu = document.getElementById('simplePagesMenu');
+    if(menu) menu.classList.remove('open');
+    setOnlyPage(id);
+    try{
+      if(typeof renderAll === 'function') renderAll();
+    }catch(e){}
+    setOnlyPage(id);
+    setTimeout(function(){setOnlyPage(id);},0);
+    return false;
+  };
+
+  window.goLuxuryPage = window.goSimplePage;
+  window.fmNavigate = window.goSimplePage;
+  window.showTab = window.goSimplePage;
+
+  document.addEventListener('click', function(e){
+    const btn = e.target.closest('#simplePagesMenu [data-tab]');
+    if(btn){
+      e.preventDefault();
+      e.stopPropagation();
+      goSimplePage(btn.getAttribute('data-tab'));
+    }
+  }, true);
+
+  document.addEventListener('DOMContentLoaded', function(){
+    const menuBtn = document.getElementById('fmMenuButton') || document.querySelector('.fmMenuBtn');
+    if(menuBtn){
+      menuBtn.type = 'button';
+      menuBtn.onclick = function(ev){return toggleSimplePagesMenu(ev);};
+    }
+    setTimeout(function(){setOnlyPage(window.currentTabId || 'newMatch');}, 150);
+    setTimeout(function(){setOnlyPage(window.currentTabId || 'newMatch');}, 500);
+  });
+
+  // Prevent old drawer classes from blocking anything
+  document.body.classList.remove('drawerOpen');
+})();

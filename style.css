@@ -92,3 +92,49 @@ html body .fmMain section.tab.active{
   height:0!important;
   overflow:hidden!important;
 }
+
+/* ===== Simple Pages Menu Fix CSS ===== */
+.drawerOverlay,.sideDrawer{display:none!important;pointer-events:none!important}
+.simplePagesMenu{
+  display:none;
+  margin:8px 0 4px;
+  padding:8px;
+  border-radius:16px;
+  background:#08111f;
+  border:1px solid rgba(246,216,132,.18);
+  box-shadow:0 14px 35px rgba(0,0,0,.35);
+  grid-template-columns:1fr 1fr;
+  gap:6px;
+}
+.simplePagesMenu.open{
+  display:grid!important;
+}
+.simplePagesMenu button{
+  min-height:42px!important;
+  border-radius:12px!important;
+  background:#101d30!important;
+  color:#fff!important;
+  border:1px solid rgba(246,216,132,.10)!important;
+  box-shadow:none!important;
+  text-align:center!important;
+  font-size:12px!important;
+}
+.simplePagesMenu button.activeTab{
+  background:linear-gradient(135deg,#6f5318,#d7a943)!important;
+  color:#111!important;
+}
+.fmMenuBtn{
+  pointer-events:auto!important;
+  z-index:10!important;
+}
+section.tab:not(.active){
+  display:none!important;
+  visibility:hidden!important;
+  height:0!important;
+  overflow:hidden!important;
+}
+section.tab.active{
+  display:block!important;
+  visibility:visible!important;
+  height:auto!important;
+}
