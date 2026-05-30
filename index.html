@@ -5,37 +5,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <meta name="theme-color" content="#08111f">
 <title>قروب الكورة - Football Manager Pro</title>
-<link rel="manifest" href="manifest.json?v=fmpro3">
-<link rel="stylesheet" href="style.css?v=fmpro3">
+<link rel="manifest" href="manifest.json?v=sectioniso1">
+<link rel="stylesheet" href="style.css?v=sectioniso1">
 </head>
 <body class="fmShell">
+<div id="drawerOverlay" class="drawerOverlay" onclick="closeDrawer()"></div><aside id="sideDrawer" class="sideDrawer"><div class="drawerHead"><div class="drawerLogo">⚽️</div><div><b>قروب الكورة</b><span>Football Manager Luxury V2</span></div></div><button type="button" data-tab="newMatch" onclick="goLuxuryPage('newMatch')"><span>🏠</span><div><b>الرئيسية</b><small>اللعبة القادمة</small></div></button><button type="button" data-tab="accounts" onclick="goLuxuryPage('accounts')"><span>💰</span><div><b>الحسابات</b><small>الأرصدة والمديونية</small></div></button><button type="button" data-tab="players" onclick="goLuxuryPage('players')"><span>👥</span><div><b>اللاعبين</b><small>إدارة اللاعبين</small></div></button><button type="button" data-tab="playerFilter" onclick="goLuxuryPage('playerFilter')"><span>🔎</span><div><b>كشف لاعب</b><small>تقرير فردي</small></div></button><button type="button" data-tab="calendar" onclick="goLuxuryPage('calendar')"><span>📅</span><div><b>التقويم</b><small>اللعبات الشهرية</small></div></button><button type="button" data-tab="teams" onclick="goLuxuryPage('teams')"><span>🟨</span><div><b>الفريقين</b><small>تقسيم الفرق</small></div></button><button type="button" data-tab="deposits" onclick="goLuxuryPage('deposits')"><span>💳</span><div><b>الإيداعات</b><small>الحركات المالية</small></div></button><button type="button" data-tab="playerTable" onclick="goLuxuryPage('playerTable')"><span>📊</span><div><b>جدول اللاعبين</b><small>الأرصدة واللعبات</small></div></button><button type="button" data-tab="matchLog" onclick="goLuxuryPage('matchLog')"><span>🧾</span><div><b>السجل</b><small>سجل اللعبات</small></div></button><button type="button" data-tab="backup" onclick="goLuxuryPage('backup')"><span>⚙️</span><div><b>الإعدادات</b><small>التصدير والاستيراد</small></div></button></aside><div class="fmApp">
+<header class="fmHeader"><div class="fmHeaderTop"><button class="fmMenuBtn" type="button" id="fmMenuButton" onclick="toggleLuxuryMenu(event)">☰</button><div class="fmTitle"><h1 id="appTitle">قروب الكورة</h1><p>إدارة اللعبات • الحسابات • اللاعبين</p></div><div class="fmLogo">⚽️</div></div><div class="currentPageBox" id="currentPageBox">الرئيسية</div></header>
 
-<div id="drawerOverlay" class="drawerOverlay" onclick="closeDrawer()"></div>
-<aside id="sideDrawer" class="sideDrawer">
-  <div class="drawerHead"><div class="drawerLogo">⚽️</div><div><b>قروب الكورة</b><span>Football Manager Luxury V2</span></div></div>
-  <button type="button" data-tab="newMatch" onclick="fmNavigate('newMatch')"><span>🏠</span><div><b>الرئيسية</b><small>اللعبة القادمة</small></div></button>
-  <button type="button" data-tab="accounts" onclick="fmNavigate('accounts')"><span>💰</span><div><b>الحسابات</b><small>الأرصدة والمديونية</small></div></button>
-  <button type="button" data-tab="players" onclick="fmNavigate('players')"><span>👥</span><div><b>اللاعبين</b><small>إدارة اللاعبين</small></div></button>
-  <button type="button" data-tab="playerFilter" onclick="fmNavigate('playerFilter')"><span>🔎</span><div><b>كشف لاعب</b><small>تقرير فردي</small></div></button>
-  <button type="button" data-tab="calendar" onclick="fmNavigate('calendar')"><span>📅</span><div><b>التقويم</b><small>اللعبات الشهرية</small></div></button>
-  <button type="button" data-tab="teams" onclick="fmNavigate('teams')"><span>🟨</span><div><b>الفريقين</b><small>تقسيم الفرق</small></div></button>
-  <button type="button" data-tab="deposits" onclick="fmNavigate('deposits')"><span>💳</span><div><b>الإيداعات</b><small>الحركات المالية</small></div></button>
-  <button type="button" data-tab="playerTable" onclick="fmNavigate('playerTable')"><span>📊</span><div><b>جدول اللاعبين</b><small>الأرصدة واللعبات</small></div></button>
-  <button type="button" data-tab="matchLog" onclick="fmNavigate('matchLog')"><span>🧾</span><div><b>السجل</b><small>سجل اللعبات</small></div></button>
-  <button type="button" data-tab="backup" onclick="fmNavigate('backup')"><span>⚙️</span><div><b>الإعدادات</b><small>التصدير والاستيراد</small></div></button>
-</aside>
-
-<div class="fmApp">
-<header class="fmHeader">
-  <div class="fmHeaderTop">
-    <button class="fmMenuBtn" type="button" onclick="openDrawer()">☰</button>
-    <div class="fmTitle"><h1 id="appTitle">قروب الكورة</h1><p>إدارة اللعبات • الحسابات • اللاعبين</p></div>
-    <div class="fmLogo">⚽️</div>
-  </div>
-  <div class="currentPageBox" id="currentPageBox">الرئيسية</div>
-</header>
-
-<main class="fmMain"><section id="newMatch" class="tab active">
+<main class="fmMain"><section id="newMatch" data-page="newMatch" class="tab active">
 <h2 id="matchFormTitle">لوحة التحكم واللعبة القادمة</h2>
 
   <div class="fmStats">
@@ -65,16 +42,16 @@
 <div class="twoBtns"><button class="primary" onclick="saveMatch()">حفظ</button><button onclick="clearMatchForm()">تفريغ</button></div>
 </div>
 </section>
-<section id="accounts" class="tab">
+<section id="accounts" data-page="accounts" class="tab">
 <h2>الحسابات</h2>
 <div id="accountsContent"></div>
 </section>
-<section id="players" class="tab">
+<section id="players" data-page="players" class="tab">
 <h2>اللاعبين</h2>
 <div class="card"><div class="addRow"><input id="playerName" placeholder="اسم اللاعب"><button onclick="addPlayer()">إضافة</button></div></div>
 <div class="card"><div id="playersList" class="plainList"></div><div class="twoBtns bottom"><button onclick="showPlayerEditBox()">تعديل</button><button class="danger" onclick="showPlayerDeleteBox()">حذف</button></div><div id="playerActionBox"></div></div>
 </section>
-<section id="playerFilter" class="tab">
+<section id="playerFilter" data-page="playerFilter" class="tab">
 <h2>كشف لاعب</h2>
 <div class="card">
 <label>اختر اللاعب</label>
@@ -82,13 +59,13 @@
 </div>
 <div id="playerFilterContent"></div>
 </section>
-<section id="calendar" class="tab">
+<section id="calendar" data-page="calendar" class="tab">
 <h2>التقويم</h2>
 <div class="card calHead"><button onclick="moveMonth(-1)">السابق</button><b id="calendarMonthTitle"></b><button onclick="moveMonth(1)">التالي</button></div>
 <div id="monthCalendar" class="month"></div>
 <div class="card"><h3 id="calendarSelectedTitle">المشاركون</h3><div id="calendarList"></div></div>
 </section>
-<section id="teams" class="tab">
+<section id="teams" data-page="teams" class="tab">
 <h2>الفريقين</h2>
 <div class="card">
 <label>اللعبة<select id="teamsMatchSelect" onchange="renderTeams();renderTeamsPreview()"></select></label>
@@ -98,7 +75,7 @@
 <div id="teamsPreview"></div>
 </div>
 </section>
-<section id="deposits" class="tab">
+<section id="deposits" data-page="deposits" class="tab">
 <h2>الإيداعات</h2>
 <div class="card depositBox">
 <input type="hidden" id="editingDepositId">
@@ -110,15 +87,15 @@
 </div>
 <div id="depositsList"></div>
 </section>
-<section id="playerTable" class="tab"><h2>جدول اللاعبين</h2><div id="playerTableWrap"></div></section>
-<section id="matchLog" class="tab"><h2>سجل اللعب</h2><div id="matchLogList"><div class="card">
+<section id="playerTable" data-page="playerTable" class="tab"><h2>جدول اللاعبين</h2><div id="playerTableWrap"></div></section>
+<section id="matchLog" data-page="matchLog" class="tab"><h2>سجل اللعب</h2><div id="matchLogList"><div class="card">
 <h3>جميع العمليات</h3>
 <div id="depositHistoryList"></div>
 </div>
 
 </div></section>
-<section id="reports" class="tab"><h2>التقارير</h2><div id="reportSummary"></div><div id="reportsList"></div></section>
-<section id="backup" class="tab">
+<section id="reports" data-page="reports" class="tab"><h2>التقارير</h2><div id="reportSummary"></div><div id="reportsList"></div></section>
+<section id="backup" data-page="backup" class="tab">
 <h2>الإعدادات</h2>
 
 <div class="card">
@@ -143,7 +120,7 @@
 </div>
 
 </section>
-<section id="editPage" class="tab editOnly">
+<section id="editPage" data-page="editPage" class="tab editOnly">
 <h2 id="editPageTitle">تعديل</h2>
 <div class="card">
 <div id="editPageContent"></div>
@@ -155,15 +132,5 @@
 </section></main>
 </div>
 
-
-<div id="adjustEditModal" class="editModal">
-  <div class="editModalCard">
-    <div class="editModalHead"><b>تعديل الخصم / الإضافة</b><button type="button" onclick="closeAdjustEditor()">إغلاق</button></div>
-    <p class="editHint">اضغط على أي سطر لإزالته، ثم اضغط حفظ.</p>
-    <div id="adjustEditTable" class="compactTable"></div>
-    <button class="primary wide" type="button" onclick="saveAdjustEditor()">حفظ</button>
-  </div>
-</div>
-
-<script src="app.js?v=fmpro3"></script>
+<div id="adjustEditModal" class="editModal"><div class="editModalCard"><div class="editModalHead"><b>تعديل الخصم / الإضافة</b><button type="button" onclick="closeAdjustEditor()">إغلاق</button></div><p class="editHint">اضغط على أي سطر لإزالته، ثم اضغط حفظ.</p><div id="adjustEditTable" class="compactTable"></div><button class="primary wide" type="button" onclick="saveAdjustEditor()">حفظ</button></div></div><script src="app.js?v=sectioniso1"></script>
 </body></html>
