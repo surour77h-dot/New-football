@@ -5,24 +5,24 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <meta name="theme-color" content="#08111f">
 <title>قروب الكورة - Football Manager Pro</title>
-<link rel="manifest" href="manifest.json?v=simplemenu1">
-<link rel="stylesheet" href="style.css?v=simplemenu1">
+<link rel="manifest" href="manifest.json?v=realmenufix">
+<link rel="stylesheet" href="style.css?v=realmenufix">
 </head>
 <body class="fmShell">
 <div class="fmApp">
-<header class="fmHeader"><div class="fmHeaderTop"><button class="fmMenuBtn" type="button" id="fmMenuButton" onclick="toggleSimplePagesMenu(event)">☰</button><div class="fmTitle"><h1 id="appTitle">قروب الكورة</h1><p>إدارة اللعبات • الحسابات • اللاعبين</p></div><div class="fmLogo">⚽️</div></div><div class="currentPageBox" id="currentPageBox">الرئيسية</div></header>
+<header class="fmHeader"><div class="fmHeaderTop"><button id="realMenuBtn" class="fmMenuBtn" type="button" aria-label="اختيار الصفحات">☰</button><div class="fmTitle"><h1 id="appTitle">قروب الكورة</h1><p>إدارة اللعبات • الحسابات • اللاعبين</p></div><div class="fmLogo">⚽️</div></div><div class="currentPageBox" id="currentPageBox">الرئيسية</div></header>
 
-<div id="simplePagesMenu" class="simplePagesMenu">
-  <button type="button" data-tab="newMatch">🏠 الرئيسية</button>
-  <button type="button" data-tab="accounts">💰 الحسابات</button>
-  <button type="button" data-tab="players">👥 اللاعبين</button>
-  <button type="button" data-tab="playerFilter">🔎 كشف لاعب</button>
-  <button type="button" data-tab="calendar">📅 التقويم</button>
-  <button type="button" data-tab="teams">🟨 الفريقين</button>
-  <button type="button" data-tab="deposits">💳 الإيداعات</button>
-  <button type="button" data-tab="playerTable">📊 جدول اللاعبين</button>
-  <button type="button" data-tab="matchLog">🧾 السجل</button>
-  <button type="button" data-tab="backup">⚙️ الإعدادات</button>
+<div id="realPagesMenu" class="realPagesMenu" aria-label="اختيار الصفحات">
+  <button type="button" data-page="newMatch">🏠 الرئيسية</button>
+  <button type="button" data-page="accounts">💰 الحسابات</button>
+  <button type="button" data-page="players">👥 اللاعبين</button>
+  <button type="button" data-page="playerFilter">🔎 كشف لاعب</button>
+  <button type="button" data-page="calendar">📅 التقويم</button>
+  <button type="button" data-page="teams">🟨 الفريقين</button>
+  <button type="button" data-page="deposits">💳 الإيداعات</button>
+  <button type="button" data-page="playerTable">📊 جدول اللاعبين</button>
+  <button type="button" data-page="matchLog">🧾 السجل</button>
+  <button type="button" data-page="backup">⚙️ الإعدادات</button>
 </div>
 
 
@@ -146,5 +146,5 @@
 </section></main>
 </div>
 
-<div id="adjustEditModal" class="editModal"><div class="editModalCard"><div class="editModalHead"><b>تعديل الخصم / الإضافة</b><button type="button" onclick="closeAdjustEditor()">إغلاق</button></div><p class="editHint">اضغط على أي سطر لإزالته، ثم اضغط حفظ.</p><div id="adjustEditTable" class="compactTable"></div><button class="primary wide" type="button" onclick="saveAdjustEditor()">حفظ</button></div></div><script src="app.js?v=simplemenu1"></script>
+<div id="adjustEditModal" class="editModal"><div class="editModalCard"><div class="editModalHead"><b>تعديل الخصم / الإضافة</b><button type="button" onclick="closeAdjustEditor()">إغلاق</button></div><p class="editHint">اضغط على أي سطر لإزالته، ثم اضغط حفظ.</p><div id="adjustEditTable" class="compactTable"></div><button class="primary wide" type="button" onclick="saveAdjustEditor()">حفظ</button></div></div><script src="app.js?v=realmenufix"></script>
 </body></html>

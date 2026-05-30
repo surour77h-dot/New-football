@@ -1481,3 +1481,126 @@ document.addEventListener('DOMContentLoaded',()=>setTimeout(()=>fmNavigate(curre
   // Prevent old drawer classes from blocking anything
   document.body.classList.remove('drawerOpen');
 })();
+
+
+
+/* ===== FINAL MENU BUTTON HARD FIX ===== */
+(function(){
+  var pageTitles = {
+    newMatch:'الرئيسية',
+    accounts:'الحسابات',
+    players:'اللاعبين',
+    playerFilter:'كشف لاعب',
+    calendar:'التقويم',
+    teams:'الفريقين',
+    deposits:'الإيداعات',
+    playerTable:'جدول اللاعبين',
+    matchLog:'السجل',
+    backup:'الإعدادات',
+    reports:'التقارير',
+    editPage:'ترتيب الصفحات'
+  };
+
+  function menuEl(){ return document.getElementById('realPagesMenu'); }
+  function menuBtn(){ return document.getElementById('realMenuBtn') || document.querySelector('.fmMenuBtn'); }
+
+  window.realToggleMenu = function(){
+    var m = menuEl();
+    if(!m) return false;
+    m.classList.toggle('open');
+    return false;
+  };
+
+  window.realCloseMenu = function(){
+    var m = menuEl();
+    if(m) m.classList.remove('open');
+  };
+
+  window.realShowPage = function(id){
+    id = id || 'newMatch';
+    window.currentTabId = id;
+
+    var sections = document.querySelectorAll('main > section, section.tab, .tab');
+    sections.forEach(function(sec){
+      var active = sec.id === id;
+      sec.classList.toggle('active', active);
+      sec.hidden = !active;
+      sec.style.display = active ? 'block' : 'none';
+      sec.style.visibility = active ? 'visible' : 'hidden';
+      sec.style.height = active ? 'auto' : '0';
+      sec.style.overflow = active ? 'visible' : 'hidden';
+    });
+
+    document.querySelectorAll('[data-page],[data-tab]').forEach(function(btn){
+      var p = btn.getAttribute('data-page') || btn.getAttribute('data-tab');
+      btn.classList.toggle('activeTab', p === id);
+    });
+
+    var title = document.getElementById('currentPageBox');
+    if(title) title.textContent = pageTitles[id] || id;
+
+    realCloseMenu();
+
+    try {
+      if (typeof renderAll === 'function') renderAll();
+    } catch(e) {}
+
+    // Enforce again after renderAll because the old code may reset the active page.
+    setTimeout(function(){
+      document.querySelectorAll('main > section, section.tab, .tab').forEach(function(sec){
+        var active = sec.id === id;
+        sec.classList.toggle('active', active);
+        sec.hidden = !active;
+        sec.style.display = active ? 'block' : 'none';
+        sec.style.visibility = active ? 'visible' : 'hidden';
+        sec.style.height = active ? 'auto' : '0';
+        sec.style.overflow = active ? 'visible' : 'hidden';
+      });
+    }, 0);
+
+    return false;
+  };
+
+  // Override old navigation names to point to the same reliable function.
+  window.toggleSimplePagesMenu = function(ev){ if(ev){ev.preventDefault();ev.stopPropagation();} return realToggleMenu(); };
+  window.toggleLuxuryMenu = function(ev){ if(ev){ev.preventDefault();ev.stopPropagation();} return realToggleMenu(); };
+  window.goSimplePage = window.realShowPage;
+  window.goLuxuryPage = window.realShowPage;
+  window.fmNavigate = window.realShowPage;
+  window.showTab = window.realShowPage;
+
+  function bindMenu(){
+    var b = menuBtn();
+    var m = menuEl();
+
+    if(b){
+      b.removeAttribute('onclick');
+      b.type = 'button';
+      b.style.pointerEvents = 'auto';
+      b.addEventListener('click', function(ev){
+        ev.preventDefault();
+        ev.stopPropagation();
+        realToggleMenu();
+      }, true);
+    }
+
+    if(m){
+      m.querySelectorAll('button[data-page]').forEach(function(btn){
+        btn.addEventListener('click', function(ev){
+          ev.preventDefault();
+          ev.stopPropagation();
+          realShowPage(btn.getAttribute('data-page'));
+        }, true);
+      });
+    }
+
+    document.body.classList.remove('drawerOpen');
+    setTimeout(function(){ realShowPage(window.currentTabId || 'newMatch'); }, 100);
+  }
+
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', bindMenu);
+  } else {
+    bindMenu();
+  }
+})();

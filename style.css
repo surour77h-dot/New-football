@@ -138,3 +138,62 @@ section.tab.active{
   visibility:visible!important;
   height:auto!important;
 }
+
+/* ===== FINAL MENU BUTTON HARD FIX CSS ===== */
+.drawerOverlay,
+.sideDrawer,
+.simplePagesMenu{
+  display:none!important;
+  pointer-events:none!important;
+}
+#realMenuBtn,
+.fmMenuBtn{
+  position:relative!important;
+  z-index:99999!important;
+  pointer-events:auto!important;
+  cursor:pointer!important;
+}
+.realPagesMenu{
+  display:none;
+  position:relative;
+  z-index:99998;
+  margin:8px 0 4px;
+  padding:8px;
+  border-radius:16px;
+  background:#08111f;
+  border:1px solid rgba(246,216,132,.18);
+  box-shadow:0 14px 35px rgba(0,0,0,.35);
+  grid-template-columns:1fr 1fr;
+  gap:6px;
+}
+.realPagesMenu.open{
+  display:grid!important;
+}
+.realPagesMenu button{
+  min-height:42px!important;
+  border-radius:12px!important;
+  background:#101d30!important;
+  color:#fff!important;
+  border:1px solid rgba(246,216,132,.10)!important;
+  box-shadow:none!important;
+  text-align:center!important;
+  font-size:12px!important;
+  pointer-events:auto!important;
+}
+.realPagesMenu button.activeTab{
+  background:linear-gradient(135deg,#6f5318,#d7a943)!important;
+  color:#111!important;
+}
+main > section.tab:not(.active),
+section.tab:not(.active){
+  display:none!important;
+  visibility:hidden!important;
+  height:0!important;
+  overflow:hidden!important;
+}
+main > section.tab.active,
+section.tab.active{
+  display:block!important;
+  visibility:visible!important;
+  height:auto!important;
+}
