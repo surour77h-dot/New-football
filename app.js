@@ -35,26 +35,25 @@ function goPage(id){
   currentPage=id;
   document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id===id));
   document.querySelectorAll('[data-page]').forEach(b=>b.classList.toggle('active',b.dataset.page===id));
-  const titleBox=document.getElementById('pageTitle');
-  if(titleBox) titleBox.textContent=pageTitle(id);
+  if(typeof pageTitleEl!=='undefined' && pageTitleEl) pageTitleEl.textContent=pageTitle(id);
   if(typeof pagesMenu!=='undefined' && pagesMenu) pagesMenu.classList.remove('open');
   renderAll();
-  if(titleBox) titleBox.textContent=pageTitle(id);
+  if(typeof pageTitleEl!=='undefined' && pageTitleEl) pageTitleEl.textContent=pageTitle(id);
 }
 function toggleMenu(){pagesMenu.classList.toggle('open')}
 
 function depositTypeLabel(d){
-  if(d.type==='late') return 'تأخير';
-  if(d.type==='out') return 'مديونية';
-  if(d.type==='initial') return 'إيداع مبدئي';
+  if(d.type==='late')return 'تأخير';
+  if(d.type==='out')return 'مديونية';
+  if(d.type==='initial')return 'إيداع مبدئي';
   const raw=String(d.date||'').replace(/-/g,'/');
-  if(raw==='2026/01/01'||raw==='1/1/2026') return 'إيداع مبدئي';
+  if(raw==='2026/01/01'||raw==='1/1/2026')return 'إيداع مبدئي';
   return 'إيداع';
 }
 function amountClass(n,type){
-  if(type==='late') return 'moneyLate';
-  if(type==='out'||type==='debt'||type==='discount') return 'moneyNeg';
-  if(type==='initial'||type==='in'||type==='extra'||type==='deposit') return 'moneyPos';
+  if(type==='late')return'moneyLate';
+  if(type==='out'||type==='debt'||type==='discount')return'moneyNeg';
+  if(type==='initial'||type==='in'||type==='extra')return'moneyPos';
   n=Number(n||0);
   return n<0?'moneyNeg':n>0?'moneyPos':'moneyZero';
 }
@@ -63,28 +62,28 @@ function balances(s){
   const b={};
   s.players.forEach(p=>b[p]={balance:0,games:0,last:'',deposits:0,late:0,playTotal:0,debtDeposits:0});
   (s.deposits||[]).forEach(d=>{
-    if(!b[d.player]) b[d.player]={balance:0,games:0,last:'',deposits:0,late:0,playTotal:0,debtDeposits:0};
+    if(!b[d.player])b[d.player]={balance:0,games:0,last:'',deposits:0,late:0,playTotal:0,debtDeposits:0};
     let type=d.type;
     const raw=String(d.date||'').replace(/-/g,'/');
-    if(!type&&(raw==='2026/01/01'||raw==='1/1/2026')) type='initial';
+    if(!type&&(raw==='2026/01/01'||raw==='1/1/2026'))type='initial';
     let amt=Math.abs(Number(d.amount||0));
-    if(type==='out'||type==='late') amt=-amt;
+    if(type==='out'||type==='late')amt=-amt;
     b[d.player].balance+=amt;
-    if(amt>0) b[d.player].deposits+=amt;
-    if(type==='late') b[d.player].late+=Math.abs(Number(d.amount||0));
-    if(type==='out') b[d.player].debtDeposits+=Math.abs(Number(d.amount||0));
+    if(amt>0)b[d.player].deposits+=amt;
+    if(type==='late')b[d.player].late+=Math.abs(amt);
+    if(type==='out')b[d.player].debtDeposits+=Math.abs(Number(d.amount||0));
   });
   (s.matches||[]).forEach(m=>{
     (m.players||[]).forEach(p=>{
-      if(!b[p]) b[p]={balance:0,games:0,last:'',deposits:0,late:0,playTotal:0,debtDeposits:0};
+      if(!b[p])b[p]={balance:0,games:0,last:'',deposits:0,late:0,playTotal:0,debtDeposits:0};
       b[p].balance-=Number(m.price||0);
       b[p].playTotal+=Number(m.price||0);
       b[p].games++;
-      if(!b[p].last||m.date>b[p].last) b[p].last=m.date;
+      if(!b[p].last||m.date>b[p].last)b[p].last=m.date;
     });
     (m.guests||[]).forEach(g=>{
       const p=g.owner;
-      if(!b[p]) b[p]={balance:0,games:0,last:'',deposits:0,late:0,playTotal:0,debtDeposits:0};
+      if(!b[p])b[p]={balance:0,games:0,last:'',deposits:0,late:0,playTotal:0,debtDeposits:0};
       b[p].balance-=Number(m.price||0);
       b[p].playTotal+=Number(m.price||0);
     });
@@ -98,11 +97,9 @@ function refreshSelects(s){
   playerFilterSelect.innerHTML='<option value="">اختر لاعب</option>'+opts;
 }
 function renderAll(){
-  const s=state();
-  saveNoRender(s);
-  refreshSelects(s);
-  if(!matchDate.value) matchDate.value=today();
-  if(!depositDate.value) depositDate.value=today();
+  const s=state();saveNoRender(s);refreshSelects(s);
+  if(!matchDate.value)matchDate.value=today();
+  if(!depositDate.value)depositDate.value=today();
   pricePerPlayer.textContent=money(calcPrice());
   if(s.settings.appTitle) document.querySelector('.title h1').textContent=s.settings.appTitle;
   if(s.settings.appDesc) document.querySelector('.title p').textContent=s.settings.appDesc;
@@ -110,23 +107,9 @@ function renderAll(){
     appTitleInput.value=s.settings.appTitle||'قروب الكورة';
     appDescInput.value=s.settings.appDesc||'إدارة اللعبات • الحسابات • اللاعبين';
   }
-  renderPlayers(s);
-  renderMatchPlayers(s);
-  renderDeposits(s);
-  renderCalendar();
-  renderCalendarList();
-  renderTeamsSelect(s);
-  renderTeams();
-  renderPlayerTable(s);
-  renderPlayerReport();
-  renderAccounts(s);
-  renderMatchLog(s);
-  renderPageOrder();
-  renderSettingsPageNames();
-  renderMenuLabels();
+  renderPlayers(s);renderMatchPlayers(s);renderDeposits(s);renderCalendar();renderCalendarList();renderTeamsSelect(s);renderTeams();renderPlayerTable(s);renderPlayerReport();renderAccounts(s);renderMatchLog(s);renderPageOrder();renderSettingsPageNames();
   document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id===currentPage));
-  const titleBox=document.getElementById('pageTitle');
-  if(titleBox) titleBox.textContent=pageTitle(currentPage);
+  if(typeof pageTitleEl!=='undefined' && pageTitleEl) pageTitleEl.textContent=pageTitle(currentPage);
 }
 function calcPrice(){const c=Number(bookingCost.value||0),n=Number(neededPlayers.value||0);return n?c/n:0}
 function renderPlayers(s){
@@ -145,38 +128,31 @@ function clearMatch(){editingMatchId.value='';place.value='';bookingCost.value='
 
 function saveDeposit(){
   const s=state();
-  const amt=Number(depositAmount.value||0);
+  let amt=Number(depositAmount.value||0);
   const type=depositType.value;
-  if(!depositPlayer.value||!amt) return;
+  if(!depositPlayer.value||!amt)return;
   const row={id:editingDepositId.value||uid(),player:depositPlayer.value,date:depositDate.value||today(),amount:Math.abs(amt),type,createdAt:Date.now()};
   const i=s.deposits.findIndex(d=>d.id===row.id);
-  if(i>=0) s.deposits[i]=row; else s.deposits.push(row);
-  editingDepositId.value='';
-  depositAmount.value='';
-  save(s);
+  if(i>=0)s.deposits[i]=row;else s.deposits.push(row);
+  editingDepositId.value='';depositAmount.value='';save(s);
 }
 function clearDeposit(){editingDepositId.value='';depositAmount.value=''}
 function renderDeposits(s){
   const rows=[...s.deposits].sort((a,b)=>(b.date||'').localeCompare(a.date||'')).map(d=>{
     let type=d.type;
     const raw=String(d.date||'').replace(/-/g,'/');
-    if(!type&&(raw==='2026/01/01'||raw==='1/1/2026')) type='initial';
+    if(!type&&(raw==='2026/01/01'||raw==='1/1/2026'))type='initial';
     const cls=amountClass(0,type);
     const sign=(type==='out'||type==='late')?'-':'';
     return `<div class="tRow" onclick="editDeposit('${d.id}')"><span>${escapeHtml(d.player||'')}</span><span>${fmDate(d.date)}</span><span class="${cls}">${depositTypeLabel({...d,type})} ${sign}${money(Math.abs(d.amount||0))}</span></div>`;
   }).join('');
-  depositsList.innerHTML=`<div class="compactTable depositsMoneyTable"><div class="tHead"><span>اللاعب</span><span>التاريخ</span><span class="amountHead">المبلغ</span></div>${rows||'<p class="muted">لا توجد عمليات</p>'}</div>`;
+  depositsList.innerHTML=`<div class="compactTable moneyTable narrowAmount"><div class="tHead"><span>اللاعب</span><span>التاريخ</span><span class="amountHead">المبلغ</span></div>${rows||'<p class="muted">لا توجد عمليات</p>'}</div>`;
 }
 function editDeposit(id){
-  const s=state(),d=s.deposits.find(x=>x.id===id);
-  if(!d) return;
-  editingDepositId.value=d.id;
-  depositPlayer.value=d.player;
-  depositDate.value=d.date;
-  depositAmount.value=Math.abs(d.amount);
-  let type=d.type;
-  const raw=String(d.date||'').replace(/-/g,'/');
-  if(!type&&(raw==='2026/01/01'||raw==='1/1/2026')) type='initial';
+  const s=state(),d=s.deposits.find(x=>x.id===id);if(!d)return;
+  editingDepositId.value=d.id;depositPlayer.value=d.player;depositDate.value=d.date;depositAmount.value=Math.abs(d.amount);
+  let type=d.type;const raw=String(d.date||'').replace(/-/g,'/');
+  if(!type&&(raw==='2026/01/01'||raw==='1/1/2026'))type='initial';
   depositType.value=type||'in';
   goPage('deposits');
 }
@@ -186,22 +162,17 @@ function renderTeamsSelect(s){teamsMatchSelect.innerHTML=[...s.matches].sort((a,
 function renderTeams(){
   const s=state(),m=s.matches.find(x=>x.id===teamsMatchSelect.value);
   if(!m){teamsPlayers.innerHTML='';teamsPreview.innerHTML='';return}
-  if(tempTeamMap.__matchId!==m.id) tempTeamMap={...(s.teams[m.id]||{}),__matchId:m.id};
+  if(tempTeamMap.__matchId!==m.id){tempTeamMap={...(s.teams[m.id]||{}),__matchId:m.id};}
   const names=participants(m);
-  teamsPlayers.innerHTML=`<button type="button" class="primary wide editMatchTeamBtn" onclick="editSelectedMatchFromTeams()">تعديل وإضافة لاعبين للعبة المختارة</button>`+
-    names.map(n=>`<div class="teamPickLine"><b>${escapeHtml(n)}</b><div class="teamTabs"><button type="button" class="${tempTeamMap[n]==='A'?'selA':''}" onclick="pickTeam('${escAttr(n)}','A')">الأول</button><button type="button" class="${tempTeamMap[n]==='B'?'selB':''}" onclick="pickTeam('${escAttr(n)}','B')">الثاني</button></div></div>`).join('');
-  const map={...tempTeamMap};
-  delete map.__matchId;
+  teamsPlayers.innerHTML=names.map(n=>`<div class="teamPickLine"><b>${escapeHtml(n)}</b><div class="teamTabs"><button type="button" class="${tempTeamMap[n]==='A'?'selA':''}" onclick="pickTeam('${escAttr(n)}','A')">الأول</button><button type="button" class="${tempTeamMap[n]==='B'?'selB':''}" onclick="pickTeam('${escAttr(n)}','B')">الثاني</button></div></div>`).join('');
+  const map={...tempTeamMap};delete map.__matchId;
   teamsPreview.innerHTML=`<div class="card">${teamHtml({...s,teams:{...s.teams,[m.id]:map}},m)}</div>`;
 }
 function pickTeam(n,t){tempTeamMap[n]=t;renderTeams()}
 function saveTeams(){
-  const s=state(),id=teamsMatchSelect.value;
-  if(!id) return;
-  const map={...tempTeamMap};
-  delete map.__matchId;
-  s.teams[id]=map;
-  save(s);
+  const s=state(),id=teamsMatchSelect.value;if(!id)return;
+  const map={...tempTeamMap};delete map.__matchId;
+  s.teams[id]=map;save(s);
 }
 
 function renderPlayerTable(s){
@@ -211,15 +182,13 @@ function renderPlayerTable(s){
 function openPlayerReport(p){playerFilterSelect.value=p;goPage('playerReport')}
 
 function renderPlayerReport(){
-  const s=state(),p=playerFilterSelect.value;
-  if(!p){playerFilterContent.innerHTML='';return}
+  const s=state(),p=playerFilterSelect.value;if(!p){playerFilterContent.innerHTML='';return}
   const b=balances(s)[p]||{},deps=s.deposits.filter(d=>d.player===p),games=s.matches.filter(m=>(m.players||[]).includes(p));
   const playPlusDebt=(b.playTotal||0)+(b.debtDeposits||0);
   const gameRows=games.map(g=>`<div class="tRow"><span>${fmDate(g.date)}</span><span>${escapeHtml(g.place||'')}</span><span class="moneyNeg">-${money(g.price||0)}</span></div>`).join('');
   const depRows=deps.map(d=>{
-    let type=d.type;
-    const raw=String(d.date||'').replace(/-/g,'/');
-    if(!type&&(raw==='2026/01/01'||raw==='1/1/2026')) type='initial';
+    let type=d.type;const raw=String(d.date||'').replace(/-/g,'/');
+    if(!type&&(raw==='2026/01/01'||raw==='1/1/2026'))type='initial';
     const sign=(type==='out'||type==='late')?'-':'';
     return `<div class="tRow"><span>${fmDate(d.date)}</span><span>${depositTypeLabel({...d,type})}</span><span class="${amountClass(0,type)}">${sign}${money(Math.abs(d.amount||0))}</span></div>`;
   }).join('');
@@ -245,13 +214,13 @@ function renderAccounts(s){
   const debtRows=neg.map(p=>`<div class="tRow" onclick="openPlayerReport('${escAttr(p)}')"><span>${escapeHtml(p)}</span><span>${fmDate(b[p].last)}</span><span class="moneyNeg">-${money(Math.abs(b[p].balance))}</span></div>`).join('');
   const lateRows=late.map(d=>`<div class="tRow" onclick="openPlayerReport('${escAttr(d.player)}')"><span>${escapeHtml(d.player)}</span><span>${fmDate(d.date)}</span><span class="moneyLate">-${money(Math.abs(d.amount))}</span></div>`).join('');
   accountsContent.innerHTML=`<div class="accountMiniCards"><div><span>المديونية</span><b class="moneyNeg">-${money(debt)}</b></div><div><span>التأخير</span><b class="moneyLate">-${money(lateTotal)}</b></div><div><span>الإضافي</span><b class="moneyPos">${money(extra)}</b></div><div><span>الإجمالي</span><b class="${amountClass(final)}">${final<0?'-':''}${money(Math.abs(final))}</b></div></div>
-  <div class="card"><h3>اللاعبين المدانين والمتأخرين</h3><div class="compactTable accountsMoneyTable"><div class="tHead"><span>الاسم</span><span>التاريخ</span><span class="amountHead">المبلغ</span></div>${debtRows}${lateRows}${(!debtRows&&!lateRows)?'<p class="muted">لا يوجد</p>':''}</div></div>
-  <div class="card"><div class="sectionTitleLine"><b>خصم / إضافة</b></div><div class="grid2 accountsExtraGrid"><label>النوع<select id="extraType"><option value="extra">إضافة</option><option value="discount">خصم</option></select></label><label>التاريخ<input id="extraDate" type="date" value="${today()}"></label><label>المبلغ<input id="extraAmount" type="number" step="0.001"></label><label>الملاحظة<input id="extraNote"></label></div><button class="primary wide" onclick="saveExtraUnified()">حفظ</button></div>
+  <div class="card"><h3>اللاعبين المدانين والمتأخرين</h3><div class="compactTable moneyTable narrowAmount"><div class="tHead"><span>الاسم</span><span>التاريخ</span><span class="amountHead">المبلغ</span></div>${debtRows}${lateRows}${(!debtRows&&!lateRows)?'<p class="muted">لا يوجد</p>':''}</div></div>
+  <div class="card"><div class="sectionTitleLine"><b>خصم / إضافة</b></div><div class="grid2"><label>النوع<select id="extraType"><option value="extra">إضافة</option><option value="discount">خصم</option></select></label><label>التاريخ<input id="extraDate" type="date" value="${today()}"></label><label>المبلغ<input id="extraAmount" type="number" step="0.001"></label><label>الملاحظة<input id="extraNote"></label></div><button class="primary wide" onclick="saveExtraUnified()">حفظ</button></div>
   <div class="card"><div class="sectionTitleLine"><b>سجل الخصم / الإضافة</b><button onclick="openAdjustEditor()">تعديل</button></div>${renderAdjustRows(s)}</div>`;
 }
 function renderAdjustRows(s){
   let rows=[...s.extraCharges.map(x=>({...x,t:'إضافة',cls:'moneyPos',type:'extra'})),...s.extraDiscounts.map(x=>({...x,t:'خصم',cls:'moneyNeg',type:'discount'}))].sort((a,b)=>(b.date||'').localeCompare(a.date||''));
-  return `<div class="compactTable accountsMoneyTable"><div class="tHead"><span>التاريخ</span><span>العملية</span><span class="amountHead">المبلغ</span></div>${rows.map(r=>`<div class="tRow"><span>${fmDate(r.date)}</span><span>${r.t}</span><span class="${r.cls}">${r.type==='discount'?'-':''}${money(Math.abs(r.amount||0))}</span></div>`).join('')||'<p class="muted">لا يوجد</p>'}</div>`;
+  return `<div class="compactTable moneyTable narrowAmount"><div class="tHead"><span>التاريخ</span><span>العملية</span><span class="amountHead">المبلغ</span></div>${rows.map(r=>`<div class="tRow"><span>${fmDate(r.date)}</span><span>${r.t}</span><span class="${r.cls}">${r.type==='discount'?'-':''}${money(Math.abs(r.amount||0))}</span></div>`).join('')||'<p class="muted">لا يوجد</p>'}</div>`;
 }
 function saveExtraUnified(){const s=state(),type=extraType.value,amount=Number(extraAmount.value||0);if(!amount)return;const row={id:uid(),date:extraDate.value||today(),amount:Math.abs(amount),note:extraNote.value,createdAt:Date.now()};if(type==='discount')s.extraDiscounts.push(row);else s.extraCharges.push(row);save(s)}
 function openAdjustEditor(){const s=state();adjustEditorDraft={extraCharges:JSON.parse(JSON.stringify(s.extraCharges)),extraDiscounts:JSON.parse(JSON.stringify(s.extraDiscounts))};renderAdjustEditTable();adjustEditModal.classList.add('show')}
@@ -263,16 +232,8 @@ function saveAdjustEditor(){const s=state();s.extraCharges=adjustEditorDraft.ext
 function renderMatchLog(s){
   matchLogList.innerHTML=[...s.matches].sort((a,b)=>(b.date||'').localeCompare(a.date||'')).map(m=>`<div class="matchCard"><div class="matchHead"><b>${fmDate(m.date)}</b><span>${escapeHtml(m.place||'')}</span></div><div class="matchMeta"><span>${participants(m).length} لاعب</span><b>${money(m.bookingCost||m.price||0)} د.ك</b></div>${teamHtml(s,m)}</div>`).join('')||'<p class="muted">لا توجد ألعاب محفوظة.</p>';
 }
-function renderPageOrder(){
-  const order=getPageOrder();
-  pageOrderList.innerHTML=order.map(id=>`<div class="compactItem pageOrderItem"><b>${pageTitle(id)}</b><div class="actions"><button onclick="movePage('${id}',-1)">↑</button><button onclick="movePage('${id}',1)">↓</button></div></div>`).join('');
-}
-function movePage(id,dir){
-  const order=getPageOrder(),i=order.indexOf(id),j=i+dir;
-  if(i<0||j<0||j>=order.length)return;
-  [order[i],order[j]]=[order[j],order[i]];
-  savePageOrder(order);
-}
+function renderPageOrder(){const order=getPageOrder(),labels=Object.fromEntries(defaultPages);pageOrderList.innerHTML=order.map(id=>`<div class="compactItem pageOrderItem"><b>${labels[id]}</b><div class="actions"><button onclick="movePage('${id}',-1)">↑</button><button onclick="movePage('${id}',1)">↓</button></div></div>`).join('')}
+function movePage(id,dir){const order=getPageOrder(),i=order.indexOf(id),j=i+dir;if(i<0||j<0||j>=order.length)return;[order[i],order[j]]=[order[j],order[i]];savePageOrder(order)}
 function exportData(){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(state(),null,2)],{type:'application/json'}));a.download='football-backup.json';a.click()}
 function importData(e){const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{localStorage.setItem(LS,r.result);renderAll();alert('تم الاستيراد')};r.readAsText(f)}
 function exportExcel(){alert('تصدير Excel في هذه النسخة سيكون ملف CSV لاحقاً')}
@@ -287,59 +248,12 @@ if(typeof saveAppInfoBtn!=='undefined')saveAppInfoBtn.onclick=saveAppInfo;
 renderAll();goPage('home');
 
 
-if(target && !document.getElementById('pageNamesEditor')) target.insertAdjacentHTML('beforebegin','<h3>تعديل أسماء الصفحات</h3><div id="pageNamesEditor" class="pageNamesEditor"></div>');
+function renderSettingsPageNames(){
+  const target=document.getElementById('pageOrderList');
+  if(target && !document.getElementById('pageNamesEditor')) target.insertAdjacentHTML('beforebegin','<h3>تعديل أسماء الصفحات</h3><div id="pageNamesEditor" class="pageNamesEditor"></div>');
   const editor=document.getElementById('pageNamesEditor');if(!editor)return;
   const s=state(),names=s.settings.pageNames||{};
   editor.innerHTML=defaultPages.map(([id,label])=>`<label>${label}<input data-page-name="${id}" value="${escapeHtml(names[id]||label)}"></label>`).join('')+'<button type="button" class="primary wide" onclick="savePageNames()">حفظ أسماء الصفحات</button>';
 }
 function savePageNames(){const s=state();s.settings.pageNames=s.settings.pageNames||{};document.querySelectorAll('[data-page-name]').forEach(inp=>{s.settings.pageNames[inp.dataset.pageName]=inp.value.trim()||Object.fromEntries(defaultPages)[inp.dataset.pageName]});save(s);goPage(currentPage)}
 function saveAppInfo(){const s=state();s.settings.appTitle=appTitleInput.value.trim()||'قروب الكورة';s.settings.appDesc=appDescInput.value.trim()||'إدارة اللعبات • الحسابات • اللاعبين';save(s)}
-
-function editSelectedMatchFromTeams(){
-  const s=state(),m=s.matches.find(x=>x.id===teamsMatchSelect.value);
-  if(!m)return alert('اختر لعبة أولاً');
-  editingMatchId.value=m.id;matchDate.value=m.date||today();place.value=m.place||'';bookingCost.value=m.bookingCost||'';neededPlayers.value=m.neededPlayers||'';tempGuests=[...(m.guests||[])];
-  goPage('home');
-  setTimeout(()=>{document.querySelectorAll('.playerCheck').forEach(ch=>{ch.checked=(m.players||[]).includes(ch.value)});renderTempGuests();renderMatchPreview();pricePerPlayer.textContent=money(calcPrice());},60);
-}
-
-
-
-function renderSettingsPageNames(){
-  let editor=document.getElementById('pageNamesEditor');
-  if(!editor){
-    const target=document.getElementById('pageOrderList');
-    if(target){
-      target.insertAdjacentHTML('beforebegin','<h3>تعديل أسماء الصفحات</h3><div id="pageNamesEditor" class="pageNamesEditor"></div>');
-      editor=document.getElementById('pageNamesEditor');
-    }
-  }
-  if(!editor)return;
-  const s=state(),names=s.settings.pageNames||{};
-  editor.innerHTML=defaultPages.map(([id,label])=>`<label><span>${label}</span><input data-page-name="${id}" value="${escapeHtml(names[id]||label)}"></label>`).join('')+'<button type="button" class="primary wide" onclick="savePageNames()">حفظ أسماء الصفحات</button>';
-}
-function savePageNames(){
-  const s=state();
-  s.settings.pageNames=s.settings.pageNames||{};
-  document.querySelectorAll('[data-page-name]').forEach(inp=>{
-    s.settings.pageNames[inp.dataset.pageName]=inp.value.trim()||Object.fromEntries(defaultPages)[inp.dataset.pageName];
-  });
-  localStorage.setItem(LS,JSON.stringify(s));
-  renderMenuLabels();
-  renderPageOrder();
-  goPage(currentPage);
-}
-function renderMenuLabels(){
-  if(!pagesMenu)return;
-  const icons={home:'🏠',accounts:'💰',players:'👥',playerReport:'🔎',calendar:'📅',teams:'🟨',deposits:'💳',playerTable:'📊',matchLog:'🧾',settings:'⚙️'};
-  pagesMenu.querySelectorAll('[data-page]').forEach(btn=>{
-    const id=btn.dataset.page;
-    btn.textContent=(icons[id]||'📄')+' '+pageTitle(id);
-  });
-}
-function saveAppInfo(){
-  const s=state();
-  s.settings.appTitle=appTitleInput.value.trim()||'قروب الكورة';
-  s.settings.appDesc=appDescInput.value.trim()||'إدارة اللعبات • الحسابات • اللاعبين';
-  save(s);
-}
