@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <meta name="theme-color" content="#08111f">
 <title>قروب الكورة - Clean V3</title>
-<link rel="manifest" href="manifest.json?v=cleanv3">
-<link rel="stylesheet" href="style.css?v=cleanv3">
+<link rel="manifest" href="manifest.json?v=cleanv3r2">
+<link rel="stylesheet" href="style.css?v=cleanv3r2">
 </head>
 <body>
 <div class="app">
@@ -27,16 +27,15 @@
     <button data-page="players">👥 اللاعبين</button>
     <button data-page="playerReport">🔎 كشف لاعب</button>
     <button data-page="calendar">📅 التقويم</button>
-    <button data-page="teams">🟨 الفريقين</button>
+    <button data-page="teams">🟨 تقسيم الفريقين</button>
     <button data-page="deposits">💳 الإيداعات</button>
     <button data-page="playerTable">📊 جدول اللاعبين</button>
-    <button data-page="matchLog">🧾 السجل</button>
+    <button data-page="matchLog">🧾 سجل المباريات</button>
     <button data-page="settings">⚙️ الإعدادات</button>
   </nav>
 
   <main>
     <section id="home" class="page active">
-      <h2>لعبة جديدة</h2>
       <div class="card">
         <input type="hidden" id="editingMatchId">
         <div class="grid2">
@@ -64,7 +63,6 @@
     </section>
 
     <section id="players" class="page">
-      <h2>اللاعبين</h2>
       <div class="card">
         <div class="addLine">
           <input id="playerName" placeholder="اسم اللاعب">
@@ -86,12 +84,10 @@
     </section>
 
     <section id="playerTable" class="page">
-      <h2>جدول اللاعبين</h2>
       <div id="playerTableWrap" class="card tableCard"></div>
     </section>
 
     <section id="playerReport" class="page">
-      <h2>كشف لاعب</h2>
       <div class="card">
         <label>اختر لاعب<select id="playerFilterSelect"></select></label>
         <div id="playerFilterContent"></div>
@@ -99,7 +95,6 @@
     </section>
 
     <section id="calendar" class="page">
-      <h2>التقويم</h2>
       <div class="card">
         <div class="monthNav">
           <button id="prevMonth" type="button">‹</button>
@@ -115,7 +110,6 @@
     </section>
 
     <section id="teams" class="page">
-      <h2>الفريقين</h2>
       <div class="card">
         <label>اختر لعبة<select id="teamsMatchSelect"></select></label>
         <div id="teamsPlayers" class="teamPickWrap"></div>
@@ -125,14 +119,13 @@
     </section>
 
     <section id="deposits" class="page">
-      <h2>الإيداعات</h2>
       <div class="card">
         <input type="hidden" id="editingDepositId">
         <div class="grid2">
           <label>اللاعب<select id="depositPlayer"></select></label>
           <label>تاريخ الإيداع<input id="depositDate" type="date"></label>
           <label>المبلغ<input id="depositAmount" type="number" step="0.001" inputmode="decimal"></label>
-          <label>النوع<select id="depositType"><option value="in">إيداع</option><option value="out">خصم</option><option value="late">تأخير</option></select></label>
+          <label>النوع<select id="depositType"><option value="in">إيداع</option><option value="initial">إيداع مبدئي</option><option value="out">مديونية</option><option value="late">تأخير</option></select></label>
         </div>
         <div class="actions">
           <button id="saveDepositBtn" class="primary" type="button">حفظ</button>
@@ -143,17 +136,14 @@
     </section>
 
     <section id="accounts" class="page">
-      <h2>الحسابات</h2>
       <div id="accountsContent"></div>
     </section>
 
     <section id="matchLog" class="page">
-      <h2>السجل</h2>
       <div id="matchLogList"></div>
     </section>
 
     <section id="settings" class="page">
-      <h2>الإعدادات</h2>
       <div class="card">
         <div class="settingsActions">
           <button id="exportDataBtn" type="button">تصدير البيانات</button>
@@ -178,6 +168,6 @@
   </div>
 </div>
 
-<script src="app.js?v=cleanv3"></script>
+<script src="app.js?v=cleanv3r2"></script>
 </body>
 </html>
