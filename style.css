@@ -130,3 +130,77 @@ button,.importLabel{min-height:40px;border:0;border-radius:13px;padding:8px 11px
   #home .grid2,#deposits .grid2{grid-template-columns:1fr 1fr!important;gap:6px!important}
   .moneyTable.narrowAmount .tHead,.moneyTable.narrowAmount .tRow{grid-template-columns:minmax(0,1fr) 56px 72px!important}
 }
+
+/* Round 4 hard fixes for X items */
+.pageTitle{font-weight:950!important;color:var(--gold2)!important}.page>h2{display:none!important}
+#home .grid2,#deposits .grid2,.accountsExtraGrid{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;align-items:end!important;gap:8px!important}
+#home .grid2 label,#deposits .grid2 label,.accountsExtraGrid label{min-width:0!important;width:100%!important;display:block!important}
+#matchDate,#place,#bookingCost,#neededPlayers,#depositDate,#depositPlayer,#depositAmount,#depositType,#extraDate,#extraType,#extraAmount,#extraNote{width:100%!important;min-width:0!important;max-width:100%!important;display:block!important;box-sizing:border-box!important}
+.compactList{display:flex!important;flex-wrap:wrap!important;gap:5px!important}.playerChip,.compactList .nameOnly{width:auto!important;min-width:max-content!important;max-width:100%!important;padding:5px 9px!important;flex:0 0 auto!important}
+.depositsMoneyTable .tHead,.depositsMoneyTable .tRow{grid-template-columns:minmax(0,1fr) 54px 112px!important}.accountsMoneyTable .tHead,.accountsMoneyTable .tRow{grid-template-columns:minmax(0,1fr) 58px 92px!important}
+.depositsMoneyTable .tRow span:nth-child(2),.accountsMoneyTable .tRow span:nth-child(2){color:var(--muted)!important;font-size:11px!important}.depositsMoneyTable .tRow span:last-child,.depositsMoneyTable .tHead span:last-child,.accountsMoneyTable .tRow span:last-child,.accountsMoneyTable .tHead span:last-child{justify-self:end!important;text-align:left!important;white-space:nowrap!important}
+.reportTable .tHead,.reportTable .tRow{grid-template-columns:62px minmax(0,1fr) 86px!important}.reportTable .tRow span:first-child{color:var(--muted)!important;font-size:11px!important}.reportTable .tRow span:last-child,.reportTable .tHead span:last-child{justify-self:end!important;text-align:left!important;white-space:nowrap!important}.moneyPos{color:var(--green)!important;font-weight:950!important}.moneyNeg{color:var(--red)!important;font-weight:950!important}.moneyLate{color:var(--orange)!important;font-weight:950!important}
+.pageNamesEditor{display:grid!important;gap:4px!important;margin-bottom:10px!important}.pageNamesEditor label{display:grid!important;grid-template-columns:92px minmax(0,1fr)!important;align-items:center!important;gap:6px!important;margin:2px 0!important}.pageNamesEditor input{min-height:34px!important;padding:6px 8px!important;font-size:14px!important}.pageOrderItem{min-height:28px!important;padding:4px 8px!important}.editMatchTeamBtn{margin-bottom:8px!important}
+@media(max-width:360px){#home .grid2,#deposits .grid2,.accountsExtraGrid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:6px!important}.depositsMoneyTable .tHead,.depositsMoneyTable .tRow{grid-template-columns:minmax(0,1fr) 50px 104px!important}}
+
+/* All instructions final pass */
+.pageTitle{font-weight:950!important;color:var(--gold2)!important}
+.page > h2{display:none!important}
+#home .grid2,#deposits .grid2,.accountsExtraGrid{
+  display:grid!important;
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  gap:8px!important;
+  align-items:end!important;
+}
+#home .grid2 label,#deposits .grid2 label,.accountsExtraGrid label{
+  min-width:0!important;width:100%!important;display:block!important;
+}
+#matchDate,#place,#bookingCost,#neededPlayers,#depositDate,#depositPlayer,#depositAmount,#depositType,#extraDate,#extraType,#extraAmount,#extraNote{
+  width:100%!important;min-width:0!important;max-width:100%!important;display:block!important;box-sizing:border-box!important;
+}
+.checkList{grid-template-columns:repeat(auto-fit,minmax(112px,1fr))!important}
+.checkList label{display:flex!important;align-items:center!important;gap:6px!important;white-space:nowrap!important;min-height:28px!important;padding:3px 6px!important}
+.checkList input{width:auto!important;min-height:auto!important;flex:0 0 auto!important}
+.compactList{display:flex!important;flex-wrap:wrap!important;gap:5px!important}
+.playerChip,.compactList .nameOnly{width:auto!important;min-width:max-content!important;max-width:100%!important;padding:5px 9px!important;flex:0 0 auto!important}
+.depositsMoneyTable .tHead,.depositsMoneyTable .tRow{grid-template-columns:minmax(0,1fr) 54px 112px!important}
+.accountsMoneyTable .tHead,.accountsMoneyTable .tRow{grid-template-columns:minmax(0,1fr) 58px 92px!important}
+.depositsMoneyTable .tRow span:nth-child(2),.accountsMoneyTable .tRow span:nth-child(2){color:var(--muted)!important;font-size:11px!important}
+.depositsMoneyTable .tRow span:last-child,.depositsMoneyTable .tHead span:last-child,.accountsMoneyTable .tRow span:last-child,.accountsMoneyTable .tHead span:last-child{justify-self:end!important;text-align:left!important;white-space:nowrap!important}
+.reportTable .tHead,.reportTable .tRow{grid-template-columns:62px minmax(0,1fr) 86px!important}
+.reportTable .tRow span:first-child{color:var(--muted)!important;font-size:11px!important}
+.reportTable .tRow span:last-child,.reportTable .tHead span:last-child{justify-self:end!important;text-align:left!important;white-space:nowrap!important}
+.moneyPos{color:var(--green)!important;font-weight:950!important}
+.moneyNeg{color:var(--red)!important;font-weight:950!important}
+.moneyLate{color:var(--orange)!important;font-weight:950!important}
+.reportStats{display:grid!important;grid-template-columns:1fr auto 1fr!important;gap:6px!important;align-items:stretch!important;margin:8px 0!important}
+.statBox{background:#101d30;border:1px solid var(--line);border-radius:14px;padding:8px;min-height:48px}
+.statBox span{display:block;color:var(--muted);font-size:10px;font-weight:900}.statBox b{font-size:14px}
+.depositStat{grid-column:1}.gamesStat{grid-column:2;min-width:68px;text-align:center}.playTotalStat{grid-column:3}.lateStat{grid-column:1}.balanceStat{grid-column:2 / span 2}
+.playersTable{border-spacing:0 2px!important}
+.playersTable td{padding:3px 4px!important}
+.playersTable .balanceTh,.playersTable .balanceTd{width:70px!important}
+.playersTable .gamesTh,.playersTable .gamesTd{width:32px!important;text-align:center!important}
+.playersTable .lastTh,.playersTable .lastTd{width:62px!important;text-align:left!important}
+.latestDate{color:var(--gold2)!important;font-weight:950!important}
+.calMatchTop,.calMatchMeta{display:flex;justify-content:space-between;gap:8px;align-items:center}
+.calMatchTop span{color:var(--gold2);font-weight:950}.calMatchTop b{font-size:13px}
+.calMatchMeta{margin:5px 0;color:var(--muted);font-size:12px}.calMatchMeta b{color:var(--text)}
+.splitMeta{display:grid!important;grid-template-columns:1fr auto 1fr!important;align-items:center!important}
+.splitMeta span{text-align:right}.splitMeta strong{text-align:center;color:var(--gold2);font-weight:950}.splitMeta b{text-align:left}
+#calendarSelectedTitle{display:none!important}
+.matchMeta{display:flex!important;justify-content:space-between!important;gap:8px!important}
+.matchMeta b{color:var(--text);font-weight:950}
+.teamTabs button{pointer-events:auto!important}
+.teamTabs .selA{color:var(--yellow)!important;border-bottom:2px solid var(--yellow)!important}
+.teamTabs .selB{color:var(--pink)!important;border-bottom:2px solid var(--pink)!important}
+.editMatchTeamBtn{margin-bottom:8px!important}
+.pageNamesEditor{display:grid!important;gap:4px!important;margin-bottom:10px!important}
+.pageNamesEditor label{display:grid!important;grid-template-columns:92px minmax(0,1fr)!important;align-items:center!important;gap:6px!important;margin:2px 0!important}
+.pageNamesEditor input{min-height:34px!important;padding:6px 8px!important;font-size:14px!important}
+.pageOrderItem{min-height:28px!important;padding:4px 8px!important}
+.reportStats .playTotalStat span{font-size:9px}
+@media(max-width:360px){
+  #home .grid2,#deposits .grid2,.accountsExtraGrid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:6px!important}
+  .depositsMoneyTable .tHead,.depositsMoneyTable .tRow{grid-template-columns:minmax(0,1fr) 50px 104px!important}
+}
