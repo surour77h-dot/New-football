@@ -245,15 +245,20 @@ prevMonth.onclick=()=>moveMonth(-1);nextMonth.onclick=()=>moveMonth(1);exportDat
 document.addEventListener('change',e=>{if(e.target.classList.contains('playerCheck'))renderMatchPreview()});['bookingCost','neededPlayers'].forEach(id=>document.getElementById(id).addEventListener('input',()=>pricePerPlayer.textContent=money(calcPrice())));
 if('serviceWorker'in navigator){navigator.serviceWorker.register('sw.js')}
 if(typeof saveAppInfoBtn!=='undefined')saveAppInfoBtn.onclick=saveAppInfo;
-renderAll();goPage('home');
-
 
 function renderSettingsPageNames(){
   const target=document.getElementById('pageOrderList');
-  if(target && !document.getElementById('pageNamesEditor')) target.insertAdjacentHTML('beforebegin','<h3>تعديل أسماء الصفحات</h3><div id="pageNamesEditor" class="pageNamesEditor"></div>');
-  const editor=document.getElementById('pageNamesEditor');if(!editor)return;
-  const s=state(),names=s.settings.pageNames||{};
-  editor.innerHTML=defaultPages.map(([id,label])=>`<label>${label}<input data-page-name="${id}" value="${escapeHtml(names[id]||label)}"></label>`).join('')+'<button type="button" class="primary wide" onclick="savePageNames()">حفظ أسماء الصفحات</button>';
+  if(!target)return;
 }
-function savePageNames(){const s=state();s.settings.pageNames=s.settings.pageNames||{};document.querySelectorAll('[data-page-name]').forEach(inp=>{s.settings.pageNames[inp.dataset.pageName]=inp.value.trim()||Object.fromEntries(defaultPages)[inp.dataset.pageName]});save(s);goPage(currentPage)}
+function savePageNames(){}
+function saveAppInfo(){
+  const s=state();
+  if(typeof appTitleInput!=='undefined' && appTitleInput) s.settings.appTitle=appTitleInput.value.trim()||'قروب الكورة';
+  if(typeof appDescInput!=='undefined' && appDescInput) s.settings.appDesc=appDescInput.value.trim()||'إدارة اللعبات • الحسابات • اللاعبين';
+  save(s);
+}
+
+renderAll();goPage('home');
+
+
 function saveAppInfo(){const s=state();s.settings.appTitle=appTitleInput.value.trim()||'قروب الكورة';s.settings.appDesc=appDescInput.value.trim()||'إدارة اللعبات • الحسابات • اللاعبين';save(s)}

@@ -130,3 +130,41 @@ button,.importLabel{min-height:40px;border:0;border-radius:13px;padding:8px 11px
   #home .grid2,#deposits .grid2{grid-template-columns:1fr 1fr!important;gap:6px!important}
   .moneyTable.narrowAmount .tHead,.moneyTable.narrowAmount .tRow{grid-template-columns:minmax(0,1fr) 56px 72px!important}
 }
+
+/* Emergency stable pages menu */
+#ballBtn,.ball{
+  cursor:pointer!important;
+  pointer-events:auto!important;
+  position:relative!important;
+  z-index:9999!important;
+  border:0!important;
+}
+#pagesMenu.pagesMenu{
+  display:none;
+  grid-template-columns:1fr 1fr;
+  gap:6px;
+  margin:8px 0;
+  padding:8px;
+  border-radius:16px;
+  background:#08111f;
+  border:1px solid rgba(246,216,132,.18);
+  position:relative;
+  z-index:9998;
+}
+#pagesMenu.pagesMenu.open{
+  display:grid!important;
+}
+#pagesMenu button{
+  pointer-events:auto!important;
+}
+.page:not(.active){
+  display:none!important;
+  visibility:hidden!important;
+  height:0!important;
+  overflow:hidden!important;
+}
+.page.active{
+  display:block!important;
+  visibility:visible!important;
+  height:auto!important;
+}

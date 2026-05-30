@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <meta name="theme-color" content="#08111f">
 <title>قروب الكورة - Clean V3</title>
-<link rel="manifest" href="manifest.json?v=cleanv3r3retry">
-<link rel="stylesheet" href="style.css?v=cleanv3r3retry">
+<link rel="manifest" href="manifest.json?v=navfixed1">
+<link rel="stylesheet" href="style.css?v=navfixed1">
 </head>
 <body>
 <div class="app">
@@ -21,20 +21,23 @@
 
   <div id="pageTitle" class="pageTitle">الرئيسية</div>
 
-  <nav id="pagesMenu" class="pagesMenu">
-    <button data-page="home">🏠 الرئيسية</button>
-    <button data-page="accounts">💰 الحسابات</button>
-    <button data-page="players">👥 اللاعبين</button>
-    <button data-page="playerReport">🔎 كشف لاعب</button>
-    <button data-page="calendar">📅 التقويم</button>
-    <button data-page="teams">🟨 تقسيم الفريقين</button>
-    <button data-page="deposits">💳 الإيداعات</button>
-    <button data-page="playerTable">📊 جدول اللاعبين</button>
-    <button data-page="matchLog">🧾 سجل المباريات</button>
-    <button data-page="settings">⚙️ الإعدادات</button>
-  </nav>
+  
 
-  <main>
+  
+<nav id="pagesMenu" class="pagesMenu">
+  <button type="button" data-page="home">🏠 الرئيسية</button>
+  <button type="button" data-page="accounts">💰 الحسابات</button>
+  <button type="button" data-page="players">👥 اللاعبين</button>
+  <button type="button" data-page="playerReport">🔎 كشف لاعب</button>
+  <button type="button" data-page="calendar">📅 التقويم</button>
+  <button type="button" data-page="teams">🟨 تقسيم الفريقين</button>
+  <button type="button" data-page="deposits">💳 الإيداعات</button>
+  <button type="button" data-page="playerTable">📊 جدول اللاعبين</button>
+  <button type="button" data-page="matchLog">🧾 سجل المباريات</button>
+  <button type="button" data-page="settings">⚙️ الإعدادات</button>
+</nav>
+
+<main>
     <section id="home" class="page active">
       <div class="card">
         <input type="hidden" id="editingMatchId">
@@ -176,6 +179,94 @@
   </div>
 </div>
 
-<script src="app.js?v=cleanv3r3retry"></script>
+<script src="app.js?v=navfixed1"></script>
+
+<script>
+(function(){
+  const titles = {
+    home:'الرئيسية',
+    accounts:'الحسابات',
+    players:'اللاعبين',
+    playerReport:'كشف لاعب',
+    calendar:'التقويم',
+    teams:'تقسيم الفريقين',
+    deposits:'الإيداعات',
+    playerTable:'جدول اللاعبين',
+    matchLog:'سجل المباريات',
+    settings:'الإعدادات'
+  };
+
+  function setPage(id){
+    id = id || 'home';
+    window.currentPage = id;
+
+    document.querySelectorAll('main > section.page, .page').forEach(function(sec){
+      const active = sec.id === id;
+      sec.classList.toggle('active', active);
+      sec.hidden = !active;
+      sec.style.display = active ? 'block' : 'none';
+      sec.style.visibility = active ? 'visible' : 'hidden';
+      sec.style.height = active ? 'auto' : '0';
+      sec.style.overflow = active ? 'visible' : 'hidden';
+    });
+
+    document.querySelectorAll('#pagesMenu [data-page]').forEach(function(btn){
+      btn.classList.toggle('active', btn.getAttribute('data-page') === id);
+    });
+
+    const title = document.getElementById('pageTitle');
+    if(title) title.textContent = titles[id] || id;
+
+    const menu = document.getElementById('pagesMenu');
+    if(menu) menu.classList.remove('open');
+  }
+
+  function toggleMenu(e){
+    if(e){ e.preventDefault(); e.stopPropagation(); }
+    const menu = document.getElementById('pagesMenu');
+    if(menu) menu.classList.toggle('open');
+    return false;
+  }
+
+  function bind(){
+    const ball = document.getElementById('ballBtn');
+    const menu = document.getElementById('pagesMenu');
+
+    if(ball){
+      ball.onclick = toggleMenu;
+      ball.addEventListener('touchend', toggleMenu, {passive:false});
+    }
+
+    if(menu){
+      menu.querySelectorAll('[data-page]').forEach(function(btn){
+        btn.onclick = function(e){
+          e.preventDefault();
+          e.stopPropagation();
+          setPage(btn.getAttribute('data-page'));
+          return false;
+        };
+      });
+    }
+
+    // Override app navigation too
+    window.goPage = function(id){
+      setPage(id);
+      try{ if(typeof renderAll === 'function') renderAll(); }catch(e){}
+      setTimeout(function(){ setPage(id); }, 0);
+      return false;
+    };
+
+    setTimeout(function(){ setPage(window.currentPage || 'home'); }, 50);
+    setTimeout(function(){ setPage(window.currentPage || 'home'); }, 300);
+  }
+
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', bind);
+  }else{
+    bind();
+  }
+})();
+</script>
+
 </body>
 </html>
