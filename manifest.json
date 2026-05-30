@@ -1,10 +1,9 @@
 {
-  "name": "قروب الكورة - Luxury V2 CheckFix2",
+  "name": "قروب الكورة - Clean V3",
   "short_name": "قروب الكورة",
-  "start_url": "index.html",
   "display": "standalone",
-  "background_color": "#08111f",
-  "theme_color": "#08111f",
   "orientation": "portrait",
-  "icons": []
+  "theme_color": "#08111f",
+  "background_color": "#08111f",
+  "start_url": "./index.html"
 }
