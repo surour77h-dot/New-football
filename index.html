@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <meta name="theme-color" content="#08111f">
 <title>قروب الكورة - Clean V3</title>
-<link rel="manifest" href="manifest.json?v=navfixed1">
-<link rel="stylesheet" href="style.css?v=navfixed1">
+<link rel="manifest" href="manifest.json?v=cleanv3r5">
+<link rel="stylesheet" href="style.css?v=cleanv3r5">
 </head>
 <body>
 <div class="app">
@@ -42,7 +42,7 @@
       <div class="card">
         <input type="hidden" id="editingMatchId">
         <div class="grid2">
-          <label>تاريخ اللعب<input id="matchDate" type="date"></label>
+          <label>تاريخ اللعب<button id="matchDateBtn" class="fakeDateInput" type="button">--</button><input id="matchDate" type="hidden"></label>
           <label>المكان<input id="place" placeholder="مثال: مشرف 7×7"></label>
           <label>سعر الحجز<input id="bookingCost" type="number" step="0.001" inputmode="decimal"></label>
           <label>عدد اللاعبين<input id="neededPlayers" type="number" inputmode="numeric"></label>
@@ -126,7 +126,7 @@
         <input type="hidden" id="editingDepositId">
         <div class="grid2">
           <label>اللاعب<select id="depositPlayer"></select></label>
-          <label>تاريخ الإيداع<input id="depositDate" type="date"></label>
+          <label>التاريخ<button id="depositDateBtn" class="fakeDateInput" type="button">--</button><input id="depositDate" type="hidden"></label>
           <label>المبلغ<input id="depositAmount" type="number" step="0.001" inputmode="decimal"></label>
           <label>النوع<select id="depositType"><option value="in">إيداع</option><option value="initial">إيداع مبدئي</option><option value="out">مديونية</option><option value="late">تأخير</option></select></label>
         </div>
@@ -163,7 +163,7 @@
         </div>
       </div>
       <div class="card">
-        <h3>ترتيب الصفحات</h3>
+        <div class="sectionTitleLine"><h3>ترتيب الصفحات</h3><button type="button" onclick="openRenamePages()">إعادة تسمية الصفحات</button></div>
         <div id="pageOrderList"></div>
       </div>
     </section>
@@ -179,7 +179,7 @@
   </div>
 </div>
 
-<script src="app.js?v=navfixed1"></script>
+<script src="app.js?v=cleanv3r5"></script>
 
 <script>
 (function(){
@@ -268,5 +268,9 @@
 })();
 </script>
 
+
+<div id="datePickerModal" class="modal"><div class="modalCard smallModal"><div class="sectionTitleLine"><b>اختيار التاريخ</b><button type="button" onclick="closeDatePicker()">إغلاق</button></div><input id="nativeDateInput" type="date"><button id="applyDateBtn" class="primary wide" type="button">اختيار</button></div></div>
+<div id="depositEditModal" class="modal"><div class="modalCard"><div class="sectionTitleLine"><b>تعديل العملية</b><button type="button" onclick="closeDepositEditor()">عودة</button></div><input type="hidden" id="editDepositModalId"><div class="grid2 depositEditorGrid"><label>اللاعب<select id="editDepositModalPlayer"></select></label><label>التاريخ<button id="editDepositModalDateBtn" class="fakeDateInput" type="button">--</button><input type="hidden" id="editDepositModalDate"></label><label>المبلغ<input id="editDepositModalAmount" type="number" step="0.001"></label><label>النوع<select id="editDepositModalType"><option value="in">إيداع</option><option value="initial">إيداع مبدئي</option><option value="out">مديونية</option><option value="late">تأخير</option></select></label></div><div class="actions"><button class="primary" type="button" onclick="saveDepositEditor()">حفظ</button><button class="danger" type="button" onclick="deleteDepositEditor()">حذف</button><button type="button" onclick="closeDepositEditor()">عودة</button></div></div></div>
+<div id="renamePagesModal" class="modal"><div class="modalCard"><div class="sectionTitleLine"><b>إعادة تسمية الصفحات</b><button type="button" onclick="closeRenamePages()">إغلاق</button></div><div id="renamePagesContent" class="pageNamesEditor"></div><button class="primary wide" type="button" onclick="saveRenamePagesModal()">حفظ</button></div></div>
 </body>
 </html>

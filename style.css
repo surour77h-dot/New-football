@@ -168,3 +168,19 @@ button,.importLabel{min-height:40px;border:0;border-radius:13px;padding:8px 11px
   visibility:visible!important;
   height:auto!important;
 }
+
+/* R5 fixes */
+.fakeDateInput{width:100%!important;min-height:42px!important;padding:9px 10px!important;border-radius:13px!important;border:1px solid rgba(246,216,132,.13)!important;background:#07101e!important;color:#fff!important;font-size:16px!important;justify-content:flex-start!important;text-align:right!important;box-shadow:none!important}
+#home .grid2,#deposits .grid2,.accountsExtraGrid,.depositEditorGrid{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:8px!important;align-items:end!important}
+#home .grid2 label,#deposits .grid2 label,.accountsExtraGrid label,.depositEditorGrid label{min-width:0!important;width:100%!important;display:block!important}
+.depositsMoneyTable .tHead,.depositsMoneyTable .tRow{grid-template-columns:minmax(0,1fr) 48px 126px!important}
+.depositsMoneyTable .tRow span:nth-child(2){color:var(--muted)!important;font-size:10px!important}
+.depositsMoneyTable .tRow span:last-child,.depositsMoneyTable .tHead span:last-child{justify-self:end!important;text-align:left!important;white-space:nowrap!important;overflow:visible!important}
+.moneyPos{color:var(--green)!important;font-weight:950!important}
+.teamPickLine b{cursor:pointer}.unpickedNames{margin-top:7px;color:var(--muted);font-size:12px;line-height:1.7}.teamEditFooter{display:flex;justify-content:flex-start;margin-top:8px}.teamEditFooter button{background:#162840!important;color:#fff!important;min-height:34px!important;padding:6px 10px!important}
+.smallModal{max-width:360px}.pageNamesEditor{display:grid!important;gap:4px!important}.pageNamesEditor label{display:grid!important;grid-template-columns:96px minmax(0,1fr)!important;gap:6px!important;align-items:center!important;margin:2px 0!important}.pageNamesEditor input{min-height:34px!important;padding:6px 8px!important;font-size:14px!important}
+.themeRow{margin:8px 0}.themeRow button{width:100%;background:#162840}
+body.lightMode{--bg:#f5f7fb;--panel:#ffffff;--panel2:#eef2f7;--text:#111827;--muted:#5b6777;--line:rgba(15,23,42,.12);background:#f5f7fb!important;color:#111827!important}
+body.lightMode .card,body.lightMode .lineInfo,body.lightMode .compactItem,body.lightMode td,body.lightMode .luxTeamBox,body.lightMode .calCell,body.lightMode .modalCard{background:#fff!important;color:#111827!important;border-color:rgba(15,23,42,.12)!important}
+body.lightMode input,body.lightMode select,body.lightMode .fakeDateInput{background:#f1f5f9!important;color:#111827!important}
+@media(max-width:360px){#home .grid2,#deposits .grid2,.accountsExtraGrid,.depositEditorGrid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:6px!important}.depositsMoneyTable .tHead,.depositsMoneyTable .tRow{grid-template-columns:minmax(0,1fr) 44px 118px!important}}
