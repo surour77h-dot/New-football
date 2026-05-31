@@ -1,0 +1,1 @@
+R6 fixed: save match, guests preview, date dd/mm/yyyy, deposit colors, deposit modal return, rename pages, light mode readability.
