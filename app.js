@@ -161,3 +161,57 @@ function exportData(){const a=document.createElement('a');a.href=URL.createObjec
 function exportExcel(){let s=state(),rows=['player,balance,games,last'];let b=balances(s);s.players.forEach(p=>rows.push(`${p},${b[p]?.balance||0},${b[p]?.games||0},${b[p]?.last||''}`));const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([rows.join('\n')],{type:'text/csv'}));a.download='football-export.csv';a.click();showConfirm('تم تصدير البيانات بنجاح كملف EXCEL','settings')}
 function importData(e){const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{localStorage.setItem(LS,r.result);renderAll();showConfirm('تم استيراد البيانات للتطبيق','settings')};r.readAsText(f)}
 document.addEventListener('DOMContentLoaded',()=>{if(deletePlayerBtn)deletePlayerBtn.onclick=deletePlayer;if(saveMatchBtn)saveMatchBtn.onclick=saveMatch;if(saveDepositBtn)saveDepositBtn.onclick=saveDeposit;if(exportDataBtn)exportDataBtn.onclick=exportData;if(exportExcelBtn)exportExcelBtn.onclick=exportExcel;if(importDataInput)importDataInput.onchange=importData;const c=document.getElementById('clearDepositBtn');if(c)c.remove();document.querySelectorAll('#renamePagesBtn').forEach((b,i)=>{if(i>0)b.remove()})});
+
+
+/* R9 NIGHT UI FINAL OVERRIDES */
+function renderMenuLabels(){
+  const menu=document.getElementById('pagesMenu'); if(!menu)return;
+  const icons={home:'🏠',accounts:'💰',players:'👥',playerReport:'🔎',calendar:'📅',teams:'🟨',deposits:'💳',playerTable:'📊',matchLog:'🧾',settings:'⚙️'};
+  menu.querySelectorAll('[data-page]').forEach(btn=>{const id=btn.dataset.page;btn.textContent=(icons[id]||'📄')+' '+pageTitle(id)});
+}
+function openPlayerReport(p){
+  const sel=document.getElementById('playerFilterSelect');
+  if(sel)sel.value=p;
+  goPage('playerReport');
+  setTimeout(()=>{const s=document.getElementById('playerFilterSelect');if(s){s.value=p;renderPlayerReport();}},80);
+}
+function renderAccounts(s){
+  const b=balances(s),neg=s.players.filter(p=>(b[p]?.balance||0)<0),late=s.deposits.filter(d=>d.type==='late'),extra=s.extraCharges.reduce((a,x)=>a+Number(x.amount||0),0),discount=s.extraDiscounts.reduce((a,x)=>a+Number(x.amount||0),0),lateTotal=late.reduce((a,d)=>a+Math.abs(Number(d.amount||0)),0),debt=neg.reduce((a,p)=>a+Math.abs(b[p].balance),0)+discount,final=extra+lateTotal-debt;
+  const debtRows=neg.map(p=>`<div class="tRow" onclick="openPlayerReport('${escAttr(p)}')"><span>${escapeHtml(p)}</span><span>${fmDate(b[p].last)}</span><span class="moneyNeg">-${money(Math.abs(b[p].balance))}</span></div>`).join('');
+  const lateRows=late.map(d=>`<div class="tRow" onclick="openPlayerReport('${escAttr(d.player)}')"><span>${escapeHtml(d.player)}</span><span>${fmDate(d.date)}</span><span class="moneyLate">-${money(Math.abs(d.amount))}</span></div>`).join('');
+  accountsContent.innerHTML=`<div class="accountMiniCards"><div><span>المديونية</span><b class="moneyNeg">-${money(debt)}</b></div><div><span>التأخير</span><b class="moneyLate">-${money(lateTotal)}</b></div><div><span>الإضافي</span><b class="moneyPos">${money(extra)}</b></div><div><span>الإجمالي</span><b class="${amountClass(final)}">${final<0?'-':''}${money(Math.abs(final))}</b></div></div>
+  <div class="card"><h3>اللاعبين المدانين والمتأخرين</h3><div class="compactTable accountsMoneyTable"><div class="tHead"><span>الاسم</span><span>التاريخ</span><span class="amountHead">المبلغ</span></div>${debtRows}${lateRows}${(!debtRows&&!lateRows)?'<p class="muted">لا يوجد</p>':''}</div></div>
+  <div class="card"><div class="sectionTitleLine"><b>سجل الخصم / الإضافة</b><button onclick="openAdjustEditor()">تعديل</button></div>${renderAdjustRows(s)}</div>
+  <div class="card"><div class="sectionTitleLine"><b>خصم / إضافة</b></div><div class="grid2 accountsExtraGrid"><label>النوع<select id="extraType"><option value="extra">إضافة</option><option value="discount">خصم</option></select></label><label>التاريخ<button id="extraDateBtn" class="fakeDateInput" type="button" onclick="openDatePicker('extraDate')">${fmDate(today())}</button><input id="extraDate" type="hidden" value="${today()}"></label><label>المبلغ<input id="extraAmount" type="number" step="0.001"></label><label>الملاحظة<input id="extraNote"></label></div><button class="primary wide saveBtn" onclick="saveExtraUnified()">حفظ</button></div>`;
+  if(typeof updateDateButtons==='function')updateDateButtons();
+}
+function updateDateButtons(){
+  [['matchDate','matchDateBtn'],['depositDate','depositDateBtn'],['editDepositModalDate','editDepositModalDateBtn'],['extraDate','extraDateBtn']].forEach(([h,b])=>{const hidden=document.getElementById(h),btn=document.getElementById(b); if(hidden&&btn)btn.textContent=fmDate(hidden.value||today());});
+}
+function saveExtraUnified(){
+  const s=state(),type=extraType.value,amount=Number(extraAmount.value||0); if(!amount)return;
+  const row={id:uid(),date:extraDate.value||today(),amount:Math.abs(amount),note:extraNote.value,createdAt:Date.now()};
+  if(type==='discount')s.extraDiscounts.push(row);else s.extraCharges.push(row);
+  localStorage.setItem(LS,JSON.stringify(s)); renderAll();
+  showConfirm(type==='discount'?`تم خصم مبلغ ${money(Math.abs(amount))} من الإجمالي`:`تم اضافة مبلغ ${money(Math.abs(amount))} بنجاح`,'accounts');
+}
+function exportData(){
+  const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([JSON.stringify(state(),null,2)],{type:'application/json'})); a.download='football-backup.json'; a.click();
+  setTimeout(()=>showConfirm('تم تصدير البيانات بنجاح','settings'),120);
+}
+function exportExcel(){
+  const s=state(); const rows=[['النوع','اللاعب','التاريخ','المبلغ','ملاحظة']];
+  (s.deposits||[]).forEach(d=>rows.push([depositTypeLabel(d),d.player||'',fmDate(d.date||''),money(d.amount||0),'']));
+  const csv=rows.map(r=>r.map(x=>`"${String(x).replace(/"/g,'""')}"`).join(',')).join('\n');
+  const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'})); a.download='football-data.csv'; a.click();
+  setTimeout(()=>showConfirm('تم تصدير البيانات بنجاح كملف EXCEL','settings'),120);
+}
+function importData(e){
+  const f=e.target.files[0]; if(!f)return; const r=new FileReader();
+  r.onload=()=>{localStorage.setItem(LS,r.result); renderAll(); goPage('settings'); showConfirm('تم استيراد البيانات للتطبيق','settings');};
+  r.readAsText(f);
+}
+function applyThemeMode(){const s=state(); document.body.classList.toggle('lightMode',s.settings.themeMode==='light');}
+function renderSettingsPageNames(){
+  if(!document.getElementById('themeToggleBtn')&&pageOrderList){pageOrderList.insertAdjacentHTML('beforebegin','<div class="themeRow"><button id="themeToggleBtn" type="button" onclick="toggleThemeMode()">تبديل نهاري / ليلي</button></div>');}
+}
