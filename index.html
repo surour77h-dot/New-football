@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <meta name="theme-color" content="#08111f">
 <title>قروب الكورة - Clean V3</title>
-<link rel="manifest" href="manifest.json?v=cleanv3r6">
-<link rel="stylesheet" href="style.css?v=cleanv3r6">
+<link rel="manifest" href="manifest.json?v=cleanv3r7">
+<link rel="stylesheet" href="style.css?v=cleanv3r7">
 </head>
 <body>
 <div class="app">
@@ -132,7 +132,6 @@
         </div>
         <div class="actions">
           <button id="saveDepositBtn" class="primary" type="button">حفظ</button>
-          <button id="clearDepositBtn" type="button">تفريغ</button>
         </div>
       </div>
       <div id="depositsList" class="card"></div>
@@ -163,7 +162,7 @@
         </div>
       </div>
       <div class="card">
-        <div class="sectionTitleLine"><div class="sectionTitleLine"><h3>ترتيب الصفحات</h3><button type="button" onclick="openRenamePages()">إعادة تسمية الصفحات</button></div><button type="button" onclick="openRenamePages()">إعادة تسمية الصفحات</button></div>
+        <div class="sectionTitleLine"><div class="sectionTitleLine"><div class="sectionTitleLine"><h3>ترتيب الصفحات</h3><button id="renamePagesBtn" type="button" onclick="openRenamePages()">إعادة تسمية الصفحات</button></div><button id="renamePagesBtn" type="button" onclick="openRenamePages()">إعادة تسمية الصفحات</button></div><button type="button" onclick="openRenamePages()">إعادة تسمية الصفحات</button></div>
         <div id="pageOrderList"></div>
       </div>
     </section>
@@ -179,7 +178,7 @@
   </div>
 </div>
 
-<script src="app.js?v=cleanv3r6"></script>
+<script src="app.js?v=cleanv3r7"></script>
 
 <script>
 (function(){
@@ -272,5 +271,6 @@
 <div id="datePickerModal" class="modal"><div class="modalCard smallModal"><div class="sectionTitleLine"><b>اختيار التاريخ</b><button type="button" onclick="closeDatePicker()">إغلاق</button></div><input id="nativeDateInput" type="date"><button id="applyDateBtn" class="primary wide" type="button">اختيار</button></div></div>
 <div id="depositEditModal" class="modal"><div class="modalCard"><div class="sectionTitleLine"><b>تعديل العملية</b><button type="button" onclick="closeDepositEditor()">عودة</button></div><input type="hidden" id="editDepositModalId"><div class="grid2 depositEditorGrid"><label>اللاعب<select id="editDepositModalPlayer"></select></label><label>التاريخ<button id="editDepositModalDateBtn" class="fakeDateInput" type="button">--</button><input type="hidden" id="editDepositModalDate"></label><label>المبلغ<input id="editDepositModalAmount" type="number" step="0.001"></label><label>النوع<select id="editDepositModalType"><option value="in">إيداع</option><option value="initial">إيداع مبدئي</option><option value="out">مديونية</option><option value="late">تأخير</option></select></label></div><div class="actions"><button class="primary" type="button" onclick="saveDepositEditor()">حفظ</button><button class="danger" type="button" onclick="deleteDepositEditor()">حذف</button><button type="button" onclick="closeDepositEditor()">عودة</button></div></div></div>
 <div id="renamePagesModal" class="modal"><div class="modalCard"><div class="sectionTitleLine"><b>إعادة تسمية الصفحات</b><button type="button" onclick="closeRenamePages()">إغلاق</button></div><div id="renamePagesContent" class="pageNamesEditor"></div><button class="primary wide" type="button" onclick="saveRenamePagesModal()">حفظ</button></div></div>
+<div id="confirmModal" class="modal"><div class="modalCard confirmCard"><div class="confirmIcon">✅</div><div id="confirmMessage" class="confirmMessage"></div><button id="confirmCloseBtn" class="primary wide" type="button">إغلاق</button></div></div>
 </body>
 </html>
