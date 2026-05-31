@@ -1,0 +1,1 @@
+R8 final fixes: confirmation windows, delete without extra prompts, page order fixed, one rename button, light/dark contrast, player table navigation, export/import confirmations.
