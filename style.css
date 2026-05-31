@@ -226,3 +226,30 @@ body.lightMode{--bg:#f5f7fb;--panel:#fff;--panel2:#f1f5f9;--text:#111827;--muted
 .reportStats .statBox,.accountMiniCards div,.playerMiniStats div{background:linear-gradient(180deg,#172b45,#112338)!important;border:1px solid rgba(125,211,252,.18)!important}.fakeDateInput,#extraDateBtn{width:100%!important;min-height:42px!important;background:#07182c!important;color:#fff!important;border:1px solid rgba(147,197,253,.25)!important}.pageOrderHeader{margin-top:8px!important}.pageOrderHeader h3{margin:0!important}#renamePagesBtn{background:#1e293b!important;color:#e0f2fe!important;border:1px solid rgba(125,211,252,.25)!important}.pageOrderHeader + .pageOrderHeader{display:none!important}
 body.lightMode .primary,body.lightMode .saveBtn,body.lightMode #saveMatchBtn,body.lightMode #addPlayerBtn,body.lightMode #saveTeamsBtn,body.lightMode #saveDepositBtn,body.lightMode #saveAppInfoBtn,body.lightMode #applyDateBtn,body.lightMode #confirmCloseBtn{background:linear-gradient(135deg,#2563eb,#1d4ed8)!important;color:#fff!important}
 body.lightMode .card,body.lightMode .accountMiniCards div,body.lightMode .playerMiniStats div,body.lightMode .statBox,body.lightMode .calendarMatchCard,body.lightMode .matchCard{background:#fff!important;color:#111827!important;border-color:rgba(15,23,42,.16)!important}body.lightMode .lineInfo,body.lightMode .calCell,body.lightMode .luxTeamBox,body.lightMode .modalCard,body.lightMode .pagesMenu{background:#f8fafc!important;color:#111827!important;border-color:rgba(15,23,42,.16)!important}body.lightMode .teamABox{border:2px solid #ca8a04!important;box-shadow:none!important}body.lightMode .teamBBox{border:2px solid #db2777!important;box-shadow:none!important}body.lightMode .teamTabs .selA{color:#854d0e!important;border-bottom-color:#ca8a04!important;text-shadow:none!important}body.lightMode .teamTabs .selB{color:#9d174d!important;border-bottom-color:#db2777!important;text-shadow:none!important}body.lightMode .checkList label{background:#fff!important;color:#111827!important;border:1px solid rgba(15,23,42,.12)!important}body.lightMode .accountsMoneyTable .tHead span,body.lightMode .depositsMoneyTable .tHead span,body.lightMode .reportTable .tHead span{color:#334155!important}body.lightMode .accountsMoneyTable .tRow span:nth-child(2),body.lightMode .depositsMoneyTable .tRow span:nth-child(2),body.lightMode .reportTable .tRow span:first-child{color:#475569!important}body.lightMode .moneyLate{color:#b45309!important;text-shadow:none!important}body.lightMode .moneyNeg{color:#b42318!important}body.lightMode .moneyPos{color:#027a48!important}body.lightMode .splitMeta strong{background:#e0f2fe!important;color:#075985!important;border-color:#7dd3fc!important}
+
+/* R10 night refinements */
+.topThemeBtn{
+  width:42px!important;height:42px!important;min-height:42px!important;border-radius:14px!important;padding:0!important;
+  display:grid!important;place-items:center!important;background:linear-gradient(180deg,#1e3a5f,#0f2440)!important;color:#fff!important;
+  border:1px solid rgba(125,211,252,.35)!important;box-shadow:0 8px 20px rgba(0,0,0,.25)!important;font-size:20px!important;
+}
+.spacer{display:none!important}
+.themeRow{display:none!important}
+.calCell.hasGame{border:2px solid #38bdf8!important;box-shadow:0 0 0 2px rgba(56,189,248,.22),0 0 18px rgba(56,189,248,.22),inset 0 0 14px rgba(56,189,248,.10)!important}
+.calCell.hasGame span{color:#e0f2fe!important;filter:drop-shadow(0 0 7px #38bdf8)!important}
+.moneyLate{color:#ffdf5d!important;font-weight:950!important;text-shadow:0 0 8px rgba(255,223,93,.35)!important}
+.moneyNeg{color:#ff5b6e!important;font-weight:950!important}.moneyPos{color:#34d399!important;font-weight:950!important}
+.reportTable .tRow span:first-child,.reportTable .tHead span:first-child,.accountsMoneyTable .tRow span:nth-child(2),.depositsMoneyTable .tRow span:nth-child(2){color:#bfdbfe!important;font-weight:900!important}
+.teamTabs button{padding:4px 6px!important;border-radius:8px!important}
+.teamTabs .selA{color:#fff176!important;border:1px solid rgba(255,241,118,.65)!important;border-bottom:3px solid #fff176!important;background:rgba(255,241,118,.10)!important;box-shadow:0 0 10px rgba(255,241,118,.18)!important}
+.teamTabs .selB{color:#ff8ac7!important;border:1px solid rgba(255,138,199,.65)!important;border-bottom:3px solid #ff8ac7!important;background:rgba(255,138,199,.10)!important;box-shadow:0 0 10px rgba(255,138,199,.18)!important}
+.matchMeta,.matchMeta span,.matchMeta b{color:#c7d2fe!important;font-weight:950!important}.matchMeta b{color:#e0f2fe!important}
+.pageOrderHeader{display:flex!important;align-items:center!important;justify-content:space-between!important;margin-top:8px!important}.pageOrderHeader h3{margin:0!important;color:#e0f2fe!important}
+#renamePagesBtn{background:#1e40af!important;color:#fff!important;border:1px solid rgba(191,219,254,.35)!important;min-height:32px!important;padding:4px 9px!important}
+.playerNameLink{cursor:pointer!important;color:inherit!important;text-decoration:none!important}
+.fakeDateInput,#extraDateBtn{width:100%!important;min-height:42px!important;background:#07182c!important;color:#fff!important;border:1px solid rgba(147,197,253,.25)!important}
+body.lightMode .topThemeBtn{background:linear-gradient(180deg,#f8fafc,#e2e8f0)!important;color:#111827!important;border-color:rgba(15,23,42,.18)!important}
+body.lightMode .teamTabs .selA{color:#854d0e!important;border:1px solid #ca8a04!important;border-bottom:3px solid #ca8a04!important;background:#fef9c3!important;box-shadow:none!important}
+body.lightMode .teamTabs .selB{color:#9d174d!important;border:1px solid #db2777!important;border-bottom:3px solid #db2777!important;background:#fce7f3!important;box-shadow:none!important}
+body.lightMode .moneyLate{color:#b45309!important;text-shadow:none!important}
+body.lightMode #renamePagesBtn{background:#2563eb!important;color:#fff!important}

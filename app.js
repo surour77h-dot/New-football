@@ -13,7 +13,17 @@ function state(){let s;try{s=JSON.parse(localStorage.getItem(LS)||'{}')}catch(e)
 function saveNoRender(s){localStorage.setItem(LS,JSON.stringify(s))}function save(s){saveNoRender(s);renderAll()}
 function pageTitle(id){const s=state();return (s.settings.pageNames||{})[id]||Object.fromEntries(defaultPages)[id]||id}
 function getPageOrder(){const s=state();return s.settings.pageOrder||defaultPages.map(x=>x[0])}function savePageOrder(order){const s=state();s.settings.pageOrder=order;save(s)}
-function renderMenuLabels(){const icons={home:'🏠',accounts:'💰',players:'👥',playerReport:'🔎',calendar:'📅',teams:'🟨',deposits:'💳',playerTable:'📊',matchLog:'🧾',settings:'⚙️'};document.querySelectorAll('#pagesMenu [data-page]').forEach(btn=>{btn.textContent=(icons[btn.dataset.page]||'📄')+' '+pageTitle(btn.dataset.page)})}
+function renderMenuLabels(){
+  const menu=document.getElementById('pagesMenu');
+  if(!menu)return;
+  const icons={home:'🏠',accounts:'💰',players:'👥',playerReport:'🔎',calendar:'📅',teams:'🟨',deposits:'💳',playerTable:'📊',matchLog:'🧾',settings:'⚙️'};
+  menu.querySelectorAll('[data-page]').forEach(btn=>{
+    const id=btn.dataset.page;
+    btn.textContent=(icons[id]||'📄')+' '+pageTitle(id);
+  });
+  const titleBox=document.getElementById('pageTitle');
+  if(titleBox)titleBox.textContent=pageTitle(currentPage||'home');
+}
 function goPage(id){currentPage=id||'home';document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id===currentPage));document.querySelectorAll('[data-page]').forEach(b=>b.classList.toggle('active',b.dataset.page===currentPage));pageTitle.textContent=pageTitleFn(currentPage);pagesMenu.classList.remove('open');renderAll();pageTitle.textContent=pageTitleFn(currentPage)}
 function pageTitleFn(id){return pageTitle(id)}
 function toggleMenu(){pagesMenu.classList.toggle('open')}
@@ -26,7 +36,12 @@ function refreshSelects(s){const opts=s.players.map(p=>`<option>${escapeHtml(p)}
 function openDatePicker(targetId){activeDateTarget=targetId;nativeDateInput.value=document.getElementById(targetId)?.value||today();datePickerModal.classList.add('show')}
 function closeDatePicker(){datePickerModal.classList.remove('show')}
 function applyDatePicker(){const h=document.getElementById(activeDateTarget);if(h)h.value=nativeDateInput.value||today();updateDateButtons();closeDatePicker()}
-function updateDateButtons(){[['matchDate','matchDateBtn'],['depositDate','depositDateBtn'],['editDepositModalDate','editDepositModalDateBtn']].forEach(([h,b])=>{const x=document.getElementById(h),y=document.getElementById(b);if(x&&y)y.textContent=fmDate(x.value||today())})}
+function updateDateButtons(){
+  [['matchDate','matchDateBtn'],['depositDate','depositDateBtn'],['editDepositModalDate','editDepositModalDateBtn'],['extraDate','extraDateBtn']].forEach(([h,b])=>{
+    const hidden=document.getElementById(h),btn=document.getElementById(b);
+    if(hidden&&btn)btn.textContent=fmDate(hidden.value||today());
+  });
+}
 function renderAll(){const s=state();saveNoRender(s);refreshSelects(s);if(!matchDate.value)matchDate.value=today();if(!depositDate.value)depositDate.value=today();applyThemeMode();updateDateButtons();pricePerPlayer.textContent=money(calcPrice());if(s.settings.appTitle)document.querySelector('.title h1').textContent=s.settings.appTitle;if(s.settings.appDesc)document.querySelector('.title p').textContent=s.settings.appDesc;if(typeof appTitleInput!=='undefined'&&appTitleInput){appTitleInput.value=s.settings.appTitle||'قروب الكورة';appDescInput.value=s.settings.appDesc||'إدارة اللعبات • الحسابات • اللاعبين'}renderPlayers(s);renderMatchPlayers(s);renderDeposits(s);renderCalendar();renderCalendarList();renderTeamsSelect(s);renderTeams();renderPlayerTable(s);renderPlayerReport();renderAccounts(s);renderMatchLog(s);renderPageOrder();renderSettingsPageNames();renderMenuLabels();document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id===currentPage));pageTitle.textContent=pageTitleFn(currentPage);updateDateButtons()}
 function calcPrice(){const c=Number(bookingCost.value||0),n=Number(neededPlayers.value||0);return n?c/n:0}
 function renderPlayers(s){playersList.innerHTML=s.players.map(p=>`<div class="nameOnly playerChip">${escapeHtml(p)}</div>`).join('')||'<p class="muted">أضف اللاعبين أولًا.</p>'}
@@ -76,8 +91,21 @@ function renderTeamsSelect(s){teamsMatchSelect.innerHTML=[...s.matches].sort((a,
 function renderTeams(){const s=state(),m=s.matches.find(x=>x.id===teamsMatchSelect.value);if(!m){teamsPlayers.innerHTML='';teamsPreview.innerHTML='';return}if(tempTeamMap.__matchId!==m.id)tempTeamMap={...(s.teams[m.id]||{}),__matchId:m.id};const names=participants(m);teamsPlayers.innerHTML=names.map(n=>`<div class="teamPickLine"><b onclick="clearTeamFor('${escAttr(n)}')">${escapeHtml(n)}</b><div class="teamTabs"><button type="button" class="${tempTeamMap[n]==='A'?'selA':''}" onclick="pickTeam('${escAttr(n)}','A')">الأول</button><button type="button" class="${tempTeamMap[n]==='B'?'selB':''}" onclick="pickTeam('${escAttr(n)}','B')">الثاني</button></div></div>`).join('');const map={...tempTeamMap};delete map.__matchId;teamsPreview.innerHTML=`<div class="card">${teamHtml({...s,teams:{...s.teams,[m.id]:map}},m)}<div class="teamEditFooter"><button type="button" onclick="editSelectedMatchFromTeams()">تعديل وإضافة لاعبين</button></div></div>`}
 function pickTeam(n,t){tempTeamMap[n]=t;renderTeams()}function clearTeamFor(n){delete tempTeamMap[n];renderTeams()}function saveTeams(){const s=state(),id=teamsMatchSelect.value;if(!id)return;const map={...tempTeamMap};delete map.__matchId;s.teams[id]=map;save(s)}
 function editSelectedMatchFromTeams(){const s=state(),m=s.matches.find(x=>x.id===teamsMatchSelect.value);if(!m)return alert('اختر لعبة أولاً');editingMatchId.value=m.id;matchDate.value=m.date||today();place.value=m.place||'';bookingCost.value=m.bookingCost||'';neededPlayers.value=m.neededPlayers||'';tempGuests=[...(m.guests||[])];goPage('home');setTimeout(()=>{document.querySelectorAll('.playerCheck').forEach(ch=>{ch.checked=(m.players||[]).includes(ch.value)});renderTempGuests();renderMatchPreview();pricePerPlayer.textContent=money(calcPrice());updateDateButtons()},80)}
-function renderPlayerTable(s){const b=balances(s),latest=Object.values(b).map(x=>x.last).filter(Boolean).sort().pop()||'';playerTableWrap.innerHTML=`<div class="tableWrap"><table class="playersTable"><thead><tr><th class="nameTd">الاسم</th><th class="balanceTh">الرصيد</th><th class="gamesTh">لعب</th><th class="lastTh">آخر لعب</th></tr></thead><tbody>${s.players.map(p=>`<tr><td class="nameTd ${isInactiveThisYear(b[p]?.last)?'inactiveName':''}" onclick="openPlayerReport('${escAttr(p)}')">${escapeHtml(p)}</td><td class="balanceTd ${amountClass(b[p]?.balance)}">${fmAmount(b[p]?.balance)}</td><td class="gamesTd">${b[p]?.games||''}</td><td class="lastTd ${b[p]?.last&&b[p]?.last===latest?'latestDate':''}">${fmDate(b[p]?.last)}</td></tr>`).join('')}</tbody></table></div>`}
-function openPlayerReport(p){playerFilterSelect.value=p;goPage('playerReport')}
+function renderPlayerTable(s){
+  const b=balances(s),latest=Object.values(b).map(x=>x.last).filter(Boolean).sort().pop()||'';
+  playerTableWrap.innerHTML=`<div class="tableWrap"><table class="playersTable"><thead><tr><th class="nameTd">الاسم</th><th class="balanceTh">الرصيد</th><th class="gamesTh">لعب</th><th class="lastTh">آخر لعب</th></tr></thead><tbody>${s.players.map(p=>`<tr><td class="nameTd ${isInactiveThisYear(b[p]?.last)?'inactiveName':''}"><span class="playerNameLink" onclick="openPlayerReport('${escAttr(p)}')">${escapeHtml(p)}</span></td><td class="balanceTd ${amountClass(b[p]?.balance)}">${fmAmount(b[p]?.balance)}</td><td class="gamesTd">${b[p]?.games||''}</td><td class="lastTd ${b[p]?.last&&b[p]?.last===latest?'latestDate':''}">${fmDate(b[p]?.last)}</td></tr>`).join('')}</tbody></table></div>`;
+}
+function openPlayerReport(p){
+  currentPage='playerReport';
+  document.querySelectorAll('.page').forEach(sec=>sec.classList.toggle('active',sec.id==='playerReport'));
+  document.querySelectorAll('[data-page]').forEach(b=>b.classList.toggle('active',b.dataset.page==='playerReport'));
+  const sel=document.getElementById('playerFilterSelect');
+  if(sel)sel.value=p;
+  const titleBox=document.getElementById('pageTitle');
+  if(titleBox)titleBox.textContent=pageTitle('playerReport');
+  renderPlayerReport();
+  setTimeout(()=>{const s=document.getElementById('playerFilterSelect');if(s){s.value=p;renderPlayerReport();}},50);
+}
 function renderPlayerReport(){
   const s=state(),p=playerFilterSelect.value;if(!p){playerFilterContent.innerHTML='';return}const b=balances(s)[p]||{},deps=s.deposits.filter(d=>d.player===p),games=s.matches.filter(m=>(m.players||[]).includes(p));const playPlusDebt=(b.playTotal||0)+(b.debtDeposits||0);
   const gameRows=games.map(g=>`<div class="tRow"><span>${fmDate(g.date)}</span><span>${escapeHtml(g.place||'')}</span><span class="moneyNeg">-${money(g.price||0)}</span></div>`).join('');
@@ -91,7 +119,16 @@ function renderAccounts(s){
   const b=balances(s),neg=s.players.filter(p=>(b[p]?.balance||0)<0),late=s.deposits.filter(d=>d.type==='late'),extra=s.extraCharges.reduce((a,x)=>a+Number(x.amount||0),0),discount=s.extraDiscounts.reduce((a,x)=>a+Number(x.amount||0),0),lateTotal=late.reduce((a,d)=>a+Math.abs(Number(d.amount||0)),0),debt=neg.reduce((a,p)=>a+Math.abs(b[p].balance),0)+discount,final=extra+lateTotal-debt;
   const debtRows=neg.map(p=>`<div class="tRow" onclick="openPlayerReport('${escAttr(p)}')"><span>${escapeHtml(p)}</span><span>${fmDate(b[p].last)}</span><span class="moneyNeg">-${money(Math.abs(b[p].balance))}</span></div>`).join('');
   const lateRows=late.map(d=>`<div class="tRow" onclick="openPlayerReport('${escAttr(d.player)}')"><span>${escapeHtml(d.player)}</span><span>${fmDate(d.date)}</span><span class="moneyLate">-${money(Math.abs(d.amount))}</span></div>`).join('');
-  accountsContent.innerHTML=`<div class="accountMiniCards"><div><span>المديونية</span><b class="moneyNeg">-${money(debt)}</b></div><div><span>التأخير</span><b class="moneyLate">-${money(lateTotal)}</b></div><div><span>الإضافي</span><b class="moneyPos">${money(extra)}</b></div><div><span>الإجمالي</span><b class="${amountClass(final)}">${final<0?'-':''}${money(Math.abs(final))}</b></div></div><div class="card"><h3>اللاعبين المدانين والمتأخرين</h3><div class="compactTable accountsMoneyTable"><div class="tHead"><span>الاسم</span><span>التاريخ</span><span class="amountHead">المبلغ</span></div>${debtRows}${lateRows}${(!debtRows&&!lateRows)?'<p class="muted">لا يوجد</p>':''}</div></div><div class="card"><div class="sectionTitleLine"><b>سجل الخصم / الإضافة</b><button onclick="openAdjustEditor()">تعديل</button></div>${renderAdjustRows(s)}</div><div class="card"><div class="sectionTitleLine"><b>خصم / إضافة</b></div><div class="grid2 accountsExtraGrid"><label>النوع<select id="extraType"><option value="extra">إضافة</option><option value="discount">خصم</option></select></label><label>التاريخ<input id="extraDate" type="date" value="${today()}"></label><label>المبلغ<input id="extraAmount" type="number" step="0.001"></label><label>الملاحظة<input id="extraNote"></label></div><button class="primary wide" onclick="saveExtraUnified()">حفظ</button></div>`;
+  accountsContent.innerHTML=`<div class="accountMiniCards"><div><span>المديونية</span><b class="moneyNeg">-${money(debt)}</b></div><div><span>التأخير</span><b class="moneyLate">-${money(lateTotal)}</b></div><div><span>الإضافي</span><b class="moneyPos">${money(extra)}</b></div><div><span>الإجمالي</span><b class="${amountClass(final)}">${final<0?'-':''}${money(Math.abs(final))}</b></div></div>
+  <div class="card"><h3>اللاعبين المدانين والمتأخرين</h3><div class="compactTable accountsMoneyTable"><div class="tHead"><span>الاسم</span><span>التاريخ</span><span class="amountHead">المبلغ</span></div>${debtRows}${lateRows}${(!debtRows&&!lateRows)?'<p class="muted">لا يوجد</p>':''}</div></div>
+  <div class="card"><div class="sectionTitleLine"><b>سجل الخصم / الإضافة</b><button onclick="openAdjustEditor()">تعديل</button></div>${renderAdjustRows(s)}</div>
+  <div class="card"><div class="sectionTitleLine"><b>خصم / إضافة</b></div><div class="grid2 accountsExtraGrid">
+    <label>النوع<select id="extraType"><option value="extra">إضافة</option><option value="discount">خصم</option></select></label>
+    <label>التاريخ<button id="extraDateBtn" class="fakeDateInput" type="button" onclick="openDatePicker('extraDate')">${fmDate(today())}</button><input id="extraDate" type="hidden" value="${today()}"></label>
+    <label>المبلغ<input id="extraAmount" type="number" step="0.001"></label>
+    <label>الملاحظة<input id="extraNote"></label>
+  </div><button class="primary wide saveBtn" onclick="saveExtraUnified()">حفظ</button></div>`;
+  if(typeof updateDateButtons==='function')updateDateButtons();
 }
 function renderAdjustRows(s){let rows=[...s.extraCharges.map(x=>({...x,t:'إضافة',cls:'moneyPos',type:'extra'})),...s.extraDiscounts.map(x=>({...x,t:'خصم',cls:'moneyNeg',type:'discount'}))].sort((a,b)=>(b.date||'').localeCompare(a.date||''));return `<div class="compactTable accountsMoneyTable"><div class="tHead"><span>التاريخ</span><span>العملية</span><span class="amountHead">المبلغ</span></div>${rows.map(r=>`<div class="tRow"><span>${fmDate(r.date)}</span><span>${r.t}</span><span class="${r.cls}">${r.type==='discount'?'-':''}${money(Math.abs(r.amount||0))}</span></div>`).join('')||'<p class="muted">لا يوجد</p>'}</div>`}
 function saveExtraUnified(){
@@ -106,18 +143,35 @@ function removeAdjust(type,id){let k=type==='discount'?'extraDiscounts':'extraCh
 function saveAdjustEditor(){const s=state();s.extraCharges=adjustEditorDraft.extraCharges;s.extraDiscounts=adjustEditorDraft.extraDiscounts;save(s);closeAdjustEditor();goPage('accounts')}
 function renderMatchLog(s){matchLogList.innerHTML=[...s.matches].sort((a,b)=>(b.date||'').localeCompare(a.date||'')).map(m=>`<div class="matchCard"><div class="matchHead"><b>${fmDate(m.date)}</b><span>${escapeHtml(m.place||'')}</span></div><div class="matchMeta"><span>${participants(m).length} لاعب</span><b>${money(m.bookingCost||m.price||0)} د.ك</b></div>${teamHtml(s,m)}</div>`).join('')||'<p class="muted">لا توجد ألعاب محفوظة.</p>'}
 function renderPageOrder(){
-  const order=getPageOrder();pageOrderList.innerHTML=`<div class="newPageOrder">${order.map(id=>`<div class="pageOrderRow"><span>${pageTitleFn(id)}</span><div><button onclick="movePage('${id}',-1)">↑</button><button onclick="movePage('${id}',1)">↓</button></div></div>`).join('')}</div>`;
+  const order=getPageOrder();
+  pageOrderList.innerHTML=`<div class="newPageOrder">${order.map(id=>`<div class="pageOrderRow"><span>${pageTitle(id)}</span><div><button type="button" onclick="movePage('${id}',-1);event.preventDefault();">↑</button><button type="button" onclick="movePage('${id}',1);event.preventDefault();">↓</button></div></div>`).join('')}</div>`;
 }
 function movePage(id,dir){const order=getPageOrder(),i=order.indexOf(id),j=i+dir;if(i<0||j<0||j>=order.length)return;[order[i],order[j]]=[order[j],order[i]];savePageOrder(order)}
 function renderSettingsPageNames(){if(!document.getElementById('themeToggleBtn')&&pageOrderList){pageOrderList.insertAdjacentHTML('beforebegin','<div class="themeRow"><button id="themeToggleBtn" type="button" onclick="toggleThemeMode()">تبديل نهاري / ليلي</button></div>')}}
 function openRenamePages(){const s=state(),names=s.settings.pageNames||{};renamePagesContent.innerHTML=defaultPages.map(([id,label])=>`<label><span>${pageTitleFn(id)}</span><input data-rename-page="${id}" value="${escapeHtml(names[id]||label)}"></label>`).join('');renamePagesModal.classList.add('show')}
 function closeRenamePages(){renamePagesModal.classList.remove('show')}
-function saveRenamePagesModal(){const s=state();s.settings.pageNames=s.settings.pageNames||{};document.querySelectorAll('[data-rename-page]').forEach(inp=>{s.settings.pageNames[inp.dataset.renamePage]=inp.value.trim()||Object.fromEntries(defaultPages)[inp.dataset.renamePage]});saveNoRender(s);closeRenamePages();renderAll();goPage(currentPage)}
+function saveRenamePagesModal(){
+  const s=state();
+  s.settings.pageNames=s.settings.pageNames||{};
+  document.querySelectorAll('[data-rename-page]').forEach(inp=>{
+    s.settings.pageNames[inp.dataset.renamePage]=inp.value.trim()||Object.fromEntries(defaultPages)[inp.dataset.renamePage];
+  });
+  localStorage.setItem(LS,JSON.stringify(s));
+  closeRenamePages();
+  renderAll();
+  renderMenuLabels();
+  renderPageOrder();
+  goPage(currentPage||'settings');
+}
 function saveAppInfo(){
   const s=state();s.settings.appTitle=appTitleInput.value.trim()||'قروب الكورة';s.settings.appDesc=appDescInput.value.trim()||'إدارة اللعبات • الحسابات • اللاعبين';saveNoRender(s);renderAll();showConfirm(`تم تغيير أسم التطبيق إلى ${escapeHtml(s.settings.appTitle)} بنجاح ووصف التطبيق ${escapeHtml(s.settings.appDesc)}`,'home');
 }
 function toggleThemeMode(){const s=state();s.settings.themeMode=s.settings.themeMode==='light'?'dark':'light';saveNoRender(s);applyThemeMode()}
-function applyThemeMode(){const s=state();document.body.classList.toggle('lightMode',s.settings.themeMode==='light')}
+function applyThemeMode(){
+  const s=state();
+  document.body.classList.toggle('lightMode',s.settings.themeMode==='light');
+  if(typeof updateTopThemeIcon==='function')updateTopThemeIcon();
+}
 function exportData(){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(state(),null,2)],{type:'application/json'}));a.download='football-backup.json';a.click()}
 function importData(e){const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{localStorage.setItem(LS,r.result);renderAll();alert('تم الاستيراد')};r.readAsText(f)}
 function exportExcel(){alert('تصدير Excel في هذه النسخة سيكون ملف CSV لاحقاً')}
@@ -215,3 +269,15 @@ function applyThemeMode(){const s=state(); document.body.classList.toggle('light
 function renderSettingsPageNames(){
   if(!document.getElementById('themeToggleBtn')&&pageOrderList){pageOrderList.insertAdjacentHTML('beforebegin','<div class="themeRow"><button id="themeToggleBtn" type="button" onclick="toggleThemeMode()">تبديل نهاري / ليلي</button></div>');}
 }
+
+
+function updateTopThemeIcon(){
+  const s=state();
+  const btn=document.getElementById('topThemeBtn');
+  if(btn)btn.textContent=s.settings.themeMode==='light'?'☀️':'🌙';
+}
+document.addEventListener('DOMContentLoaded',()=>{
+  const b=document.getElementById('topThemeBtn');
+  if(b){b.onclick=()=>{toggleThemeMode();updateTopThemeIcon();};}
+  updateTopThemeIcon();
+});
