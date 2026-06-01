@@ -253,3 +253,215 @@ body.lightMode .teamTabs .selA{color:#854d0e!important;border:1px solid #ca8a04!
 body.lightMode .teamTabs .selB{color:#9d174d!important;border:1px solid #db2777!important;border-bottom:3px solid #db2777!important;background:#fce7f3!important;box-shadow:none!important}
 body.lightMode .moneyLate{color:#b45309!important;text-shadow:none!important}
 body.lightMode #renamePagesBtn{background:#2563eb!important;color:#fff!important}
+
+/* R11 */
+input,select,textarea,.fakeDateInput{background:#08213a!important;color:#fff!important;border:1px solid rgba(125,211,252,.38)!important}
+body.lightMode input,body.lightMode select,body.lightMode textarea,body.lightMode .fakeDateInput{background:#fff!important;color:#111827!important;border:1px solid rgba(37,99,235,.35)!important}
+.playerChipBtn{background:linear-gradient(180deg,#162b45,#102137)!important;border:0!important;color:#f8fafc!important;border-radius:10px!important;min-height:28px!important;padding:4px 8px!important;width:auto!important;flex:0 0 auto!important}
+body.lightMode .playerChipBtn{background:#fff!important;color:#111827!important;border:1px solid rgba(15,23,42,.12)!important}
+.compactList{display:flex!important;flex-wrap:wrap!important;gap:5px!important}
+.accountsMoneyTable .tRow,.depositsMoneyTable .tRow,.reportTable .tRow{font-size:13px!important;line-height:1.55!important;min-height:32px!important}
+.accountsMoneyTable .tHead,.depositsMoneyTable .tHead,.reportTable .tHead{font-size:12px!important}
+.playersTable td,.playersTable th{font-size:13px!important;line-height:1.5!important}
+.playersTable .balanceTd,.playersTable .balanceTh{text-align:left!important}
+.teamName,.unpickedNames,.teamPickLine b,.matchCard .teamName,.calendarMatchCard .teamName{font-size:13px!important}
+.teamTabs .selA{background:#fff176!important;color:#111827!important;border:1px solid #facc15!important;border-bottom:3px solid #facc15!important}
+.teamTabs .selB{background:#ff8ac7!important;color:#111827!important;border:1px solid #f472b6!important;border-bottom:3px solid #f472b6!important}
+body.lightMode .teamTabs .selA{background:#fef08a!important;color:#111827!important;border-color:#ca8a04!important}
+body.lightMode .teamTabs .selB{background:#f9a8d4!important;color:#111827!important;border-color:#db2777!important}
+.matchMeta,.matchMeta span,.matchMeta b{color:#e0f2fe!important;font-weight:950!important}
+.calCell.hasGame{background:linear-gradient(180deg,rgba(56,189,248,.24),#10243c)!important}
+.todayCell{outline:2px solid #a78bfa!important;box-shadow:0 0 0 2px rgba(167,139,250,.18)!important}
+.calDayName{color:#c7d2fe!important;font-weight:950!important}
+.accountMiniCards div,.reportStats .statBox,.playerMiniStats div{background:linear-gradient(180deg,#172b45,#112338)!important;border:1px solid rgba(125,211,252,.20)!important}
+body.lightMode .accountMiniCards div,body.lightMode .reportStats .statBox,body.lightMode .playerMiniStats div{background:#fff!important;border-color:rgba(15,23,42,.16)!important}
+.accountsExtraGrid input,.accountsExtraGrid select,.accountsExtraGrid .fakeDateInput{min-height:42px!important}
+.pageOrderHeader{display:flex!important;justify-content:space-between!important;align-items:center!important;margin-top:8px!important}
+.pageOrderHeader h3{margin:0!important}
+#renamePagesBtn{margin-inline-start:auto!important}
+
+/* R12 missing-only hard overrides */
+
+/* All input boxes visible in both modes */
+input,select,textarea,.fakeDateInput,.amountInputLikeDeposits{
+  background:#08213a!important;
+  color:#ffffff!important;
+  border:1px solid rgba(125,211,252,.55)!important;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.04),0 0 0 1px rgba(14,165,233,.06)!important;
+}
+input::placeholder{color:#b7d8f5!important}
+body.lightMode input,
+body.lightMode select,
+body.lightMode textarea,
+body.lightMode .fakeDateInput,
+body.lightMode .amountInputLikeDeposits{
+  background:#ffffff!important;
+  color:#111827!important;
+  border:1px solid rgba(37,99,235,.45)!important;
+}
+
+/* Players page: chips same idea as participants without checkbox */
+#playersList{
+  display:flex!important;
+  flex-wrap:wrap!important;
+  gap:5px!important;
+}
+.playerChipBtn{
+  background:linear-gradient(180deg,#162b45,#102137)!important;
+  border:0!important;
+  color:#f8fafc!important;
+  border-radius:10px!important;
+  min-height:28px!important;
+  padding:4px 8px!important;
+  width:auto!important;
+  flex:0 0 auto!important;
+  font-size:13px!important;
+  font-weight:900!important;
+}
+body.lightMode .playerChipBtn{
+  background:#ffffff!important;
+  color:#111827!important;
+  border:1px solid rgba(15,23,42,.14)!important;
+}
+
+/* Calendar */
+.calendarMonthTitle,#calendarMonthTitle{
+  letter-spacing:.5px!important;
+}
+.calDayName{
+  color:#c7d2fe!important;
+  font-weight:950!important;
+  font-size:11px!important;
+}
+.calCell.hasGame{
+  background:linear-gradient(180deg,rgba(56,189,248,.32),rgba(16,36,60,.98))!important;
+  border:2px solid #38bdf8!important;
+  box-shadow:0 0 0 2px rgba(56,189,248,.20),0 0 18px rgba(56,189,248,.18)!important;
+}
+.todayCell{
+  outline:2px solid #a78bfa!important;
+  box-shadow:0 0 0 2px rgba(167,139,250,.18),0 0 12px rgba(167,139,250,.22)!important;
+}
+.teamName,.unpickedNames,.teamPickLine b,.matchCard .teamName,.calendarMatchCard .teamName{
+  font-size:13.5px!important;
+  line-height:1.65!important;
+}
+
+/* Accounts and player-report top amount boxes like dark mode */
+.accountMiniCards div,.reportStats .statBox,.playerMiniStats div{
+  background:linear-gradient(180deg,#172b45,#112338)!important;
+  border:1px solid rgba(125,211,252,.22)!important;
+  color:#f8fafc!important;
+}
+body.lightMode .accountMiniCards div,
+body.lightMode .reportStats .statBox,
+body.lightMode .playerMiniStats div{
+  background:#ffffff!important;
+  color:#111827!important;
+  border:1px solid rgba(15,23,42,.16)!important;
+}
+
+/* Table font size readable and safe */
+.accountsMoneyTable .tRow,
+.depositsMoneyTable .tRow,
+.reportTable .tRow{
+  font-size:13px!important;
+  line-height:1.55!important;
+  min-height:32px!important;
+}
+.accountsMoneyTable .tHead,
+.depositsMoneyTable .tHead,
+.reportTable .tHead{
+  font-size:12px!important;
+  line-height:1.4!important;
+}
+.accountsMoneyTable .tRow span,
+.depositsMoneyTable .tRow span,
+.reportTable .tRow span{
+  white-space:nowrap!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+}
+.accountsMoneyTable .tRow span:last-child,
+.depositsMoneyTable .tRow span:last-child,
+.reportTable .tRow span:last-child{
+  overflow:visible!important;
+}
+
+/* Player table */
+.playersTable td,.playersTable th{
+  font-size:13px!important;
+  line-height:1.5!important;
+  padding:5px 3px!important;
+}
+.playersTable .balanceTd,.playersTable .balanceTh{
+  text-align:left!important;
+}
+.playersTable .balanceTd.moneyNeg{
+  color:#ff5b6e!important;
+  font-weight:950!important;
+}
+.tableNameBtn{
+  background:transparent!important;
+  border:0!important;
+  color:inherit!important;
+  padding:0!important;
+  min-height:0!important;
+  font:inherit!important;
+  cursor:pointer!important;
+}
+
+/* Teams */
+.teamTabs .selA{
+  background:#fff176!important;
+  color:#111827!important;
+  border:1px solid #facc15!important;
+  border-bottom:3px solid #facc15!important;
+  box-shadow:0 0 10px rgba(255,241,118,.18)!important;
+}
+.teamTabs .selB{
+  background:#ff8ac7!important;
+  color:#111827!important;
+  border:1px solid #f472b6!important;
+  border-bottom:3px solid #f472b6!important;
+  box-shadow:0 0 10px rgba(255,138,199,.18)!important;
+}
+body.lightMode .teamTabs .selA{
+  background:#fef08a!important;
+  color:#111827!important;
+  border-color:#ca8a04!important;
+  box-shadow:none!important;
+}
+body.lightMode .teamTabs .selB{
+  background:#f9a8d4!important;
+  color:#111827!important;
+  border-color:#db2777!important;
+  box-shadow:none!important;
+}
+
+/* Match log */
+.matchMeta,.matchMeta span,.matchMeta b{
+  color:#e0f2fe!important;
+  font-weight:950!important;
+}
+
+/* Settings rename button */
+.pageOrderHeader{
+  display:flex!important;
+  justify-content:space-between!important;
+  align-items:center!important;
+  margin-top:8px!important;
+}
+.pageOrderHeader h3{
+  margin:0!important;
+}
+#renamePagesBtn{
+  margin-inline-start:auto!important;
+  background:#1e40af!important;
+  color:#ffffff!important;
+  border:1px solid rgba(191,219,254,.35)!important;
+}
+body.lightMode #renamePagesBtn{
+  background:#2563eb!important;
+  color:#ffffff!important;
+}
