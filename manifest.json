@@ -1,9 +1,0 @@
-{
-  "name": "قروب الكورة - Clean V3 R14",
-  "short_name": "قروب الكورة",
-  "display": "standalone",
-  "orientation": "portrait",
-  "theme_color": "#08111f",
-  "background_color": "#08111f",
-  "start_url": "./index.html"
-}
