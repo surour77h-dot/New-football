@@ -1,0 +1,276 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#08111f">
+<title>قروب الكورة - Clean V3</title>
+<link rel="manifest" href="manifest.json?v=cleanv3r15">
+<link rel="stylesheet" href="style.css?v=cleanv3r15">
+</head>
+<body>
+<div class="app">
+  <header class="top">
+    <button id="ballBtn" class="ball cleanBall" type="button">⚽️</button>
+    <div class="title">
+      <h1>قروب الكورة</h1>
+      <p>إدارة اللعبات • الحسابات • اللاعبين</p>
+    </div>
+    <button id="topThemeBtn" class="topThemeBtn" type="button" aria-label="تبديل الوضع">🌙</button>
+  </header>
+
+  <div id="pageTitle" class="pageTitle">الرئيسية</div>
+
+  
+
+  
+<nav id="pagesMenu" class="pagesMenu">
+  <button type="button" data-page="home">🏠 الرئيسية</button>
+  <button type="button" data-page="accounts">💰 الحسابات</button>
+  <button type="button" data-page="players">👥 اللاعبين</button>
+  <button type="button" data-page="playerReport">🔎 كشف لاعب</button>
+  <button type="button" data-page="calendar">📅 التقويم</button>
+  <button type="button" data-page="teams">🟨 تقسيم الفريقين</button>
+  <button type="button" data-page="deposits">💳 الإيداعات</button>
+  <button type="button" data-page="playerTable">📊 جدول اللاعبين</button>
+  <button type="button" data-page="matchLog">🧾 سجل المباريات</button>
+  <button type="button" data-page="settings">⚙️ الإعدادات</button>
+</nav>
+
+<main>
+    <section id="home" class="page active">
+      <div class="card">
+        <input type="hidden" id="editingMatchId">
+        <div class="grid2">
+          <label>تاريخ اللعب<button id="matchDateBtn" class="fakeDateInput" type="button">--</button><input id="matchDate" type="hidden"></label>
+          <label>المكان<input id="place" placeholder=""></label>
+          <label>سعر الحجز<input id="bookingCost" type="number" step="0.001" inputmode="decimal"></label>
+          <label>عدد اللاعبين<input id="neededPlayers" type="number" inputmode="numeric"></label>
+        </div>
+        <div class="lineInfo">سعر اللاعب: <b id="pricePerPlayer">0.000</b></div>
+        <h3>المشاركون</h3>
+        <div id="matchPlayers" class="checkList"></div>
+        <h3>إضافة ضيف</h3>
+        <div class="grid2">
+          <label>اسم الضيف<input id="guestName"></label>
+          <label>العضو<select id="guestOwner"></select></label>
+        </div>
+        <button id="addGuestBtn" type="button">إضافة ضيف</button>
+        <div id="tempGuests" class="miniList"></div>
+        <div id="matchParticipantsPreview" class="lineInfo"></div>
+        <div class="actions">
+          <button id="saveMatchBtn" class="primary" type="button">حفظ اللعبة</button>
+          <button id="clearMatchBtn" type="button">تفريغ</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="players" class="page">
+      <div class="card">
+        <div class="addLine">
+          <input id="playerName" placeholder="اسم اللاعب">
+          <button id="addPlayerBtn" class="primary" type="button">إضافة</button>
+        </div>
+        <div id="playersList" class="compactList"></div>
+      </div>
+      <div class="card">
+        <div class="sectionTitleLine"><b>تعديل / حذف لاعب</b></div>
+        <div class="grid2">
+          <select id="editPlayerSelect"></select>
+          <input id="editPlayerName" placeholder="الاسم الجديد">
+        </div>
+        <div class="actions">
+          <button id="renamePlayerBtn" type="button">حفظ التعديل</button>
+          <button id="deletePlayerBtn" class="danger" type="button">حذف اللاعب</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="playerTable" class="page">
+      <div id="playerTableWrap" class="card tableCard"></div>
+    </section>
+
+    <section id="playerReport" class="page">
+      <div class="card">
+        <label>اختر لاعب<select id="playerFilterSelect"></select></label>
+        <div id="playerFilterContent"></div>
+      </div>
+    </section>
+
+    <section id="calendar" class="page">
+      <div class="card">
+        <div class="monthNav">
+          <button id="prevMonth" type="button">‹</button>
+          <b id="calendarMonthTitle"></b>
+          <button id="nextMonth" type="button">›</button>
+        </div>
+        <div id="monthCalendar"></div>
+      </div>
+      <div class="card">
+        <h3 id="calendarSelectedTitle">المشاركون</h3>
+        <div id="calendarList"></div>
+      </div>
+    </section>
+
+    <section id="teams" class="page">
+      <div class="card">
+        <label>اختر لعبة<select id="teamsMatchSelect"></select></label>
+        <div id="teamsPlayers" class="teamPickWrap"></div>
+        <button id="saveTeamsBtn" class="primary wide" type="button">حفظ الفريقين</button>
+      </div>
+      <div id="teamsPreview"></div>
+    </section>
+
+    <section id="deposits" class="page">
+      <div class="card">
+        <input type="hidden" id="editingDepositId">
+        <div class="grid2">
+          <label>اللاعب<select id="depositPlayer"></select></label>
+          <label>التاريخ<button id="depositDateBtn" class="fakeDateInput" type="button">--</button><input id="depositDate" type="hidden"></label>
+          <label>المبلغ<input id="depositAmount" type="number" step="0.001" inputmode="decimal"></label>
+          <label>النوع<select id="depositType"><option value="in">إيداع</option><option value="initial">إيداع مبدئي</option><option value="out">مديونية</option><option value="late">تأخير</option></select></label>
+        </div>
+        <div class="actions">
+          <button id="saveDepositBtn" class="primary" type="button">حفظ</button>
+        </div>
+      </div>
+      <div id="depositsList" class="card"></div>
+    </section>
+
+    <section id="accounts" class="page">
+      <div id="accountsContent"></div>
+    </section>
+
+    <section id="matchLog" class="page">
+      <div id="matchLogList"></div>
+    </section>
+
+    <section id="settings" class="page">
+      
+      <div class="card">
+        <h3>اسم ووصف التطبيق</h3>
+        <label>اسم التطبيق<input id="appTitleInput" placeholder="قروب الكورة"></label>
+        <label>شرح / وصف التطبيق<input id="appDescInput" placeholder="إدارة اللعبات • الحسابات • اللاعبين"></label>
+        <button id="saveAppInfoBtn" class="primary wide" type="button">حفظ الاسم والوصف</button>
+      </div>
+
+      <div class="card">
+        <div class="settingsActions">
+          <button id="exportDataBtn" type="button">تصدير البيانات</button>
+          <button id="exportExcelBtn" type="button">تصدير Excel</button>
+          <label class="importLabel">استيراد البيانات<input id="importDataInput" type="file" accept="application/json"></label>
+        </div>
+      </div>
+      <div class="card">
+        <div class="sectionTitleLine pageOrderHeader"><div class="sectionTitleLine pageOrderHeader"><h3>ترتيب الصفحات</h3><button id="renamePagesBtn" type="button" onclick="openRenamePages()">إعادة تسمية الصفحات</button></div><button id="renamePagesBtn" type="button" onclick="openRenamePages()">إعادة تسمية الصفحات</button></div></div></div></div>
+        <div id="pageOrderList"></div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<div id="adjustEditModal" class="modal">
+  <div class="modalCard">
+    <div class="sectionTitleLine"><b>تعديل الخصم / الإضافة</b><button id="closeAdjustModal" type="button">إغلاق</button></div>
+    <p class="muted">اضغط على أي سطر لإزالته، ثم اضغط حفظ.</p>
+    <div id="adjustEditTable" class="compactTable"></div>
+    <button id="saveAdjustModal" class="primary wide" type="button">حفظ</button>
+  </div>
+</div>
+
+<script src="app.js?v=cleanv3r15"></script>
+
+<script>
+(function(){
+  const titles = {
+    home:'الرئيسية',
+    accounts:'الحسابات',
+    players:'اللاعبين',
+    playerReport:'كشف لاعب',
+    calendar:'التقويم',
+    teams:'تقسيم الفريقين',
+    deposits:'الإيداعات',
+    playerTable:'جدول اللاعبين',
+    matchLog:'سجل المباريات',
+    settings:'الإعدادات'
+  };
+
+  function setPage(id){
+    id = id || 'home';
+    window.currentPage = id;
+
+    document.querySelectorAll('main > section.page, .page').forEach(function(sec){
+      const active = sec.id === id;
+      sec.classList.toggle('active', active);
+      sec.hidden = !active;
+      sec.style.display = active ? 'block' : 'none';
+      sec.style.visibility = active ? 'visible' : 'hidden';
+      sec.style.height = active ? 'auto' : '0';
+      sec.style.overflow = active ? 'visible' : 'hidden';
+    });
+
+    document.querySelectorAll('#pagesMenu [data-page]').forEach(function(btn){
+      btn.classList.toggle('active', btn.getAttribute('data-page') === id);
+    });
+
+    const title = document.getElementById('pageTitle');
+    if(title) title.textContent = titles[id] || id;
+
+    const menu = document.getElementById('pagesMenu');
+    if(menu) menu.classList.remove('open');
+  }
+
+  function toggleMenu(e){
+    if(e){ e.preventDefault(); e.stopPropagation(); }
+    const menu = document.getElementById('pagesMenu');
+    if(menu) menu.classList.toggle('open');
+    return false;
+  }
+
+  function bind(){
+    const ball = document.getElementById('ballBtn');
+    const menu = document.getElementById('pagesMenu');
+
+    if(ball){
+      ball.onclick = toggleMenu;
+      ball.addEventListener('touchend', toggleMenu, {passive:false});
+    }
+
+    if(menu){
+      menu.querySelectorAll('[data-page]').forEach(function(btn){
+        btn.onclick = function(e){
+          e.preventDefault();
+          e.stopPropagation();
+          setPage(btn.getAttribute('data-page'));
+          return false;
+        };
+      });
+    }
+
+    // Override app navigation too
+    window.goPage = function(id){
+      setPage(id);
+      try{ if(typeof renderAll === 'function') renderAll(); }catch(e){}
+      setTimeout(function(){ setPage(id); }, 0);
+      return false;
+    };
+
+    setTimeout(function(){ setPage(window.currentPage || 'home'); }, 50);
+    setTimeout(function(){ setPage(window.currentPage || 'home'); }, 300);
+  }
+
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', bind);
+  }else{
+    bind();
+  }
+})();
+</script>
+
+
+<div id="datePickerModal" class="modal"><div class="modalCard smallModal"><div class="sectionTitleLine"><b>اختيار التاريخ</b><button type="button" onclick="closeDatePicker()">إغلاق</button></div><input id="nativeDateInput" type="date"><button id="applyDateBtn" class="primary wide" type="button">اختيار</button></div></div>
+<div id="depositEditModal" class="modal"><div class="modalCard"><div class="sectionTitleLine"><b>تعديل العملية</b><button type="button" onclick="closeDepositEditor()">عودة</button></div><input type="hidden" id="editDepositModalId"><div class="grid2 depositEditorGrid"><label>اللاعب<select id="editDepositModalPlayer"></select></label><label>التاريخ<button id="editDepositModalDateBtn" class="fakeDateInput" type="button">--</button><input type="hidden" id="editDepositModalDate"></label><label>المبلغ<input id="editDepositModalAmount" type="number" step="0.001"></label><label>النوع<select id="editDepositModalType"><option value="in">إيداع</option><option value="initial">إيداع مبدئي</option><option value="out">مديونية</option><option value="late">تأخير</option></select></label></div><div class="actions"><button class="primary" type="button" onclick="saveDepositEditor()">حفظ</button><button class="danger" type="button" onclick="deleteDepositEditor()">حذف</button><button type="button" onclick="closeDepositEditor()">عودة</button></div></div></div>
+<div id="renamePagesModal" class="modal"><div class="modalCard"><div class="sectionTitleLine"><b>إعادة تسمية الصفحات</b><button type="button" onclick="closeRenamePages()">إغلاق</button></div><div id="renamePagesContent" class="pageNamesEditor"></div><button class="primary wide" type="button" onclick="saveRenamePagesModal()">حفظ</button></div></div>
+<div id="confirmModal" class="modal"><div class="modalCard confirmCard"><div class="confirmIcon">✅</div><div id="confirmMessage" class="confirmMessage"></div><button id="confirmCloseBtn" class="primary wide" type="button">إغلاق</button></div></div>
+</body>
+</html>
