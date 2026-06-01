@@ -92,9 +92,14 @@ function deleteDepositEditor(){
   const s=state(),id=editDepositModalId.value;if(!id)return;if(!confirm('حذف العملية؟'))return;
   s.deposits=s.deposits.filter(d=>d.id!==id);saveNoRender(s);depositEditModal.classList.remove('show');renderAll();goPage('deposits');scrollToDepositsTop();
 }
-function teamHtml(s,m){const map=s.teams[m.id]||{},names=participants(m),a=names.filter(n=>map[n]==='A'),b=names.filter(n=>map[n]==='B'),no=names.filter(n=>!map[n]);return `<div class="luxTeamsGrid"><div class="luxTeamBox teamABox"><h4>الفريق الأول <small>(${a.length})</small></h4>${a.map(x=>`<div class="teamName">${escapeHtml(x)}</div>`).join('')||'<p class="muted">لا يوجد</p>'}</div><div class="luxTeamBox teamBBox"><h4>الفريق الثاني <small>(${b.length})</small></h4>${b.map(x=>`<div class="teamName">${escapeHtml(x)}</div>`).join('')||'<p class="muted">لا يوجد</p>'}</div></div>${no.length?`<div class="unpickedNames">${no.map(escapeHtml).join('، ')}</div>`:''}`}
+function teamHtml(s,m){
+ const map=s.teams[m.id]||{},names=participants(m),a=names.filter(n=>map[n]==='A'),b=names.filter(n=>map[n]==='B'),no=names.filter(n=>!map[n]);
+ const guestSet=(m.guests||[]).map(g=>`${g.guest} (${g.owner})`), noMembers=no.filter(n=>!guestSet.includes(n)), noGuests=no.filter(n=>guestSet.includes(n));
+ const unpicked=no.length?`<div class="unpickedBlock"><div class="unpickedMembers">${noMembers.map(x=>`<span>${escapeHtml(x)}</span>`).join('')}</div><div class="unpickedGuests">${noGuests.map(x=>`<div>${escapeHtml(x)}</div>`).join('')}</div></div>`:'';
+ return `<div class="luxTeamsGrid"><div class="luxTeamBox teamABox"><h4>الفريق الأول <small>(${a.length})</small></h4>${(a.map(x=>`<div class="teamName">${escapeHtml(x)}</div>`).join('')||'<p class="muted">لا يوجد</p>')}</div><div class="luxTeamBox teamBBox"><h4>الفريق الثاني <small>(${b.length})</small></h4>${(b.map(x=>`<div class="teamName">${escapeHtml(x)}</div>`).join('')||'<p class="muted">لا يوجد</p>')}</div></div>${unpicked}`;
+}
 function renderTeamsSelect(s){
- teamsMatchSelect.innerHTML=[...s.matches].sort((a,b)=>(b.date||'').localeCompare(a.date||'')).map(m=>{const need=Number(m.neededPlayers||0);const split=need===14?'7x7':need===12?'6x6':(need?`${Math.floor(need/2)}x${Math.ceil(need/2)}`:'');return `<option value="${m.id}">${fmDate(m.date)}  ${split}  ${escapeHtml(m.place||'')}</option>`}).join('');
+ teamsMatchSelect.innerHTML=[...s.matches].sort((a,b)=>(b.date||'').localeCompare(a.date||'')).map(m=>{const need=Number(m.neededPlayers||0);const split=need===14?'7x7':need===12?'6x6':(need?`${Math.floor(need/2)}x${Math.ceil(need/2)}`:'');return `<option value="${m.id}">${split}  ${fmDate(m.date)}  ${escapeHtml(m.place||'')}</option>`}).join('');
 }
 function renderTeams(){const s=state(),m=s.matches.find(x=>x.id===teamsMatchSelect.value);if(!m){teamsPlayers.innerHTML='';teamsPreview.innerHTML='';return}if(tempTeamMap.__matchId!==m.id)tempTeamMap={...(s.teams[m.id]||{}),__matchId:m.id};const names=participants(m);teamsPlayers.innerHTML=names.map(n=>`<div class="teamPickLine"><b onclick="clearTeamFor('${escAttr(n)}')">${escapeHtml(n)}</b><div class="teamTabs"><button type="button" class="${tempTeamMap[n]==='A'?'selA':''}" onclick="pickTeam('${escAttr(n)}','A')">الأول</button><button type="button" class="${tempTeamMap[n]==='B'?'selB':''}" onclick="pickTeam('${escAttr(n)}','B')">الثاني</button></div></div>`).join('');const map={...tempTeamMap};delete map.__matchId;teamsPreview.innerHTML=`<div class="card">${teamHtml({...s,teams:{...s.teams,[m.id]:map}},m)}<div class="teamEditFooter"><button type="button" onclick="editSelectedMatchFromTeams()">تعديل وإضافة لاعبين</button></div></div>`}
 function pickTeam(n,t){tempTeamMap[n]=t;renderTeams()}function clearTeamFor(n){delete tempTeamMap[n];renderTeams()}function saveTeams(){const s=state(),id=teamsMatchSelect.value;if(!id)return;const map={...tempTeamMap};delete map.__matchId;s.teams[id]=map;save(s)}
@@ -151,8 +156,9 @@ function removeAdjust(type,id){let k=type==='discount'?'extraDiscounts':'extraCh
 function saveAdjustEditor(){const s=state();s.extraCharges=adjustEditorDraft.extraCharges;s.extraDiscounts=adjustEditorDraft.extraDiscounts;save(s);closeAdjustEditor();goPage('accounts')}
 function renderMatchLog(s){matchLogList.innerHTML=[...s.matches].sort((a,b)=>(b.date||'').localeCompare(a.date||'')).map(m=>`<div class="matchCard"><div class="matchHead"><b>${fmDate(m.date)}</b><span>${escapeHtml(m.place||'')}</span></div><div class="matchMeta"><span>${participants(m).length} لاعب</span><b>${money(m.bookingCost||m.price||0)} د.ك</b></div>${teamHtml(s,m)}</div>`).join('')||'<p class="muted">لا توجد ألعاب محفوظة.</p>'}
 function renderPageOrder(){
-  const order=getPageOrder();
-  pageOrderList.innerHTML=`<div class="newPageOrder">${order.map(id=>`<div class="pageOrderRow"><span>${pageTitle(id)}</span><div><button type="button" onclick="movePage('${id}',-1);event.preventDefault();">↑</button><button type="button" onclick="movePage('${id}',1);event.preventDefault();">↓</button></div></div>`).join('')}</div>`;
+ if(currentPage!=='settings'||!document.getElementById('pageOrderList'))return;
+ const order=getPageOrder();
+ pageOrderList.innerHTML=`<div class="newPageOrder">${order.map(id=>`<div class="pageOrderRow"><span>${pageTitle(id)}</span><div><button type="button" onclick="movePage('${id}',-1);event.preventDefault();">↑</button><button type="button" onclick="movePage('${id}',1);event.preventDefault();">↓</button></div></div>`).join('')}</div>`;
 }
 function movePage(id,dir){const order=getPageOrder(),i=order.indexOf(id),j=i+dir;if(i<0||j<0||j>=order.length)return;[order[i],order[j]]=[order[j],order[i]];savePageOrder(order)}
 function renderSettingsPageNames(){if(!document.getElementById('themeToggleBtn')&&pageOrderList){pageOrderList.insertAdjacentHTML('beforebegin','<div class="themeRow"><button id="themeToggleBtn" type="button" onclick="toggleThemeMode()">تبديل نهاري / ليلي</button></div>')}}
@@ -289,3 +295,22 @@ document.addEventListener('DOMContentLoaded',()=>{
   if(b){b.onclick=()=>{toggleThemeMode();updateTopThemeIcon();};}
   updateTopThemeIcon();
 });
+
+function loadMatchByDateIfExists(dateVal){
+  const s=state(), m=s.matches.find(x=>x.date===dateVal);
+  if(!m)return;
+  editingMatchId.value=m.id; matchDate.value=m.date||dateVal; document.getElementById('place').value=m.place||'';
+  bookingCost.value=m.bookingCost||''; neededPlayers.value=m.neededPlayers||''; tempGuests=[...(m.guests||[])];
+  renderMatchPlayers(s);
+  setTimeout(()=>{document.querySelectorAll('.playerCheck').forEach(ch=>{ch.checked=(m.players||[]).includes(ch.value)});renderTempGuests();renderMatchPreview();pricePerPlayer.textContent=money(calcPrice());updateDateButtons();},40);
+}
+function applyDatePicker(){
+  if(!activeDateTarget)return;
+  const hidden=document.getElementById(activeDateTarget);
+  if(hidden)hidden.value=nativeDateInput.value||today();
+  updateDateButtons(); closeDatePicker();
+  if(activeDateTarget==='matchDate')loadMatchByDateIfExists(hidden.value);
+}
+function updateDateButtons(){
+  [['matchDate','matchDateBtn'],['depositDate','depositDateBtn'],['editDepositModalDate','editDepositModalDateBtn'],['extraDate','extraDateBtn']].forEach(([h,b])=>{const hidden=document.getElementById(h),btn=document.getElementById(b);if(hidden&&btn)btn.textContent=fmDate(hidden.value||today());});
+}

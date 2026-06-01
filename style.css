@@ -488,3 +488,27 @@ body.lightMode .accountMiniCards div,body.lightMode .reportStats .statBox,body.l
 .matchMeta,.matchMeta span,.matchMeta b{color:#e0f2fe!important;font-weight:950!important}body.lightMode .matchMeta,body.lightMode .matchMeta span,body.lightMode .matchMeta b{color:#1e3a8a!important}
 .pageOrderHeader{display:flex!important;justify-content:space-between!important;align-items:center!important;margin-top:8px!important}.pageOrderHeader h3{margin:0!important}#renamePagesBtn{margin-inline-start:auto!important;background:#1e40af!important;color:#fff!important;border:1px solid rgba(191,219,254,.35)!important}body.lightMode #renamePagesBtn{background:#2563eb!important;color:#fff!important}
 body:not(.settings-page) .pageOrderHeader,body:not(.settings-page) #pageOrderList{display:none!important}body.settings-page #settings.active .pageOrderHeader{display:flex!important}body.settings-page #settings.active #pageOrderList{display:block!important}
+
+/* R14 */
+.cleanBall,.ball{background:transparent!important;box-shadow:none!important;border:0!important;font-size:42px!important;width:50px!important;height:50px!important;min-height:50px!important;padding:0!important}
+.pagesMenu button.active,#pagesMenu button.active{background:linear-gradient(135deg,#2563eb,#1d4ed8)!important;color:#fff!important;border:2px solid #93c5fd!important}
+body.lightMode .pagesMenu button.active,body.lightMode #pagesMenu button.active{background:#dbeafe!important;color:#1e3a8a!important;border:2px solid #2563eb!important}
+.calDayName{color:#e0f2fe!important;font-weight:950!important;text-shadow:0 1px 2px rgba(0,0,0,.35)!important}
+body.lightMode .calDayName{color:#1e3a8a!important;text-shadow:none!important}
+.calCell.hasGame{background:linear-gradient(180deg,rgba(56,189,248,.42),rgba(16,36,60,.98))!important;border:2px solid #38bdf8!important;box-shadow:0 0 0 2px rgba(56,189,248,.25),0 0 18px rgba(56,189,248,.22)!important}
+body.lightMode .calCell.hasGame{background:#bfdbfe!important;border:2px solid #1d4ed8!important;color:#111827!important}
+.teamName,.unpickedNames,.unpickedBlock,.matchCard .teamName,.calendarMatchCard .teamName{font-size:14px!important;line-height:1.75!important}
+.unpickedBlock{margin-top:8px!important;color:var(--text)!important}
+.unpickedMembers{display:grid!important;grid-template-columns:repeat(auto-fit,minmax(110px,1fr))!important;gap:4px!important}
+.unpickedMembers span{background:rgba(125,211,252,.08)!important;border-radius:8px!important;padding:3px 6px!important}
+.unpickedGuests div{margin-top:4px!important;padding:3px 6px!important;background:rgba(244,114,182,.08)!important;border-radius:8px!important}
+body.lightMode .accountMiniCards div,body.lightMode .reportStats .statBox,body.lightMode .playerMiniStats div{background:#172b45!important;color:#fff!important;border:1px solid rgba(37,99,235,.25)!important}
+.reportTable .tHead,.reportTable .tRow{grid-template-columns:90px minmax(0,1fr) 86px!important}
+.reportTable .tRow span:first-child{overflow:visible!important}
+.depositsMoneyTable .tRow span:nth-child(1),.depositsMoneyTable .tRow span:nth-child(2){font-size:13.5px!important}
+body.lightMode .moneyLate{color:#f59e0b!important;text-shadow:none!important}
+body.lightMode .moneyNeg{color:#dc2626!important}
+.depositsMoneyTable .tRow span:last-child,.accountsMoneyTable .tRow span:last-child,.reportTable .tRow span:last-child{justify-self:end!important;text-align:left!important}
+body.lightMode .matchMeta,body.lightMode .matchMeta span,body.lightMode .matchMeta b{color:#1d4ed8!important;font-weight:950!important}
+#settings:not(.active) .pageOrderHeader,#settings:not(.active) #pageOrderList,.page:not(#settings) .pageOrderHeader,.page:not(#settings) #pageOrderList{display:none!important}
+#settings.active .pageOrderHeader{display:flex!important}#settings.active #pageOrderList{display:block!important}
