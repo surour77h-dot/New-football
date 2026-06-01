@@ -24,7 +24,14 @@ function renderMenuLabels(){
   const titleBox=document.getElementById('pageTitle');
   if(titleBox)titleBox.textContent=pageTitle(currentPage||'home');
 }
-function goPage(id){currentPage=id||'home';document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id===currentPage));document.querySelectorAll('[data-page]').forEach(b=>b.classList.toggle('active',b.dataset.page===currentPage));pageTitle.textContent=pageTitleFn(currentPage);pagesMenu.classList.remove('open');renderAll();pageTitle.textContent=pageTitleFn(currentPage)}
+function goPage(id){
+ currentPage=id||'home';document.body.classList.toggle('settings-page',currentPage==='settings');
+ document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id===currentPage));document.querySelectorAll('[data-page]').forEach(b=>b.classList.toggle('active',b.dataset.page===currentPage));
+ const titleBox=document.getElementById('pageTitle');if(titleBox)titleBox.textContent=pageTitle(currentPage);
+ if(typeof pagesMenu!=='undefined'&&pagesMenu)pagesMenu.classList.remove('open');
+ try{renderAll()}catch(e){console.error(e)}
+ document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id===currentPage));document.body.classList.toggle('settings-page',currentPage==='settings');if(titleBox)titleBox.textContent=pageTitle(currentPage);
+}
 function pageTitleFn(id){return pageTitle(id)}
 function toggleMenu(){pagesMenu.classList.toggle('open')}
 function depositTypeLabel(d){if(d.type==='late')return'تأخير';if(d.type==='out')return'مديونية';if(d.type==='initial')return'إيداع مبدئي';const raw=String(d.date||'').replace(/-/g,'/');if(raw==='2026/01/01'||raw==='1/1/2026')return'إيداع مبدئي';return'إيداع'}
@@ -37,17 +44,12 @@ function openDatePicker(targetId){activeDateTarget=targetId;nativeDateInput.valu
 function closeDatePicker(){datePickerModal.classList.remove('show')}
 function applyDatePicker(){const h=document.getElementById(activeDateTarget);if(h)h.value=nativeDateInput.value||today();updateDateButtons();closeDatePicker()}
 function updateDateButtons(){
-  [['matchDate','matchDateBtn'],['depositDate','depositDateBtn'],['editDepositModalDate','editDepositModalDateBtn'],['extraDate','extraDateBtn']].forEach(([h,b])=>{
-    const hidden=document.getElementById(h),btn=document.getElementById(b);
-    if(hidden&&btn) btn.textContent=fmDate(hidden.value||today());
-  });
+ [['matchDate','matchDateBtn'],['depositDate','depositDateBtn'],['editDepositModalDate','editDepositModalDateBtn'],['extraDate','extraDateBtn']].forEach(([h,b])=>{const hidden=document.getElementById(h),btn=document.getElementById(b);if(hidden&&btn)btn.textContent=fmDate(hidden.value||today())});
 }
 function renderAll(){const s=state();saveNoRender(s);refreshSelects(s);if(!matchDate.value)matchDate.value=today();if(!depositDate.value)depositDate.value=today();applyThemeMode();updateDateButtons();pricePerPlayer.textContent=money(calcPrice());if(s.settings.appTitle)document.querySelector('.title h1').textContent=s.settings.appTitle;if(s.settings.appDesc)document.querySelector('.title p').textContent=s.settings.appDesc;if(typeof appTitleInput!=='undefined'&&appTitleInput){appTitleInput.value=s.settings.appTitle||'قروب الكورة';appDescInput.value=s.settings.appDesc||'إدارة اللعبات • الحسابات • اللاعبين'}renderPlayers(s);renderMatchPlayers(s);renderDeposits(s);renderCalendar();renderCalendarList();renderTeamsSelect(s);renderTeams();renderPlayerTable(s);renderPlayerReport();renderAccounts(s);renderMatchLog(s);renderPageOrder();renderSettingsPageNames();renderMenuLabels();document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id===currentPage));pageTitle.textContent=pageTitleFn(currentPage);updateDateButtons()}
 function calcPrice(){const c=Number(bookingCost.value||0),n=Number(neededPlayers.value||0);return n?c/n:0}
 function renderPlayers(s){
-  playersList.innerHTML = s.players.map(p =>
-    `<button type="button" class="playerChipBtn" onclick="openPlayerReport('${escAttr(p)}')">${escapeHtml(p)}</button>`
-  ).join('') || '<p class="muted">أضف اللاعبين أولًا.</p>';
+ playersList.innerHTML=s.players.map(p=>`<button type="button" class="playerChipBtn" onclick="openPlayerReport('${escAttr(p)}')">${escapeHtml(p)}</button>`).join('')||'<p class="muted">أضف اللاعبين أولًا.</p>';
 }
 function renderMatchPlayers(s){matchPlayers.innerHTML=s.players.map(p=>`<label><input class="playerCheck" type="checkbox" value="${escapeHtml(p)}"> <span>${escapeHtml(p)}</span></label>`).join('');renderTempGuests();renderMatchPreview()}
 function renderTempGuests(){tempGuests.innerHTML=tempGuests.map((g,i)=>`<div class="compactItem">${escapeHtml(g.guest)} (${escapeHtml(g.owner)}) <button type="button" onclick="tempGuests.splice(${i},1);renderTempGuests();renderMatchPreview()">×</button></div>`).join('')}
@@ -92,20 +94,14 @@ function deleteDepositEditor(){
 }
 function teamHtml(s,m){const map=s.teams[m.id]||{},names=participants(m),a=names.filter(n=>map[n]==='A'),b=names.filter(n=>map[n]==='B'),no=names.filter(n=>!map[n]);return `<div class="luxTeamsGrid"><div class="luxTeamBox teamABox"><h4>الفريق الأول <small>(${a.length})</small></h4>${a.map(x=>`<div class="teamName">${escapeHtml(x)}</div>`).join('')||'<p class="muted">لا يوجد</p>'}</div><div class="luxTeamBox teamBBox"><h4>الفريق الثاني <small>(${b.length})</small></h4>${b.map(x=>`<div class="teamName">${escapeHtml(x)}</div>`).join('')||'<p class="muted">لا يوجد</p>'}</div></div>${no.length?`<div class="unpickedNames">${no.map(escapeHtml).join('، ')}</div>`:''}`}
 function renderTeamsSelect(s){
-  teamsMatchSelect.innerHTML=[...s.matches].sort((a,b)=>(b.date||'').localeCompare(a.date||'')).map(m=>{
-    const count=participants(m).length;
-    return `<option value="${m.id}">${fmDate(m.date)}  ${escapeHtml(m.place||'')}  ${count} لاعب</option>`;
-  }).join('');
+ teamsMatchSelect.innerHTML=[...s.matches].sort((a,b)=>(b.date||'').localeCompare(a.date||'')).map(m=>{const need=Number(m.neededPlayers||0);const split=need===14?'7x7':need===12?'6x6':(need?`${Math.floor(need/2)}x${Math.ceil(need/2)}`:'');return `<option value="${m.id}">${fmDate(m.date)}  ${split}  ${escapeHtml(m.place||'')}</option>`}).join('');
 }
 function renderTeams(){const s=state(),m=s.matches.find(x=>x.id===teamsMatchSelect.value);if(!m){teamsPlayers.innerHTML='';teamsPreview.innerHTML='';return}if(tempTeamMap.__matchId!==m.id)tempTeamMap={...(s.teams[m.id]||{}),__matchId:m.id};const names=participants(m);teamsPlayers.innerHTML=names.map(n=>`<div class="teamPickLine"><b onclick="clearTeamFor('${escAttr(n)}')">${escapeHtml(n)}</b><div class="teamTabs"><button type="button" class="${tempTeamMap[n]==='A'?'selA':''}" onclick="pickTeam('${escAttr(n)}','A')">الأول</button><button type="button" class="${tempTeamMap[n]==='B'?'selB':''}" onclick="pickTeam('${escAttr(n)}','B')">الثاني</button></div></div>`).join('');const map={...tempTeamMap};delete map.__matchId;teamsPreview.innerHTML=`<div class="card">${teamHtml({...s,teams:{...s.teams,[m.id]:map}},m)}<div class="teamEditFooter"><button type="button" onclick="editSelectedMatchFromTeams()">تعديل وإضافة لاعبين</button></div></div>`}
 function pickTeam(n,t){tempTeamMap[n]=t;renderTeams()}function clearTeamFor(n){delete tempTeamMap[n];renderTeams()}function saveTeams(){const s=state(),id=teamsMatchSelect.value;if(!id)return;const map={...tempTeamMap};delete map.__matchId;s.teams[id]=map;save(s)}
 function editSelectedMatchFromTeams(){const s=state(),m=s.matches.find(x=>x.id===teamsMatchSelect.value);if(!m)return alert('اختر لعبة أولاً');editingMatchId.value=m.id;matchDate.value=m.date||today();place.value=m.place||'';bookingCost.value=m.bookingCost||'';neededPlayers.value=m.neededPlayers||'';tempGuests=[...(m.guests||[])];goPage('home');setTimeout(()=>{document.querySelectorAll('.playerCheck').forEach(ch=>{ch.checked=(m.players||[]).includes(ch.value)});renderTempGuests();renderMatchPreview();pricePerPlayer.textContent=money(calcPrice());updateDateButtons()},80)}
 function renderPlayerTable(s){
-  const b=balances(s), latest=Object.values(b).map(x=>x.last).filter(Boolean).sort().pop()||'';
-  playerTableWrap.innerHTML=`<div class="tableWrap"><table class="playersTable"><thead><tr><th class="nameTd">الاسم</th><th class="balanceTh">الرصيد</th><th class="gamesTh">لعب</th><th class="lastTh">آخر لعب</th></tr></thead><tbody>${s.players.map(p=>{
-    const bal=b[p]?.balance||0;
-    return `<tr><td class="nameTd ${isInactiveThisYear(b[p]?.last)?'inactiveName':''}"><button type="button" class="tableNameBtn" onclick="openPlayerReport('${escAttr(p)}')">${escapeHtml(p)}</button></td><td class="balanceTd ${bal<0?'moneyNeg':amountClass(bal)}">${fmAmount(bal)}</td><td class="gamesTd">${b[p]?.games||''}</td><td class="lastTd ${b[p]?.last&&b[p]?.last===latest?'latestDate':''}">${fmDate(b[p]?.last)}</td></tr>`;
-  }).join('')}</tbody></table></div>`;
+ const b=balances(s),latest=Object.values(b).map(x=>x.last).filter(Boolean).sort().pop()||'';
+ playerTableWrap.innerHTML=`<div class="tableWrap"><table class="playersTable"><thead><tr><th class="nameTd">الاسم</th><th class="balanceTh">الرصيد</th><th class="gamesTh">لعب</th><th class="lastTh">آخر لعب</th></tr></thead><tbody>${s.players.map(p=>{const bal=Number(b[p]?.balance||0);return `<tr><td class="nameTd ${isInactiveThisYear(b[p]?.last)?'inactiveName':''}"><button type="button" class="tableNameBtn" onclick="openPlayerReport('${escAttr(p)}')">${escapeHtml(p)}</button></td><td class="balanceTd ${bal<0?'moneyNeg':amountClass(bal)}">${fmAmount(bal)}</td><td class="gamesTd">${b[p]?.games||''}</td><td class="lastTd ${b[p]?.last&&b[p]?.last===latest?'latestDate':''}">${fmDate(b[p]?.last)}</td></tr>`}).join('')}</tbody></table></div>`;
 }
 function openPlayerReport(p){
   currentPage='playerReport';
@@ -125,36 +121,22 @@ function renderPlayerReport(){
   playerFilterContent.innerHTML=`<div class="reportStats"><div class="statBox depositStat"><span>الإيداعات</span><b class="moneyPos">${fmAmount(b.deposits)}</b></div><div class="statBox gamesStat"><span>اللعب</span><b>${b.games||''}</b></div><div class="statBox playTotalStat"><span>إجمالي اللعب + المديونية</span><b class="moneyNeg">${playPlusDebt?'-'+money(playPlusDebt):''}</b></div><div class="statBox lateStat"><span>التأخير</span><b class="moneyLate">${fmAmount(b.late)}</b></div><div class="statBox balanceStat"><span>الرصيد</span><b class="${amountClass(b.balance)}">${fmAmount(b.balance)}</b></div></div><div class="card"><h3>أيام اللعب</h3><div class="compactTable reportTable"><div class="tHead"><span>التاريخ</span><span>المكان</span><span class="amountHead">المبلغ</span></div>${gameRows||'<p class="muted">لا يوجد</p>'}</div></div><div class="card"><h3>الإيداعات والمديونيات</h3><div class="compactTable reportTable"><div class="tHead"><span>التاريخ</span><span>العملية</span><span class="amountHead">المبلغ</span></div>${depRows||'<p class="muted">لا يوجد</p>'}</div></div>`;
 }
 function renderCalendar(){
-  const s=state(), y=calendarView.getFullYear(), mo=calendarView.getMonth(),
-        first=new Date(y,mo,1), last=new Date(y,mo+1,0),
-        monthMs=s.matches.filter(m=>{let d=new Date(m.date);return d.getFullYear()===y&&d.getMonth()===mo});
-  calendarMonthTitle.textContent = calendarView.toLocaleDateString('en-US',{month:'long',year:'numeric'}).toUpperCase();
-  const days=['Sun','Mon','Tues','Wed','Thu','Fri','Sat'];
-  let html=`<div class="calendarMeta">⚽ ${monthMs.length} لعبات هذا الشهر</div><div class="luxCalendarGrid">${days.map(d=>`<div class="calDayName">${d}</div>`).join('')}`;
-  for(let i=0;i<first.getDay();i++) html+='<div class="calEmpty"></div>';
-  for(let d=1; d<=last.getDate(); d++){
-    let date=`${y}-${String(mo+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`,
-        ms=s.matches.filter(m=>m.date===date);
-    html+=`<button class="calCell ${ms.length?'hasGame':''} ${selectedCalendarDate===date?'selected':''} ${date===today()?'todayCell':''}" onclick="selectedCalendarDate='${date}';renderCalendar();renderCalendarList()"><b>${d}</b>${ms.length?'<span>⚽</span>':''}</button>`;
-  }
-  monthCalendar.innerHTML=html+'</div>';
+ const s=state(),y=calendarView.getFullYear(),mo=calendarView.getMonth(),first=new Date(y,mo,1),last=new Date(y,mo+1,0),monthMs=s.matches.filter(m=>{let d=new Date(m.date);return d.getFullYear()===y&&d.getMonth()===mo});
+ calendarMonthTitle.textContent=calendarView.toLocaleDateString('en-US',{month:'long',year:'numeric'}).toUpperCase();
+ const days=['Sun','Mon','Tues','Wed','Thu','Fri','Sat'];
+ let html=`<div class="calendarMeta">⚽ ${monthMs.length} لعبات هذا الشهر</div><div class="luxCalendarGrid">${days.map(d=>`<div class="calDayName">${d}</div>`).join('')}`;
+ for(let i=0;i<first.getDay();i++)html+='<div class="calEmpty"></div>';
+ for(let d=1;d<=last.getDate();d++){let date=`${y}-${String(mo+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`,ms=s.matches.filter(m=>m.date===date);html+=`<button class="calCell ${ms.length?'hasGame':''} ${selectedCalendarDate===date?'selected':''} ${date===today()?'todayCell':''}" onclick="selectedCalendarDate='${date}';renderCalendar();renderCalendarList()"><b>${d}</b>${ms.length?'<span>⚽</span>':''}</button>`}
+ monthCalendar.innerHTML=html+'</div>';
 }
 function renderCalendarList(){const s=state(),ms=s.matches.filter(m=>m.date===selectedCalendarDate);calendarSelectedTitle.textContent='المشاركون';calendarList.innerHTML=selectedCalendarDate?(ms.map(m=>{const count=participants(m).length,split=count>=14?'7X7':count>=12?'6X6':(count?Math.floor(count/2)+'X'+Math.ceil(count/2):'');return `<div class="calendarMatchCard"><div class="calMatchTop"><span>⚽ ${fmDate(m.date)}</span><b>${escapeHtml(m.place||'')}</b></div><div class="calMatchMeta splitMeta"><span>${count} لاعب</span><strong>${split}</strong><b>${money(m.bookingCost||0)} د.ك</b></div>${teamHtml(s,m)}</div>`}).join('')||'<p class="muted">لا توجد لعبة بهذا التاريخ.</p>'):'<p class="muted">اضغط على يوم من التقويم.</p>'}
 function moveMonth(n){calendarView.setMonth(calendarView.getMonth()+n);renderCalendar();renderCalendarList()}
 function renderAccounts(s){
-  const b=balances(s),neg=s.players.filter(p=>(b[p]?.balance||0)<0),late=s.deposits.filter(d=>d.type==='late'),extra=s.extraCharges.reduce((a,x)=>a+Number(x.amount||0),0),discount=s.extraDiscounts.reduce((a,x)=>a+Number(x.amount||0),0),lateTotal=late.reduce((a,d)=>a+Math.abs(Number(d.amount||0)),0),debt=neg.reduce((a,p)=>a+Math.abs(b[p].balance),0)+discount,final=extra+lateTotal-debt;
-  const debtRows=neg.map(p=>`<div class="tRow" onclick="openPlayerReport('${escAttr(p)}')"><span>${escapeHtml(p)}</span><span>${fmDate(b[p].last)}</span><span class="moneyNeg">-${money(Math.abs(b[p].balance))}</span></div>`).join('');
-  const lateRows=late.map(d=>`<div class="tRow" onclick="openPlayerReport('${escAttr(d.player)}')"><span>${escapeHtml(d.player)}</span><span>${fmDate(d.date)}</span><span class="moneyLate">-${money(Math.abs(d.amount))}</span></div>`).join('');
-  accountsContent.innerHTML=`<div class="accountMiniCards"><div><span>المديونية</span><b class="moneyNeg">-${money(debt)}</b></div><div><span>التأخير</span><b class="moneyLate">-${money(lateTotal)}</b></div><div><span>الإضافي</span><b class="moneyPos">${money(extra)}</b></div><div><span>الإجمالي</span><b class="${amountClass(final)}">${final<0?'-':''}${money(Math.abs(final))}</b></div></div>
-  <div class="card"><h3>اللاعبين المدانين والمتأخرين</h3><div class="compactTable accountsMoneyTable bigReadableTable"><div class="tHead"><span>الاسم</span><span>التاريخ</span><span class="amountHead">المبلغ</span></div>${debtRows}${lateRows}${(!debtRows&&!lateRows)?'<p class="muted">لا يوجد</p>':''}</div></div>
-  <div class="card"><div class="sectionTitleLine"><b>سجل الخصم / الإضافة</b><button onclick="openAdjustEditor()">تعديل</button></div>${renderAdjustRows(s)}</div>
-  <div class="card"><div class="sectionTitleLine"><b>خصم / إضافة</b></div><div class="grid2 accountsExtraGrid">
-    <label>النوع<select id="extraType"><option value="extra">إضافة</option><option value="discount">خصم</option></select></label>
-    <label>التاريخ<button id="extraDateBtn" class="fakeDateInput" type="button" onclick="openDatePicker('extraDate')">${fmDate(today())}</button><input id="extraDate" type="hidden" value="${today()}"></label>
-    <label>المبلغ<input id="extraAmount" class="amountInputLikeDeposits" type="number" step="0.001"></label>
-    <label>الملاحظة<input id="extraNote"></label>
-  </div><button class="primary wide saveBtn" onclick="saveExtraUnified()">حفظ</button></div>`;
-  if(typeof updateDateButtons==='function') updateDateButtons();
+ const b=balances(s),neg=s.players.filter(p=>(b[p]?.balance||0)<0),late=s.deposits.filter(d=>d.type==='late'),extra=s.extraCharges.reduce((a,x)=>a+Number(x.amount||0),0),discount=s.extraDiscounts.reduce((a,x)=>a+Number(x.amount||0),0),lateTotal=late.reduce((a,d)=>a+Math.abs(Number(d.amount||0)),0),debt=neg.reduce((a,p)=>a+Math.abs(b[p].balance),0)+discount,final=extra+lateTotal-debt;
+ const debtRows=neg.map(p=>`<div class="tRow" onclick="openPlayerReport('${escAttr(p)}')"><span>${escapeHtml(p)}</span><span>${fmDate(b[p].last)}</span><span class="moneyNeg">-${money(Math.abs(b[p].balance))}</span></div>`).join('');
+ const lateRows=late.map(d=>`<div class="tRow" onclick="openPlayerReport('${escAttr(d.player)}')"><span>${escapeHtml(d.player)}</span><span>${fmDate(d.date)}</span><span class="moneyLate">-${money(Math.abs(d.amount))}</span></div>`).join('');
+ accountsContent.innerHTML=`<div class="accountMiniCards"><div><span>المديونية</span><b class="moneyNeg">-${money(debt)}</b></div><div><span>التأخير</span><b class="moneyLate">-${money(lateTotal)}</b></div><div><span>الإضافي</span><b class="moneyPos">${money(extra)}</b></div><div><span>الإجمالي</span><b class="${amountClass(final)}">${final<0?'-':''}${money(Math.abs(final))}</b></div></div><div class="card"><h3>اللاعبين المدانين والمتأخرين</h3><div class="compactTable accountsMoneyTable bigReadableTable"><div class="tHead"><span>الاسم</span><span>التاريخ</span><span class="amountHead">المبلغ</span></div>${debtRows}${lateRows}${(!debtRows&&!lateRows)?'<p class="muted">لا يوجد</p>':''}</div></div><div class="card"><div class="sectionTitleLine"><b>سجل الخصم / الإضافة</b><button onclick="openAdjustEditor()">تعديل</button></div>${renderAdjustRows(s)}</div><div class="card"><div class="sectionTitleLine"><b>خصم / إضافة</b></div><div class="grid2 accountsExtraGrid"><label>النوع<select id="extraType"><option value="extra">إضافة</option><option value="discount">خصم</option></select></label><label>التاريخ<button id="extraDateBtn" class="fakeDateInput" type="button" onclick="openDatePicker('extraDate')">${fmDate(today())}</button><input id="extraDate" type="hidden" value="${today()}"></label><label>المبلغ<input id="extraAmount" class="amountInputLikeDeposits" type="number" step="0.001" inputmode="decimal"></label><label>الملاحظة<input id="extraNote"></label></div><button class="primary wide saveBtn" onclick="saveExtraUnified()">حفظ</button></div>`;
+ if(typeof updateDateButtons==='function')updateDateButtons();
 }
 function renderAdjustRows(s){let rows=[...s.extraCharges.map(x=>({...x,t:'إضافة',cls:'moneyPos',type:'extra'})),...s.extraDiscounts.map(x=>({...x,t:'خصم',cls:'moneyNeg',type:'discount'}))].sort((a,b)=>(b.date||'').localeCompare(a.date||''));return `<div class="compactTable accountsMoneyTable"><div class="tHead"><span>التاريخ</span><span>العملية</span><span class="amountHead">المبلغ</span></div>${rows.map(r=>`<div class="tRow"><span>${fmDate(r.date)}</span><span>${r.t}</span><span class="${r.cls}">${r.type==='discount'?'-':''}${money(Math.abs(r.amount||0))}</span></div>`).join('')||'<p class="muted">لا يوجد</p>'}</div>`}
 function saveExtraUnified(){
