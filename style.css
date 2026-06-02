@@ -649,3 +649,114 @@ td .special-date {
   line-height: inherit !important;
   transform: none !important;
 }
+
+
+/* ===== Final balanced font fix ===== */
+
+/* Player names: clear, balanced, no gray box */
+.name-chip,
+.player-chip,
+.player-name-chip,
+.name-badge,
+.player-badge,
+.player-pill,
+.name-pill,
+.playerName,
+.player-name,
+td .playerName,
+td .player-name,
+td .name-chip,
+td .player-chip,
+.players-table td:first-child span,
+.players-table td:last-child span,
+#playersTable td:first-child span,
+#playersTable td:last-child span,
+#depositsTable td:first-child span,
+#depositsTable td:last-child span,
+#accountsTable td:first-child span,
+#accountsTable td:last-child span {
+  background: transparent !important;
+  background-color: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  outline: 0 !important;
+  border-radius: 0 !important;
+  padding: 0 !important;
+  font-size: 16px !important;
+  font-weight: 700 !important;
+  line-height: 1.35 !important;
+}
+
+/* Name cells */
+#playersTable td:first-child,
+#playersTable td:last-child,
+#depositsTable td:first-child,
+#depositsTable td:last-child,
+#accountsTable td:first-child,
+#accountsTable td:last-child,
+.players-table td:first-child,
+.players-table td:last-child {
+  font-size: 16px !important;
+  font-weight: 700 !important;
+  line-height: 1.35 !important;
+  background: transparent !important;
+  background-color: transparent !important;
+  box-shadow: none !important;
+  outline: 0 !important;
+}
+
+/* Table headers */
+#playersTable th,
+#depositsTable th,
+#accountsTable th,
+.players-table th,
+table th {
+  font-size: 15px !important;
+  font-weight: 700 !important;
+  line-height: 1.35 !important;
+}
+
+/* Normal table data */
+#playersTable td,
+#depositsTable td,
+#accountsTable td,
+.players-table td,
+table td {
+  line-height: 1.35 !important;
+}
+
+/* Highlighted date: same size as normal date, color only */
+.play-date-highlight,
+.highlight-date,
+.highlighted-date,
+.last-game-date,
+.lastGameDate,
+.date-highlight,
+.special-date,
+td.play-date-highlight,
+td.highlight-date,
+td.highlighted-date,
+td.last-game-date,
+td.lastGameDate,
+td.date-highlight,
+td.special-date,
+td .play-date-highlight,
+td .highlight-date,
+td .highlighted-date,
+td .last-game-date,
+td .lastGameDate,
+td .date-highlight,
+td .special-date {
+  font-size: 14px !important;
+  line-height: 1.35 !important;
+  transform: none !important;
+}
+
+/* Date cells stay stable */
+td[data-label*="آخر"],
+td[data-label*="تاريخ"],
+td.date,
+table td.date {
+  font-size: 14px !important;
+  line-height: 1.35 !important;
+}
