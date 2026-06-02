@@ -542,3 +542,9 @@ body.lightMode .moneyLate{color:#f59e0b!important}body.lightMode .moneyNeg{color
 #settings.active .pageOrderHeader{display:flex!important}#settings.active #pageOrderList{display:block!important}
 .pagesMenu button.active,#pagesMenu button.active{background:linear-gradient(135deg,#2563eb,#1d4ed8)!important;color:#fff!important;border:2px solid #93c5fd!important}
 body.lightMode .pagesMenu button.active,body.lightMode #pagesMenu button.active{background:#dbeafe!important;color:#1e3a8a!important;border:2px solid #2563eb!important}
+
+
+/* Larger fonts for players, deposits and accounts tables */
+table td,.tRow,.teamName{font-size:14px !important;}
+table th,.tHead{font-size:13px !important;}
+.nameOnly,.compactItem{font-size:14px !important;}
