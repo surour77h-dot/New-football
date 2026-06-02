@@ -1076,3 +1076,197 @@ body.dark .players-table tr[data-inactive="true"] td:nth-child(1),
     font-size: 13px !important;
   }
 }
+
+
+/* =========================================================
+   EXACT FIX: جدول اللاعبين الحقيقي داخل التطبيق
+   Classes: .playersTable .nameTd .tableNameBtn .balanceTd .gamesTd .lastTd
+   ========================================================= */
+
+#playerTable .tableWrap {
+  overflow-x: hidden !important;
+  width: 100% !important;
+}
+
+#playerTable .playersTable {
+  width: 100% !important;
+  table-layout: fixed !important;
+  border-collapse: separate !important;
+  border-spacing: 0 !important;
+}
+
+/* ترتيب الأعمدة الحقيقي: الاسم، الرصيد، لعب، آخر لعب */
+#playerTable .playersTable .nameTd {
+  width: 42% !important;
+}
+
+#playerTable .playersTable .balanceTh,
+#playerTable .playersTable .balanceTd {
+  width: 25% !important;
+}
+
+#playerTable .playersTable .gamesTh,
+#playerTable .playersTable .gamesTd {
+  width: 11% !important;
+  text-align: center !important;
+}
+
+#playerTable .playersTable .lastTh,
+#playerTable .playersTable .lastTd {
+  width: 22% !important;
+  text-align: right !important;
+}
+
+/* شكل عام للجدول */
+#playerTable .playersTable th {
+  padding: 10px 5px !important;
+  font-size: 14.5px !important;
+  font-weight: 900 !important;
+  line-height: 1.2 !important;
+  white-space: nowrap !important;
+  background: transparent !important;
+}
+
+#playerTable .playersTable td {
+  height: 49px !important;
+  min-height: 49px !important;
+  padding: 7px 5px !important;
+  vertical-align: middle !important;
+  line-height: 1.25 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  border-bottom: 1px solid rgba(100,116,139,.32) !important;
+}
+
+/* الاسم: أوضح وأجمل - بدون مربع رمادي */
+#playerTable .playersTable .nameTd,
+#playerTable .playersTable .nameTd * {
+  background: transparent !important;
+  background-color: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  outline: 0 !important;
+  border-radius: 0 !important;
+}
+
+#playerTable .playersTable .tableNameBtn {
+  display: block !important;
+  width: 100% !important;
+  text-align: right !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  background: transparent !important;
+  background-color: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  outline: 0 !important;
+  border-radius: 0 !important;
+  color: inherit !important;
+  font-family: inherit !important;
+  font-size: 17px !important;
+  font-weight: 900 !important;
+  line-height: 1.23 !important;
+  letter-spacing: -0.2px !important;
+  white-space: normal !important;
+  overflow-wrap: anywhere !important;
+  word-break: normal !important;
+}
+
+/* اللاعب غير النشط */
+#playerTable .playersTable .nameTd.inactiveName,
+#playerTable .playersTable .nameTd.inactiveName .tableNameBtn {
+  color: #a15c00 !important;
+}
+
+/* الرصيد: يبقى بنفس شكل الألوان والحجم */
+#playerTable .playersTable .balanceTd,
+#playerTable .playersTable .balanceTd * {
+  font-size: 17px !important;
+  font-weight: 900 !important;
+  line-height: 1.25 !important;
+  white-space: nowrap !important;
+}
+
+/* لعب */
+#playerTable .playersTable .gamesTd,
+#playerTable .playersTable .gamesTd * {
+  font-size: 14px !important;
+  font-weight: 800 !important;
+  line-height: 1.25 !important;
+  white-space: nowrap !important;
+  color: inherit !important;
+}
+
+/* آخر لعب */
+#playerTable .playersTable .lastTd,
+#playerTable .playersTable .lastTd * {
+  font-size: 13.5px !important;
+  font-weight: 750 !important;
+  line-height: 1.25 !important;
+  white-space: nowrap !important;
+}
+
+/* أحدث تاريخ: نفس الحجم، لون مميز فقط */
+#playerTable .playersTable .lastTd.latestDate {
+  font-size: 13.5px !important;
+  line-height: 1.25 !important;
+  transform: none !important;
+  color: #9a5a08 !important;
+  font-weight: 900 !important;
+}
+
+/* الوضع النهاري */
+body.lightMode #playerTable .playersTable .tableNameBtn,
+body:not(.darkMode) #playerTable .playersTable .tableNameBtn {
+  color: #111827 !important;
+}
+
+body.lightMode #playerTable .playersTable .nameTd.inactiveName .tableNameBtn,
+body:not(.darkMode) #playerTable .playersTable .nameTd.inactiveName .tableNameBtn {
+  color: #a15c00 !important;
+}
+
+/* الوضع الليلي - يدعم أسماء كلاس مختلفة محتملة */
+body.darkMode #playerTable .playersTable td,
+body.dark #playerTable .playersTable td,
+.darkMode #playerTable .playersTable td,
+.dark #playerTable .playersTable td {
+  border-bottom-color: rgba(226,232,240,.18) !important;
+}
+
+body.darkMode #playerTable .playersTable .tableNameBtn,
+body.dark #playerTable .playersTable .tableNameBtn,
+.darkMode #playerTable .playersTable .tableNameBtn,
+.dark #playerTable .playersTable .tableNameBtn {
+  color: #f8fafc !important;
+}
+
+body.darkMode #playerTable .playersTable .nameTd.inactiveName .tableNameBtn,
+body.dark #playerTable .playersTable .nameTd.inactiveName .tableNameBtn,
+.darkMode #playerTable .playersTable .nameTd.inactiveName .tableNameBtn,
+.dark #playerTable .playersTable .nameTd.inactiveName .tableNameBtn {
+  color: #fbbf24 !important;
+}
+
+body.darkMode #playerTable .playersTable .lastTd.latestDate,
+body.dark #playerTable .playersTable .lastTd.latestDate,
+.darkMode #playerTable .playersTable .lastTd.latestDate,
+.dark #playerTable .playersTable .lastTd.latestDate {
+  color: #fbbf24 !important;
+}
+
+/* آيفون صغير */
+@media (max-width: 390px) {
+  #playerTable .playersTable .tableNameBtn {
+    font-size: 16px !important;
+  }
+  #playerTable .playersTable .balanceTd,
+  #playerTable .playersTable .balanceTd * {
+    font-size: 16px !important;
+  }
+  #playerTable .playersTable .lastTd,
+  #playerTable .playersTable .lastTd *,
+  #playerTable .playersTable .lastTd.latestDate {
+    font-size: 13px !important;
+  }
+}

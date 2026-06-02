@@ -1,3 +1,4 @@
+/* real players table redesign exact css */
 
 const LS='qatiyaState';
 const defaultPages=[['home','الرئيسية'],['accounts','الحسابات'],['players','اللاعبين'],['playerReport','كشف لاعب'],['calendar','التقويم'],['teams','تقسيم الفريقين'],['deposits','الإيداعات'],['playerTable','جدول اللاعبين'],['matchLog','سجل المباريات'],['settings','الإعدادات']];
