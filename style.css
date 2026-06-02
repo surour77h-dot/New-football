@@ -543,59 +543,20 @@ body.lightMode .moneyLate{color:#f59e0b!important}body.lightMode .moneyNeg{color
 .pagesMenu button.active,#pagesMenu button.active{background:linear-gradient(135deg,#2563eb,#1d4ed8)!important;color:#fff!important;border:2px solid #93c5fd!important}
 body.lightMode .pagesMenu button.active,body.lightMode #pagesMenu button.active{background:#dbeafe!important;color:#1e3a8a!important;border:2px solid #2563eb!important}
 
-/* R16 flexible large player names: scales names to fit the name column without row overlap */
-.flexNameFit,
-.flexNameFit .tableNameBtn,
-.accountsMoneyTable .tRow span:first-child,
-.depositsMoneyTable .tRow span:first-child,
-.playersTable .nameTd,
-.playersTable .nameTd .tableNameBtn{
-  font-weight:950!important;
-  line-height:1.28!important;
-  white-space:normal!important;
-  overflow:visible!important;
-  text-overflow:clip!important;
-  overflow-wrap:anywhere!important;
-  word-break:normal!important;
+
+/* Balanced player names */
+table td:first-child,
+.players-table td:first-child,
+#playersTable td:first-child,
+#accountsTable td:first-child{
+  font-size:16px !important;
+  font-weight:600 !important;
+  line-height:1.35 !important;
 }
-.accountsMoneyTable .tRow,
-.depositsMoneyTable .tRow{
-  min-height:42px!important;
-  align-items:center!important;
-  padding-top:7px!important;
-  padding-bottom:7px!important;
-  row-gap:3px!important;
-}
-.playersTable td{
-  min-height:42px!important;
-  height:auto!important;
-  vertical-align:middle!important;
-  padding-top:7px!important;
-  padding-bottom:7px!important;
-}
-.playersTable .nameTd{
-  width:auto!important;
-  min-width:0!important;
-}
-.playersTable .balanceTd,.playersTable .balanceTh{width:74px!important}
-.playersTable .gamesTd,.playersTable .gamesTh{width:36px!important;text-align:center!important}
-.playersTable .lastTd,.playersTable .lastTh{width:74px!important}
-.accountsMoneyTable .tHead,.accountsMoneyTable .tRow{
-  grid-template-columns:minmax(0,1.15fr) 86px 96px!important;
-}
-.depositsMoneyTable .tHead,.depositsMoneyTable .tRow{
-  grid-template-columns:minmax(0,1.15fr) 88px 100px!important;
-}
-.nameFlexApplied{
-  font-size:var(--name-fit-size,18px)!important;
-}
-.nameFlexApplied .tableNameBtn{
-  font-size:inherit!important;
-}
-@media(max-width:430px){
-  .playersTable .balanceTd,.playersTable .balanceTh{width:66px!important}
-  .playersTable .gamesTd,.playersTable .gamesTh{width:32px!important}
-  .playersTable .lastTd,.playersTable .lastTh{width:62px!important}
-  .accountsMoneyTable .tHead,.accountsMoneyTable .tRow{grid-template-columns:minmax(0,1.2fr) 72px 84px!important}
-  .depositsMoneyTable .tHead,.depositsMoneyTable .tRow{grid-template-columns:minmax(0,1.2fr) 74px 88px!important}
+
+table th,
+#playersTable th,
+#accountsTable th{
+  font-size:15px !important;
+  font-weight:700 !important;
 }

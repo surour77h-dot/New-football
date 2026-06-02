@@ -43,7 +43,7 @@ function refreshSelects(s){const opts=s.players.map(p=>`<option>${escapeHtml(p)}
 function openDatePicker(targetId){activeDateTarget=targetId;nativeDateInput.value=document.getElementById(targetId)?.value||today();datePickerModal.classList.add('show')}
 function closeDatePicker(){datePickerModal.classList.remove('show')}
 
-function renderAll(){const s=state();saveNoRender(s);refreshSelects(s);if(!matchDate.value)matchDate.value=today();if(!depositDate.value)depositDate.value=today();applyThemeMode();updateDateButtons();pricePerPlayer.textContent=money(calcPrice());if(s.settings.appTitle)document.querySelector('.title h1').textContent=s.settings.appTitle;if(s.settings.appDesc)document.querySelector('.title p').textContent=s.settings.appDesc;if(typeof appTitleInput!=='undefined'&&appTitleInput){appTitleInput.value=s.settings.appTitle||'قروب الكورة';appDescInput.value=s.settings.appDesc||'إدارة اللعبات • الحسابات • اللاعبين'}renderPlayers(s);renderMatchPlayers(s);renderDeposits(s);renderCalendar();renderCalendarList();renderTeamsSelect(s);renderTeams();renderPlayerTable(s);renderPlayerReport();renderAccounts(s);renderMatchLog(s);renderPageOrder();renderSettingsPageNames();renderMenuLabels();document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id===currentPage));pageTitle.textContent=pageTitleFn(currentPage);updateDateButtons();setTimeout(applyFlexibleNameFonts,0)}
+function renderAll(){const s=state();saveNoRender(s);refreshSelects(s);if(!matchDate.value)matchDate.value=today();if(!depositDate.value)depositDate.value=today();applyThemeMode();updateDateButtons();pricePerPlayer.textContent=money(calcPrice());if(s.settings.appTitle)document.querySelector('.title h1').textContent=s.settings.appTitle;if(s.settings.appDesc)document.querySelector('.title p').textContent=s.settings.appDesc;if(typeof appTitleInput!=='undefined'&&appTitleInput){appTitleInput.value=s.settings.appTitle||'قروب الكورة';appDescInput.value=s.settings.appDesc||'إدارة اللعبات • الحسابات • اللاعبين'}renderPlayers(s);renderMatchPlayers(s);renderDeposits(s);renderCalendar();renderCalendarList();renderTeamsSelect(s);renderTeams();renderPlayerTable(s);renderPlayerReport();renderAccounts(s);renderMatchLog(s);renderPageOrder();renderSettingsPageNames();renderMenuLabels();document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id===currentPage));pageTitle.textContent=pageTitleFn(currentPage);updateDateButtons()}
 function calcPrice(){const c=Number(bookingCost.value||0),n=Number(neededPlayers.value||0);return n?c/n:0}
 function renderPlayers(s){
  playersList.innerHTML=s.players.map(p=>`<button type="button" class="playerChipBtn" onclick="openPlayerReport('${escAttr(p)}')">${escapeHtml(p)}</button>`).join('')||'<p class="muted">أضف اللاعبين أولًا.</p>';
@@ -330,36 +330,3 @@ function applyDatePicker(){
 document.addEventListener('DOMContentLoaded',()=>{
   if(typeof applyDateBtn!=='undefined')applyDateBtn.onclick=applyDatePicker;
 });
-
-
-/* R16 flexible name sizing */
-function applyFlexibleNameFonts(){
-  try{
-    const groups=[
-      Array.from(document.querySelectorAll('.playersTable .nameTd')),
-      Array.from(document.querySelectorAll('.accountsMoneyTable .tRow span:first-child')),
-      Array.from(document.querySelectorAll('.depositsMoneyTable .tRow span:first-child'))
-    ];
-    groups.forEach(nodes=>fitNameGroup(nodes));
-  }catch(e){}
-}
-function fitNameGroup(nodes){
-  nodes=(nodes||[]).filter(Boolean);
-  if(!nodes.length)return;
-  nodes.forEach(n=>{n.classList.add('flexNameFit','nameFlexApplied');n.style.setProperty('--name-fit-size','22px');});
-  const longest=nodes.slice().sort((a,b)=>(b.innerText||'').trim().length-(a.innerText||'').trim().length)[0];
-  if(!longest)return;
-  let low=15, high=24, best=18;
-  for(let i=0;i<9;i++){
-    const mid=(low+high)/2;
-    nodes.forEach(n=>n.style.setProperty('--name-fit-size',mid.toFixed(2)+'px'));
-    if(nameFits(longest)){best=mid;low=mid;}else{high=mid;}
-  }
-  best=Math.max(15,Math.min(24,best));
-  nodes.forEach(n=>n.style.setProperty('--name-fit-size',best.toFixed(2)+'px'));
-}
-function nameFits(el){
-  const limitH=Math.max(44, parseFloat(getComputedStyle(el).lineHeight||'24')*2.15);
-  return el.scrollWidth<=el.clientWidth+1 && el.scrollHeight<=limitH+1;
-}
-window.addEventListener('resize',()=>setTimeout(applyFlexibleNameFonts,80));
