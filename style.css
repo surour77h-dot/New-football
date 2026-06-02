@@ -842,3 +842,237 @@ body.lightMode .playersTable .nameTd{
   background-color:transparent!important;
   box-shadow:none!important;
 }
+
+
+/* =========================================================
+   Players table redesign - light & dark mode
+   هدفه: وضوح الاسم، ثبات الرصيد، تصغير لعب/آخر لعب، وتمييز أحدث تاريخ
+   ========================================================= */
+
+/* جدول اللاعبين */
+#playersTable,
+.players-table {
+  width: 100% !important;
+  table-layout: fixed !important;
+  border-collapse: separate !important;
+  border-spacing: 0 !important;
+}
+
+/* عرض الأعمدة مناسب للآيفون بدون تزاحم */
+#playersTable th:nth-child(1),
+#playersTable td:nth-child(1),
+.players-table th:nth-child(1),
+.players-table td:nth-child(1) {
+  width: 38% !important;
+}
+
+#playersTable th:nth-child(2),
+#playersTable td:nth-child(2),
+.players-table th:nth-child(2),
+.players-table td:nth-child(2) {
+  width: 27% !important;
+}
+
+#playersTable th:nth-child(3),
+#playersTable td:nth-child(3),
+.players-table th:nth-child(3),
+.players-table td:nth-child(3) {
+  width: 13% !important;
+  text-align: center !important;
+}
+
+#playersTable th:nth-child(4),
+#playersTable td:nth-child(4),
+.players-table th:nth-child(4),
+.players-table td:nth-child(4) {
+  width: 22% !important;
+}
+
+/* رأس الجدول */
+#playersTable th,
+.players-table th {
+  font-size: 14.5px !important;
+  font-weight: 800 !important;
+  line-height: 1.25 !important;
+  padding: 10px 6px !important;
+  white-space: nowrap !important;
+}
+
+/* خلايا الجدول */
+#playersTable td,
+.players-table td {
+  padding: 8px 6px !important;
+  min-height: 48px !important;
+  height: 48px !important;
+  line-height: 1.25 !important;
+  vertical-align: middle !important;
+  border-bottom: 1px solid rgba(120, 130, 145, 0.35) !important;
+  background: transparent !important;
+}
+
+/* الاسم: واضح وأجمل بدون مربع رمادي */
+#playersTable td:nth-child(1),
+.players-table td:nth-child(1),
+#playersTable td:nth-child(1) *,
+.players-table td:nth-child(1) * {
+  font-size: 17px !important;
+  font-weight: 800 !important;
+  line-height: 1.25 !important;
+  letter-spacing: -0.15px !important;
+  white-space: normal !important;
+  word-break: normal !important;
+  overflow-wrap: anywhere !important;
+  background: transparent !important;
+  background-color: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  outline: 0 !important;
+  border-radius: 0 !important;
+  padding-inline: 0 !important;
+}
+
+/* الرصيد: لا نغير الحجم أو الألوان إلا نثبت الوضوح */
+#playersTable td:nth-child(2),
+.players-table td:nth-child(2),
+#playersTable td:nth-child(2) *,
+.players-table td:nth-child(2) * {
+  font-size: 17px !important;
+  font-weight: 800 !important;
+  line-height: 1.25 !important;
+  white-space: nowrap !important;
+}
+
+/* عمود لعب */
+#playersTable td:nth-child(3),
+.players-table td:nth-child(3),
+#playersTable td:nth-child(3) *,
+.players-table td:nth-child(3) * {
+  font-size: 14px !important;
+  font-weight: 700 !important;
+  line-height: 1.25 !important;
+  white-space: nowrap !important;
+}
+
+/* آخر لعب: مناسب للآيفون */
+#playersTable td:nth-child(4),
+.players-table td:nth-child(4),
+#playersTable td:nth-child(4) *,
+.players-table td:nth-child(4) * {
+  font-size: 13.5px !important;
+  font-weight: 700 !important;
+  line-height: 1.25 !important;
+  white-space: nowrap !important;
+}
+
+/* التاريخ الأحدث: نفس الحجم، لون مميز فقط */
+#playersTable .play-date-highlight,
+#playersTable .highlight-date,
+#playersTable .highlighted-date,
+#playersTable .last-game-date,
+#playersTable .lastGameDate,
+#playersTable .date-highlight,
+#playersTable .special-date,
+.players-table .play-date-highlight,
+.players-table .highlight-date,
+.players-table .highlighted-date,
+.players-table .last-game-date,
+.players-table .lastGameDate,
+.players-table .date-highlight,
+.players-table .special-date {
+  font-size: inherit !important;
+  line-height: inherit !important;
+  transform: none !important;
+  color: #9a5a08 !important;
+  font-weight: 800 !important;
+}
+
+/* لاعب غير نشط - دعم عدة أسماء كلاس محتملة */
+#playersTable tr.inactive td:nth-child(1),
+#playersTable tr.inactive-player td:nth-child(1),
+#playersTable tr.player-inactive td:nth-child(1),
+#playersTable tr.old-player td:nth-child(1),
+#playersTable tr[data-inactive="true"] td:nth-child(1),
+.players-table tr.inactive td:nth-child(1),
+.players-table tr.inactive-player td:nth-child(1),
+.players-table tr.player-inactive td:nth-child(1),
+.players-table tr.old-player td:nth-child(1),
+.players-table tr[data-inactive="true"] td:nth-child(1) {
+  color: #b26a00 !important;
+  font-weight: 900 !important;
+}
+
+/* الوضع النهاري */
+body:not(.dark) #playersTable td:nth-child(1),
+body:not(.dark) .players-table td:nth-child(1) {
+  color: #111827 !important;
+}
+
+body:not(.dark) #playersTable tr.inactive td:nth-child(1),
+body:not(.dark) #playersTable tr.inactive-player td:nth-child(1),
+body:not(.dark) #playersTable tr.player-inactive td:nth-child(1),
+body:not(.dark) #playersTable tr.old-player td:nth-child(1),
+body:not(.dark) #playersTable tr[data-inactive="true"] td:nth-child(1),
+body:not(.dark) .players-table tr.inactive td:nth-child(1),
+body:not(.dark) .players-table tr.inactive-player td:nth-child(1),
+body:not(.dark) .players-table tr.player-inactive td:nth-child(1),
+body:not(.dark) .players-table tr.old-player td:nth-child(1),
+body:not(.dark) .players-table tr[data-inactive="true"] td:nth-child(1) {
+  color: #a15c00 !important;
+}
+
+/* الوضع الليلي */
+body.dark #playersTable td,
+body.dark .players-table td,
+.dark #playersTable td,
+.dark .players-table td {
+  border-bottom-color: rgba(226, 232, 240, 0.18) !important;
+}
+
+body.dark #playersTable td:nth-child(1),
+body.dark .players-table td:nth-child(1),
+.dark #playersTable td:nth-child(1),
+.dark .players-table td:nth-child(1) {
+  color: #f8fafc !important;
+}
+
+body.dark #playersTable tr.inactive td:nth-child(1),
+body.dark #playersTable tr.inactive-player td:nth-child(1),
+body.dark #playersTable tr.player-inactive td:nth-child(1),
+body.dark #playersTable tr.old-player td:nth-child(1),
+body.dark #playersTable tr[data-inactive="true"] td:nth-child(1),
+body.dark .players-table tr.inactive td:nth-child(1),
+body.dark .players-table tr.inactive-player td:nth-child(1),
+body.dark .players-table tr.player-inactive td:nth-child(1),
+body.dark .players-table tr.old-player td:nth-child(1),
+body.dark .players-table tr[data-inactive="true"] td:nth-child(1),
+.dark #playersTable tr.inactive td:nth-child(1),
+.dark #playersTable tr.inactive-player td:nth-child(1),
+.dark #playersTable tr.player-inactive td:nth-child(1),
+.dark #playersTable tr.old-player td:nth-child(1),
+.dark #playersTable tr[data-inactive="true"] td:nth-child(1) {
+  color: #fbbf24 !important;
+}
+
+/* تصغير بسيط جداً للشاشات الضيقة */
+@media (max-width: 390px) {
+  #playersTable td:nth-child(1),
+  .players-table td:nth-child(1),
+  #playersTable td:nth-child(1) *,
+  .players-table td:nth-child(1) * {
+    font-size: 16px !important;
+  }
+
+  #playersTable td:nth-child(2),
+  .players-table td:nth-child(2),
+  #playersTable td:nth-child(2) *,
+  .players-table td:nth-child(2) * {
+    font-size: 16px !important;
+  }
+
+  #playersTable td:nth-child(4),
+  .players-table td:nth-child(4),
+  #playersTable td:nth-child(4) *,
+  .players-table td:nth-child(4) * {
+    font-size: 13px !important;
+  }
+}
