@@ -1438,3 +1438,213 @@ body.dark #playerTable .playersTable td,
   #playerTable .playersTable .lastTd *,
   #playerTable .playersTable .lastTd.latestDate{font-size:12.3px!important;}
 }
+
+
+/* =========================================================
+   FINAL APPROVED PLAYER TABLE
+   iPhone fit: name 44%, balance 24%, games 10%, last date 22%
+   compact rows + clear dark/light + blue latest date + purple inactive
+   ========================================================= */
+
+#playerTable .tableWrap{
+  overflow-x:hidden!important;
+  width:100%!important;
+  box-sizing:border-box!important;
+}
+
+#playerTable .playersTable{
+  width:100%!important;
+  max-width:100%!important;
+  table-layout:fixed!important;
+  border-collapse:separate!important;
+  border-spacing:0!important;
+  box-sizing:border-box!important;
+}
+
+/* الأعمدة النهائية */
+#playerTable .playersTable .nameTd{width:44%!important;}
+#playerTable .playersTable .balanceTh,
+#playerTable .playersTable .balanceTd{width:24%!important;}
+#playerTable .playersTable .gamesTh,
+#playerTable .playersTable .gamesTd{width:10%!important;text-align:center!important;}
+#playerTable .playersTable .lastTh,
+#playerTable .playersTable .lastTd{width:22%!important;text-align:right!important;}
+
+/* رأس الجدول */
+#playerTable .playersTable th{
+  padding:7px 3px!important;
+  font-size:13.5px!important;
+  font-weight:900!important;
+  line-height:1.1!important;
+  white-space:nowrap!important;
+  overflow:hidden!important;
+  text-overflow:clip!important;
+  box-sizing:border-box!important;
+}
+
+/* الصفوف المضغوطة */
+#playerTable .playersTable td{
+  height:37px!important;
+  min-height:37px!important;
+  max-height:37px!important;
+  padding:3px 3px!important;
+  vertical-align:middle!important;
+  line-height:1.08!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  border-bottom:1px solid rgba(100,116,139,.28)!important;
+  box-sizing:border-box!important;
+}
+
+/* إزالة مربع الاسم بالكامل */
+#playerTable .playersTable .nameTd,
+#playerTable .playersTable .nameTd *,
+#playerTable .playersTable .tableNameBtn{
+  background:transparent!important;
+  background-color:transparent!important;
+  border:0!important;
+  box-shadow:none!important;
+  outline:0!important;
+  border-radius:0!important;
+}
+
+/* الاسم */
+#playerTable .playersTable .tableNameBtn{
+  display:block!important;
+  width:100%!important;
+  max-width:100%!important;
+  text-align:right!important;
+  padding:0!important;
+  margin:0!important;
+  color:#111827!important;
+  font-family:inherit!important;
+  font-size:15px!important;
+  font-weight:900!important;
+  line-height:1.08!important;
+  letter-spacing:-0.1px!important;
+  white-space:nowrap!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+  box-sizing:border-box!important;
+}
+
+/* اللاعب غير النشط */
+#playerTable .playersTable .nameTd.inactiveName .tableNameBtn{
+  color:#7c3aed!important;
+}
+
+/* الرصيد: المحافظة على الشكل والألوان */
+#playerTable .playersTable .balanceTd,
+#playerTable .playersTable .balanceTd *{
+  font-size:15.8px!important;
+  font-weight:900!important;
+  line-height:1.08!important;
+  white-space:nowrap!important;
+  overflow:hidden!important;
+  text-overflow:clip!important;
+}
+
+/* لعب */
+#playerTable .playersTable .gamesTd,
+#playerTable .playersTable .gamesTd *{
+  font-size:13px!important;
+  font-weight:800!important;
+  line-height:1.08!important;
+  white-space:nowrap!important;
+}
+
+/* آخر لعب - يدخل داخل شاشة الآيفون */
+#playerTable .playersTable .lastTd,
+#playerTable .playersTable .lastTd *{
+  font-size:12.2px!important;
+  font-weight:800!important;
+  line-height:1.08!important;
+  white-space:nowrap!important;
+  overflow:hidden!important;
+  text-overflow:clip!important;
+}
+
+/* أحدث تاريخ: نفس الحجم، لون أزرق فقط */
+#playerTable .playersTable .lastTd.latestDate{
+  font-size:12.2px!important;
+  line-height:1.08!important;
+  transform:none!important;
+  color:#2563eb!important;
+  font-weight:900!important;
+}
+
+/* الوضع النهاري */
+body.lightMode #playerTable .playersTable .tableNameBtn,
+body:not(.darkMode) #playerTable .playersTable .tableNameBtn{
+  color:#111827!important;
+}
+
+body.lightMode #playerTable .playersTable .nameTd.inactiveName .tableNameBtn,
+body:not(.darkMode) #playerTable .playersTable .nameTd.inactiveName .tableNameBtn{
+  color:#7c3aed!important;
+}
+
+/* الوضع الليلي */
+body.darkMode #playerTable .playersTable td,
+body.dark #playerTable .playersTable td,
+.darkMode #playerTable .playersTable td,
+.dark #playerTable .playersTable td{
+  border-bottom-color:rgba(226,232,240,.16)!important;
+}
+
+body.darkMode #playerTable .playersTable .tableNameBtn,
+body.dark #playerTable .playersTable .tableNameBtn,
+.darkMode #playerTable .playersTable .tableNameBtn,
+.dark #playerTable .playersTable .tableNameBtn{
+  color:#f8fafc!important;
+}
+
+body.darkMode #playerTable .playersTable .nameTd.inactiveName .tableNameBtn,
+body.dark #playerTable .playersTable .nameTd.inactiveName .tableNameBtn,
+.darkMode #playerTable .playersTable .nameTd.inactiveName .tableNameBtn,
+.dark #playerTable .playersTable .nameTd.inactiveName .tableNameBtn{
+  color:#c084fc!important;
+}
+
+body.darkMode #playerTable .playersTable .lastTd.latestDate,
+body.dark #playerTable .playersTable .lastTd.latestDate,
+.darkMode #playerTable .playersTable .lastTd.latestDate,
+.dark #playerTable .playersTable .lastTd.latestDate{
+  color:#60a5fa!important;
+}
+
+/* آيفون صغير */
+@media (max-width:390px){
+  #playerTable .playersTable th{
+    font-size:13px!important;
+    padding-left:2px!important;
+    padding-right:2px!important;
+  }
+
+  #playerTable .playersTable td{
+    height:36px!important;
+    min-height:36px!important;
+    max-height:36px!important;
+    padding:2px 2px!important;
+  }
+
+  #playerTable .playersTable .tableNameBtn{
+    font-size:14.5px!important;
+  }
+
+  #playerTable .playersTable .balanceTd,
+  #playerTable .playersTable .balanceTd *{
+    font-size:15.2px!important;
+  }
+
+  #playerTable .playersTable .gamesTd,
+  #playerTable .playersTable .gamesTd *{
+    font-size:12.7px!important;
+  }
+
+  #playerTable .playersTable .lastTd,
+  #playerTable .playersTable .lastTd *,
+  #playerTable .playersTable .lastTd.latestDate{
+    font-size:11.8px!important;
+  }
+}
