@@ -760,3 +760,85 @@ table td.date {
   font-size: 14px !important;
   line-height: 1.35 !important;
 }
+
+
+/* ===== LEFT IMAGE FONT SIZE + NO NAME BOX FINAL OVERRIDE ===== */
+.playersTable{
+  border-collapse:collapse!important;
+  border-spacing:0!important;
+  table-layout:fixed!important;
+}
+.playersTable th{
+  font-size:16px!important;
+  font-weight:950!important;
+  line-height:1.35!important;
+  padding:6px 4px!important;
+}
+.playersTable td{
+  font-size:16px!important;
+  font-weight:800!important;
+  line-height:1.35!important;
+  padding:6px 4px!important;
+  background:transparent!important;
+  border-left:0!important;
+  border-right:0!important;
+  border-top:0!important;
+  border-bottom:1px solid rgba(15,23,42,.28)!important;
+  border-radius:0!important;
+  box-shadow:none!important;
+}
+.playersTable .nameTd{
+  font-size:17px!important;
+  font-weight:950!important;
+  line-height:1.35!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  border-radius:0!important;
+}
+.playersTable .tableNameBtn,
+body.lightMode .playersTable .tableNameBtn,
+body.lightMode button.tableNameBtn,
+body.lightMode button.tableNameBtn:not(.primary):not(.danger):not(.ball){
+  appearance:none!important;
+  -webkit-appearance:none!important;
+  background:transparent!important;
+  background-color:transparent!important;
+  border:0!important;
+  outline:0!important;
+  box-shadow:none!important;
+  border-radius:0!important;
+  padding:0!important;
+  margin:0!important;
+  min-height:0!important;
+  height:auto!important;
+  color:inherit!important;
+  font-family:inherit!important;
+  font-size:17px!important;
+  font-weight:950!important;
+  line-height:1.35!important;
+  text-align:right!important;
+}
+.playersTable .balanceTd,
+.playersTable .gamesTd,
+.playersTable .lastTd{
+  font-size:16px!important;
+  line-height:1.35!important;
+}
+.playersTable .latestDate,
+body.lightMode .playersTable .latestDate{
+  font-size:16px!important;
+  line-height:1.35!important;
+  transform:none!important;
+  font-weight:950!important;
+}
+body.lightMode .playersTable td{
+  background:transparent!important;
+  background-color:transparent!important;
+  border-bottom:1px solid rgba(15,23,42,.28)!important;
+  box-shadow:none!important;
+}
+body.lightMode .playersTable .nameTd{
+  background:transparent!important;
+  background-color:transparent!important;
+  box-shadow:none!important;
+}
