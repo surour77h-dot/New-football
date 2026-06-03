@@ -44,10 +44,35 @@ function refreshSelects(s){const opts=s.players.map(p=>`<option>${escapeHtml(p)}
 function openDatePicker(targetId){activeDateTarget=targetId;nativeDateInput.value=document.getElementById(targetId)?.value||today();datePickerModal.classList.add('show')}
 function closeDatePicker(){datePickerModal.classList.remove('show')}
 
+
+function restorePlayerNameClicks(){
+  const s=state();
+  const names=new Set((s.players||[]).map(String));
+  document.querySelectorAll('#players .playerItem,#players .playerRow,#players .listRow,#players .checkList label,#players .playerName,#players b,#players span').forEach(el=>{
+    const txt=(el.textContent||'').trim();
+    if(!txt || !names.has(txt) || el.dataset.reportClick==='1') return;
+    el.dataset.reportClick='1';
+    el.style.cursor='pointer';
+    el.addEventListener('click',ev=>{
+      ev.preventDefault();
+      ev.stopPropagation();
+      openPlayerReport(txt);
+    });
+  });
+}
+
+
+function dedupeRenamePagesButtons(){
+  const btns=[...document.querySelectorAll('button')].filter(b=>(b.textContent||'').trim().includes('إعادة تسمية الصفحات'));
+  btns.slice(1).forEach(b=>b.remove());
+}
+
 function renderAll(){const s=state();saveNoRender(s);refreshSelects(s);if(!matchDate.value)matchDate.value=today();if(!depositDate.value)depositDate.value=today();applyThemeMode();updateDateButtons();pricePerPlayer.textContent=money(calcPrice());if(s.settings.appTitle)document.querySelector('.title h1').textContent=s.settings.appTitle;if(s.settings.appDesc)document.querySelector('.title p').textContent=s.settings.appDesc;if(typeof appTitleInput!=='undefined'&&appTitleInput){appTitleInput.value=s.settings.appTitle||'قروب الكورة';appDescInput.value=s.settings.appDesc||'إدارة اللعبات • الحسابات • اللاعبين'}renderPlayers(s);renderMatchPlayers(s);renderDeposits(s);renderCalendar();renderCalendarList();renderTeamsSelect(s);renderTeams();renderPlayerTable(s);forceCompactPlayerRows();setTimeout(forceCompactPlayerRows,50);renderPlayerReport();renderAccounts(s);renderMatchLog(s);renderPageOrder();renderSettingsPageNames();renderMenuLabels();document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id===currentPage));pageTitle.textContent=pageTitleFn(currentPage);updateDateButtons()}
 function calcPrice(){const c=Number(bookingCost.value||0),n=Number(neededPlayers.value||0);return n?c/n:0}
 function renderPlayers(s){
  playersList.innerHTML=s.players.map(p=>`<button type="button" class="playerChipBtn" onclick="openPlayerReport('${escAttr(p)}')">${escapeHtml(p)}</button>`).join('')||'<p class="muted">أضف اللاعبين أولًا.</p>';
+  setTimeout(restorePlayerNameClicks,0);
+  setTimeout(dedupeRenamePagesButtons,0);
 }
 function renderMatchPlayers(s){matchPlayers.innerHTML=s.players.map(p=>`<label><input class="playerCheck" type="checkbox" value="${escapeHtml(p)}"> <span>${escapeHtml(p)}</span></label>`).join('');renderTempGuests();renderMatchPreview()}
 function renderTempGuests(){tempGuests.innerHTML=tempGuests.map((g,i)=>`<div class="compactItem">${escapeHtml(g.guest)} (${escapeHtml(g.owner)}) <button type="button" onclick="tempGuests.splice(${i},1);renderTempGuests();renderMatchPreview()">×</button></div>`).join('')}
@@ -105,7 +130,7 @@ function renderTeamsSelect(s){
     return `<option value="${m.id}">${split} ${fmDate(m.date)} ${escapeHtml(m.place||'')}</option>`;
   }).join('');
 }
-function renderTeams(){setTimeout(ensureDeleteMatchBtn,0);const s=state(),m=s.matches.find(x=>x.id===teamsMatchSelect.value);if(!m){teamsPlayers.innerHTML='';teamsPreview.innerHTML='';return}if(tempTeamMap.__matchId!==m.id)tempTeamMap={...(s.teams[m.id]||{}),__matchId:m.id};const names=participants(m);teamsPlayers.innerHTML=names.map(n=>`<div class="teamPickLine"><b onclick="clearTeamFor('${escAttr(n)}')">${escapeHtml(n)}</b><div class="teamTabs"><button type="button" class="${tempTeamMap[n]==='A'?'selA':''}" onclick="pickTeam('${escAttr(n)}','A')">الأول</button><button type="button" class="${tempTeamMap[n]==='B'?'selB':''}" onclick="pickTeam('${escAttr(n)}','B')">الثاني</button></div></div>`).join('');const map={...tempTeamMap};delete map.__matchId;teamsPreview.innerHTML=`<div class="card">${teamHtml({...s,teams:{...s.teams,[m.id]:map}},m)}<div class="teamEditFooter"><button type="button" onclick="editSelectedMatchFromTeams()">تعديل وإضافة لاعبين</button><button type="button" class="dangerBtn" onclick="deleteSelectedMatchFromTeams()">مسح المباراة</button></div></div>`}
+function renderTeams(){setTimeout(ensureDeleteMatchBtn,0);setTimeout(ensureDeleteMatchBtn,0);const s=state(),m=s.matches.find(x=>x.id===teamsMatchSelect.value);if(!m){teamsPlayers.innerHTML='';teamsPreview.innerHTML='';return}if(tempTeamMap.__matchId!==m.id)tempTeamMap={...(s.teams[m.id]||{}),__matchId:m.id};const names=participants(m);teamsPlayers.innerHTML=names.map(n=>`<div class="teamPickLine"><b onclick="clearTeamFor('${escAttr(n)}')">${escapeHtml(n)}</b><div class="teamTabs"><button type="button" class="${tempTeamMap[n]==='A'?'selA':''}" onclick="pickTeam('${escAttr(n)}','A')">الأول</button><button type="button" class="${tempTeamMap[n]==='B'?'selB':''}" onclick="pickTeam('${escAttr(n)}','B')">الثاني</button></div></div>`).join('');const map={...tempTeamMap};delete map.__matchId;teamsPreview.innerHTML=`<div class="card">${teamHtml({...s,teams:{...s.teams,[m.id]:map}},m)}<div class="teamEditFooter"><button type="button" onclick="editSelectedMatchFromTeams()">تعديل وإضافة لاعبين</button></div></div>`}
 function pickTeam(n,t){tempTeamMap[n]=t;renderTeams()}function clearTeamFor(n){delete tempTeamMap[n];renderTeams()}function saveTeams(){const s=state(),id=teamsMatchSelect.value;if(!id)return;const map={...tempTeamMap};delete map.__matchId;s.teams[id]=map;save(s)}
 function deleteSelectedMatchFromTeams(){
   const s=state(), id=teamsMatchSelect.value;
@@ -148,7 +173,7 @@ function deleteSelectedMatchFromTeams(){
 
 function renderPlayerTable(s){
  const b=balances(s),latest=Object.values(b).map(x=>x.last).filter(Boolean).sort().pop()||'';
- playerTableWrap.innerHTML=`<div class="playersModernWrap"><table class="playersModernTable"><thead><tr><th class="pmNameH">الاسم</th><th class="pmBalanceH">الرصيد</th><th class="pmGamesH">لعب</th><th class="pmLastH">آخر لعب</th></tr></thead><tbody>${s.players.map(p=>{const info=b[p]||{}, bal=Number(info.balance||0), inactive=isInactiveThisYear(info.last), isLatest=!!(info.last&&info.last===latest);return `<tr class="pmRow ${inactive?'pmInactive':''} ${isLatest?'pmLatest':''}"><td class="pmNameCell"><button type="button" class="pmNameBtn" onclick="openPlayerReport('${escAttr(p)}')">${escapeHtml(p)}</button></td><td class="pmBalanceCell ${bal<0?'moneyNeg':amountClass(bal)}">${fmAmount(bal)}</td><td class="pmGamesCell">${info.games||''}</td><td class="pmLastCell ${isLatest?'pmLatestDate':''}">${fmDate(info.last)}</td></tr>`}).join('')}</tbody></table></div>`;
+ playerTableWrap.innerHTML=`<div class="playersModernWrap"><table class="playersModernTable"><thead><tr><th class="pmNameH">الاسم</th><th class="pmBalanceH">الرصيد</th><th class="pmGamesH">لعب</th><th class="pmLastH">آخر لعب</th></tr></thead><tbody>${s.players.map(p=>{const info=b[p]||{}, bal=Number(info.balance||0), inactive=isInactiveThisYear(info.last), isLatest=!!(info.last&&info.last===latest);return `<tr class="pmRow ${inactive?'pmInactive':''} ${isLatest?'pmLatest':''}"><td class="pmNameCell"><button type="button" class="pmNameBtn" onclick="openPlayerReport('${escAttr(p)}')" onclick="openPlayerReport(\'${escAttr(p)}\')">${escapeHtml(p)}</button></td><td class="pmBalanceCell ${bal<0?'moneyNeg':amountClass(bal)}">${fmAmount(bal)}</td><td class="pmGamesCell">${info.games||''}</td><td class="pmLastCell ${isLatest?'pmLatestDate':''}">${fmDate(info.last)}</td></tr>`}).join('')}</tbody></table></div>`;
  forceCompactPlayerRows();setTimeout(forceCompactPlayerRows,30);
 }
 

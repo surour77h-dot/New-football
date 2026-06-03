@@ -3976,3 +3976,17 @@ html.lightMode body button.selB{
   margin-inline-start:8px !important;
   margin-top:8px !important;
 }
+
+/* cleanup: delete match button beside save teams only */
+#saveTeamsBtn + #deleteMatchFromTeamsBtn{
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  width:auto!important;
+  margin-inline-start:8px!important;
+  margin-top:0!important;
+  padding:10px 14px!important;
+  border-radius:12px!important;
+}
+.teamEditFooter .dangerBtn{display:none!important;}
+#players .playerItem,#players .playerRow,#players .playerName,#players b,#players span{cursor:pointer;}
