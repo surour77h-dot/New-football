@@ -2144,3 +2144,265 @@ body.darkMode #playerTable .playersTable .lastTd *{
   #playerTable .playersTable .lastTd,
   #playerTable .playersTable .lastTd *{font-size:11.5px!important;}
 }
+
+
+/* =========================================================
+   FRESH PLAYER TABLE DESIGN
+   إعادة تصميم كاملة لجدول اللاعبين
+   الحفاظ فقط على ألوان الرصيد الموجب/السالب
+   ========================================================= */
+
+/* الحاوية */
+#playerTable .playersModernWrap{
+  width:100%!important;
+  max-width:100%!important;
+  overflow-x:hidden!important;
+  box-sizing:border-box!important;
+  padding:0!important;
+  margin:0!important;
+}
+
+/* الجدول */
+#playerTable .playersModernTable{
+  width:100%!important;
+  max-width:100%!important;
+  table-layout:fixed!important;
+  border-collapse:separate!important;
+  border-spacing:0 6px!important;
+  box-sizing:border-box!important;
+}
+
+/* نسب الأعمدة الجديدة */
+#playerTable .playersModernTable .pmNameH,
+#playerTable .playersModernTable .pmNameCell{
+  width:42%!important;
+}
+#playerTable .playersModernTable .pmBalanceH,
+#playerTable .playersModernTable .pmBalanceCell{
+  width:24%!important;
+}
+#playerTable .playersModernTable .pmGamesH,
+#playerTable .playersModernTable .pmGamesCell{
+  width:10%!important;
+  text-align:center!important;
+}
+#playerTable .playersModernTable .pmLastH,
+#playerTable .playersModernTable .pmLastCell{
+  width:24%!important;
+  text-align:right!important;
+}
+
+/* رأس الجدول */
+#playerTable .playersModernTable thead th{
+  padding:7px 5px!important;
+  font-size:12.5px!important;
+  font-weight:900!important;
+  line-height:1.1!important;
+  white-space:nowrap!important;
+  background:transparent!important;
+  border:0!important;
+  opacity:.82!important;
+}
+
+/* الصفوف: شكل كروت خفيفة */
+#playerTable .playersModernTable tbody tr{
+  height:38px!important;
+  overflow:hidden!important;
+}
+
+#playerTable .playersModernTable tbody td{
+  height:38px!important;
+  padding:5px 5px!important;
+  vertical-align:middle!important;
+  line-height:1.1!important;
+  border-top:1px solid transparent!important;
+  border-bottom:1px solid transparent!important;
+  box-sizing:border-box!important;
+}
+
+/* زوايا الصف */
+#playerTable .playersModernTable tbody td:first-child{
+  border-radius:12px 0 0 12px!important;
+}
+#playerTable .playersModernTable tbody td:last-child{
+  border-radius:0 12px 12px 0!important;
+}
+
+/* زر الاسم */
+#playerTable .pmNameBtn{
+  display:block!important;
+  width:100%!important;
+  max-width:100%!important;
+  padding:0!important;
+  margin:0!important;
+  border:0!important;
+  outline:0!important;
+  box-shadow:none!important;
+  background:transparent!important;
+  font-family:inherit!important;
+  font-size:14.8px!important;
+  font-weight:900!important;
+  line-height:1.1!important;
+  text-align:right!important;
+  white-space:nowrap!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+}
+
+/* الرصيد: الحفاظ على ألوانه فقط مع تصميم أوضح */
+#playerTable .pmBalanceCell{
+  font-size:15px!important;
+  font-weight:950!important;
+  line-height:1.1!important;
+  white-space:nowrap!important;
+  text-align:right!important;
+}
+
+/* لا نغير ألوان الرصيد الأصلية */
+#playerTable .pmBalanceCell.moneyNeg,
+#playerTable .pmBalanceCell.negative,
+#playerTable .pmBalanceCell.neg{
+  /* intentionally keep existing red via original classes */
+}
+#playerTable .pmBalanceCell.moneyPos,
+#playerTable .pmBalanceCell.positive,
+#playerTable .pmBalanceCell.pos{
+  /* intentionally keep existing green via original classes */
+}
+
+/* لعب */
+#playerTable .pmGamesCell{
+  font-size:12.5px!important;
+  font-weight:850!important;
+  line-height:1.1!important;
+  white-space:nowrap!important;
+}
+
+/* آخر لعب */
+#playerTable .pmLastCell{
+  font-size:11.8px!important;
+  font-weight:850!important;
+  line-height:1.1!important;
+  white-space:nowrap!important;
+  overflow:hidden!important;
+}
+
+/* ===== الوضع النهاري ===== */
+body.lightMode #playerTable .playersModernTable thead th,
+html.lightMode body #playerTable .playersModernTable thead th{
+  color:#475569!important;
+}
+
+body.lightMode #playerTable .playersModernTable tbody td,
+html.lightMode body #playerTable .playersModernTable tbody td{
+  background:#ffffff!important;
+  border-top-color:#e2e8f0!important;
+  border-bottom-color:#e2e8f0!important;
+}
+
+body.lightMode #playerTable .pmNameBtn,
+html.lightMode body #playerTable .pmNameBtn{
+  color:#111827!important;
+}
+
+body.lightMode #playerTable .pmLastCell,
+html.lightMode body #playerTable .pmLastCell{
+  color:#111827!important;
+}
+
+body.lightMode #playerTable .pmGamesCell,
+html.lightMode body #playerTable .pmGamesCell{
+  color:#334155!important;
+}
+
+/* المميز في النهاري: كحلي واضح وليس باهت */
+body.lightMode #playerTable .pmInactive .pmNameBtn,
+html.lightMode body #playerTable .pmInactive .pmNameBtn{
+  color:#0f4c81!important;
+}
+
+body.lightMode #playerTable .pmLatestDate,
+html.lightMode body #playerTable .pmLatestDate{
+  color:#0f4c81!important;
+  font-weight:950!important;
+}
+
+/* ===== الوضع الليلي ===== */
+body.darkMode #playerTable .playersModernTable thead th,
+html.darkMode body #playerTable .playersModernTable thead th{
+  color:#cbd5e1!important;
+}
+
+body.darkMode #playerTable .playersModernTable tbody td,
+html.darkMode body #playerTable .playersModernTable tbody td{
+  background:#111827!important;
+  border-top-color:#334155!important;
+  border-bottom-color:#334155!important;
+}
+
+body.darkMode #playerTable .pmNameBtn,
+html.darkMode body #playerTable .pmNameBtn{
+  color:#ffffff!important;
+}
+
+body.darkMode #playerTable .pmLastCell,
+html.darkMode body #playerTable .pmLastCell{
+  color:#ffffff!important;
+}
+
+body.darkMode #playerTable .pmGamesCell,
+html.darkMode body #playerTable .pmGamesCell{
+  color:#e2e8f0!important;
+}
+
+/* المميز في الليلي: سماوي واضح */
+body.darkMode #playerTable .pmInactive .pmNameBtn,
+html.darkMode body #playerTable .pmInactive .pmNameBtn{
+  color:#38bdf8!important;
+}
+
+body.darkMode #playerTable .pmLatestDate,
+html.darkMode body #playerTable .pmLatestDate{
+  color:#38bdf8!important;
+  font-weight:950!important;
+}
+
+/* fallback */
+body:not(.lightMode):not(.darkMode) #playerTable .playersModernTable tbody td{
+  background:#ffffff!important;
+  border-color:#e2e8f0!important;
+}
+body:not(.lightMode):not(.darkMode) #playerTable .pmNameBtn,
+body:not(.lightMode):not(.darkMode) #playerTable .pmLastCell{
+  color:#111827!important;
+}
+
+/* آيفون صغير */
+@media (max-width:390px){
+  #playerTable .playersModernTable{
+    border-spacing:0 5px!important;
+  }
+  #playerTable .playersModernTable tbody tr,
+  #playerTable .playersModernTable tbody td{
+    height:36px!important;
+  }
+  #playerTable .playersModernTable tbody td{
+    padding:4px 4px!important;
+  }
+  #playerTable .pmNameBtn{
+    font-size:14px!important;
+  }
+  #playerTable .pmBalanceCell{
+    font-size:14.6px!important;
+  }
+  #playerTable .pmGamesCell{
+    font-size:12px!important;
+  }
+  #playerTable .pmLastCell{
+    font-size:11.2px!important;
+  }
+  #playerTable .playersModernTable thead th{
+    font-size:12px!important;
+    padding:6px 4px!important;
+  }
+}
