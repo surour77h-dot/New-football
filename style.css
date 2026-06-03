@@ -3537,3 +3537,24 @@ html.darkMode body #playerTable .playersModernTable thead th{
   #playerTable .pmGamesCell,#playerTable .gamesTd{font-size:10.8px!important;}
   #playerTable .pmLastCell,#playerTable .lastTd{font-size:10.2px!important;}
 }
+
+
+/* Ultra compact players table */
+.playersTable{border-spacing:0 1px!important;}
+.playersTable th{
+ font-size:10px!important;
+ padding:1px 2px!important;
+ line-height:1!important;
+}
+.playersTable td{
+ padding:1px 3px!important;
+ line-height:0.95!important;
+ font-size:11px!important;
+}
+.playersTable tr{
+ height:22px!important;
+}
+.playersTable .balanceTd,.playersTable .gamesTd,.playersTable .lastTd,.playersTable .nameTd{
+ padding-top:1px!important;
+ padding-bottom:1px!important;
+}
