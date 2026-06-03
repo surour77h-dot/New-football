@@ -3817,3 +3817,11 @@ body.lightMode .reportStats .moneyLate{color:#b45309!important;}
 .accountsMoneyTable .tHead,.accountsMoneyTable .tRow{grid-template-columns:minmax(0,1fr) 88px 82px!important;gap:3px!important;}
 .depositsMoneyTable .tHead,.depositsMoneyTable .tRow{grid-template-columns:minmax(0,1fr) 88px 112px!important;gap:3px!important;}
 .reportTable .tHead,.reportTable .tRow{grid-template-columns:88px minmax(0,1fr) 82px!important;gap:3px!important;}
+
+/* v15 final: forced operation colors in all money tables */
+.moneyPos{color:#22c55e!important;font-weight:950!important;}
+.moneyNeg{color:#ff5b6e!important;font-weight:950!important;}
+.moneyLate{color:#ffd166!important;font-weight:950!important;}
+body.lightMode .moneyPos{color:#027a48!important;}
+body.lightMode .moneyNeg{color:#b42318!important;}
+body.lightMode .moneyLate{color:#b45309!important;}
