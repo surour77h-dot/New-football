@@ -3582,3 +3582,238 @@ html.darkMode body #playerTable .playersModernTable thead th{
  #playerTable .pmNameBtn,#playerTable .pmBalanceCell{font-size:14.8px!important;}
  #playerTable .pmLastCell{font-size:14px!important;}
 }
+
+/* ===== v10: توحيد خطوط وألوان جداول الحسابات والإيداعات مع جدول اللاعبين ===== */
+.accountsMoneyTable,
+.depositsMoneyTable,
+.reportTable{
+  width:100%!important;
+  max-width:100%!important;
+}
+.accountsMoneyTable .tHead,
+.depositsMoneyTable .tHead,
+.reportTable .tHead{
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Tahoma,Arial,sans-serif!important;
+  font-size:12px!important;
+  font-weight:950!important;
+  color:#6b7280!important;
+  line-height:1!important;
+  padding:0 1px 4px 1px!important;
+}
+.accountsMoneyTable .tRow,
+.depositsMoneyTable .tRow,
+.reportTable .tRow{
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Tahoma,Arial,sans-serif!important;
+  min-height:32px!important;
+  height:32px!important;
+  max-height:32px!important;
+  padding:0 1px!important;
+  line-height:1!important;
+  align-items:center!important;
+  border-bottom:1px solid rgba(148,163,184,.34)!important;
+  background:transparent!important;
+  font-size:15px!important;
+  font-weight:950!important;
+}
+.accountsMoneyTable .tRow span,
+.depositsMoneyTable .tRow span,
+.reportTable .tRow span{
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Tahoma,Arial,sans-serif!important;
+  line-height:1!important;
+  margin:0!important;
+  padding:0!important;
+  white-space:nowrap!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+  color:var(--text)!important;
+  font-size:15px!important;
+  font-weight:950!important;
+}
+.accountsMoneyTable .tRow span:nth-child(2),
+.depositsMoneyTable .tRow span:nth-child(2),
+.reportTable .tRow span:first-child{
+  font-size:14px!important;
+  font-weight:950!important;
+  letter-spacing:-0.4px!important;
+  color:var(--text)!important;
+}
+.accountsMoneyTable .tRow span:last-child,
+.depositsMoneyTable .tRow span:last-child,
+.reportTable .tRow span:last-child{
+  font-size:15px!important;
+  font-weight:950!important;
+  text-align:center!important;
+  justify-self:center!important;
+  overflow:visible!important;
+}
+.accountsMoneyTable .moneyPos,
+.depositsMoneyTable .moneyPos,
+.reportTable .moneyPos,
+.accountMiniCards .moneyPos,
+.playerMiniStats .moneyPos,
+.reportStats .moneyPos{
+  color:#07864f!important;
+  font-weight:950!important;
+  text-shadow:none!important;
+}
+.accountsMoneyTable .moneyNeg,
+.depositsMoneyTable .moneyNeg,
+.reportTable .moneyNeg,
+.accountMiniCards .moneyNeg,
+.playerMiniStats .moneyNeg,
+.reportStats .moneyNeg{
+  color:#d92d2d!important;
+  font-weight:950!important;
+  text-shadow:none!important;
+}
+.accountsMoneyTable .moneyLate,
+.depositsMoneyTable .moneyLate,
+.reportTable .moneyLate,
+.accountMiniCards .moneyLate,
+.playerMiniStats .moneyLate,
+.reportStats .moneyLate{
+  color:#b45309!important;
+  font-weight:950!important;
+  text-shadow:none!important;
+}
+.accountsMoneyTable .tHead,
+.accountsMoneyTable .tRow{grid-template-columns:minmax(0,1fr) 106px 78px!important;gap:2px!important;}
+.depositsMoneyTable .tHead,
+.depositsMoneyTable .tRow{grid-template-columns:minmax(0,1fr) 106px 118px!important;gap:2px!important;}
+.reportTable .tHead,
+.reportTable .tRow{grid-template-columns:106px minmax(0,1fr) 78px!important;gap:2px!important;}
+body.lightMode .accountsMoneyTable .tHead,
+body.lightMode .depositsMoneyTable .tHead,
+body.lightMode .reportTable .tHead{color:#64748b!important;}
+body.lightMode .accountsMoneyTable .tRow span,
+body.lightMode .depositsMoneyTable .tRow span,
+body.lightMode .reportTable .tRow span{color:#111827!important;}
+body.lightMode .accountsMoneyTable .moneyPos,
+body.lightMode .depositsMoneyTable .moneyPos,
+body.lightMode .reportTable .moneyPos,
+body.lightMode .accountMiniCards .moneyPos,
+body.lightMode .playerMiniStats .moneyPos,
+body.lightMode .reportStats .moneyPos{color:#07864f!important;}
+body.lightMode .accountsMoneyTable .moneyNeg,
+body.lightMode .depositsMoneyTable .moneyNeg,
+body.lightMode .reportTable .moneyNeg,
+body.lightMode .accountMiniCards .moneyNeg,
+body.lightMode .playerMiniStats .moneyNeg,
+body.lightMode .reportStats .moneyNeg{color:#d92d2d!important;}
+body.lightMode .accountsMoneyTable .moneyLate,
+body.lightMode .depositsMoneyTable .moneyLate,
+body.lightMode .reportTable .moneyLate,
+body.lightMode .accountMiniCards .moneyLate,
+body.lightMode .playerMiniStats .moneyLate,
+body.lightMode .reportStats .moneyLate{color:#b45309!important;}
+@media(max-width:430px){
+  .accountsMoneyTable .tRow,.depositsMoneyTable .tRow,.reportTable .tRow{height:31px!important;min-height:31px!important;max-height:31px!important;}
+  .accountsMoneyTable .tRow span,.depositsMoneyTable .tRow span,.reportTable .tRow span{font-size:14.8px!important;}
+  .accountsMoneyTable .tRow span:nth-child(2),.depositsMoneyTable .tRow span:nth-child(2),.reportTable .tRow span:first-child{font-size:14px!important;}
+  .accountsMoneyTable .tHead,.accountsMoneyTable .tRow{grid-template-columns:minmax(0,1fr) 104px 76px!important;}
+  .depositsMoneyTable .tHead,.depositsMoneyTable .tRow{grid-template-columns:minmax(0,1fr) 104px 114px!important;}
+  .reportTable .tHead,.reportTable .tRow{grid-template-columns:104px minmax(0,1fr) 76px!important;}
+}
+
+/* ===== V11: unify Accounts + Deposits + Player report FULL text style with Players table ===== */
+.accountsMoneyTable,
+.depositsMoneyTable,
+.reportTable{
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Tahoma,Arial,sans-serif!important;
+}
+.accountsMoneyTable .tHead,
+.depositsMoneyTable .tHead,
+.reportTable .tHead{
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Tahoma,Arial,sans-serif!important;
+  font-size:13px!important;
+  font-weight:950!important;
+  line-height:1.15!important;
+  color:var(--muted)!important;
+}
+.accountsMoneyTable .tRow,
+.depositsMoneyTable .tRow,
+.reportTable .tRow{
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Tahoma,Arial,sans-serif!important;
+  font-size:13.5px!important;
+  font-weight:950!important;
+  line-height:1.5!important;
+  color:var(--text)!important;
+  min-height:32px!important;
+  height:32px!important;
+  padding:0 3px!important;
+  background:transparent!important;
+  border-bottom:1px solid rgba(246,216,132,.14)!important;
+}
+.accountsMoneyTable .tRow span,
+.depositsMoneyTable .tRow span,
+.reportTable .tRow span,
+.accountsMoneyTable .tHead span,
+.depositsMoneyTable .tHead span,
+.reportTable .tHead span{
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Tahoma,Arial,sans-serif!important;
+  font-size:inherit!important;
+  font-weight:950!important;
+  line-height:inherit!important;
+  color:inherit!important;
+  margin:0!important;
+  padding:0!important;
+  white-space:nowrap!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+}
+.accountsMoneyTable .tRow span:last-child,
+.depositsMoneyTable .tRow span:last-child,
+.reportTable .tRow span:last-child,
+.accountsMoneyTable .amountHead,
+.depositsMoneyTable .amountHead,
+.reportTable .amountHead{
+  justify-self:end!important;
+  text-align:left!important;
+  overflow:visible!important;
+}
+.accountsMoneyTable .moneyPos,
+.depositsMoneyTable .moneyPos,
+.reportTable .moneyPos,
+.accountMiniCards .moneyPos,
+.playerMiniStats .moneyPos,
+.reportStats .moneyPos{color:#22c55e!important;font-weight:950!important;}
+.accountsMoneyTable .moneyNeg,
+.depositsMoneyTable .moneyNeg,
+.reportTable .moneyNeg,
+.accountMiniCards .moneyNeg,
+.playerMiniStats .moneyNeg,
+.reportStats .moneyNeg{color:#ff5b6e!important;font-weight:950!important;}
+.accountsMoneyTable .moneyLate,
+.depositsMoneyTable .moneyLate,
+.reportTable .moneyLate,
+.accountMiniCards .moneyLate,
+.playerMiniStats .moneyLate,
+.reportStats .moneyLate{color:#ffd166!important;font-weight:950!important;}
+body.lightMode .accountsMoneyTable .tRow,
+body.lightMode .depositsMoneyTable .tRow,
+body.lightMode .reportTable .tRow{color:#111827!important;border-bottom-color:rgba(15,23,42,.18)!important;}
+body.lightMode .accountsMoneyTable .tHead,
+body.lightMode .depositsMoneyTable .tHead,
+body.lightMode .reportTable .tHead{color:#334155!important;}
+body.lightMode .accountsMoneyTable .moneyPos,
+body.lightMode .depositsMoneyTable .moneyPos,
+body.lightMode .reportTable .moneyPos,
+body.lightMode .accountMiniCards .moneyPos,
+body.lightMode .playerMiniStats .moneyPos,
+body.lightMode .reportStats .moneyPos{color:#027a48!important;}
+body.lightMode .accountsMoneyTable .moneyNeg,
+body.lightMode .depositsMoneyTable .moneyNeg,
+body.lightMode .reportTable .moneyNeg,
+body.lightMode .accountMiniCards .moneyNeg,
+body.lightMode .playerMiniStats .moneyNeg,
+body.lightMode .reportStats .moneyNeg{color:#b42318!important;}
+body.lightMode .accountsMoneyTable .moneyLate,
+body.lightMode .depositsMoneyTable .moneyLate,
+body.lightMode .reportTable .moneyLate,
+body.lightMode .accountMiniCards .moneyLate,
+body.lightMode .playerMiniStats .moneyLate,
+body.lightMode .reportStats .moneyLate{color:#b45309!important;}
+/* Keep columns compact but readable */
+.accountsMoneyTable .tHead,.accountsMoneyTable .tRow{grid-template-columns:minmax(0,1fr) 88px 82px!important;gap:3px!important;}
+.depositsMoneyTable .tHead,.depositsMoneyTable .tRow{grid-template-columns:minmax(0,1fr) 88px 112px!important;gap:3px!important;}
+.reportTable .tHead,.reportTable .tRow{grid-template-columns:88px minmax(0,1fr) 82px!important;gap:3px!important;}
