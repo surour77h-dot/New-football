@@ -3818,27 +3818,11 @@ body.lightMode .reportStats .moneyLate{color:#b45309!important;}
 .depositsMoneyTable .tHead,.depositsMoneyTable .tRow{grid-template-columns:minmax(0,1fr) 88px 112px!important;gap:3px!important;}
 .reportTable .tHead,.reportTable .tRow{grid-template-columns:88px minmax(0,1fr) 82px!important;gap:3px!important;}
 
-/* v15 final: forced operation colors in all money tables */
-.moneyPos{color:#22c55e!important;font-weight:950!important;}
-.moneyNeg{color:#ff5b6e!important;font-weight:950!important;}
-.moneyLate{color:#ffd166!important;font-weight:950!important;}
-body.lightMode .moneyPos{color:#027a48!important;}
-body.lightMode .moneyNeg{color:#b42318!important;}
-body.lightMode .moneyLate{color:#b45309!important;}
-
-/* === v16 HARD APPLY: same readable money style as player table === */
-.unifiedMoneyTable .tRow span,
-.accountsMoneyTable .tRow span,
-.depositsMoneyTable .tRow span,
-.reportTable .tRow span,
-.accountMiniCards b,
-.reportStats b{
-  font-weight:950!important;
-  font-family:inherit!important;
-}
-.moneyPos{color:#22c55e!important;font-weight:950!important;}
-.moneyNeg{color:#ff5b6e!important;font-weight:950!important;}
-.moneyLate{color:#ffd166!important;font-weight:950!important;}
-body.lightMode .moneyPos{color:#027a48!important;}
-body.lightMode .moneyNeg{color:#b42318!important;}
-body.lightMode .moneyLate{color:#b45309!important;}
+/* === v17 final visible money rules for all account/deposit/report tables === */
+.accountsMoneyTable .moneyPos,.depositsMoneyTable .moneyPos,.reportTable .moneyPos,.accountMiniCards .moneyPos,.reportStats .moneyPos,[data-money-kind="deposit"],[data-money-kind="initial"]{color:#34d399!important;font-weight:950!important;}
+.accountsMoneyTable .moneyNeg,.depositsMoneyTable .moneyNeg,.reportTable .moneyNeg,.accountMiniCards .moneyNeg,.reportStats .moneyNeg,[data-money-kind="debt"],[data-money-kind="discount"]{color:#ff5b6e!important;font-weight:950!important;}
+.accountsMoneyTable .moneyLate,.depositsMoneyTable .moneyLate,.reportTable .moneyLate,.accountMiniCards .moneyLate,.reportStats .moneyLate,[data-money-kind="late"]{color:#ffbf47!important;font-weight:950!important;text-shadow:0 0 6px rgba(255,191,71,.28)!important;}
+body.lightMode .accountsMoneyTable .moneyPos,body.lightMode .depositsMoneyTable .moneyPos,body.lightMode .reportTable .moneyPos,body.lightMode .accountMiniCards .moneyPos,body.lightMode .reportStats .moneyPos,body.lightMode [data-money-kind="deposit"],body.lightMode [data-money-kind="initial"]{color:#07864f!important;}
+body.lightMode .accountsMoneyTable .moneyNeg,body.lightMode .depositsMoneyTable .moneyNeg,body.lightMode .reportTable .moneyNeg,body.lightMode .accountMiniCards .moneyNeg,body.lightMode .reportStats .moneyNeg,body.lightMode [data-money-kind="debt"],body.lightMode [data-money-kind="discount"]{color:#dc2626!important;}
+body.lightMode .accountsMoneyTable .moneyLate,body.lightMode .depositsMoneyTable .moneyLate,body.lightMode .reportTable .moneyLate,body.lightMode .accountMiniCards .moneyLate,body.lightMode .reportStats .moneyLate,body.lightMode [data-money-kind="late"]{color:#b45309!important;text-shadow:none!important;}
+.v17MoneyTable .tRow span,.accountsMoneyTable .tRow span,.depositsMoneyTable .tRow span,.reportTable .tRow span{font-family:inherit!important;font-weight:950!important;}
