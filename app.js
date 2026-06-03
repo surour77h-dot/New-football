@@ -6,7 +6,7 @@ let currentPage='home', calendarView=new Date(), selectedCalendarDate='', tempGu
 function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,7)}
 function today(){return new Date().toISOString().slice(0,10)}
 function money(n){return Number(n||0).toFixed(3)}
-function fmAmount(n){n=Number(n||0);if(Math.abs(n)<0.0005)return '';const v=Math.abs(n).toFixed(3);return n<0?(v+'-'):v}
+function fmAmount(n){n=Number(n||0);return Math.abs(n)<0.0005?'':n.toFixed(3)}
 function fmDate(d){if(!d)return '';d=String(d);if(/^\d{4}-\d{2}-\d{2}$/.test(d)){let [y,m,dd]=d.split('-');return `${dd}/${m}/${y}`}return d}
 function escapeHtml(v){return String(v??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]))}
 function escAttr(v){return String(v??'').replace(/\\/g,'\\\\').replace(/'/g,"\\'")}
@@ -35,7 +35,7 @@ function goPage(id){
 }
 function pageTitleFn(id){return pageTitle(id)}
 function toggleMenu(){pagesMenu.classList.toggle('open')}
-function depositTypeLabel(d){if(d.type==='late')return'تأخير';if(d.type==='out')return'مديونية';if(d.type==='initial')return'إيداع.م';const raw=String(d.date||'').replace(/-/g,'/');if(raw==='2026/01/01'||raw==='1/1/2026')return'إيداع.م';return'إيداع'}
+function depositTypeLabel(d){if(d.type==='late')return'تأخير';if(d.type==='out')return'مديونية';if(d.type==='initial')return'إيداع مبدئي';const raw=String(d.date||'').replace(/-/g,'/');if(raw==='2026/01/01'||raw==='1/1/2026')return'إيداع مبدئي';return'إيداع'}
 function amountClass(n,type){if(type==='late')return'moneyLate';if(type==='out'||type==='debt'||type==='discount')return'moneyNeg';if(type==='initial'||type==='in'||type==='extra'||type==='deposit'||!type)return'moneyPos';n=Number(n||0);return n<0?'moneyNeg':'moneyPos'}
 function participants(m){return [...(m.players||[]),...(m.guests||[]).map(g=>`${g.guest} (${g.owner})`)]}
 function balances(s){const b={};s.players.forEach(p=>b[p]={balance:0,games:0,last:'',deposits:0,late:0,playTotal:0,debtDeposits:0});(s.deposits||[]).forEach(d=>{if(!b[d.player])b[d.player]={balance:0,games:0,last:'',deposits:0,late:0,playTotal:0,debtDeposits:0};let type=d.type;const raw=String(d.date||'').replace(/-/g,'/');if(!type&&(raw==='2026/01/01'||raw==='1/1/2026'))type='initial';let amt=Math.abs(Number(d.amount||0));if(type==='out'||type==='late')amt=-amt;b[d.player].balance+=amt;if(amt>0)b[d.player].deposits+=amt;if(type==='late')b[d.player].late+=Math.abs(Number(d.amount||0));if(type==='out')b[d.player].debtDeposits+=Math.abs(Number(d.amount||0))});(s.matches||[]).forEach(m=>{(m.players||[]).forEach(p=>{if(!b[p])b[p]={balance:0,games:0,last:'',deposits:0,late:0,playTotal:0,debtDeposits:0};b[p].balance-=Number(m.price||0);b[p].playTotal+=Number(m.price||0);b[p].games++;if(!b[p].last||m.date>b[p].last)b[p].last=m.date});(m.guests||[]).forEach(g=>{const p=g.owner;if(!b[p])b[p]={balance:0,games:0,last:'',deposits:0,late:0,playTotal:0,debtDeposits:0};b[p].balance-=Number(m.price||0);b[p].playTotal+=Number(m.price||0)})});return b}
@@ -644,3 +644,70 @@ function forceCompactPlayerRows(){
 }
 setTimeout(forceCompactPlayerRows,50);
 setTimeout(forceCompactPlayerRows,300);
+
+/* === v14: final operation colors + zero empty + right-side minus === */
+function opKind(d){
+  const type=normalizeDepositType(d);
+  if(type==='late')return 'late';
+  if(type==='out')return 'debt';
+  if(type==='discount')return 'discount';
+  if(type==='initial')return 'initial';
+  return 'deposit';
+}
+function opClsFromKind(kind){
+  if(kind==='late')return 'moneyLate';
+  if(kind==='debt'||kind==='discount'||kind==='out')return 'moneyNeg';
+  return 'moneyPos';
+}
+function amountTextByKind(amount, kind){
+  const v=Math.abs(Number(amount||0));
+  if(v<0.0005)return '';
+  const txt=money(v);
+  if(kind==='late'||kind==='debt'||kind==='discount'||kind==='out')return txt+'-';
+  return txt;
+}
+function signedAmountText(n){
+  const v=Number(n||0);
+  if(Math.abs(v)<0.0005)return '';
+  return money(Math.abs(v))+(v<0?'-':'');
+}
+function depositShortLabelByKind(kind){
+  if(kind==='late')return 'تأخير';
+  if(kind==='debt')return 'مديونية';
+  if(kind==='discount')return 'خصم';
+  if(kind==='initial')return 'إيداع.م';
+  return 'إيداع';
+}
+function renderDeposits(s){
+  const rows=[...(s.deposits||[])].sort((a,b)=>(b.date||'').localeCompare(a.date||'')).map(d=>{
+    const kind=opKind(d), cls=opClsFromKind(kind), label=depositShortLabelByKind(kind), amt=amountTextByKind(d.amount,kind);
+    const text=amt ? `${label} ${amt}` : label;
+    return `<div class="tRow" onclick="openDepositEditor('${d.id}')"><span>${escapeHtml(d.player||'')}</span><span>${fmDate(d.date)}</span><span class="${cls}">${text}</span></div>`;
+  }).join('');
+  depositsList.innerHTML=`<div class="compactTable depositsMoneyTable"><div class="tHead"><span>اللاعب</span><span>التاريخ</span><span class="amountHead">المبلغ</span></div>${rows||'<p class="muted">لا توجد عمليات</p>'}</div>`;
+}
+function renderPlayerReport(){
+  const s=state(),p=playerFilterSelect.value;if(!p){playerFilterContent.innerHTML='';return}
+  const b=balances(s)[p]||{},deps=(s.deposits||[]).filter(d=>d.player===p),games=(s.matches||[]).filter(m=>(m.players||[]).includes(p));
+  const playPlusDebt=(b.playTotal||0)+(b.debtDeposits||0);
+  const gameRows=games.map(g=>`<div class="tRow"><span>${fmDate(g.date)}</span><span>${escapeHtml(g.place||'')}</span><span class="moneyNeg">${amountTextByKind(g.price||0,'debt')}</span></div>`).join('');
+  const depRows=deps.map(d=>{
+    const kind=opKind(d), cls=opClsFromKind(kind), label=depositShortLabelByKind(kind), amt=amountTextByKind(d.amount,kind);
+    return `<div class="tRow"><span>${fmDate(d.date)}</span><span class="${cls}">${label}</span><span class="${cls}">${amt}</span></div>`;
+  }).join('');
+  playerFilterContent.innerHTML=`<div class="reportStats"><div class="statBox depositStat"><span>الإيداعات</span><b class="moneyPos">${fmAmount(b.deposits)}</b></div><div class="statBox gamesStat"><span>اللعب</span><b>${b.games||''}</b></div><div class="statBox playTotalStat"><span>إجمالي اللعب + المديونية</span><b class="moneyNeg">${amountTextByKind(playPlusDebt,'debt')}</b></div><div class="statBox lateStat"><span>التأخير</span><b class="moneyLate">${amountTextByKind(b.late,'late')}</b></div><div class="statBox balanceStat"><span>الرصيد</span><b class="${amountClass(b.balance)}">${signedAmountText(b.balance)}</b></div></div><div class="card"><h3>أيام اللعب</h3><div class="compactTable reportTable"><div class="tHead"><span>التاريخ</span><span>المكان</span><span class="amountHead">المبلغ</span></div>${gameRows||'<p class="muted">لا يوجد</p>'}</div></div><div class="card"><h3>الإيداعات والمديونيات</h3><div class="compactTable reportTable"><div class="tHead"><span>التاريخ</span><span>العملية</span><span class="amountHead">المبلغ</span></div>${depRows||'<p class="muted">لا يوجد</p>'}</div></div>`;
+}
+function renderAccounts(s){
+  const b=balances(s),neg=(s.players||[]).filter(p=>(b[p]?.balance||0)<0),late=(s.deposits||[]).filter(d=>normalizeDepositType(d)==='late'),extra=(s.extraCharges||[]).reduce((a,x)=>a+Number(x.amount||0),0),discount=(s.extraDiscounts||[]).reduce((a,x)=>a+Number(x.amount||0),0),lateTotal=late.reduce((a,d)=>a+Math.abs(Number(d.amount||0)),0),debt=neg.reduce((a,p)=>a+Math.abs(b[p].balance),0)+discount,final=extra+lateTotal-debt;
+  const debtRows=neg.map(p=>`<div class="tRow" onclick="openPlayerReport('${escAttr(p)}')"><span>${escapeHtml(p)}</span><span>${fmDate(b[p].last)}</span><span class="moneyNeg">${amountTextByKind(Math.abs(b[p].balance),'debt')}</span></div>`).join('');
+  const lateRows=late.map(d=>`<div class="tRow" onclick="openPlayerReport('${escAttr(d.player)}')"><span>${escapeHtml(d.player)}</span><span>${fmDate(d.date)}</span><span class="moneyLate">${amountTextByKind(d.amount,'late')}</span></div>`).join('');
+  accountsContent.innerHTML=`<div class="accountMiniCards"><div><span>المديونية</span><b class="moneyNeg">${amountTextByKind(debt,'debt')}</b></div><div><span>التأخير</span><b class="moneyLate">${amountTextByKind(lateTotal,'late')}</b></div><div><span>الإضافي</span><b class="moneyPos">${amountTextByKind(extra,'deposit')}</b></div><div><span>الإجمالي</span><b class="${amountClass(final)}">${signedAmountText(final)}</b></div></div>
+  <div class="card"><h3>اللاعبين المدانين والمتأخرين</h3><div class="compactTable accountsMoneyTable"><div class="tHead"><span>الاسم</span><span>التاريخ</span><span class="amountHead">المبلغ</span></div>${debtRows}${lateRows}${(!debtRows&&!lateRows)?'<p class="muted">لا يوجد</p>':''}</div></div>
+  <div class="card"><div class="sectionTitleLine"><b>سجل الخصم / الإضافة</b><button onclick="openAdjustEditor()">تعديل</button></div>${renderAdjustRows(s)}</div>
+  <div class="card"><div class="sectionTitleLine"><b>خصم / إضافة</b></div><div class="grid2 accountsExtraGrid"><label>النوع<select id="extraType"><option value="extra">إضافة</option><option value="discount">خصم</option></select></label><label>التاريخ<button id="extraDateBtn" class="fakeDateInput" type="button" onclick="openDatePicker('extraDate')">${fmDate(today())}</button><input id="extraDate" type="hidden" value="${today()}"></label><label>المبلغ<input id="extraAmount" type="number" step="0.001"></label><label>الملاحظة<input id="extraNote"></label></div><button class="primary wide saveBtn" onclick="saveExtraUnified()">حفظ</button></div>`;
+  if(typeof updateDateButtons==='function')updateDateButtons();
+}
+function renderAdjustRows(s){
+  let rows=[...(s.extraCharges||[]).map(x=>({...x,t:'إضافة',kind:'deposit',type:'extra'})),...(s.extraDiscounts||[]).map(x=>({...x,t:'خصم',kind:'discount',type:'discount'}))].sort((a,b)=>(b.date||'').localeCompare(a.date||''));
+  return `<div class="compactTable accountsMoneyTable"><div class="tHead"><span>التاريخ</span><span>العملية</span><span class="amountHead">المبلغ</span></div>${rows.map(r=>{const cls=opClsFromKind(r.kind);return `<div class="tRow"><span>${fmDate(r.date)}</span><span class="${cls}">${r.t}</span><span class="${cls}">${amountTextByKind(r.amount,r.kind)}</span></div>`}).join('')||'<p class="muted">لا يوجد</p>'}</div>`;
+}
