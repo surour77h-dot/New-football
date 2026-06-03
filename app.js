@@ -530,3 +530,117 @@ function applyDatePicker(){
 document.addEventListener('DOMContentLoaded',()=>{
   if(typeof applyDateBtn!=='undefined')applyDateBtn.onclick=applyDatePicker;
 });
+
+/* ===== REAL FINAL PLAYER TABLE COMPACT v9 =====
+   المطلوب: تضييق السطر فقط + تقريب الأعمدة + منع خروج التاريخ + تكبير التاريخ
+*/
+function forceCompactPlayerRows(){
+  const root=document.getElementById('playerTable');
+  if(!root) return;
+  const wrap=root.querySelector('.playersModernWrap');
+  const table=root.querySelector('.playersModernTable');
+  if(!table) return;
+
+  if(wrap){
+    wrap.style.setProperty('padding','0','important');
+    wrap.style.setProperty('margin','0','important');
+    wrap.style.setProperty('overflow','hidden','important');
+    wrap.style.setProperty('width','100%','important');
+  }
+
+  table.style.setProperty('width','100%','important');
+  table.style.setProperty('max-width','100%','important');
+  table.style.setProperty('table-layout','fixed','important');
+  table.style.setProperty('border-collapse','collapse','important');
+  table.style.setProperty('border-spacing','0','important');
+
+  // عرض الأعمدة: الاسم | الرصيد | لعب | آخر لعب
+  const widths={
+    pmNameH:'auto', pmBalanceH:'78px', pmGamesH:'34px', pmLastH:'102px',
+    pmNameCell:'auto', pmBalanceCell:'78px', pmGamesCell:'34px', pmLastCell:'102px'
+  };
+  Object.entries(widths).forEach(([cls,w])=>{
+    root.querySelectorAll('.'+cls).forEach(el=>{
+      el.style.setProperty('width',w,'important');
+      if(w!=='auto'){
+        el.style.setProperty('min-width',w,'important');
+        el.style.setProperty('max-width',w,'important');
+      }
+    });
+  });
+
+  root.querySelectorAll('.playersModernTable thead th').forEach(el=>{
+    el.style.setProperty('height','16px','important');
+    el.style.setProperty('min-height','16px','important');
+    el.style.setProperty('max-height','16px','important');
+    el.style.setProperty('padding','0 1px','important');
+    el.style.setProperty('line-height','1','important');
+    el.style.setProperty('font-size','12px','important');
+    el.style.setProperty('white-space','nowrap','important');
+    el.style.setProperty('overflow','hidden','important');
+  });
+
+  root.querySelectorAll('.playersModernTable tbody tr').forEach(el=>{
+    el.style.setProperty('height','32px','important');
+    el.style.setProperty('min-height','32px','important');
+    el.style.setProperty('max-height','32px','important');
+    el.style.setProperty('border-bottom','1px solid rgba(148,163,184,.34)','important');
+  });
+
+  root.querySelectorAll('.playersModernTable tbody td').forEach(el=>{
+    el.style.setProperty('height','32px','important');
+    el.style.setProperty('min-height','32px','important');
+    el.style.setProperty('max-height','32px','important');
+    el.style.setProperty('padding','0 1px','important');
+    el.style.setProperty('line-height','1','important');
+    el.style.setProperty('vertical-align','middle','important');
+    el.style.setProperty('background','transparent','important');
+    el.style.setProperty('border-top','0','important');
+    el.style.setProperty('border-left','0','important');
+    el.style.setProperty('border-right','0','important');
+    el.style.setProperty('border-radius','0','important');
+    el.style.setProperty('white-space','nowrap','important');
+    el.style.setProperty('overflow','hidden','important');
+  });
+
+  root.querySelectorAll('.playersModernTable tbody td *').forEach(el=>{
+    el.style.setProperty('line-height','1','important');
+    el.style.setProperty('margin','0','important');
+    el.style.setProperty('padding-top','0','important');
+    el.style.setProperty('padding-bottom','0','important');
+    el.style.setProperty('min-height','0','important');
+  });
+
+  root.querySelectorAll('.pmNameBtn').forEach(el=>{
+    el.style.setProperty('font-size','15px','important');
+    el.style.setProperty('font-weight','950','important');
+    el.style.setProperty('line-height','1','important');
+    el.style.setProperty('padding','0','important');
+    el.style.setProperty('margin','0','important');
+    el.style.setProperty('min-height','0','important');
+    el.style.setProperty('height','auto','important');
+    el.style.setProperty('max-width','100%','important');
+    el.style.setProperty('overflow','hidden','important');
+    el.style.setProperty('text-overflow','ellipsis','important');
+    el.style.setProperty('white-space','nowrap','important');
+  });
+  root.querySelectorAll('.pmBalanceCell').forEach(el=>{
+    el.style.setProperty('font-size','15px','important');
+    el.style.setProperty('font-weight','950','important');
+    el.style.setProperty('text-align','center','important');
+  });
+  root.querySelectorAll('.pmGamesCell').forEach(el=>{
+    el.style.setProperty('font-size','12px','important');
+    el.style.setProperty('font-weight','950','important');
+    el.style.setProperty('text-align','center','important');
+  });
+  root.querySelectorAll('.pmLastCell').forEach(el=>{
+    el.style.setProperty('font-size','14px','important');
+    el.style.setProperty('font-weight','950','important');
+    el.style.setProperty('text-align','left','important');
+    el.style.setProperty('direction','ltr','important');
+    el.style.setProperty('letter-spacing','-0.4px','important');
+  });
+}
+setTimeout(forceCompactPlayerRows,50);
+setTimeout(forceCompactPlayerRows,300);

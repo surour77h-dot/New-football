@@ -3556,3 +3556,29 @@ html.darkMode body #playerTable .playersModernTable thead th{
  #playerTable .pmBalanceCell{font-size:15.7px!important;}
  #playerTable .pmLastCell{font-size:13.8px!important;}
 }
+
+/* ===== REAL FINAL PLAYER TABLE COMPACT v9 =====
+   تضييق الصفوف فقط + تقريب الرصيد/لعب + مساحة أكبر للتاريخ
+*/
+#playerTable .playersModernWrap{padding:0!important;margin:0!important;overflow:hidden!important;width:100%!important;max-width:100%!important;}
+#playerTable .playersModernTable{width:100%!important;max-width:100%!important;table-layout:fixed!important;border-collapse:collapse!important;border-spacing:0!important;}
+#playerTable .playersModernTable thead th{height:16px!important;min-height:16px!important;max-height:16px!important;padding:0 1px!important;line-height:1!important;font-size:12px!important;white-space:nowrap!important;overflow:hidden!important;}
+#playerTable .playersModernTable tbody tr{height:32px!important;min-height:32px!important;max-height:32px!important;border-bottom:1px solid rgba(148,163,184,.34)!important;}
+#playerTable .playersModernTable tbody td{height:32px!important;min-height:32px!important;max-height:32px!important;padding:0 1px!important;line-height:1!important;vertical-align:middle!important;background:transparent!important;border-top:0!important;border-left:0!important;border-right:0!important;border-radius:0!important;white-space:nowrap!important;overflow:hidden!important;}
+#playerTable .playersModernTable tbody td *{line-height:1!important;margin-top:0!important;margin-bottom:0!important;padding-top:0!important;padding-bottom:0!important;min-height:0!important;}
+#playerTable .pmNameH,#playerTable .pmNameCell{width:auto!important;}
+#playerTable .pmBalanceH,#playerTable .pmBalanceCell{width:78px!important;min-width:78px!important;max-width:78px!important;text-align:center!important;}
+#playerTable .pmGamesH,#playerTable .pmGamesCell{width:34px!important;min-width:34px!important;max-width:34px!important;text-align:center!important;}
+#playerTable .pmLastH,#playerTable .pmLastCell{width:102px!important;min-width:102px!important;max-width:102px!important;text-align:left!important;direction:ltr!important;}
+#playerTable .pmNameBtn{font-size:15px!important;font-weight:950!important;line-height:1!important;padding:0!important;margin:0!important;min-height:0!important;height:auto!important;max-width:100%!important;overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important;}
+#playerTable .pmBalanceCell{font-size:15px!important;font-weight:950!important;}
+#playerTable .pmGamesCell{font-size:12px!important;font-weight:950!important;}
+#playerTable .pmLastCell{font-size:14px!important;font-weight:950!important;letter-spacing:-0.4px!important;}
+@media(max-width:430px){
+ #playerTable .playersModernTable tbody tr,#playerTable .playersModernTable tbody td{height:31px!important;min-height:31px!important;max-height:31px!important;}
+ #playerTable .pmBalanceH,#playerTable .pmBalanceCell{width:76px!important;min-width:76px!important;max-width:76px!important;}
+ #playerTable .pmGamesH,#playerTable .pmGamesCell{width:32px!important;min-width:32px!important;max-width:32px!important;}
+ #playerTable .pmLastH,#playerTable .pmLastCell{width:106px!important;min-width:106px!important;max-width:106px!important;}
+ #playerTable .pmNameBtn,#playerTable .pmBalanceCell{font-size:14.8px!important;}
+ #playerTable .pmLastCell{font-size:14px!important;}
+}
