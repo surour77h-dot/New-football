@@ -1975,3 +1975,16 @@ html.dark #playerTable .playersTable th,
 html.dark #playerTable .playersTable td{
   border-bottom:1px solid rgba(255,255,255,.18)!important;
 }
+
+
+/* REAL OVERRIDE FIX */
+.darkMode .tableNameBtn,.dark .tableNameBtn,body.darkMode .tableNameBtn,body.dark .tableNameBtn{color:#fff!important}
+.darkMode .lastTd,.dark .lastTd,body.darkMode .lastTd,body.dark .lastTd{color:#fff!important}
+.darkMode .inactiveName .tableNameBtn,.dark .inactiveName .tableNameBtn{color:#ff4fd8!important}
+.darkMode .latestDate,.dark .latestDate{color:#ff4fd8!important}
+
+.lightMode .inactiveName .tableNameBtn,.light .inactiveName .tableNameBtn{color:#d97706!important}
+.lightMode .latestDate,.light .latestDate{color:#d97706!important}
+
+.playersTable tr td{border-bottom:1px solid rgba(148,163,184,.35)!important}
+.darkMode .playersTable tr td,.dark .playersTable tr td{border-bottom:1px solid rgba(255,255,255,.18)!important}
