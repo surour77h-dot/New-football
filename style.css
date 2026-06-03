@@ -1866,3 +1866,112 @@ body.dark #playerTable .playersTable td,
   #playerTable .playersTable .lastTd *,
   #playerTable .playersTable .lastTd.latestDate{font-size:11.5px!important;}
 }
+
+/* FINAL VISIBILITY FIX - player table */
+#playerTable .playersTable .nameTd{width:42%!important;}
+#playerTable .playersTable .balanceTh,
+#playerTable .playersTable .balanceTd{width:24%!important;}
+#playerTable .playersTable .gamesTh,
+#playerTable .playersTable .gamesTd{width:10%!important;text-align:center!important;}
+#playerTable .playersTable .lastTh,
+#playerTable .playersTable .lastTd{width:24%!important;text-align:right!important;}
+
+#playerTable .playersTable{
+  border-collapse:collapse!important;
+  border-spacing:0!important;
+}
+#playerTable .playersTable th,
+#playerTable .playersTable td{
+  border-bottom:1px solid rgba(148,163,184,.42)!important;
+}
+#playerTable .playersTable .tableNameBtn,
+#playerTable .playersTable .lastTd,
+#playerTable .playersTable .lastTd *{
+  text-shadow:none!important;
+}
+
+/* Light mode */
+body.lightMode #playerTable .playersTable .nameTd:not(.inactiveName) .tableNameBtn,
+body:not(.darkMode) #playerTable .playersTable .nameTd:not(.inactiveName) .tableNameBtn{
+  color:#000000!important;
+}
+body.lightMode #playerTable .playersTable .lastTd:not(.latestDate),
+body.lightMode #playerTable .playersTable .lastTd:not(.latestDate) *,
+body:not(.darkMode) #playerTable .playersTable .lastTd:not(.latestDate),
+body:not(.darkMode) #playerTable .playersTable .lastTd:not(.latestDate) *{
+  color:#000000!important;
+}
+body.lightMode #playerTable .playersTable .nameTd.inactiveName .tableNameBtn,
+body:not(.darkMode) #playerTable .playersTable .nameTd.inactiveName .tableNameBtn{
+  color:#d97706!important;
+  font-weight:950!important;
+}
+body.lightMode #playerTable .playersTable .lastTd.latestDate,
+body.lightMode #playerTable .playersTable .lastTd.latestDate *,
+body:not(.darkMode) #playerTable .playersTable .lastTd.latestDate,
+body:not(.darkMode) #playerTable .playersTable .lastTd.latestDate *{
+  color:#d97706!important;
+  font-weight:950!important;
+}
+
+/* Dark mode */
+body.darkMode #playerTable .playersTable .nameTd:not(.inactiveName) .tableNameBtn,
+body.dark #playerTable .playersTable .nameTd:not(.inactiveName) .tableNameBtn,
+.darkMode #playerTable .playersTable .nameTd:not(.inactiveName) .tableNameBtn,
+.dark #playerTable .playersTable .nameTd:not(.inactiveName) .tableNameBtn,
+html.darkMode #playerTable .playersTable .nameTd:not(.inactiveName) .tableNameBtn,
+html.dark #playerTable .playersTable .nameTd:not(.inactiveName) .tableNameBtn{
+  color:#ffffff!important;
+}
+body.darkMode #playerTable .playersTable .lastTd:not(.latestDate),
+body.darkMode #playerTable .playersTable .lastTd:not(.latestDate) *,
+body.dark #playerTable .playersTable .lastTd:not(.latestDate),
+body.dark #playerTable .playersTable .lastTd:not(.latestDate) *,
+.darkMode #playerTable .playersTable .lastTd:not(.latestDate),
+.darkMode #playerTable .playersTable .lastTd:not(.latestDate) *,
+.dark #playerTable .playersTable .lastTd:not(.latestDate),
+.dark #playerTable .playersTable .lastTd:not(.latestDate) *,
+html.darkMode #playerTable .playersTable .lastTd:not(.latestDate),
+html.darkMode #playerTable .playersTable .lastTd:not(.latestDate) *,
+html.dark #playerTable .playersTable .lastTd:not(.latestDate),
+html.dark #playerTable .playersTable .lastTd:not(.latestDate) *{
+  color:#ffffff!important;
+}
+body.darkMode #playerTable .playersTable .nameTd.inactiveName .tableNameBtn,
+body.dark #playerTable .playersTable .nameTd.inactiveName .tableNameBtn,
+.darkMode #playerTable .playersTable .nameTd.inactiveName .tableNameBtn,
+.dark #playerTable .playersTable .nameTd.inactiveName .tableNameBtn,
+html.darkMode #playerTable .playersTable .nameTd.inactiveName .tableNameBtn,
+html.dark #playerTable .playersTable .nameTd.inactiveName .tableNameBtn{
+  color:#ff4fd8!important;
+  font-weight:950!important;
+}
+body.darkMode #playerTable .playersTable .lastTd.latestDate,
+body.darkMode #playerTable .playersTable .lastTd.latestDate *,
+body.dark #playerTable .playersTable .lastTd.latestDate,
+body.dark #playerTable .playersTable .lastTd.latestDate *,
+.darkMode #playerTable .playersTable .lastTd.latestDate,
+.darkMode #playerTable .playersTable .lastTd.latestDate *,
+.dark #playerTable .playersTable .lastTd.latestDate,
+.dark #playerTable .playersTable .lastTd.latestDate *,
+html.darkMode #playerTable .playersTable .lastTd.latestDate,
+html.darkMode #playerTable .playersTable .lastTd.latestDate *,
+html.dark #playerTable .playersTable .lastTd.latestDate,
+html.dark #playerTable .playersTable .lastTd.latestDate *{
+  color:#ff4fd8!important;
+  font-weight:950!important;
+}
+body.darkMode #playerTable .playersTable th,
+body.darkMode #playerTable .playersTable td,
+body.dark #playerTable .playersTable th,
+body.dark #playerTable .playersTable td,
+.darkMode #playerTable .playersTable th,
+.darkMode #playerTable .playersTable td,
+.dark #playerTable .playersTable th,
+.dark #playerTable .playersTable td,
+html.darkMode #playerTable .playersTable th,
+html.darkMode #playerTable .playersTable td,
+html.dark #playerTable .playersTable th,
+html.dark #playerTable .playersTable td{
+  border-bottom:1px solid rgba(255,255,255,.18)!important;
+}
