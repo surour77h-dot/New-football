@@ -3847,12 +3847,20 @@ body.lightMode .accountsMoneyTable .moneyLate,body.lightMode .depositsMoneyTable
 }
 
 
-/* Strong late color same as delay card */
-.moneyLate,[data-money-kind="late"]{
- color:#f59e0b !important;
- font-weight:900 !important;
+/* FORCE DELAY COLOR IN ACCOUNTS + PLAYER REPORT */
+.moneyLate,
+[data-money-kind="late"],
+.accountsMoneyTable .moneyLate,
+.reportTable .moneyLate,
+.accountMiniCards .moneyLate,
+.reportStats .moneyLate{
+  color:#f59e0b !important;
+  -webkit-text-fill-color:#f59e0b !important;
+  font-weight:900 !important;
 }
+
 body.darkMode .moneyLate,
 body.darkMode [data-money-kind="late"]{
- color:#f59e0b !important;
+  color:#f59e0b !important;
+  -webkit-text-fill-color:#f59e0b !important;
 }
