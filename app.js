@@ -6,7 +6,7 @@ let currentPage='home', calendarView=new Date(), selectedCalendarDate='', tempGu
 function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,7)}
 function today(){return new Date().toISOString().slice(0,10)}
 function money(n){return Number(n||0).toFixed(3)}
-function fmAmount(n){n=Number(n||0);return Math.abs(n)<0.0005?'':n.toFixed(3)}
+function fmAmount(n){n=Number(n||0);if(Math.abs(n)<0.0005)return '';const v=Math.abs(n).toFixed(3);return n<0?(v+'-'):v}
 function fmDate(d){if(!d)return '';d=String(d);if(/^\d{4}-\d{2}-\d{2}$/.test(d)){let [y,m,dd]=d.split('-');return `${dd}/${m}/${y}`}return d}
 function escapeHtml(v){return String(v??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]))}
 function escAttr(v){return String(v??'').replace(/\\/g,'\\\\').replace(/'/g,"\\'")}
@@ -35,7 +35,7 @@ function goPage(id){
 }
 function pageTitleFn(id){return pageTitle(id)}
 function toggleMenu(){pagesMenu.classList.toggle('open')}
-function depositTypeLabel(d){if(d.type==='late')return'تأخير';if(d.type==='out')return'مديونية';if(d.type==='initial')return'إيداع مبدئي';const raw=String(d.date||'').replace(/-/g,'/');if(raw==='2026/01/01'||raw==='1/1/2026')return'إيداع مبدئي';return'إيداع'}
+function depositTypeLabel(d){if(d.type==='late')return'تأخير';if(d.type==='out')return'مديونية';if(d.type==='initial')return'إيداع.م';const raw=String(d.date||'').replace(/-/g,'/');if(raw==='2026/01/01'||raw==='1/1/2026')return'إيداع.م';return'إيداع'}
 function amountClass(n,type){if(type==='late')return'moneyLate';if(type==='out'||type==='debt'||type==='discount')return'moneyNeg';if(type==='initial'||type==='in'||type==='extra'||type==='deposit'||!type)return'moneyPos';n=Number(n||0);return n<0?'moneyNeg':'moneyPos'}
 function participants(m){return [...(m.players||[]),...(m.guests||[]).map(g=>`${g.guest} (${g.owner})`)]}
 function balances(s){const b={};s.players.forEach(p=>b[p]={balance:0,games:0,last:'',deposits:0,late:0,playTotal:0,debtDeposits:0});(s.deposits||[]).forEach(d=>{if(!b[d.player])b[d.player]={balance:0,games:0,last:'',deposits:0,late:0,playTotal:0,debtDeposits:0};let type=d.type;const raw=String(d.date||'').replace(/-/g,'/');if(!type&&(raw==='2026/01/01'||raw==='1/1/2026'))type='initial';let amt=Math.abs(Number(d.amount||0));if(type==='out'||type==='late')amt=-amt;b[d.player].balance+=amt;if(amt>0)b[d.player].deposits+=amt;if(type==='late')b[d.player].late+=Math.abs(Number(d.amount||0));if(type==='out')b[d.player].debtDeposits+=Math.abs(Number(d.amount||0))});(s.matches||[]).forEach(m=>{(m.players||[]).forEach(p=>{if(!b[p])b[p]={balance:0,games:0,last:'',deposits:0,late:0,playTotal:0,debtDeposits:0};b[p].balance-=Number(m.price||0);b[p].playTotal+=Number(m.price||0);b[p].games++;if(!b[p].last||m.date>b[p].last)b[p].last=m.date});(m.guests||[]).forEach(g=>{const p=g.owner;if(!b[p])b[p]={balance:0,games:0,last:'',deposits:0,late:0,playTotal:0,debtDeposits:0};b[p].balance-=Number(m.price||0);b[p].playTotal+=Number(m.price||0)})});return b}
