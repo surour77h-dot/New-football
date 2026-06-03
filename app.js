@@ -44,7 +44,7 @@ function refreshSelects(s){const opts=s.players.map(p=>`<option>${escapeHtml(p)}
 function openDatePicker(targetId){activeDateTarget=targetId;nativeDateInput.value=document.getElementById(targetId)?.value||today();datePickerModal.classList.add('show')}
 function closeDatePicker(){datePickerModal.classList.remove('show')}
 
-function renderAll(){const s=state();saveNoRender(s);refreshSelects(s);if(!matchDate.value)matchDate.value=today();if(!depositDate.value)depositDate.value=today();applyThemeMode();updateDateButtons();pricePerPlayer.textContent=money(calcPrice());if(s.settings.appTitle)document.querySelector('.title h1').textContent=s.settings.appTitle;if(s.settings.appDesc)document.querySelector('.title p').textContent=s.settings.appDesc;if(typeof appTitleInput!=='undefined'&&appTitleInput){appTitleInput.value=s.settings.appTitle||'قروب الكورة';appDescInput.value=s.settings.appDesc||'إدارة اللعبات • الحسابات • اللاعبين'}renderPlayers(s);renderMatchPlayers(s);renderDeposits(s);renderCalendar();renderCalendarList();renderTeamsSelect(s);renderTeams();renderPlayerTable(s);renderPlayerReport();renderAccounts(s);renderMatchLog(s);renderPageOrder();renderSettingsPageNames();renderMenuLabels();document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id===currentPage));pageTitle.textContent=pageTitleFn(currentPage);updateDateButtons()}
+function renderAll(){const s=state();saveNoRender(s);refreshSelects(s);if(!matchDate.value)matchDate.value=today();if(!depositDate.value)depositDate.value=today();applyThemeMode();updateDateButtons();pricePerPlayer.textContent=money(calcPrice());if(s.settings.appTitle)document.querySelector('.title h1').textContent=s.settings.appTitle;if(s.settings.appDesc)document.querySelector('.title p').textContent=s.settings.appDesc;if(typeof appTitleInput!=='undefined'&&appTitleInput){appTitleInput.value=s.settings.appTitle||'قروب الكورة';appDescInput.value=s.settings.appDesc||'إدارة اللعبات • الحسابات • اللاعبين'}renderPlayers(s);renderMatchPlayers(s);renderDeposits(s);renderCalendar();renderCalendarList();renderTeamsSelect(s);renderTeams();renderPlayerTable(s);forceCompactPlayerRows();setTimeout(forceCompactPlayerRows,50);renderPlayerReport();renderAccounts(s);renderMatchLog(s);renderPageOrder();renderSettingsPageNames();renderMenuLabels();document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id===currentPage));pageTitle.textContent=pageTitleFn(currentPage);updateDateButtons()}
 function calcPrice(){const c=Number(bookingCost.value||0),n=Number(neededPlayers.value||0);return n?c/n:0}
 function renderPlayers(s){
  playersList.innerHTML=s.players.map(p=>`<button type="button" class="playerChipBtn" onclick="openPlayerReport('${escAttr(p)}')">${escapeHtml(p)}</button>`).join('')||'<p class="muted">أضف اللاعبين أولًا.</p>';
@@ -110,7 +110,70 @@ function editSelectedMatchFromTeams(){const s=state(),m=s.matches.find(x=>x.id==
 function renderPlayerTable(s){
  const b=balances(s),latest=Object.values(b).map(x=>x.last).filter(Boolean).sort().pop()||'';
  playerTableWrap.innerHTML=`<div class="playersModernWrap"><table class="playersModernTable"><thead><tr><th class="pmNameH">الاسم</th><th class="pmBalanceH">الرصيد</th><th class="pmGamesH">لعب</th><th class="pmLastH">آخر لعب</th></tr></thead><tbody>${s.players.map(p=>{const info=b[p]||{}, bal=Number(info.balance||0), inactive=isInactiveThisYear(info.last), isLatest=!!(info.last&&info.last===latest);return `<tr class="pmRow ${inactive?'pmInactive':''} ${isLatest?'pmLatest':''}"><td class="pmNameCell"><button type="button" class="pmNameBtn" onclick="openPlayerReport('${escAttr(p)}')">${escapeHtml(p)}</button></td><td class="pmBalanceCell ${bal<0?'moneyNeg':amountClass(bal)}">${fmAmount(bal)}</td><td class="pmGamesCell">${info.games||''}</td><td class="pmLastCell ${isLatest?'pmLatestDate':''}">${fmDate(info.last)}</td></tr>`}).join('')}</tbody></table></div>`;
+ forceCompactPlayerRows();setTimeout(forceCompactPlayerRows,30);
 }
+
+function forceCompactPlayerRows(){
+  const root=document.getElementById('playerTable');
+  if(!root)return;
+  const wrap=root.querySelector('.playersModernWrap');
+  const table=root.querySelector('.playersModernTable');
+  if(wrap){
+    wrap.style.setProperty('padding','0','important');
+    wrap.style.setProperty('margin','0','important');
+  }
+  if(table){
+    table.style.setProperty('border-collapse','collapse','important');
+    table.style.setProperty('border-spacing','0','important');
+    table.style.setProperty('table-layout','fixed','important');
+    table.style.setProperty('width','100%','important');
+  }
+  root.querySelectorAll('.playersModernTable thead th').forEach(el=>{
+    el.style.setProperty('height','18px','important');
+    el.style.setProperty('min-height','18px','important');
+    el.style.setProperty('max-height','18px','important');
+    el.style.setProperty('padding','0 2px','important');
+    el.style.setProperty('line-height','1','important');
+    el.style.setProperty('font-size','12px','important');
+  });
+  root.querySelectorAll('.playersModernTable tbody tr').forEach(el=>{
+    el.style.setProperty('height','42px','important');
+    el.style.setProperty('min-height','42px','important');
+    el.style.setProperty('max-height','42px','important');
+    el.style.setProperty('border-bottom','1px solid rgba(148,163,184,.34)','important');
+  });
+  root.querySelectorAll('.playersModernTable tbody td').forEach(el=>{
+    el.style.setProperty('height','42px','important');
+    el.style.setProperty('min-height','42px','important');
+    el.style.setProperty('max-height','42px','important');
+    el.style.setProperty('padding','0 3px','important');
+    el.style.setProperty('line-height','1','important');
+    el.style.setProperty('vertical-align','middle','important');
+    el.style.setProperty('background','transparent','important');
+  });
+  root.querySelectorAll('.pmNameBtn').forEach(el=>{
+    el.style.setProperty('font-size','16px','important');
+    el.style.setProperty('line-height','1','important');
+    el.style.setProperty('padding','0','important');
+    el.style.setProperty('margin','0','important');
+    el.style.setProperty('min-height','0','important');
+    el.style.setProperty('height','auto','important');
+  });
+  root.querySelectorAll('.pmBalanceCell').forEach(el=>{
+    el.style.setProperty('font-size','16px','important');
+    el.style.setProperty('line-height','1','important');
+  });
+  root.querySelectorAll('.pmGamesCell').forEach(el=>{
+    el.style.setProperty('font-size','12.5px','important');
+    el.style.setProperty('line-height','1','important');
+  });
+  root.querySelectorAll('.pmLastCell').forEach(el=>{
+    el.style.setProperty('font-size','14px','important');
+    el.style.setProperty('line-height','1','important');
+    el.style.setProperty('font-weight','950','important');
+  });
+}
+
 function openPlayerReport(p){
   currentPage='playerReport';
   document.querySelectorAll('.page').forEach(sec=>sec.classList.toggle('active',sec.id==='playerReport'));
@@ -234,6 +297,68 @@ function deleteDepositEditor(){const s=state(),id=editDepositModalId.value;if(!i
 function closeDepositEditor(){depositEditModal.classList.remove('show');goPage('deposits');setTimeout(()=>document.getElementById('deposits')?.scrollIntoView({block:'start'}),50)}
 function renderDeposits(s){const rows=[...s.deposits].sort((a,b)=>(b.date||'').localeCompare(a.date||'')).map(d=>{let type=normalizeDepositType(d);const cls=(type==='out')?'moneyNeg':(type==='late'?'moneyLate':'moneyPos');const sign=(type==='out'||type==='late')?'-':'';return `<div class="tRow" onclick="openDepositEditor('${d.id}')"><span>${escapeHtml(d.player||'')}</span><span>${fmDate(d.date)}</span><span class="${cls}">${depositTypeLabel({...d,type})} ${sign}${money(Math.abs(d.amount||0))}</span></div>`}).join('');depositsList.innerHTML=`<div class="compactTable depositsMoneyTable"><div class="tHead"><span>اللاعب</span><span>التاريخ</span><span class="amountHead">المبلغ</span></div>${rows||'<p class="muted">لا توجد عمليات</p>'}</div>`}
 function renderPlayerReport(){const s=state(),p=playerFilterSelect.value;if(!p){playerFilterContent.innerHTML='';return}const b=balances(s)[p]||{},deps=s.deposits.filter(d=>d.player===p),games=s.matches.filter(m=>(m.players||[]).includes(p));const playPlusDebt=(b.playTotal||0)+(b.debtDeposits||0);const gameRows=games.map(g=>`<div class="tRow"><span>${fmDate(g.date)}</span><span>${escapeHtml(g.place||'')}</span><span class="moneyNeg">-${money(g.price||0)}</span></div>`).join('');const depRows=deps.map(d=>{let type=normalizeDepositType(d);const sign=(type==='out'||type==='late')?'-':'';const cls=(type==='out')?'moneyNeg':(type==='late'?'moneyLate':'moneyPos');return `<div class="tRow"><span>${fmDate(d.date)}</span><span>${depositTypeLabel({...d,type})}</span><span class="${cls}">${sign}${money(Math.abs(d.amount||0))}</span></div>`}).join('');playerFilterContent.innerHTML=`<div class="reportStats"><div class="statBox depositStat"><span>الإيداعات</span><b class="moneyPos">${fmAmount(b.deposits)}</b></div><div class="statBox gamesStat"><span>اللعب</span><b>${b.games||''}</b></div><div class="statBox playTotalStat"><span>إجمالي اللعب + المديونية</span><b class="moneyNeg">${playPlusDebt?'-'+money(playPlusDebt):''}</b></div><div class="statBox lateStat"><span>التأخير</span><b class="moneyLate">${fmAmount(b.late)}</b></div><div class="statBox balanceStat"><span>الرصيد</span><b class="${amountClass(b.balance)}">${fmAmount(b.balance)}</b></div></div><div class="card"><h3>أيام اللعب</h3><div class="compactTable reportTable"><div class="tHead"><span>التاريخ</span><span>المكان</span><span class="amountHead">المبلغ</span></div>${gameRows||'<p class="muted">لا يوجد</p>'}</div></div><div class="card"><h3>الإيداعات والمديونيات</h3><div class="compactTable reportTable"><div class="tHead"><span>التاريخ</span><span>العملية</span><span class="amountHead">المبلغ</span></div>${depRows||'<p class="muted">لا يوجد</p>'}</div></div>`}
+
+function forceCompactPlayerRows(){
+  const root=document.getElementById('playerTable');
+  if(!root)return;
+  const wrap=root.querySelector('.playersModernWrap');
+  const table=root.querySelector('.playersModernTable');
+  if(wrap){
+    wrap.style.setProperty('padding','0','important');
+    wrap.style.setProperty('margin','0','important');
+  }
+  if(table){
+    table.style.setProperty('border-collapse','collapse','important');
+    table.style.setProperty('border-spacing','0','important');
+    table.style.setProperty('table-layout','fixed','important');
+    table.style.setProperty('width','100%','important');
+  }
+  root.querySelectorAll('.playersModernTable thead th').forEach(el=>{
+    el.style.setProperty('height','18px','important');
+    el.style.setProperty('min-height','18px','important');
+    el.style.setProperty('max-height','18px','important');
+    el.style.setProperty('padding','0 2px','important');
+    el.style.setProperty('line-height','1','important');
+    el.style.setProperty('font-size','12px','important');
+  });
+  root.querySelectorAll('.playersModernTable tbody tr').forEach(el=>{
+    el.style.setProperty('height','42px','important');
+    el.style.setProperty('min-height','42px','important');
+    el.style.setProperty('max-height','42px','important');
+    el.style.setProperty('border-bottom','1px solid rgba(148,163,184,.34)','important');
+  });
+  root.querySelectorAll('.playersModernTable tbody td').forEach(el=>{
+    el.style.setProperty('height','42px','important');
+    el.style.setProperty('min-height','42px','important');
+    el.style.setProperty('max-height','42px','important');
+    el.style.setProperty('padding','0 3px','important');
+    el.style.setProperty('line-height','1','important');
+    el.style.setProperty('vertical-align','middle','important');
+    el.style.setProperty('background','transparent','important');
+  });
+  root.querySelectorAll('.pmNameBtn').forEach(el=>{
+    el.style.setProperty('font-size','16px','important');
+    el.style.setProperty('line-height','1','important');
+    el.style.setProperty('padding','0','important');
+    el.style.setProperty('margin','0','important');
+    el.style.setProperty('min-height','0','important');
+    el.style.setProperty('height','auto','important');
+  });
+  root.querySelectorAll('.pmBalanceCell').forEach(el=>{
+    el.style.setProperty('font-size','16px','important');
+    el.style.setProperty('line-height','1','important');
+  });
+  root.querySelectorAll('.pmGamesCell').forEach(el=>{
+    el.style.setProperty('font-size','12.5px','important');
+    el.style.setProperty('line-height','1','important');
+  });
+  root.querySelectorAll('.pmLastCell').forEach(el=>{
+    el.style.setProperty('font-size','14px','important');
+    el.style.setProperty('line-height','1','important');
+    el.style.setProperty('font-weight','950','important');
+  });
+}
+
 function openPlayerReport(p){playerFilterSelect.value=p;goPage('playerReport')}
 function renderPageOrder(){const order=getPageOrder();pageOrderList.innerHTML=`<div class="newPageOrder">${order.map(id=>`<div class="pageOrderRow"><span>${pageTitle(id)}</span><div><button type="button" onclick="movePage('${id}',-1);event.preventDefault();event.stopPropagation();">↑</button><button type="button" onclick="movePage('${id}',1);event.preventDefault();event.stopPropagation();">↓</button></div></div>`).join('')}</div>`}
 function movePage(id,dir){const order=getPageOrder(),i=order.indexOf(id),j=i+dir;if(i<0||j<0||j>=order.length)return;[order[i],order[j]]=[order[j],order[i]];const s=state();s.settings.pageOrder=order;localStorage.setItem(LS,JSON.stringify(s));renderPageOrder();renderMenuLabels();document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id===currentPage));pageTitleEl.textContent=pageTitle(currentPage)}
@@ -250,6 +375,68 @@ function renderMenuLabels(){
   const icons={home:'🏠',accounts:'💰',players:'👥',playerReport:'🔎',calendar:'📅',teams:'🟨',deposits:'💳',playerTable:'📊',matchLog:'🧾',settings:'⚙️'};
   menu.querySelectorAll('[data-page]').forEach(btn=>{const id=btn.dataset.page;btn.textContent=(icons[id]||'📄')+' '+pageTitle(id)});
 }
+
+function forceCompactPlayerRows(){
+  const root=document.getElementById('playerTable');
+  if(!root)return;
+  const wrap=root.querySelector('.playersModernWrap');
+  const table=root.querySelector('.playersModernTable');
+  if(wrap){
+    wrap.style.setProperty('padding','0','important');
+    wrap.style.setProperty('margin','0','important');
+  }
+  if(table){
+    table.style.setProperty('border-collapse','collapse','important');
+    table.style.setProperty('border-spacing','0','important');
+    table.style.setProperty('table-layout','fixed','important');
+    table.style.setProperty('width','100%','important');
+  }
+  root.querySelectorAll('.playersModernTable thead th').forEach(el=>{
+    el.style.setProperty('height','18px','important');
+    el.style.setProperty('min-height','18px','important');
+    el.style.setProperty('max-height','18px','important');
+    el.style.setProperty('padding','0 2px','important');
+    el.style.setProperty('line-height','1','important');
+    el.style.setProperty('font-size','12px','important');
+  });
+  root.querySelectorAll('.playersModernTable tbody tr').forEach(el=>{
+    el.style.setProperty('height','42px','important');
+    el.style.setProperty('min-height','42px','important');
+    el.style.setProperty('max-height','42px','important');
+    el.style.setProperty('border-bottom','1px solid rgba(148,163,184,.34)','important');
+  });
+  root.querySelectorAll('.playersModernTable tbody td').forEach(el=>{
+    el.style.setProperty('height','42px','important');
+    el.style.setProperty('min-height','42px','important');
+    el.style.setProperty('max-height','42px','important');
+    el.style.setProperty('padding','0 3px','important');
+    el.style.setProperty('line-height','1','important');
+    el.style.setProperty('vertical-align','middle','important');
+    el.style.setProperty('background','transparent','important');
+  });
+  root.querySelectorAll('.pmNameBtn').forEach(el=>{
+    el.style.setProperty('font-size','16px','important');
+    el.style.setProperty('line-height','1','important');
+    el.style.setProperty('padding','0','important');
+    el.style.setProperty('margin','0','important');
+    el.style.setProperty('min-height','0','important');
+    el.style.setProperty('height','auto','important');
+  });
+  root.querySelectorAll('.pmBalanceCell').forEach(el=>{
+    el.style.setProperty('font-size','16px','important');
+    el.style.setProperty('line-height','1','important');
+  });
+  root.querySelectorAll('.pmGamesCell').forEach(el=>{
+    el.style.setProperty('font-size','12.5px','important');
+    el.style.setProperty('line-height','1','important');
+  });
+  root.querySelectorAll('.pmLastCell').forEach(el=>{
+    el.style.setProperty('font-size','14px','important');
+    el.style.setProperty('line-height','1','important');
+    el.style.setProperty('font-weight','950','important');
+  });
+}
+
 function openPlayerReport(p){
   const sel=document.getElementById('playerFilterSelect');
   if(sel)sel.value=p;
