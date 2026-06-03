@@ -3288,27 +3288,181 @@ html.darkMode body #playerTable .playersTable thead th{
 }
 
 
-/* 22 visible rows optimization */
-.playersTable{border-spacing:0 1px!important}
-.playersTable th{
- font-size:12px!important;
- padding:2px 3px!important;
- line-height:1.0!important;
+/* =========================================================
+   DEPLOY FINAL OVERRIDE 2026-06-03
+   السبب: إجبار المتصفح و Vercel على تطبيق جدول اللاعبين المضغوط فعلياً.
+   الهدف: 21-22 اسم ظاهر تقريباً مع بقاء الأسماء والتواريخ مقروءة.
+   ========================================================= */
+
+#playerTable .playersModernWrap{
+  padding:0!important;
+  margin:0!important;
+  overflow-x:hidden!important;
 }
-.playersTable td{
- padding:1px 3px!important;
- font-size:15px!important;
- line-height:1.0!important;
- height:28px!important;
+
+#playerTable .playersModernTable{
+  width:100%!important;
+  max-width:100%!important;
+  table-layout:fixed!important;
+  border-collapse:collapse!important;
+  border-spacing:0!important;
 }
-.playersTable .tableNameBtn,
-.playersTable .playerNameLink{
- font-size:15px!important;
- font-weight:800!important;
+
+#playerTable .playersModernTable .pmNameH,
+#playerTable .playersModernTable .pmNameCell{width:42%!important;}
+#playerTable .playersModernTable .pmBalanceH,
+#playerTable .playersModernTable .pmBalanceCell{width:24%!important;}
+#playerTable .playersModernTable .pmGamesH,
+#playerTable .playersModernTable .pmGamesCell{width:10%!important;text-align:center!important;}
+#playerTable .playersModernTable .pmLastH,
+#playerTable .playersModernTable .pmLastCell{width:24%!important;text-align:right!important;}
+
+#playerTable .playersModernTable thead th{
+  height:22px!important;
+  min-height:22px!important;
+  max-height:22px!important;
+  padding:1px 2px!important;
+  font-size:12px!important;
+  font-weight:950!important;
+  line-height:1!important;
+  vertical-align:middle!important;
+  background:transparent!important;
+  border:0!important;
+  border-bottom:1px solid rgba(148,163,184,.42)!important;
+  border-radius:0!important;
+  box-shadow:none!important;
 }
-.playersTable .balanceTd,
-.playersTable .gamesTd,
-.playersTable .lastTd{
- font-size:15px!important;
- font-weight:700!important;
+
+#playerTable .playersModernTable tbody tr{
+  height:28px!important;
+  min-height:28px!important;
+  max-height:28px!important;
+  border-bottom:1px solid rgba(148,163,184,.30)!important;
+  background:transparent!important;
+  box-shadow:none!important;
+}
+
+#playerTable .playersModernTable tbody td{
+  height:28px!important;
+  min-height:28px!important;
+  max-height:28px!important;
+  padding:0 3px!important;
+  line-height:1!important;
+  vertical-align:middle!important;
+  background:transparent!important;
+  border:0!important;
+  border-radius:0!important;
+  box-shadow:none!important;
+  outline:0!important;
+}
+
+#playerTable .playersModernTable tbody td *,
+#playerTable .pmNameBtn{
+  max-height:28px!important;
+}
+
+#playerTable .pmNameBtn{
+  display:block!important;
+  width:100%!important;
+  max-width:100%!important;
+  padding:0!important;
+  margin:0!important;
+  border:0!important;
+  outline:0!important;
+  box-shadow:none!important;
+  background:transparent!important;
+  font-family:inherit!important;
+  font-size:15px!important;
+  font-weight:950!important;
+  line-height:1!important;
+  text-align:right!important;
+  white-space:nowrap!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+}
+
+#playerTable .pmBalanceCell{
+  font-size:15px!important;
+  font-weight:950!important;
+  line-height:1!important;
+  white-space:nowrap!important;
+  overflow:hidden!important;
+}
+
+#playerTable .pmGamesCell{
+  font-size:12px!important;
+  font-weight:850!important;
+  line-height:1!important;
+  white-space:nowrap!important;
+}
+
+#playerTable .pmLastCell{
+  font-size:11.5px!important;
+  font-weight:900!important;
+  line-height:1!important;
+  white-space:nowrap!important;
+  overflow:hidden!important;
+}
+
+body.lightMode #playerTable .pmNameBtn,
+body.lightMode #playerTable .pmLastCell,
+html.lightMode body #playerTable .pmNameBtn,
+html.lightMode body #playerTable .pmLastCell{
+  color:#111827!important;
+}
+
+body.lightMode #playerTable .pmInactive .pmNameBtn,
+body.lightMode #playerTable .pmLatestDate,
+html.lightMode body #playerTable .pmInactive .pmNameBtn,
+html.lightMode body #playerTable .pmLatestDate{
+  color:#B45309!important;
+  font-weight:950!important;
+}
+
+body.darkMode #playerTable .pmNameBtn,
+body.darkMode #playerTable .pmLastCell,
+html.darkMode body #playerTable .pmNameBtn,
+html.darkMode body #playerTable .pmLastCell{
+  color:#ffffff!important;
+}
+
+body.darkMode #playerTable .pmInactive .pmNameBtn,
+body.darkMode #playerTable .pmLatestDate,
+html.darkMode body #playerTable .pmInactive .pmNameBtn,
+html.darkMode body #playerTable .pmLatestDate{
+  color:#38BDF8!important;
+  font-weight:950!important;
+}
+
+body.darkMode #playerTable .playersModernTable tbody tr,
+html.darkMode body #playerTable .playersModernTable tbody tr{
+  border-bottom:1px solid rgba(255,255,255,.16)!important;
+}
+body.darkMode #playerTable .playersModernTable thead th,
+html.darkMode body #playerTable .playersModernTable thead th{
+  border-bottom:1px solid rgba(255,255,255,.20)!important;
+}
+
+@media (max-width:390px){
+  #playerTable .playersModernTable thead th{
+    height:20px!important;
+    min-height:20px!important;
+    max-height:20px!important;
+    font-size:11.5px!important;
+    padding:0 2px!important;
+  }
+  #playerTable .playersModernTable tbody tr,
+  #playerTable .playersModernTable tbody td{
+    height:26px!important;
+    min-height:26px!important;
+    max-height:26px!important;
+  }
+  #playerTable .playersModernTable tbody td *,
+  #playerTable .pmNameBtn{
+    max-height:26px!important;
+  }
+  #playerTable .pmNameBtn{font-size:14.5px!important;}
+  #playerTable .pmBalanceCell{font-size:14.5px!important;}
+  #playerTable .pmGamesCell{font-size:11.5px!important;}
+  #playerTable .pmLastCell{font-size:11px!important;}
 }
