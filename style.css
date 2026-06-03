@@ -3466,3 +3466,74 @@ html.darkMode body #playerTable .playersModernTable thead th{
   #playerTable .pmGamesCell{font-size:11.5px!important;}
   #playerTable .pmLastCell{font-size:11px!important;}
 }
+
+/* ===== 22-24 visible player rows: extra compact rows only ===== */
+#playerTable .playersModernWrap{
+  padding-top:0!important;
+  margin-top:0!important;
+}
+#playerTable .playersModernTable,
+#playerTable .playersTable{
+  border-collapse:collapse!important;
+  border-spacing:0!important;
+}
+#playerTable .playersModernTable thead th,
+#playerTable .playersTable thead th{
+  height:15px!important;
+  min-height:15px!important;
+  max-height:15px!important;
+  padding:0 2px!important;
+  line-height:1!important;
+  font-size:11px!important;
+}
+#playerTable .playersModernTable tbody tr,
+#playerTable .playersModernTable tbody td,
+#playerTable .playersTable tbody tr,
+#playerTable .playersTable tbody td{
+  height:20px!important;
+  min-height:20px!important;
+  max-height:20px!important;
+  padding-top:0!important;
+  padding-bottom:0!important;
+  line-height:1!important;
+  vertical-align:middle!important;
+}
+#playerTable .playersModernTable tbody td *,
+#playerTable .playersTable tbody td *,
+#playerTable .pmNameBtn,
+#playerTable .tableNameBtn{
+  max-height:20px!important;
+  line-height:1!important;
+  padding-top:0!important;
+  padding-bottom:0!important;
+  margin-top:0!important;
+  margin-bottom:0!important;
+}
+#playerTable .pmNameBtn,
+#playerTable .tableNameBtn{font-size:14px!important;}
+#playerTable .pmBalanceCell,
+#playerTable .balanceTd{font-size:14px!important;}
+#playerTable .pmGamesCell,
+#playerTable .gamesTd{font-size:11px!important;}
+#playerTable .pmLastCell,
+#playerTable .lastTd{font-size:10.5px!important;}
+@media (max-width:430px){
+  #playerTable .playersModernTable thead th,
+  #playerTable .playersTable thead th{
+    height:14px!important;min-height:14px!important;max-height:14px!important;font-size:10.5px!important;
+  }
+  #playerTable .playersModernTable tbody tr,
+  #playerTable .playersModernTable tbody td,
+  #playerTable .playersTable tbody tr,
+  #playerTable .playersTable tbody td{
+    height:19px!important;min-height:19px!important;max-height:19px!important;
+  }
+  #playerTable .playersModernTable tbody td *,
+  #playerTable .playersTable tbody td *,
+  #playerTable .pmNameBtn,
+  #playerTable .tableNameBtn{max-height:19px!important;}
+  #playerTable .pmNameBtn,#playerTable .tableNameBtn{font-size:13.8px!important;}
+  #playerTable .pmBalanceCell,#playerTable .balanceTd{font-size:13.8px!important;}
+  #playerTable .pmGamesCell,#playerTable .gamesTd{font-size:10.8px!important;}
+  #playerTable .pmLastCell,#playerTable .lastTd{font-size:10.2px!important;}
+}
