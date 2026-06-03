@@ -2406,3 +2406,65 @@ body:not(.lightMode):not(.darkMode) #playerTable .pmLastCell{
     padding:6px 4px!important;
   }
 }
+
+
+/* DENSE TABLE FIX */
+
+/* خط واحد فقط */
+#playerTable .playersModernTable tbody td{
+  border-top:none !important;
+  border-bottom:1px solid rgba(148,163,184,.28) !important;
+}
+
+/* إزالة الفراغ بين الصفوف */
+#playerTable .playersModernTable{
+  border-spacing:0 1px !important;
+}
+
+/* صفوف أقرب */
+#playerTable .playersModernTable tbody tr{
+  height:32px !important;
+}
+#playerTable .playersModernTable tbody td{
+  height:32px !important;
+  padding:2px 4px !important;
+}
+
+/* الاسم */
+#playerTable .pmNameBtn{
+  font-size:14px !important;
+  line-height:1 !important;
+}
+
+/* التاريخ */
+#playerTable .pmLastCell{
+  font-size:11.5px !important;
+  line-height:1 !important;
+}
+
+/* النهاري - لون أوضح للمميز */
+body.lightMode #playerTable .pmInactive .pmNameBtn,
+body.lightMode #playerTable .pmLatestDate,
+html.lightMode body #playerTable .pmInactive .pmNameBtn,
+html.lightMode body #playerTable .pmLatestDate{
+  color:#B45309 !important;
+  font-weight:950 !important;
+}
+
+/* الليلي يبقى سماوي */
+body.darkMode #playerTable .pmInactive .pmNameBtn,
+body.darkMode #playerTable .pmLatestDate,
+html.darkMode body #playerTable .pmInactive .pmNameBtn,
+html.darkMode body #playerTable .pmLatestDate{
+  color:#38BDF8 !important;
+  font-weight:950 !important;
+}
+
+/* آيفون صغير */
+@media (max-width:390px){
+  #playerTable .playersModernTable tbody tr,
+  #playerTable .playersModernTable tbody td{
+    height:30px !important;
+  }
+  #playerTable .pmNameBtn{font-size:13.5px !important;}
+}
