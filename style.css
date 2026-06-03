@@ -2564,3 +2564,197 @@ html.darkMode body #playerTable .pmLatestDate{
     font-size:10.2px !important;
   }
 }
+
+
+/* =========================================================
+   STRONG COMPACT PLAYER TABLE
+   الهدف: زيادة حوالي 6 أسطر ظاهرة مقارنة بالنسخة السابقة
+   ========================================================= */
+
+/* إزالة كل الفراغات بين الصفوف */
+#playerTable .playersModernTable{
+  border-spacing:0 !important;
+  border-collapse:collapse !important;
+}
+
+/* رأس الجدول أصغر */
+#playerTable .playersModernTable thead th{
+  height:22px !important;
+  min-height:22px !important;
+  max-height:22px !important;
+  padding:1px 2px !important;
+  font-size:10.8px !important;
+  line-height:1 !important;
+}
+
+/* ضغط الصفوف بقوة */
+#playerTable .playersModernTable tbody tr,
+#playerTable .playersModernTable tbody td{
+  height:20px !important;
+  min-height:20px !important;
+  max-height:20px !important;
+}
+
+/* حشو شبه معدوم */
+#playerTable .playersModernTable tbody td{
+  padding:0 2px !important;
+  line-height:1 !important;
+  border-top:none !important;
+  border-bottom:1px solid rgba(148,163,184,.18) !important;
+  border-radius:0 !important;
+}
+
+/* الاسم */
+#playerTable .pmNameBtn{
+  font-size:11.4px !important;
+  line-height:1 !important;
+  font-weight:900 !important;
+}
+
+/* الرصيد */
+#playerTable .pmBalanceCell{
+  font-size:12.2px !important;
+  line-height:1 !important;
+  font-weight:950 !important;
+}
+
+/* لعب */
+#playerTable .pmGamesCell{
+  font-size:9.8px !important;
+  line-height:1 !important;
+  font-weight:850 !important;
+}
+
+/* آخر لعب */
+#playerTable .pmLastCell{
+  font-size:9.4px !important;
+  line-height:1 !important;
+  font-weight:850 !important;
+}
+
+/* منع أي كلاس قديم من تكبير الصف */
+#playerTable .playersModernTable tbody tr *,
+#playerTable .playersModernTable tbody td *{
+  max-height:20px !important;
+}
+
+/* آيفون صغير */
+@media (max-width:390px){
+  #playerTable .playersModernTable thead th{
+    height:20px !important;
+    min-height:20px !important;
+    max-height:20px !important;
+    font-size:10.2px !important;
+    padding:0 2px !important;
+  }
+
+  #playerTable .playersModernTable tbody tr,
+  #playerTable .playersModernTable tbody td{
+    height:19px !important;
+    min-height:19px !important;
+    max-height:19px !important;
+  }
+
+  #playerTable .pmNameBtn{
+    font-size:11px !important;
+  }
+
+  #playerTable .pmBalanceCell{
+    font-size:11.8px !important;
+  }
+
+  #playerTable .pmGamesCell{
+    font-size:9.5px !important;
+  }
+
+  #playerTable .pmLastCell{
+    font-size:9px !important;
+  }
+}
+
+
+/* =========================================================
+   SINGLE LINE ONLY BETWEEN ROWS
+   لا كروت - لا حد علوي - لا إطار - فقط خط واحد بين الصفوف
+   ========================================================= */
+
+#playerTable .playersModernTable{
+  border-collapse:collapse !important;
+  border-spacing:0 !important;
+}
+
+/* إزالة شكل الكرت والزوايا والظلال والخلفيات */
+#playerTable .playersModernTable tbody tr,
+#playerTable .playersModernTable tbody td{
+  background:transparent !important;
+  border-top:none !important;
+  border-left:none !important;
+  border-right:none !important;
+  border-radius:0 !important;
+  box-shadow:none !important;
+  outline:none !important;
+}
+
+/* الخط الوحيد بين الصفوف يكون على الصف كامل */
+#playerTable .playersModernTable tbody tr{
+  border-bottom:1px solid rgba(148,163,184,.30) !important;
+}
+
+/* منع الخلايا من إنشاء خطوط إضافية */
+#playerTable .playersModernTable tbody td{
+  border-bottom:none !important;
+}
+
+/* رأس الجدول خط واحد فقط تحته */
+#playerTable .playersModernTable thead th{
+  border-top:none !important;
+  border-left:none !important;
+  border-right:none !important;
+  border-bottom:1px solid rgba(148,163,184,.38) !important;
+  border-radius:0 !important;
+  box-shadow:none !important;
+  background:transparent !important;
+}
+
+/* ضغط مناسب مع خط واحد */
+#playerTable .playersModernTable tbody tr,
+#playerTable .playersModernTable tbody td{
+  height:21px !important;
+  min-height:21px !important;
+  max-height:21px !important;
+  padding-top:0 !important;
+  padding-bottom:0 !important;
+  line-height:1 !important;
+}
+
+/* الوضع الليلي: خط واحد خفيف */
+body.darkMode #playerTable .playersModernTable tbody tr,
+html.darkMode body #playerTable .playersModernTable tbody tr{
+  border-bottom:1px solid rgba(255,255,255,.16) !important;
+}
+
+body.darkMode #playerTable .playersModernTable thead th,
+html.darkMode body #playerTable .playersModernTable thead th{
+  border-bottom:1px solid rgba(255,255,255,.20) !important;
+}
+
+/* الوضع النهاري: خط واحد خفيف */
+body.lightMode #playerTable .playersModernTable tbody tr,
+html.lightMode body #playerTable .playersModernTable tbody tr{
+  border-bottom:1px solid rgba(148,163,184,.30) !important;
+}
+
+body.lightMode #playerTable .playersModernTable thead th,
+html.lightMode body #playerTable .playersModernTable thead th{
+  border-bottom:1px solid rgba(148,163,184,.38) !important;
+}
+
+/* آيفون صغير */
+@media (max-width:390px){
+  #playerTable .playersModernTable tbody tr,
+  #playerTable .playersModernTable tbody td{
+    height:20px !important;
+    min-height:20px !important;
+    max-height:20px !important;
+  }
+}
