@@ -3919,23 +3919,29 @@ body.darkMode .unpickedGuests div{
 }
 
 
-/* FINAL REQUEST FIXES */
+/* requested fixes - safe */
 
-/* team buttons selected */
-.lightMode .selA,
-.selA{
+/* selected team colors day/night */
+.teamTabs button.selA{
  color:#facc15 !important;
- background:rgba(250,204,21,.15)!important;
- border:2px solid #facc15!important;
+ border-color:#facc15 !important;
+ font-weight:900 !important;
 }
-.lightMode .selB,
-.selB{
+.teamTabs button.selB{
  color:#ec4899 !important;
- background:rgba(236,72,153,.15)!important;
- border:2px solid #ec4899!important;
+ border-color:#ec4899 !important;
+ font-weight:900 !important;
 }
 
-/* dropdown */
-#teamsMatchSelect option{
- font-weight:700!important;
+.dangerBtn{
+ background:#dc2626 !important;
+ color:#fff !important;
+ margin-inline-start:8px !important;
+}
+
+/* keep unpicked names visible */
+.lightMode .unpickedMembers span,
+.lightMode .unpickedGuests div{
+ color:#334155 !important;
+ font-weight:700 !important;
 }

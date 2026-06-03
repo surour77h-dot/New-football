@@ -277,22 +277,15 @@ function applyThemeMode(){
 }
 function exportData(){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(state(),null,2)],{type:'application/json'}));a.download='football-backup.json';a.click()}
 function importData(e){
- const f=e.target.files[0];
- if(!f)return;
- const currentTheme=(state().settings&&state().settings.themeMode)||'dark';
- const r=new FileReader();
- r.onload=()=>{
-   localStorage.setItem(LS,r.result);
-   let s=state();
-   s.settings=s.settings||{};
-   s.settings.themeMode=currentTheme;
-   localStorage.setItem(LS,JSON.stringify(s));
-   renderAll();
-   applyThemeMode();
-   alert('تم الاستيراد');
- };
- r.readAsText(f);
-};
+  const f=e.target.files[0];
+  if(!f)return;
+  const currentTheme=(state().settings&&state().settings.themeMode)||'dark';
+  const r=new FileReader();
+  r.onload=()=>{
+    localStorage.setItem(LS,r.result);
+    try{
+      const s=state();
+      s.settings=s.settings||{};
       s.settings.themeMode=currentTheme;
       saveNoRender(s);
     }catch(err){}
@@ -404,22 +397,15 @@ function renderMenuLabels(){const menu=document.getElementById('pagesMenu');if(!
 function exportData(){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(state(),null,2)],{type:'application/json'}));a.download='football-backup.json';a.click();showConfirm('تم تصدير البيانات بنجاح','settings')}
 function exportExcel(){let s=state(),rows=['player,balance,games,last'];let b=balances(s);s.players.forEach(p=>rows.push(`${p},${b[p]?.balance||0},${b[p]?.games||0},${b[p]?.last||''}`));const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([rows.join('\n')],{type:'text/csv'}));a.download='football-export.csv';a.click();showConfirm('تم تصدير البيانات بنجاح كملف EXCEL','settings')}
 function importData(e){
- const f=e.target.files[0];
- if(!f)return;
- const currentTheme=(state().settings&&state().settings.themeMode)||'dark';
- const r=new FileReader();
- r.onload=()=>{
-   localStorage.setItem(LS,r.result);
-   let s=state();
-   s.settings=s.settings||{};
-   s.settings.themeMode=currentTheme;
-   localStorage.setItem(LS,JSON.stringify(s));
-   renderAll();
-   applyThemeMode();
-   alert('تم الاستيراد');
- };
- r.readAsText(f);
-};
+  const f=e.target.files[0];
+  if(!f)return;
+  const currentTheme=(state().settings&&state().settings.themeMode)||'dark';
+  const r=new FileReader();
+  r.onload=()=>{
+    localStorage.setItem(LS,r.result);
+    try{
+      const s=state();
+      s.settings=s.settings||{};
       s.settings.themeMode=currentTheme;
       saveNoRender(s);
     }catch(err){}
@@ -536,22 +522,8 @@ function exportExcel(){
   setTimeout(()=>showConfirm('تم تصدير البيانات بنجاح كملف EXCEL','settings'),120);
 }
 function importData(e){
- const f=e.target.files[0];
- if(!f)return;
- const currentTheme=(state().settings&&state().settings.themeMode)||'dark';
- const r=new FileReader();
- r.onload=()=>{
-   localStorage.setItem(LS,r.result);
-   let s=state();
-   s.settings=s.settings||{};
-   s.settings.themeMode=currentTheme;
-   localStorage.setItem(LS,JSON.stringify(s));
-   renderAll();
-   applyThemeMode();
-   alert('تم الاستيراد');
- };
- r.readAsText(f);
-};
+  const f=e.target.files[0]; if(!f)return; const r=new FileReader();
+  r.onload=()=>{localStorage.setItem(LS,r.result); renderAll(); goPage('settings'); showConfirm('تم استيراد البيانات للتطبيق','settings');};
   r.readAsText(f);
 }
 function applyThemeMode(){
