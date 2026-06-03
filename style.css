@@ -3917,3 +3917,25 @@ body.darkMode .unpickedGuests,
 body.darkMode .unpickedGuests div{
   color:#e5e7eb !important;
 }
+
+
+/* FINAL REQUEST FIXES */
+
+/* team buttons selected */
+.lightMode .selA,
+.selA{
+ color:#facc15 !important;
+ background:rgba(250,204,21,.15)!important;
+ border:2px solid #facc15!important;
+}
+.lightMode .selB,
+.selB{
+ color:#ec4899 !important;
+ background:rgba(236,72,153,.15)!important;
+ border:2px solid #ec4899!important;
+}
+
+/* dropdown */
+#teamsMatchSelect option{
+ font-weight:700!important;
+}
