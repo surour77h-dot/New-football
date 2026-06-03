@@ -3847,27 +3847,73 @@ body.lightMode .accountsMoneyTable .moneyLate,body.lightMode .depositsMoneyTable
 }
 
 
-/* Day mode team buttons */
-.lightMode .teamTabs button.selA,
+/* FORCE DELAY COLOR IN ACCOUNTS + PLAYER REPORT */
+.moneyLate,
+[data-money-kind="late"],
+.accountsMoneyTable .moneyLate,
+.reportTable .moneyLate,
+.accountMiniCards .moneyLate,
+.reportStats .moneyLate{
+  color:#f59e0b !important;
+  -webkit-text-fill-color:#f59e0b !important;
+  font-weight:900 !important;
+}
+
+body.darkMode .moneyLate,
+body.darkMode [data-money-kind="late"]{
+  color:#f59e0b !important;
+  -webkit-text-fill-color:#f59e0b !important;
+}
+
+
+/* ===== Reapplied requested fixes on v18 delay-orange-fixed ===== */
+
+/* تقسيم اللاعبين: ألوان الأول والثاني في النهاري مثل الليلي */
+body.lightMode .teamTabs button.selA,
+html.lightMode body .teamTabs button.selA,
 .teamTabs button.selA{
- background:#facc15!important;
- color:#000!important;
+  color:#facc15 !important;
+  font-weight:900 !important;
+  border-color:#facc15 !important;
 }
-.lightMode .teamTabs button.selB,
+
+body.lightMode .teamTabs button.selB,
+html.lightMode body .teamTabs button.selB,
 .teamTabs button.selB{
- background:#ec4899!important;
- color:#fff!important;
+  color:#ec4899 !important;
+  font-weight:900 !important;
+  border-color:#ec4899 !important;
 }
 
-/* Unpicked names same visibility as calendar */
-.lightMode .unpickedMembers span,
-.lightMode .unpickedGuests div{
- color:#334155!important;
- font-weight:700!important;
-}
-
+/* زر مسح المباراة */
 .dangerBtn{
- background:#dc2626!important;
- color:#fff!important;
- margin-right:8px!important;
+  background:#dc2626 !important;
+  color:#ffffff !important;
+  border:0 !important;
+  font-weight:900 !important;
+  margin-inline-start:8px !important;
+}
+
+/* سجل المباريات / غير المختارين: لون واضح في النهاري مثل وضوح التقويم */
+body.lightMode .unpickedBlock,
+body.lightMode .unpickedMembers,
+body.lightMode .unpickedMembers span,
+body.lightMode .unpickedGuests,
+body.lightMode .unpickedGuests div,
+html.lightMode body .unpickedBlock,
+html.lightMode body .unpickedMembers,
+html.lightMode body .unpickedMembers span,
+html.lightMode body .unpickedGuests,
+html.lightMode body .unpickedGuests div{
+  color:#334155 !important;
+  font-weight:800 !important;
+}
+
+/* الوضع الليلي يبقى واضح */
+body.darkMode .unpickedBlock,
+body.darkMode .unpickedMembers,
+body.darkMode .unpickedMembers span,
+body.darkMode .unpickedGuests,
+body.darkMode .unpickedGuests div{
+  color:#e5e7eb !important;
 }

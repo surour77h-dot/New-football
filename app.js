@@ -106,18 +106,20 @@ function renderTeamsSelect(s){
 }
 function renderTeams(){const s=state(),m=s.matches.find(x=>x.id===teamsMatchSelect.value);if(!m){teamsPlayers.innerHTML='';teamsPreview.innerHTML='';return}if(tempTeamMap.__matchId!==m.id)tempTeamMap={...(s.teams[m.id]||{}),__matchId:m.id};const names=participants(m);teamsPlayers.innerHTML=names.map(n=>`<div class="teamPickLine"><b onclick="clearTeamFor('${escAttr(n)}')">${escapeHtml(n)}</b><div class="teamTabs"><button type="button" class="${tempTeamMap[n]==='A'?'selA':''}" onclick="pickTeam('${escAttr(n)}','A')">الأول</button><button type="button" class="${tempTeamMap[n]==='B'?'selB':''}" onclick="pickTeam('${escAttr(n)}','B')">الثاني</button></div></div>`).join('');const map={...tempTeamMap};delete map.__matchId;teamsPreview.innerHTML=`<div class="card">${teamHtml({...s,teams:{...s.teams,[m.id]:map}},m)}<div class="teamEditFooter"><button type="button" onclick="editSelectedMatchFromTeams()">تعديل وإضافة لاعبين</button><button type="button" class="dangerBtn" onclick="deleteSelectedMatchFromTeams()">مسح المباراة</button></div></div>`}
 function pickTeam(n,t){tempTeamMap[n]=t;renderTeams()}function clearTeamFor(n){delete tempTeamMap[n];renderTeams()}function saveTeams(){const s=state(),id=teamsMatchSelect.value;if(!id)return;const map={...tempTeamMap};delete map.__matchId;s.teams[id]=map;save(s)}
-function editSelectedMatchFromTeams(){const s=state(),m=s.matches.find(x=>x.id===teamsMatchSelect.value);if(!m)return alert('اختر لعبة أولاً');editingMatchId.value=m.id;matchDate.value=m.date||today();place.value=m.place||'';bookingCost.value=m.bookingCost||'';neededPlayers.value=m.neededPlayers||'';tempGuests=[...(m.guests||[])];goPage('home');setTimeout(()=>{document.querySelectorAll('.playerCheck').forEach(ch=>{ch.checked=(m.players||[]).includes(ch.value)});renderTempGuests();renderMatchPreview();pricePerPlayer.textContent=money(calcPrice());updateDateButtons()},80)}
-
 function deleteSelectedMatchFromTeams(){
- const s=state(),id=teamsMatchSelect.value;
- if(!id) return;
- s.matches=s.matches.filter(m=>m.id!==id);
- delete s.teams[id];
- save(s);
- renderAll();
- alert('تم مسح المباراة');
+  const s=state(), id=teamsMatchSelect.value;
+  if(!id) return alert('اختر لعبة أولاً');
+  if(!confirm('هل تريد مسح هذه المباراة من سجل المباريات؟')) return;
+  s.matches=(s.matches||[]).filter(m=>m.id!==id);
+  if(s.teams) delete s.teams[id];
+  tempTeamMap={};
+  saveNoRender(s);
+  renderAll();
+  goPage('matchLog');
+  alert('تم مسح المباراة');
 }
 
+function editSelectedMatchFromTeams(){const s=state(),m=s.matches.find(x=>x.id===teamsMatchSelect.value);if(!m)return alert('اختر لعبة أولاً');editingMatchId.value=m.id;matchDate.value=m.date||today();place.value=m.place||'';bookingCost.value=m.bookingCost||'';neededPlayers.value=m.neededPlayers||'';tempGuests=[...(m.guests||[])];goPage('home');setTimeout(()=>{document.querySelectorAll('.playerCheck').forEach(ch=>{ch.checked=(m.players||[]).includes(ch.value)});renderTempGuests();renderMatchPreview();pricePerPlayer.textContent=money(calcPrice());updateDateButtons()},80)}
 function renderPlayerTable(s){
  const b=balances(s),latest=Object.values(b).map(x=>x.last).filter(Boolean).sort().pop()||'';
  playerTableWrap.innerHTML=`<div class="playersModernWrap"><table class="playersModernTable"><thead><tr><th class="pmNameH">الاسم</th><th class="pmBalanceH">الرصيد</th><th class="pmGamesH">لعب</th><th class="pmLastH">آخر لعب</th></tr></thead><tbody>${s.players.map(p=>{const info=b[p]||{}, bal=Number(info.balance||0), inactive=isInactiveThisYear(info.last), isLatest=!!(info.last&&info.last===latest);return `<tr class="pmRow ${inactive?'pmInactive':''} ${isLatest?'pmLatest':''}"><td class="pmNameCell"><button type="button" class="pmNameBtn" onclick="openPlayerReport('${escAttr(p)}')">${escapeHtml(p)}</button></td><td class="pmBalanceCell ${bal<0?'moneyNeg':amountClass(bal)}">${fmAmount(bal)}</td><td class="pmGamesCell">${info.games||''}</td><td class="pmLastCell ${isLatest?'pmLatestDate':''}">${fmDate(info.last)}</td></tr>`}).join('')}</tbody></table></div>`;
@@ -274,7 +276,25 @@ function applyThemeMode(){
   if(typeof updateTopThemeIcon==='function')updateTopThemeIcon();
 }
 function exportData(){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(state(),null,2)],{type:'application/json'}));a.download='football-backup.json';a.click()}
-function importData(e){const f=e.target.files[0];if(!f)return;const currentTheme=state().settings.themeMode;const r=new FileReader();r.onload=()=>{localStorage.setItem(LS,r.result);try{const s=state();s.settings.themeMode=currentTheme;saveNoRender(s);}catch(err){}renderAll();applyThemeMode();alert('تم الاستيراد')};r.readAsText(f)}
+function importData(e){
+  const f=e.target.files[0];
+  if(!f)return;
+  const currentTheme=(state().settings&&state().settings.themeMode)||'dark';
+  const r=new FileReader();
+  r.onload=()=>{
+    localStorage.setItem(LS,r.result);
+    try{
+      const s=state();
+      s.settings=s.settings||{};
+      s.settings.themeMode=currentTheme;
+      saveNoRender(s);
+    }catch(err){}
+    renderAll();
+    applyThemeMode();
+    alert('تم الاستيراد');
+  };
+  r.readAsText(f);
+}
 function exportExcel(){alert('تصدير Excel في هذه النسخة سيكون ملف CSV لاحقاً')}
 ballBtn.onclick=toggleMenu;pagesMenu.addEventListener('click',e=>{const b=e.target.closest('[data-page]');if(b)goPage(b.dataset.page)});addPlayerBtn.onclick=addPlayer;renamePlayerBtn.onclick=renamePlayer;deletePlayerBtn.onclick=deletePlayer;addGuestBtn.onclick=addGuest;saveMatchBtn.onclick=saveMatch;clearMatchBtn.onclick=clearMatch;saveDepositBtn.onclick=saveDeposit;if(typeof clearDepositBtn!=="undefined"&&clearDepositBtn)clearDepositBtn.onclick=clearDeposit;teamsMatchSelect.onchange=renderTeams;saveTeamsBtn.onclick=saveTeams;playerFilterSelect.onchange=renderPlayerReport;prevMonth.onclick=()=>moveMonth(-1);nextMonth.onclick=()=>moveMonth(1);exportDataBtn.onclick=exportData;exportExcelBtn.onclick=exportExcel;importDataInput.onchange=importData;closeAdjustModal.onclick=closeAdjustEditor;saveAdjustModal.onclick=saveAdjustEditor;document.addEventListener('change',e=>{if(e.target.classList.contains('playerCheck'))renderMatchPreview()});['bookingCost','neededPlayers'].forEach(id=>document.getElementById(id).addEventListener('input',()=>pricePerPlayer.textContent=money(calcPrice())));if(typeof applyDateBtn!=='undefined')applyDateBtn.onclick=applyDatePicker;if(typeof matchDateBtn!=='undefined')matchDateBtn.onclick=()=>openDatePicker('matchDate');if(typeof depositDateBtn!=='undefined')depositDateBtn.onclick=()=>openDatePicker('depositDate');if(typeof editDepositModalDateBtn!=='undefined')editDepositModalDateBtn.onclick=()=>openDatePicker('editDepositModalDate');if(typeof saveAppInfoBtn!=='undefined')saveAppInfoBtn.onclick=saveAppInfo;if('serviceWorker'in navigator){navigator.serviceWorker.register('sw.js')}applyThemeMode();renderAll();goPage('home');
 
@@ -376,7 +396,25 @@ function movePage(id,dir){const order=getPageOrder(),i=order.indexOf(id),j=i+dir
 function renderMenuLabels(){const menu=document.getElementById('pagesMenu');if(!menu)return;const icons={home:'🏠',accounts:'💰',players:'👥',playerReport:'🔎',calendar:'📅',teams:'🟨',deposits:'💳',playerTable:'📊',matchLog:'🧾',settings:'⚙️'};menu.querySelectorAll('[data-page]').forEach(btn=>{const id=btn.dataset.page;btn.textContent=(icons[id]||'📄')+' '+pageTitle(id)})}
 function exportData(){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(state(),null,2)],{type:'application/json'}));a.download='football-backup.json';a.click();showConfirm('تم تصدير البيانات بنجاح','settings')}
 function exportExcel(){let s=state(),rows=['player,balance,games,last'];let b=balances(s);s.players.forEach(p=>rows.push(`${p},${b[p]?.balance||0},${b[p]?.games||0},${b[p]?.last||''}`));const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([rows.join('\n')],{type:'text/csv'}));a.download='football-export.csv';a.click();showConfirm('تم تصدير البيانات بنجاح كملف EXCEL','settings')}
-function importData(e){const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{localStorage.setItem(LS,r.result);renderAll();showConfirm('تم استيراد البيانات للتطبيق','settings')};r.readAsText(f)}
+function importData(e){
+  const f=e.target.files[0];
+  if(!f)return;
+  const currentTheme=(state().settings&&state().settings.themeMode)||'dark';
+  const r=new FileReader();
+  r.onload=()=>{
+    localStorage.setItem(LS,r.result);
+    try{
+      const s=state();
+      s.settings=s.settings||{};
+      s.settings.themeMode=currentTheme;
+      saveNoRender(s);
+    }catch(err){}
+    renderAll();
+    applyThemeMode();
+    alert('تم الاستيراد');
+  };
+  r.readAsText(f);
+}
 document.addEventListener('DOMContentLoaded',()=>{if(deletePlayerBtn)deletePlayerBtn.onclick=deletePlayer;if(saveMatchBtn)saveMatchBtn.onclick=saveMatch;if(saveDepositBtn)saveDepositBtn.onclick=saveDeposit;if(exportDataBtn)exportDataBtn.onclick=exportData;if(exportExcelBtn)exportExcelBtn.onclick=exportExcel;if(importDataInput)importDataInput.onchange=importData;const c=document.getElementById('clearDepositBtn');if(c)c.remove();document.querySelectorAll('#renamePagesBtn').forEach((b,i)=>{if(i>0)b.remove()})});
 
 
