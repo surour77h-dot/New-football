@@ -109,7 +109,7 @@ function pickTeam(n,t){tempTeamMap[n]=t;renderTeams()}function clearTeamFor(n){d
 function editSelectedMatchFromTeams(){const s=state(),m=s.matches.find(x=>x.id===teamsMatchSelect.value);if(!m)return alert('اختر لعبة أولاً');editingMatchId.value=m.id;matchDate.value=m.date||today();place.value=m.place||'';bookingCost.value=m.bookingCost||'';neededPlayers.value=m.neededPlayers||'';tempGuests=[...(m.guests||[])];goPage('home');setTimeout(()=>{document.querySelectorAll('.playerCheck').forEach(ch=>{ch.checked=(m.players||[]).includes(ch.value)});renderTempGuests();renderMatchPreview();pricePerPlayer.textContent=money(calcPrice());updateDateButtons()},80)}
 function renderPlayerTable(s){
  const b=balances(s),latest=Object.values(b).map(x=>x.last).filter(Boolean).sort().pop()||'';
- playerTableWrap.innerHTML=`<div class="playersModernWrap"><table class="playersModernTable"><thead><tr><th class="pmNameH">الاسم</th><th class="pmBalanceH">الرصيد</th><th class="pmGamesH">لعب</th><th class="pmLastH">آخر لعب</th></tr></thead><tbody>${s.players.map(p=>{const info=b[p]||{}, bal=Number(info.balance||0), inactive=isInactiveThisYear(info.last), isLatest=!!(info.last&&info.last===latest);return `<tr class="pmRow ${inactive?'pmInactive':''} ${isLatest?'pmLatest':''}"><td class="pmNameCell"><button type="button" class="pmNameBtn" onclick="openPlayerReport('${escAttr(p)}')">${escapeHtml(p)}</button></td><td class="pmBalanceCell ${bal<0?'moneyNeg':amountClass(bal)}">${fmAmount(bal)}</td><td class="pmGamesCell">${info.games||''}</td><td class="pmLastCell ${isLatest?'pmLatestDate':''}">${fmDate(info.last)}</td></tr>`}).join('')}</tbody></table></div>`;
+ playerTableWrap.innerHTML=`<div class="tableWrap"><table class="playersTable"><thead><tr><th class="nameTd">الاسم</th><th class="balanceTh">الرصيد</th><th class="gamesTh">لعب</th><th class="lastTh">آخر لعب</th></tr></thead><tbody>${s.players.map(p=>{const bal=Number(b[p]?.balance||0);return `<tr><td class="nameTd ${isInactiveThisYear(b[p]?.last)?'inactiveName':''}"><button type="button" class="tableNameBtn" onclick="openPlayerReport('${escAttr(p)}')">${escapeHtml(p)}</button></td><td class="balanceTd ${bal<0?'moneyNeg':amountClass(bal)}">${fmAmount(bal)}</td><td class="gamesTd">${b[p]?.games||''}</td><td class="lastTd ${b[p]?.last&&b[p]?.last===latest?'latestDate':''}">${fmDate(b[p]?.last)}</td></tr>`}).join('')}</tbody></table></div>`;
 }
 function openPlayerReport(p){
   currentPage='playerReport';
@@ -192,11 +192,7 @@ function saveAppInfo(){
 function toggleThemeMode(){const s=state();s.settings.themeMode=s.settings.themeMode==='light'?'dark':'light';saveNoRender(s);applyThemeMode()}
 function applyThemeMode(){
   const s=state();
-  const isLight=s.settings.themeMode==='light';
-  document.body.classList.toggle('lightMode',isLight);
-  document.body.classList.toggle('darkMode',!isLight);
-  document.documentElement.classList.toggle('lightMode',isLight);
-  document.documentElement.classList.toggle('darkMode',!isLight);
+  document.body.classList.toggle('lightMode',s.settings.themeMode==='light');
   if(typeof updateTopThemeIcon==='function')updateTopThemeIcon();
 }
 function exportData(){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(state(),null,2)],{type:'application/json'}));a.download='football-backup.json';a.click()}
@@ -290,15 +286,7 @@ function importData(e){
   r.onload=()=>{localStorage.setItem(LS,r.result); renderAll(); goPage('settings'); showConfirm('تم استيراد البيانات للتطبيق','settings');};
   r.readAsText(f);
 }
-function applyThemeMode(){
-  const s=state();
-  const isLight=s.settings.themeMode==='light';
-  document.body.classList.toggle('lightMode',isLight);
-  document.body.classList.toggle('darkMode',!isLight);
-  document.documentElement.classList.toggle('lightMode',isLight);
-  document.documentElement.classList.toggle('darkMode',!isLight);
-  if(typeof updateTopThemeIcon==='function')updateTopThemeIcon();
-}
+function applyThemeMode(){const s=state(); document.body.classList.toggle('lightMode',s.settings.themeMode==='light');}
 function renderSettingsPageNames(){
   if(!document.getElementById('themeToggleBtn')&&pageOrderList){pageOrderList.insertAdjacentHTML('beforebegin','<div class="themeRow"><button id="themeToggleBtn" type="button" onclick="toggleThemeMode()">تبديل نهاري / ليلي</button></div>');}
 }
