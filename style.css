@@ -3024,3 +3024,265 @@ html.darkMode body #playerTable .playersTable thead th{
     font-size:10.5px !important;
   }
 }
+
+
+/* =========================================================
+   FINAL 22 ROWS READABLE PLAYER TABLE
+   الهدف: تقريباً 22 اسم ظاهر + خط أسماء وتواريخ أوضح
+   ========================================================= */
+
+/* إزالة أي فراغات خارجية داخل الجدول */
+#playerTable .playersModernWrap,
+#playerTable .tableWrap{
+  padding:0 !important;
+  margin:0 !important;
+  overflow-x:hidden !important;
+}
+
+/* جدول نظيف بدون كروت */
+#playerTable .playersModernTable,
+#playerTable .playersTable{
+  width:100% !important;
+  max-width:100% !important;
+  table-layout:fixed !important;
+  border-collapse:collapse !important;
+  border-spacing:0 !important;
+}
+
+/* الأعمدة */
+#playerTable .playersModernTable .pmNameH,
+#playerTable .playersModernTable .pmNameCell,
+#playerTable .playersTable .nameTd{
+  width:42% !important;
+}
+
+#playerTable .playersModernTable .pmBalanceH,
+#playerTable .playersModernTable .pmBalanceCell,
+#playerTable .playersTable .balanceTh,
+#playerTable .playersTable .balanceTd{
+  width:24% !important;
+}
+
+#playerTable .playersModernTable .pmGamesH,
+#playerTable .playersModernTable .pmGamesCell,
+#playerTable .playersTable .gamesTh,
+#playerTable .playersTable .gamesTd{
+  width:10% !important;
+  text-align:center !important;
+}
+
+#playerTable .playersModernTable .pmLastH,
+#playerTable .playersModernTable .pmLastCell,
+#playerTable .playersTable .lastTh,
+#playerTable .playersTable .lastTd{
+  width:24% !important;
+  text-align:right !important;
+}
+
+/* عنوان الجدول مضغوط */
+#playerTable .playersModernTable thead th,
+#playerTable .playersTable thead th{
+  height:20px !important;
+  min-height:20px !important;
+  max-height:20px !important;
+  padding:0 2px !important;
+  font-size:11.8px !important;
+  font-weight:900 !important;
+  line-height:.9 !important;
+  vertical-align:middle !important;
+  background:transparent !important;
+  border-top:none !important;
+  border-left:none !important;
+  border-right:none !important;
+  border-bottom:1px solid rgba(148,163,184,.35) !important;
+  border-radius:0 !important;
+  box-shadow:none !important;
+}
+
+/* الصفوف: ضغط حقيقي مع خط واحد فقط */
+#playerTable .playersModernTable tbody tr,
+#playerTable .playersTable tbody tr{
+  height:21px !important;
+  min-height:21px !important;
+  max-height:21px !important;
+  border-bottom:1px solid rgba(148,163,184,.22) !important;
+  background:transparent !important;
+  box-shadow:none !important;
+}
+
+#playerTable .playersModernTable tbody td,
+#playerTable .playersTable tbody td{
+  height:21px !important;
+  min-height:21px !important;
+  max-height:21px !important;
+  padding:0 2px !important;
+  line-height:.9 !important;
+  vertical-align:middle !important;
+  background:transparent !important;
+  border:none !important;
+  border-radius:0 !important;
+  box-shadow:none !important;
+  outline:none !important;
+}
+
+/* منع أي ارتفاع مخفي من العناصر الداخلية */
+#playerTable .playersModernTable tbody td *,
+#playerTable .playersTable tbody td *{
+  max-height:21px !important;
+}
+
+/* الأسماء أوضح */
+#playerTable .pmNameBtn,
+#playerTable .tableNameBtn{
+  display:block !important;
+  width:100% !important;
+  max-width:100% !important;
+  padding:0 !important;
+  margin:0 !important;
+  border:0 !important;
+  outline:0 !important;
+  box-shadow:none !important;
+  background:transparent !important;
+  font-family:inherit !important;
+  font-size:14px !important;
+  font-weight:950 !important;
+  line-height:.9 !important;
+  text-align:right !important;
+  white-space:nowrap !important;
+  overflow:hidden !important;
+  text-overflow:ellipsis !important;
+}
+
+/* الرصيد: الحفاظ على ألوانه مع وضوح */
+#playerTable .pmBalanceCell,
+#playerTable .balanceTd{
+  font-size:13.7px !important;
+  font-weight:950 !important;
+  line-height:.9 !important;
+  white-space:nowrap !important;
+}
+
+/* لعب */
+#playerTable .pmGamesCell,
+#playerTable .gamesTd{
+  font-size:10.8px !important;
+  font-weight:850 !important;
+  line-height:.9 !important;
+  white-space:nowrap !important;
+}
+
+/* التواريخ أوضح */
+#playerTable .pmLastCell,
+#playerTable .lastTd{
+  font-size:11.2px !important;
+  font-weight:900 !important;
+  line-height:.9 !important;
+  white-space:nowrap !important;
+}
+
+/* النهاري */
+body.lightMode #playerTable .pmNameBtn,
+body.lightMode #playerTable .tableNameBtn,
+body.lightMode #playerTable .pmLastCell,
+body.lightMode #playerTable .lastTd,
+html.lightMode body #playerTable .pmNameBtn,
+html.lightMode body #playerTable .tableNameBtn,
+html.lightMode body #playerTable .pmLastCell,
+html.lightMode body #playerTable .lastTd{
+  color:#111827 !important;
+}
+
+body.lightMode #playerTable .pmInactive .pmNameBtn,
+body.lightMode #playerTable .pmLatestDate,
+body.lightMode #playerTable .inactiveName .tableNameBtn,
+body.lightMode #playerTable .latestDate,
+html.lightMode body #playerTable .pmInactive .pmNameBtn,
+html.lightMode body #playerTable .pmLatestDate,
+html.lightMode body #playerTable .inactiveName .tableNameBtn,
+html.lightMode body #playerTable .latestDate{
+  color:#B45309 !important;
+  font-weight:950 !important;
+}
+
+/* الليلي */
+body.darkMode #playerTable .pmNameBtn,
+body.darkMode #playerTable .tableNameBtn,
+body.darkMode #playerTable .pmLastCell,
+body.darkMode #playerTable .lastTd,
+html.darkMode body #playerTable .pmNameBtn,
+html.darkMode body #playerTable .tableNameBtn,
+html.darkMode body #playerTable .pmLastCell,
+html.darkMode body #playerTable .lastTd{
+  color:#ffffff !important;
+}
+
+body.darkMode #playerTable .pmInactive .pmNameBtn,
+body.darkMode #playerTable .pmLatestDate,
+body.darkMode #playerTable .inactiveName .tableNameBtn,
+body.darkMode #playerTable .latestDate,
+html.darkMode body #playerTable .pmInactive .pmNameBtn,
+html.darkMode body #playerTable .pmLatestDate,
+html.darkMode body #playerTable .inactiveName .tableNameBtn,
+html.darkMode body #playerTable .latestDate{
+  color:#38BDF8 !important;
+  font-weight:950 !important;
+}
+
+body.darkMode #playerTable .playersModernTable tbody tr,
+body.darkMode #playerTable .playersTable tbody tr,
+html.darkMode body #playerTable .playersModernTable tbody tr,
+html.darkMode body #playerTable .playersTable tbody tr{
+  border-bottom:1px solid rgba(255,255,255,.13) !important;
+}
+
+body.darkMode #playerTable .playersModernTable thead th,
+body.darkMode #playerTable .playersTable thead th,
+html.darkMode body #playerTable .playersModernTable thead th,
+html.darkMode body #playerTable .playersTable thead th{
+  border-bottom:1px solid rgba(255,255,255,.18) !important;
+}
+
+/* آيفون صغير جداً */
+@media (max-width:390px){
+  #playerTable .playersModernTable thead th,
+  #playerTable .playersTable thead th{
+    height:19px !important;
+    min-height:19px !important;
+    max-height:19px !important;
+    font-size:11.2px !important;
+  }
+
+  #playerTable .playersModernTable tbody tr,
+  #playerTable .playersModernTable tbody td,
+  #playerTable .playersTable tbody tr,
+  #playerTable .playersTable tbody td{
+    height:20px !important;
+    min-height:20px !important;
+    max-height:20px !important;
+  }
+
+  #playerTable .playersModernTable tbody td *,
+  #playerTable .playersTable tbody td *{
+    max-height:20px !important;
+  }
+
+  #playerTable .pmNameBtn,
+  #playerTable .tableNameBtn{
+    font-size:13.6px !important;
+  }
+
+  #playerTable .pmBalanceCell,
+  #playerTable .balanceTd{
+    font-size:13.4px !important;
+  }
+
+  #playerTable .pmGamesCell,
+  #playerTable .gamesTd{
+    font-size:10.5px !important;
+  }
+
+  #playerTable .pmLastCell,
+  #playerTable .lastTd{
+    font-size:10.8px !important;
+  }
+}
