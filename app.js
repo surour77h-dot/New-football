@@ -7,6 +7,26 @@ function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2
 function today(){return new Date().toISOString().slice(0,10)}
 function money(n){return Number(n||0).toFixed(3)}
 function fmAmount(n){n=Number(n||0);return Math.abs(n)<0.0005?'':n.toFixed(3)}
+
+function opColorClass(op){
+  const t=String(op||'').trim();
+  if(t.includes('تأخير')||t.includes('تاخير'))return 'amtDelay';
+  if(t.includes('خصم')||t.includes('مديون')||t.includes('مدينية')||t.includes('مديني'))return 'amtRed';
+  if(t.includes('إيداع')||t.includes('ايداع')||t.includes('مبدئي')||t.includes('إضافي')||t.includes('اضافي'))return 'amtGreen';
+  return '';
+}
+function fmtSignedRight(n){
+  n=Number(n||0);
+  if(Math.abs(n)<0.0005)return '';
+  return n<0 ? Math.abs(n).toFixed(3)+'-' : n.toFixed(3);
+}
+function amountClassByOpAndValue(op,n){
+  const c=opColorClass(op);
+  if(c)return c;
+  n=Number(n||0);
+  return n<0?'amtRed':(n>0?'amtGreen':'');
+}
+
 function fmDate(d){if(!d)return '';d=String(d);if(/^\d{4}-\d{2}-\d{2}$/.test(d)){let [y,m,dd]=d.split('-');return `${dd}/${m}/${y}`}return d}
 function escapeHtml(v){return String(v??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]))}
 function escAttr(v){return String(v??'').replace(/\\/g,'\\\\').replace(/'/g,"\\'")}
@@ -44,7 +64,7 @@ function refreshSelects(s){const opts=s.players.map(p=>`<option>${escapeHtml(p)}
 function openDatePicker(targetId){activeDateTarget=targetId;nativeDateInput.value=document.getElementById(targetId)?.value||today();datePickerModal.classList.add('show')}
 function closeDatePicker(){datePickerModal.classList.remove('show')}
 
-function renderAll(){const s=state();saveNoRender(s);refreshSelects(s);if(!matchDate.value)matchDate.value=today();if(!depositDate.value)depositDate.value=today();applyThemeMode();updateDateButtons();pricePerPlayer.textContent=money(calcPrice());if(s.settings.appTitle)document.querySelector('.title h1').textContent=s.settings.appTitle;if(s.settings.appDesc)document.querySelector('.title p').textContent=s.settings.appDesc;if(typeof appTitleInput!=='undefined'&&appTitleInput){appTitleInput.value=s.settings.appTitle||'قروب الكورة';appDescInput.value=s.settings.appDesc||'إدارة اللعبات • الحسابات • اللاعبين'}renderPlayers(s);renderMatchPlayers(s);renderDeposits(s);renderCalendar();renderCalendarList();renderTeamsSelect(s);renderTeams();renderPlayerTable(s);forceCompactPlayerRows();setTimeout(forceCompactPlayerRows,50);renderPlayerReport();renderAccounts(s);renderMatchLog(s);renderPageOrder();renderSettingsPageNames();renderMenuLabels();document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id===currentPage));pageTitle.textContent=pageTitleFn(currentPage);updateDateButtons()}
+function renderAll(){const s=state();saveNoRender(s);refreshSelects(s);if(!matchDate.value)matchDate.value=today();if(!depositDate.value)depositDate.value=today();applyThemeMode();updateDateButtons();pricePerPlayer.textContent=money(calcPrice());if(s.settings.appTitle)document.querySelector('.title h1').textContent=s.settings.appTitle;if(s.settings.appDesc)document.querySelector('.title p').textContent=s.settings.appDesc;if(typeof appTitleInput!=='undefined'&&appTitleInput){appTitleInput.value=s.settings.appTitle||'قروب الكورة';appDescInput.value=s.settings.appDesc||'إدارة اللعبات • الحسابات • اللاعبين'}renderPlayers(s);renderMatchPlayers(s);renderDeposits(s);renderCalendar();renderCalendarList();renderTeamsSelect(s);renderTeams();renderPlayerTable(s);renderPlayerReport();renderAccounts(s);renderMatchLog(s);renderPageOrder();renderSettingsPageNames();renderMenuLabels();document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id===currentPage));pageTitle.textContent=pageTitleFn(currentPage);updateDateButtons()}
 function calcPrice(){const c=Number(bookingCost.value||0),n=Number(neededPlayers.value||0);return n?c/n:0}
 function renderPlayers(s){
  playersList.innerHTML=s.players.map(p=>`<button type="button" class="playerChipBtn" onclick="openPlayerReport('${escAttr(p)}')">${escapeHtml(p)}</button>`).join('')||'<p class="muted">أضف اللاعبين أولًا.</p>';
@@ -110,70 +130,7 @@ function editSelectedMatchFromTeams(){const s=state(),m=s.matches.find(x=>x.id==
 function renderPlayerTable(s){
  const b=balances(s),latest=Object.values(b).map(x=>x.last).filter(Boolean).sort().pop()||'';
  playerTableWrap.innerHTML=`<div class="playersModernWrap"><table class="playersModernTable"><thead><tr><th class="pmNameH">الاسم</th><th class="pmBalanceH">الرصيد</th><th class="pmGamesH">لعب</th><th class="pmLastH">آخر لعب</th></tr></thead><tbody>${s.players.map(p=>{const info=b[p]||{}, bal=Number(info.balance||0), inactive=isInactiveThisYear(info.last), isLatest=!!(info.last&&info.last===latest);return `<tr class="pmRow ${inactive?'pmInactive':''} ${isLatest?'pmLatest':''}"><td class="pmNameCell"><button type="button" class="pmNameBtn" onclick="openPlayerReport('${escAttr(p)}')">${escapeHtml(p)}</button></td><td class="pmBalanceCell ${bal<0?'moneyNeg':amountClass(bal)}">${fmAmount(bal)}</td><td class="pmGamesCell">${info.games||''}</td><td class="pmLastCell ${isLatest?'pmLatestDate':''}">${fmDate(info.last)}</td></tr>`}).join('')}</tbody></table></div>`;
- forceCompactPlayerRows();setTimeout(forceCompactPlayerRows,30);
 }
-
-function forceCompactPlayerRows(){
-  const root=document.getElementById('playerTable');
-  if(!root)return;
-  const wrap=root.querySelector('.playersModernWrap');
-  const table=root.querySelector('.playersModernTable');
-  if(wrap){
-    wrap.style.setProperty('padding','0','important');
-    wrap.style.setProperty('margin','0','important');
-  }
-  if(table){
-    table.style.setProperty('border-collapse','collapse','important');
-    table.style.setProperty('border-spacing','0','important');
-    table.style.setProperty('table-layout','fixed','important');
-    table.style.setProperty('width','100%','important');
-  }
-  root.querySelectorAll('.playersModernTable thead th').forEach(el=>{
-    el.style.setProperty('height','18px','important');
-    el.style.setProperty('min-height','18px','important');
-    el.style.setProperty('max-height','18px','important');
-    el.style.setProperty('padding','0 2px','important');
-    el.style.setProperty('line-height','1','important');
-    el.style.setProperty('font-size','12px','important');
-  });
-  root.querySelectorAll('.playersModernTable tbody tr').forEach(el=>{
-    el.style.setProperty('height','42px','important');
-    el.style.setProperty('min-height','42px','important');
-    el.style.setProperty('max-height','42px','important');
-    el.style.setProperty('border-bottom','1px solid rgba(148,163,184,.34)','important');
-  });
-  root.querySelectorAll('.playersModernTable tbody td').forEach(el=>{
-    el.style.setProperty('height','42px','important');
-    el.style.setProperty('min-height','42px','important');
-    el.style.setProperty('max-height','42px','important');
-    el.style.setProperty('padding','0 3px','important');
-    el.style.setProperty('line-height','1','important');
-    el.style.setProperty('vertical-align','middle','important');
-    el.style.setProperty('background','transparent','important');
-  });
-  root.querySelectorAll('.pmNameBtn').forEach(el=>{
-    el.style.setProperty('font-size','16px','important');
-    el.style.setProperty('line-height','1','important');
-    el.style.setProperty('padding','0','important');
-    el.style.setProperty('margin','0','important');
-    el.style.setProperty('min-height','0','important');
-    el.style.setProperty('height','auto','important');
-  });
-  root.querySelectorAll('.pmBalanceCell').forEach(el=>{
-    el.style.setProperty('font-size','16px','important');
-    el.style.setProperty('line-height','1','important');
-  });
-  root.querySelectorAll('.pmGamesCell').forEach(el=>{
-    el.style.setProperty('font-size','12.5px','important');
-    el.style.setProperty('line-height','1','important');
-  });
-  root.querySelectorAll('.pmLastCell').forEach(el=>{
-    el.style.setProperty('font-size','14px','important');
-    el.style.setProperty('line-height','1','important');
-    el.style.setProperty('font-weight','950','important');
-  });
-}
-
 function openPlayerReport(p){
   currentPage='playerReport';
   document.querySelectorAll('.page').forEach(sec=>sec.classList.toggle('active',sec.id==='playerReport'));
@@ -297,68 +254,6 @@ function deleteDepositEditor(){const s=state(),id=editDepositModalId.value;if(!i
 function closeDepositEditor(){depositEditModal.classList.remove('show');goPage('deposits');setTimeout(()=>document.getElementById('deposits')?.scrollIntoView({block:'start'}),50)}
 function renderDeposits(s){const rows=[...s.deposits].sort((a,b)=>(b.date||'').localeCompare(a.date||'')).map(d=>{let type=normalizeDepositType(d);const cls=(type==='out')?'moneyNeg':(type==='late'?'moneyLate':'moneyPos');const sign=(type==='out'||type==='late')?'-':'';return `<div class="tRow" onclick="openDepositEditor('${d.id}')"><span>${escapeHtml(d.player||'')}</span><span>${fmDate(d.date)}</span><span class="${cls}">${depositTypeLabel({...d,type})} ${sign}${money(Math.abs(d.amount||0))}</span></div>`}).join('');depositsList.innerHTML=`<div class="compactTable depositsMoneyTable"><div class="tHead"><span>اللاعب</span><span>التاريخ</span><span class="amountHead">المبلغ</span></div>${rows||'<p class="muted">لا توجد عمليات</p>'}</div>`}
 function renderPlayerReport(){const s=state(),p=playerFilterSelect.value;if(!p){playerFilterContent.innerHTML='';return}const b=balances(s)[p]||{},deps=s.deposits.filter(d=>d.player===p),games=s.matches.filter(m=>(m.players||[]).includes(p));const playPlusDebt=(b.playTotal||0)+(b.debtDeposits||0);const gameRows=games.map(g=>`<div class="tRow"><span>${fmDate(g.date)}</span><span>${escapeHtml(g.place||'')}</span><span class="moneyNeg">-${money(g.price||0)}</span></div>`).join('');const depRows=deps.map(d=>{let type=normalizeDepositType(d);const sign=(type==='out'||type==='late')?'-':'';const cls=(type==='out')?'moneyNeg':(type==='late'?'moneyLate':'moneyPos');return `<div class="tRow"><span>${fmDate(d.date)}</span><span>${depositTypeLabel({...d,type})}</span><span class="${cls}">${sign}${money(Math.abs(d.amount||0))}</span></div>`}).join('');playerFilterContent.innerHTML=`<div class="reportStats"><div class="statBox depositStat"><span>الإيداعات</span><b class="moneyPos">${fmAmount(b.deposits)}</b></div><div class="statBox gamesStat"><span>اللعب</span><b>${b.games||''}</b></div><div class="statBox playTotalStat"><span>إجمالي اللعب + المديونية</span><b class="moneyNeg">${playPlusDebt?'-'+money(playPlusDebt):''}</b></div><div class="statBox lateStat"><span>التأخير</span><b class="moneyLate">${fmAmount(b.late)}</b></div><div class="statBox balanceStat"><span>الرصيد</span><b class="${amountClass(b.balance)}">${fmAmount(b.balance)}</b></div></div><div class="card"><h3>أيام اللعب</h3><div class="compactTable reportTable"><div class="tHead"><span>التاريخ</span><span>المكان</span><span class="amountHead">المبلغ</span></div>${gameRows||'<p class="muted">لا يوجد</p>'}</div></div><div class="card"><h3>الإيداعات والمديونيات</h3><div class="compactTable reportTable"><div class="tHead"><span>التاريخ</span><span>العملية</span><span class="amountHead">المبلغ</span></div>${depRows||'<p class="muted">لا يوجد</p>'}</div></div>`}
-
-function forceCompactPlayerRows(){
-  const root=document.getElementById('playerTable');
-  if(!root)return;
-  const wrap=root.querySelector('.playersModernWrap');
-  const table=root.querySelector('.playersModernTable');
-  if(wrap){
-    wrap.style.setProperty('padding','0','important');
-    wrap.style.setProperty('margin','0','important');
-  }
-  if(table){
-    table.style.setProperty('border-collapse','collapse','important');
-    table.style.setProperty('border-spacing','0','important');
-    table.style.setProperty('table-layout','fixed','important');
-    table.style.setProperty('width','100%','important');
-  }
-  root.querySelectorAll('.playersModernTable thead th').forEach(el=>{
-    el.style.setProperty('height','18px','important');
-    el.style.setProperty('min-height','18px','important');
-    el.style.setProperty('max-height','18px','important');
-    el.style.setProperty('padding','0 2px','important');
-    el.style.setProperty('line-height','1','important');
-    el.style.setProperty('font-size','12px','important');
-  });
-  root.querySelectorAll('.playersModernTable tbody tr').forEach(el=>{
-    el.style.setProperty('height','42px','important');
-    el.style.setProperty('min-height','42px','important');
-    el.style.setProperty('max-height','42px','important');
-    el.style.setProperty('border-bottom','1px solid rgba(148,163,184,.34)','important');
-  });
-  root.querySelectorAll('.playersModernTable tbody td').forEach(el=>{
-    el.style.setProperty('height','42px','important');
-    el.style.setProperty('min-height','42px','important');
-    el.style.setProperty('max-height','42px','important');
-    el.style.setProperty('padding','0 3px','important');
-    el.style.setProperty('line-height','1','important');
-    el.style.setProperty('vertical-align','middle','important');
-    el.style.setProperty('background','transparent','important');
-  });
-  root.querySelectorAll('.pmNameBtn').forEach(el=>{
-    el.style.setProperty('font-size','16px','important');
-    el.style.setProperty('line-height','1','important');
-    el.style.setProperty('padding','0','important');
-    el.style.setProperty('margin','0','important');
-    el.style.setProperty('min-height','0','important');
-    el.style.setProperty('height','auto','important');
-  });
-  root.querySelectorAll('.pmBalanceCell').forEach(el=>{
-    el.style.setProperty('font-size','16px','important');
-    el.style.setProperty('line-height','1','important');
-  });
-  root.querySelectorAll('.pmGamesCell').forEach(el=>{
-    el.style.setProperty('font-size','12.5px','important');
-    el.style.setProperty('line-height','1','important');
-  });
-  root.querySelectorAll('.pmLastCell').forEach(el=>{
-    el.style.setProperty('font-size','14px','important');
-    el.style.setProperty('line-height','1','important');
-    el.style.setProperty('font-weight','950','important');
-  });
-}
-
 function openPlayerReport(p){playerFilterSelect.value=p;goPage('playerReport')}
 function renderPageOrder(){const order=getPageOrder();pageOrderList.innerHTML=`<div class="newPageOrder">${order.map(id=>`<div class="pageOrderRow"><span>${pageTitle(id)}</span><div><button type="button" onclick="movePage('${id}',-1);event.preventDefault();event.stopPropagation();">↑</button><button type="button" onclick="movePage('${id}',1);event.preventDefault();event.stopPropagation();">↓</button></div></div>`).join('')}</div>`}
 function movePage(id,dir){const order=getPageOrder(),i=order.indexOf(id),j=i+dir;if(i<0||j<0||j>=order.length)return;[order[i],order[j]]=[order[j],order[i]];const s=state();s.settings.pageOrder=order;localStorage.setItem(LS,JSON.stringify(s));renderPageOrder();renderMenuLabels();document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id===currentPage));pageTitleEl.textContent=pageTitle(currentPage)}
@@ -375,68 +270,6 @@ function renderMenuLabels(){
   const icons={home:'🏠',accounts:'💰',players:'👥',playerReport:'🔎',calendar:'📅',teams:'🟨',deposits:'💳',playerTable:'📊',matchLog:'🧾',settings:'⚙️'};
   menu.querySelectorAll('[data-page]').forEach(btn=>{const id=btn.dataset.page;btn.textContent=(icons[id]||'📄')+' '+pageTitle(id)});
 }
-
-function forceCompactPlayerRows(){
-  const root=document.getElementById('playerTable');
-  if(!root)return;
-  const wrap=root.querySelector('.playersModernWrap');
-  const table=root.querySelector('.playersModernTable');
-  if(wrap){
-    wrap.style.setProperty('padding','0','important');
-    wrap.style.setProperty('margin','0','important');
-  }
-  if(table){
-    table.style.setProperty('border-collapse','collapse','important');
-    table.style.setProperty('border-spacing','0','important');
-    table.style.setProperty('table-layout','fixed','important');
-    table.style.setProperty('width','100%','important');
-  }
-  root.querySelectorAll('.playersModernTable thead th').forEach(el=>{
-    el.style.setProperty('height','18px','important');
-    el.style.setProperty('min-height','18px','important');
-    el.style.setProperty('max-height','18px','important');
-    el.style.setProperty('padding','0 2px','important');
-    el.style.setProperty('line-height','1','important');
-    el.style.setProperty('font-size','12px','important');
-  });
-  root.querySelectorAll('.playersModernTable tbody tr').forEach(el=>{
-    el.style.setProperty('height','42px','important');
-    el.style.setProperty('min-height','42px','important');
-    el.style.setProperty('max-height','42px','important');
-    el.style.setProperty('border-bottom','1px solid rgba(148,163,184,.34)','important');
-  });
-  root.querySelectorAll('.playersModernTable tbody td').forEach(el=>{
-    el.style.setProperty('height','42px','important');
-    el.style.setProperty('min-height','42px','important');
-    el.style.setProperty('max-height','42px','important');
-    el.style.setProperty('padding','0 3px','important');
-    el.style.setProperty('line-height','1','important');
-    el.style.setProperty('vertical-align','middle','important');
-    el.style.setProperty('background','transparent','important');
-  });
-  root.querySelectorAll('.pmNameBtn').forEach(el=>{
-    el.style.setProperty('font-size','16px','important');
-    el.style.setProperty('line-height','1','important');
-    el.style.setProperty('padding','0','important');
-    el.style.setProperty('margin','0','important');
-    el.style.setProperty('min-height','0','important');
-    el.style.setProperty('height','auto','important');
-  });
-  root.querySelectorAll('.pmBalanceCell').forEach(el=>{
-    el.style.setProperty('font-size','16px','important');
-    el.style.setProperty('line-height','1','important');
-  });
-  root.querySelectorAll('.pmGamesCell').forEach(el=>{
-    el.style.setProperty('font-size','12.5px','important');
-    el.style.setProperty('line-height','1','important');
-  });
-  root.querySelectorAll('.pmLastCell').forEach(el=>{
-    el.style.setProperty('font-size','14px','important');
-    el.style.setProperty('line-height','1','important');
-    el.style.setProperty('font-weight','950','important');
-  });
-}
-
 function openPlayerReport(p){
   const sel=document.getElementById('playerFilterSelect');
   if(sel)sel.value=p;
@@ -530,282 +363,3 @@ function applyDatePicker(){
 document.addEventListener('DOMContentLoaded',()=>{
   if(typeof applyDateBtn!=='undefined')applyDateBtn.onclick=applyDatePicker;
 });
-
-/* ===== REAL FINAL PLAYER TABLE COMPACT v9 =====
-   المطلوب: تضييق السطر فقط + تقريب الأعمدة + منع خروج التاريخ + تكبير التاريخ
-*/
-function forceCompactPlayerRows(){
-  const root=document.getElementById('playerTable');
-  if(!root) return;
-  const wrap=root.querySelector('.playersModernWrap');
-  const table=root.querySelector('.playersModernTable');
-  if(!table) return;
-
-  if(wrap){
-    wrap.style.setProperty('padding','0','important');
-    wrap.style.setProperty('margin','0','important');
-    wrap.style.setProperty('overflow','hidden','important');
-    wrap.style.setProperty('width','100%','important');
-  }
-
-  table.style.setProperty('width','100%','important');
-  table.style.setProperty('max-width','100%','important');
-  table.style.setProperty('table-layout','fixed','important');
-  table.style.setProperty('border-collapse','collapse','important');
-  table.style.setProperty('border-spacing','0','important');
-
-  // عرض الأعمدة: الاسم | الرصيد | لعب | آخر لعب
-  const widths={
-    pmNameH:'auto', pmBalanceH:'78px', pmGamesH:'34px', pmLastH:'102px',
-    pmNameCell:'auto', pmBalanceCell:'78px', pmGamesCell:'34px', pmLastCell:'102px'
-  };
-  Object.entries(widths).forEach(([cls,w])=>{
-    root.querySelectorAll('.'+cls).forEach(el=>{
-      el.style.setProperty('width',w,'important');
-      if(w!=='auto'){
-        el.style.setProperty('min-width',w,'important');
-        el.style.setProperty('max-width',w,'important');
-      }
-    });
-  });
-
-  root.querySelectorAll('.playersModernTable thead th').forEach(el=>{
-    el.style.setProperty('height','16px','important');
-    el.style.setProperty('min-height','16px','important');
-    el.style.setProperty('max-height','16px','important');
-    el.style.setProperty('padding','0 1px','important');
-    el.style.setProperty('line-height','1','important');
-    el.style.setProperty('font-size','12px','important');
-    el.style.setProperty('white-space','nowrap','important');
-    el.style.setProperty('overflow','hidden','important');
-  });
-
-  root.querySelectorAll('.playersModernTable tbody tr').forEach(el=>{
-    el.style.setProperty('height','32px','important');
-    el.style.setProperty('min-height','32px','important');
-    el.style.setProperty('max-height','32px','important');
-    el.style.setProperty('border-bottom','1px solid rgba(148,163,184,.34)','important');
-  });
-
-  root.querySelectorAll('.playersModernTable tbody td').forEach(el=>{
-    el.style.setProperty('height','32px','important');
-    el.style.setProperty('min-height','32px','important');
-    el.style.setProperty('max-height','32px','important');
-    el.style.setProperty('padding','0 1px','important');
-    el.style.setProperty('line-height','1','important');
-    el.style.setProperty('vertical-align','middle','important');
-    el.style.setProperty('background','transparent','important');
-    el.style.setProperty('border-top','0','important');
-    el.style.setProperty('border-left','0','important');
-    el.style.setProperty('border-right','0','important');
-    el.style.setProperty('border-radius','0','important');
-    el.style.setProperty('white-space','nowrap','important');
-    el.style.setProperty('overflow','hidden','important');
-  });
-
-  root.querySelectorAll('.playersModernTable tbody td *').forEach(el=>{
-    el.style.setProperty('line-height','1','important');
-    el.style.setProperty('margin','0','important');
-    el.style.setProperty('padding-top','0','important');
-    el.style.setProperty('padding-bottom','0','important');
-    el.style.setProperty('min-height','0','important');
-  });
-
-  root.querySelectorAll('.pmNameBtn').forEach(el=>{
-    el.style.setProperty('font-size','15px','important');
-    el.style.setProperty('font-weight','950','important');
-    el.style.setProperty('line-height','1','important');
-    el.style.setProperty('padding','0','important');
-    el.style.setProperty('margin','0','important');
-    el.style.setProperty('min-height','0','important');
-    el.style.setProperty('height','auto','important');
-    el.style.setProperty('max-width','100%','important');
-    el.style.setProperty('overflow','hidden','important');
-    el.style.setProperty('text-overflow','ellipsis','important');
-    el.style.setProperty('white-space','nowrap','important');
-  });
-  root.querySelectorAll('.pmBalanceCell').forEach(el=>{
-    el.style.setProperty('font-size','15px','important');
-    el.style.setProperty('font-weight','950','important');
-    el.style.setProperty('text-align','center','important');
-  });
-  root.querySelectorAll('.pmGamesCell').forEach(el=>{
-    el.style.setProperty('font-size','12px','important');
-    el.style.setProperty('font-weight','950','important');
-    el.style.setProperty('text-align','center','important');
-  });
-  root.querySelectorAll('.pmLastCell').forEach(el=>{
-    el.style.setProperty('font-size','14px','important');
-    el.style.setProperty('font-weight','950','important');
-    el.style.setProperty('text-align','left','important');
-    el.style.setProperty('direction','ltr','important');
-    el.style.setProperty('letter-spacing','-0.4px','important');
-  });
-}
-setTimeout(forceCompactPlayerRows,50);
-setTimeout(forceCompactPlayerRows,300);
-
-/* === v17 CLEAN REAL APPLY: accounts/deposits/player-report same money rules === */
-(function(){
-  const EPS=0.0005;
-  function val(n){ return Number(n||0); }
-  function isZero(n){ return Math.abs(val(n)) < EPS; }
-  function m(n){ return Math.abs(val(n)).toFixed(3); }
-  function normType(d){
-    const t=String((d&&(d.type||d.kind||d.operation||d.label))||'').trim().toLowerCase();
-    const ar=String((d&&(d.operation||d.label||d.typeName))||'').trim();
-    const raw=String((d&&d.date)||'').replace(/-/g,'/');
-    if(t==='late'||ar.includes('تأخير')) return 'late';
-    if(t==='out'||t==='debt'||t==='discount'||ar.includes('مديونية')||ar.includes('خصم')) return (t==='discount'||ar.includes('خصم'))?'discount':'debt';
-    if(t==='initial'||ar.includes('مبدئي')||raw==='2026/01/01'||raw==='1/1/2026') return 'initial';
-    return 'deposit';
-  }
-  function cls(k){ return k==='late'?'moneyLate':((k==='debt'||k==='discount')?'moneyNeg':'moneyPos'); }
-  function lbl(k){ return k==='late'?'تأخير':(k==='discount'?'خصم':(k==='debt'?'مديونية':(k==='initial'?'إيداع.م':'إيداع'))); }
-  function amt(n,k){ if(isZero(n)) return ''; const s=m(n); return (k==='late'||k==='debt'||k==='discount'||val(n)<0)?s+'-':s; }
-  function signed(n){ if(isZero(n)) return ''; const s=m(n); return val(n)<0?s+'-':s; }
-  function balCls(n){ return val(n)<0?'moneyNeg':'moneyPos'; }
-
-  window.depositTypeLabel=function(d){ return lbl(normType(d)); };
-  window.fmAmount=function(n){ return signed(n); };
-  window.amountClass=function(n){ return balCls(n); };
-
-  window.renderDeposits = function(s){
-    const rows=[...((s&&s.deposits)||[])].sort((a,b)=>(b.date||'').localeCompare(a.date||'')).map(d=>{
-      const k=normType(d), c=cls(k), a=amt(d.amount,k), text=a?`${lbl(k)} ${a}`:lbl(k);
-      return `<div class="tRow" onclick="openDepositEditor('${escAttr(d.id||'')}')"><span>${escapeHtml(d.player||'')}</span><span>${fmDate(d.date)}</span><span class="${c}" data-money-kind="${k}">${text}</span></div>`;
-    }).join('');
-    depositsList.innerHTML=`<div class="compactTable depositsMoneyTable v17MoneyTable"><div class="tHead"><span>اللاعب</span><span>التاريخ</span><span class="amountHead">المبلغ</span></div>${rows||'<p class="muted">لا توجد عمليات</p>'}</div>`;
-    v17PostFormat();
-  };
-
-  window.renderPlayerReport = function(){
-    const s=state(), p=playerFilterSelect.value; if(!p){playerFilterContent.innerHTML='';return;}
-    const b=balances(s)[p]||{}, deps=(s.deposits||[]).filter(d=>d.player===p), games=(s.matches||[]).filter(m=>(m.players||[]).includes(p));
-    const playPlusDebt=(b.playTotal||0)+(b.debtDeposits||0);
-    const gameRows=games.map(g=>`<div class="tRow"><span>${fmDate(g.date)}</span><span>${escapeHtml(g.place||'')}</span><span class="moneyNeg" data-money-kind="debt">${amt(g.price||0,'debt')}</span></div>`).join('');
-    const depRows=deps.map(d=>{const k=normType(d), c=cls(k);return `<div class="tRow"><span>${fmDate(d.date)}</span><span class="${c}" data-money-kind="${k}">${lbl(k)}</span><span class="${c}" data-money-kind="${k}">${amt(d.amount,k)}</span></div>`}).join('');
-    playerFilterContent.innerHTML=`<div class="reportStats"><div class="statBox depositStat"><span>الإيداعات</span><b class="moneyPos" data-money-kind="deposit">${amt(b.deposits,'deposit')}</b></div><div class="statBox gamesStat"><span>اللعب</span><b>${b.games||''}</b></div><div class="statBox playTotalStat"><span>إجمالي اللعب + المديونية</span><b class="moneyNeg" data-money-kind="debt">${amt(playPlusDebt,'debt')}</b></div><div class="statBox lateStat"><span>التأخير</span><b class="moneyLate" data-money-kind="late">${amt(b.late,'late')}</b></div><div class="statBox balanceStat"><span>الرصيد</span><b class="${balCls(b.balance)}">${signed(b.balance)}</b></div></div><div class="card"><h3>أيام اللعب</h3><div class="compactTable reportTable v17MoneyTable"><div class="tHead"><span>التاريخ</span><span>المكان</span><span class="amountHead">المبلغ</span></div>${gameRows||'<p class="muted">لا يوجد</p>'}</div></div><div class="card"><h3>الإيداعات والمديونيات</h3><div class="compactTable reportTable v17MoneyTable"><div class="tHead"><span>التاريخ</span><span>العملية</span><span class="amountHead">المبلغ</span></div>${depRows||'<p class="muted">لا يوجد</p>'}</div></div>`;
-    v17PostFormat();
-  };
-
-  window.renderAccounts = function(s){
-    const b=balances(s), neg=(s.players||[]).filter(p=>(b[p]?.balance||0)<0), late=(s.deposits||[]).filter(d=>normType(d)==='late');
-    const extra=(s.extraCharges||[]).reduce((a,x)=>a+val(x.amount),0), discount=(s.extraDiscounts||[]).reduce((a,x)=>a+val(x.amount),0);
-    const lateTotal=late.reduce((a,d)=>a+Math.abs(val(d.amount)),0), debt=neg.reduce((a,p)=>a+Math.abs(b[p].balance),0)+discount, final=extra+lateTotal-debt;
-    const debtRows=neg.map(p=>`<div class="tRow" onclick="openPlayerReport('${escAttr(p)}')"><span>${escapeHtml(p)}</span><span>${fmDate(b[p].last)}</span><span class="moneyNeg" data-money-kind="debt">${amt(Math.abs(b[p].balance),'debt')}</span></div>`).join('');
-    const lateRows=late.map(d=>`<div class="tRow" onclick="openPlayerReport('${escAttr(d.player)}')"><span>${escapeHtml(d.player)}</span><span>${fmDate(d.date)}</span><span class="moneyLate" data-money-kind="late">${amt(d.amount,'late')}</span></div>`).join('');
-    accountsContent.innerHTML=`<div class="accountMiniCards"><div><span>المديونية</span><b class="moneyNeg" data-money-kind="debt">${amt(debt,'debt')}</b></div><div><span>التأخير</span><b class="moneyLate" data-money-kind="late">${amt(lateTotal,'late')}</b></div><div><span>الإضافي</span><b class="moneyPos" data-money-kind="deposit">${amt(extra,'deposit')}</b></div><div><span>الإجمالي</span><b class="${balCls(final)}">${signed(final)}</b></div></div><div class="card"><h3>اللاعبين المدانين والمتأخرين</h3><div class="compactTable accountsMoneyTable v17MoneyTable"><div class="tHead"><span>الاسم</span><span>التاريخ</span><span class="amountHead">المبلغ</span></div>${debtRows}${lateRows}${(!debtRows&&!lateRows)?'<p class="muted">لا يوجد</p>':''}</div></div><div class="card"><div class="sectionTitleLine"><b>سجل الخصم / الإضافة</b><button onclick="openAdjustEditor()">تعديل</button></div>${renderAdjustRows(s)}</div><div class="card"><div class="sectionTitleLine"><b>خصم / إضافة</b></div><div class="grid2 accountsExtraGrid"><label>النوع<select id="extraType"><option value="extra">إضافة</option><option value="discount">خصم</option></select></label><label>التاريخ<button id="extraDateBtn" class="fakeDateInput" type="button" onclick="openDatePicker('extraDate')">${fmDate(today())}</button><input id="extraDate" type="hidden" value="${today()}"></label><label>المبلغ<input id="extraAmount" type="number" step="0.001"></label><label>الملاحظة<input id="extraNote"></label></div><button class="primary wide saveBtn" onclick="saveExtraUnified()">حفظ</button></div>`;
-    if(typeof updateDateButtons==='function') updateDateButtons();
-    v17PostFormat();
-  };
-
-  window.renderAdjustRows = function(s){
-    let rows=[...((s.extraCharges||[]).map(x=>({...x,t:'إضافة',kind:'deposit'}))),...((s.extraDiscounts||[]).map(x=>({...x,t:'خصم',kind:'discount'})))].sort((a,b)=>(b.date||'').localeCompare(a.date||''));
-    return `<div class="compactTable accountsMoneyTable v17MoneyTable"><div class="tHead"><span>التاريخ</span><span>العملية</span><span class="amountHead">المبلغ</span></div>${rows.map(r=>{const c=cls(r.kind);return `<div class="tRow"><span>${fmDate(r.date)}</span><span class="${c}" data-money-kind="${r.kind}">${r.t}</span><span class="${c}" data-money-kind="${r.kind}">${amt(r.amount,r.kind)}</span></div>`}).join('')||'<p class="muted">لا يوجد</p>'}</div>`;
-  };
-
-  window.v17PostFormat=function(){
-    document.querySelectorAll('.accountMiniCards b,.reportStats b,.v17MoneyTable .tRow span,.depositsMoneyTable .tRow span,.accountsMoneyTable .tRow span,.reportTable .tRow span').forEach(el=>{
-      let t=(el.textContent||'');
-      t=t.replace(/\+/g,'').replace(/(^|\s)-(\d+\.\d{3})(?=\s|$)/g,'$1$2-');
-      if(/^\s*-?0\.000-?\s*$/.test(t)) t='';
-      el.textContent=t;
-    });
-  };
-
-  const previousRenderAll=window.renderAll;
-  if(typeof previousRenderAll==='function'){
-    window.renderAll=function(){ const r=previousRenderAll.apply(this,arguments); v17PostFormat(); setTimeout(v17PostFormat,50); return r; };
-  }
-  setTimeout(()=>{try{renderAll(); v17PostFormat();}catch(e){}},120);
-})();
-/* === v18 DIRECT REAL APPLY: reassign actual render functions, no screenshots === */
-(function(){
-  const EPS = 0.0005;
-  function val(n){ return Number(n||0); }
-  function isZero(n){ return Math.abs(val(n)) < EPS; }
-  function num(n){ return Math.abs(val(n)).toFixed(3); }
-  function kindOf(d){
-    const t = String((d && (d.type||d.kind||d.operation||d.label)) || '').trim().toLowerCase();
-    const ar = String((d && (d.operation||d.label||d.typeName)) || '').trim();
-    const raw = String((d && d.date) || '').replace(/-/g,'/');
-    if(t==='late' || ar.includes('تأخير')) return 'late';
-    if(t==='out' || t==='debt' || ar.includes('مديونية')) return 'debt';
-    if(t==='discount' || ar.includes('خصم')) return 'discount';
-    if(t==='initial' || ar.includes('مبدئي') || raw==='2026/01/01' || raw==='1/1/2026') return 'initial';
-    return 'deposit';
-  }
-  function label(k){
-    if(k==='late') return 'تأخير';
-    if(k==='debt') return 'مديونية';
-    if(k==='discount') return 'خصم';
-    if(k==='initial') return 'إيداع.م';
-    return 'إيداع';
-  }
-  function cls(k){ return k==='late' ? 'moneyLate' : ((k==='debt'||k==='discount') ? 'moneyNeg' : 'moneyPos'); }
-  function amount(n,k){
-    if(isZero(n)) return '';
-    const s = num(n);
-    return (k==='late'||k==='debt'||k==='discount'||val(n)<0) ? (s+'-') : s;
-  }
-  function balanceAmount(n){
-    if(isZero(n)) return '';
-    return val(n)<0 ? (num(n)+'-') : num(n);
-  }
-  function balanceClass(n){ return val(n)<0 ? 'moneyNeg' : 'moneyPos'; }
-  function cleanMoneyText(){
-    document.querySelectorAll('.accountMiniCards b,.reportStats b,.depositsMoneyTable .tRow span,.accountsMoneyTable .tRow span,.reportTable .tRow span').forEach(el=>{
-      let t = (el.textContent||'').trim();
-      t = t.replace(/\+/g,'');
-      t = t.replace(/(^|\s)-(\d+\.\d{3})(?=\s|$)/g,'$1$2-');
-      if(/^0\.000-?$/.test(t) || /^-0\.000$/.test(t)) t='';
-      el.textContent = t;
-    });
-  }
-
-  try { depositTypeLabel = function(d){ return label(kindOf(d)); }; } catch(e) {}
-  try { fmAmount = function(n){ return balanceAmount(n); }; } catch(e) {}
-  try { amountClass = function(n){ return balanceClass(n); }; } catch(e) {}
-
-  try { renderDeposits = function(s){
-    const rows=[...((s&&s.deposits)||[])].sort((a,b)=>(b.date||'').localeCompare(a.date||'')).map(d=>{
-      const k=kindOf(d), c=cls(k), a=amount(d.amount,k);
-      const text = a ? `${label(k)} ${a}` : label(k);
-      return `<div class="tRow" onclick="openDepositEditor('${escAttr(d.id||'')}')"><span>${escapeHtml(d.player||'')}</span><span>${fmDate(d.date)}</span><span class="${c}" data-money-kind="${k}">${text}</span></div>`;
-    }).join('');
-    depositsList.innerHTML=`<div class="compactTable depositsMoneyTable"><div class="tHead"><span>اللاعب</span><span>التاريخ</span><span class="amountHead">المبلغ</span></div>${rows||'<p class="muted">لا توجد عمليات</p>'}</div>`;
-    cleanMoneyText();
-  }; } catch(e) {}
-
-  try { renderAdjustRows = function(s){
-    let rows=[...((s.extraCharges||[]).map(x=>({...x,t:'إضافة',kind:'deposit'}))),...((s.extraDiscounts||[]).map(x=>({...x,t:'خصم',kind:'discount'})))].sort((a,b)=>(b.date||'').localeCompare(a.date||''));
-    return `<div class="compactTable accountsMoneyTable"><div class="tHead"><span>التاريخ</span><span>العملية</span><span class="amountHead">المبلغ</span></div>${rows.map(r=>{const c=cls(r.kind);return `<div class="tRow"><span>${fmDate(r.date)}</span><span class="${c}" data-money-kind="${r.kind}">${r.t}</span><span class="${c}" data-money-kind="${r.kind}">${amount(r.amount,r.kind)}</span></div>`}).join('')||'<p class="muted">لا يوجد</p>'}</div>`;
-  }; } catch(e) {}
-
-  try { renderPlayerReport = function(){
-    const s=state(), p=playerFilterSelect.value;
-    if(!p){ playerFilterContent.innerHTML=''; return; }
-    const b=balances(s)[p]||{}, deps=(s.deposits||[]).filter(d=>d.player===p), games=(s.matches||[]).filter(m=>(m.players||[]).includes(p));
-    const playPlusDebt=(b.playTotal||0)+(b.debtDeposits||0);
-    const gameRows=games.map(g=>`<div class="tRow"><span>${fmDate(g.date)}</span><span>${escapeHtml(g.place||'')}</span><span class="moneyNeg" data-money-kind="debt">${amount(g.price||0,'debt')}</span></div>`).join('');
-    const depRows=deps.map(d=>{const k=kindOf(d), c=cls(k); return `<div class="tRow"><span>${fmDate(d.date)}</span><span class="${c}" data-money-kind="${k}">${label(k)}</span><span class="${c}" data-money-kind="${k}">${amount(d.amount,k)}</span></div>`;}).join('');
-    playerFilterContent.innerHTML=`<div class="reportStats"><div class="statBox depositStat"><span>الإيداعات</span><b class="moneyPos">${amount(b.deposits,'deposit')}</b></div><div class="statBox gamesStat"><span>اللعب</span><b>${b.games||''}</b></div><div class="statBox playTotalStat"><span>إجمالي اللعب + المديونية</span><b class="moneyNeg">${amount(playPlusDebt,'debt')}</b></div><div class="statBox lateStat"><span>التأخير</span><b class="moneyLate">${amount(b.late,'late')}</b></div><div class="statBox balanceStat"><span>الرصيد</span><b class="${balanceClass(b.balance)}">${balanceAmount(b.balance)}</b></div></div><div class="card"><h3>أيام اللعب</h3><div class="compactTable reportTable"><div class="tHead"><span>التاريخ</span><span>المكان</span><span class="amountHead">المبلغ</span></div>${gameRows||'<p class="muted">لا يوجد</p>'}</div></div><div class="card"><h3>الإيداعات والمديونيات</h3><div class="compactTable reportTable"><div class="tHead"><span>التاريخ</span><span>العملية</span><span class="amountHead">المبلغ</span></div>${depRows||'<p class="muted">لا يوجد</p>'}</div></div>`;
-    cleanMoneyText();
-  }; } catch(e) {}
-
-  try { renderAccounts = function(s){
-    const b=balances(s), neg=(s.players||[]).filter(p=>(b[p]?.balance||0)<0), late=(s.deposits||[]).filter(d=>kindOf(d)==='late');
-    const extra=(s.extraCharges||[]).reduce((a,x)=>a+val(x.amount),0), discount=(s.extraDiscounts||[]).reduce((a,x)=>a+val(x.amount),0);
-    const lateTotal=late.reduce((a,d)=>a+Math.abs(val(d.amount)),0), debt=neg.reduce((a,p)=>a+Math.abs(b[p].balance),0)+discount, final=extra+lateTotal-debt;
-    const debtRows=neg.map(p=>`<div class="tRow" onclick="openPlayerReport('${escAttr(p)}')"><span>${escapeHtml(p)}</span><span>${fmDate(b[p].last)}</span><span class="moneyNeg" data-money-kind="debt">${amount(Math.abs(b[p].balance),'debt')}</span></div>`).join('');
-    const lateRows=late.map(d=>`<div class="tRow" onclick="openPlayerReport('${escAttr(d.player)}')"><span>${escapeHtml(d.player)}</span><span>${fmDate(d.date)}</span><span class="moneyLate" data-money-kind="late">${amount(d.amount,'late')}</span></div>`).join('');
-    accountsContent.innerHTML=`<div class="accountMiniCards"><div><span>المديونية</span><b class="moneyNeg">${amount(debt,'debt')}</b></div><div><span>التأخير</span><b class="moneyLate">${amount(lateTotal,'late')}</b></div><div><span>الإضافي</span><b class="moneyPos">${amount(extra,'deposit')}</b></div><div><span>الإجمالي</span><b class="${balanceClass(final)}">${balanceAmount(final)}</b></div></div><div class="card"><h3>اللاعبين المدانين والمتأخرين</h3><div class="compactTable accountsMoneyTable"><div class="tHead"><span>الاسم</span><span>التاريخ</span><span class="amountHead">المبلغ</span></div>${debtRows}${lateRows}${(!debtRows&&!lateRows)?'<p class="muted">لا يوجد</p>':''}</div></div><div class="card"><div class="sectionTitleLine"><b>سجل الخصم / الإضافة</b><button onclick="openAdjustEditor()">تعديل</button></div>${renderAdjustRows(s)}</div><div class="card"><div class="sectionTitleLine"><b>خصم / إضافة</b></div><div class="grid2 accountsExtraGrid"><label>النوع<select id="extraType"><option value="extra">إضافة</option><option value="discount">خصم</option></select></label><label>التاريخ<button id="extraDateBtn" class="fakeDateInput" type="button" onclick="openDatePicker('extraDate')">${fmDate(today())}</button><input id="extraDate" type="hidden" value="${today()}"></label><label>المبلغ<input id="extraAmount" type="number" step="0.001"></label><label>الملاحظة<input id="extraNote"></label></div><button class="primary wide saveBtn" onclick="saveExtraUnified()">حفظ</button></div>`;
-    if(typeof updateDateButtons==='function') updateDateButtons();
-    cleanMoneyText();
-  }; } catch(e) {}
-
-  const oldRenderAll = renderAll;
-  renderAll = function(){ const r = oldRenderAll.apply(this, arguments); cleanMoneyText(); setTimeout(cleanMoneyText,50); return r; };
-  setTimeout(()=>{ try{ renderAll(); cleanMoneyText(); }catch(e){} }, 80);
-})();
