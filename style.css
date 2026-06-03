@@ -3825,3 +3825,20 @@ body.lightMode .reportStats .moneyLate{color:#b45309!important;}
 body.lightMode .moneyPos{color:#027a48!important;}
 body.lightMode .moneyNeg{color:#b42318!important;}
 body.lightMode .moneyLate{color:#b45309!important;}
+
+/* === v16 HARD APPLY: same readable money style as player table === */
+.unifiedMoneyTable .tRow span,
+.accountsMoneyTable .tRow span,
+.depositsMoneyTable .tRow span,
+.reportTable .tRow span,
+.accountMiniCards b,
+.reportStats b{
+  font-weight:950!important;
+  font-family:inherit!important;
+}
+.moneyPos{color:#22c55e!important;font-weight:950!important;}
+.moneyNeg{color:#ff5b6e!important;font-weight:950!important;}
+.moneyLate{color:#ffd166!important;font-weight:950!important;}
+body.lightMode .moneyPos{color:#027a48!important;}
+body.lightMode .moneyNeg{color:#b42318!important;}
+body.lightMode .moneyLate{color:#b45309!important;}
