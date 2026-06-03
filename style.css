@@ -3847,23 +3847,12 @@ body.lightMode .accountsMoneyTable .moneyLate,body.lightMode .depositsMoneyTable
 }
 
 
-/* User requested fixes */
-.delay,.late,.lateFee,.amtDelay{
- color:var(--warning,#f59e0b)!important;
- font-weight:900!important;
+/* Strong late color same as delay card */
+.moneyLate,[data-money-kind="late"]{
+ color:#f59e0b !important;
+ font-weight:900 !important;
 }
-
-/* Team buttons day mode same as night */
-.team1Btn,.firstTeamBtn,.btnTeamA{
- background:#facc15!important;
- color:#000!important;
-}
-.team2Btn,.secondTeamBtn,.btnTeamB{
- background:#ec4899!important;
- color:#fff!important;
-}
-
-/* Match log unselected names */
-.matchPlayerNotSelected,.benchPlayer,.notPicked{
- color:#64748b!important;
+body.darkMode .moneyLate,
+body.darkMode [data-money-kind="late"]{
+ color:#f59e0b !important;
 }

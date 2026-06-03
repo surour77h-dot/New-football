@@ -809,22 +809,3 @@ setTimeout(forceCompactPlayerRows,300);
   renderAll = function(){ const r = oldRenderAll.apply(this, arguments); cleanMoneyText(); setTimeout(cleanMoneyText,50); return r; };
   setTimeout(()=>{ try{ renderAll(); cleanMoneyText(); }catch(e){} }, 80);
 })();
-
-
-try{
-const __oldImport=window.importData;
-if(typeof __oldImport==='function'){
-window.importData=function(){
- const currentTheme=(window.state&&state().settings&&state().settings.themeMode)||localStorage.getItem('themeMode');
- const r=__oldImport.apply(this,arguments);
- try{
-   if(currentTheme){
-      if(window.state&&state().settings){ state().settings.themeMode=currentTheme; }
-      localStorage.setItem('themeMode',currentTheme);
-      if(typeof applyThemeMode==='function') applyThemeMode();
-   }
- }catch(e){}
- return r;
-}
-}
-}catch(e){}
