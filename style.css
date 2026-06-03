@@ -3945,3 +3945,34 @@ body.darkMode .unpickedGuests div{
  color:#334155 !important;
  font-weight:700 !important;
 }
+
+
+/* ===== real applied team fixes ===== */
+body.lightMode .teamTabs button.selA,
+html.lightMode body .teamTabs button.selA,
+body.lightMode button.selA,
+html.lightMode body button.selA{
+  color:#facc15 !important;
+  -webkit-text-fill-color:#facc15 !important;
+  font-weight:900 !important;
+}
+
+body.lightMode .teamTabs button.selB,
+html.lightMode body .teamTabs button.selB,
+body.lightMode button.selB,
+html.lightMode body button.selB{
+  color:#ec4899 !important;
+  -webkit-text-fill-color:#ec4899 !important;
+  font-weight:900 !important;
+}
+
+.dangerBtn,
+#deleteMatchFromTeamsBtn{
+  background:#dc2626 !important;
+  color:#fff !important;
+  -webkit-text-fill-color:#fff !important;
+  border:0 !important;
+  font-weight:900 !important;
+  margin-inline-start:8px !important;
+  margin-top:8px !important;
+}

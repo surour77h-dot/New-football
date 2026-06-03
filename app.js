@@ -99,12 +99,13 @@ function teamHtml(s,m){
 }
 function renderTeamsSelect(s){
   teamsMatchSelect.innerHTML=[...s.matches].sort((a,b)=>(b.date||'').localeCompare(a.date||'')).map(m=>{
-    const need=Number(m.neededPlayers||0);
+    const actual=participants(m).length;
+    const need=actual || Number(m.neededPlayers||0);
     const split=need===14?'7x7':need===12?'6x6':(need?`${Math.floor(need/2)}x${Math.ceil(need/2)}`:'');
     return `<option value="${m.id}">${split} ${fmDate(m.date)} ${escapeHtml(m.place||'')}</option>`;
   }).join('');
 }
-function renderTeams(){const s=state(),m=s.matches.find(x=>x.id===teamsMatchSelect.value);if(!m){teamsPlayers.innerHTML='';teamsPreview.innerHTML='';return}if(tempTeamMap.__matchId!==m.id)tempTeamMap={...(s.teams[m.id]||{}),__matchId:m.id};const names=participants(m);teamsPlayers.innerHTML=names.map(n=>`<div class="teamPickLine"><b onclick="clearTeamFor('${escAttr(n)}')">${escapeHtml(n)}</b><div class="teamTabs"><button type="button" class="${tempTeamMap[n]==='A'?'selA':''}" onclick="pickTeam('${escAttr(n)}','A')">الأول</button><button type="button" class="${tempTeamMap[n]==='B'?'selB':''}" onclick="pickTeam('${escAttr(n)}','B')">الثاني</button></div></div>`).join('');const map={...tempTeamMap};delete map.__matchId;teamsPreview.innerHTML=`<div class="card">${teamHtml({...s,teams:{...s.teams,[m.id]:map}},m)}<div class="teamEditFooter"><button type="button" onclick="editSelectedMatchFromTeams()">تعديل وإضافة لاعبين</button><button type="button" class="dangerBtn" onclick="deleteSelectedMatchFromTeams()">مسح المباراة</button></div></div>`}
+function renderTeams(){setTimeout(ensureDeleteMatchBtn,0);const s=state(),m=s.matches.find(x=>x.id===teamsMatchSelect.value);if(!m){teamsPlayers.innerHTML='';teamsPreview.innerHTML='';return}if(tempTeamMap.__matchId!==m.id)tempTeamMap={...(s.teams[m.id]||{}),__matchId:m.id};const names=participants(m);teamsPlayers.innerHTML=names.map(n=>`<div class="teamPickLine"><b onclick="clearTeamFor('${escAttr(n)}')">${escapeHtml(n)}</b><div class="teamTabs"><button type="button" class="${tempTeamMap[n]==='A'?'selA':''}" onclick="pickTeam('${escAttr(n)}','A')">الأول</button><button type="button" class="${tempTeamMap[n]==='B'?'selB':''}" onclick="pickTeam('${escAttr(n)}','B')">الثاني</button></div></div>`).join('');const map={...tempTeamMap};delete map.__matchId;teamsPreview.innerHTML=`<div class="card">${teamHtml({...s,teams:{...s.teams,[m.id]:map}},m)}<div class="teamEditFooter"><button type="button" onclick="editSelectedMatchFromTeams()">تعديل وإضافة لاعبين</button><button type="button" class="dangerBtn" onclick="deleteSelectedMatchFromTeams()">مسح المباراة</button></div></div>`}
 function pickTeam(n,t){tempTeamMap[n]=t;renderTeams()}function clearTeamFor(n){delete tempTeamMap[n];renderTeams()}function saveTeams(){const s=state(),id=teamsMatchSelect.value;if(!id)return;const map={...tempTeamMap};delete map.__matchId;s.teams[id]=map;save(s)}
 function deleteSelectedMatchFromTeams(){
   const s=state(), id=teamsMatchSelect.value;
@@ -120,6 +121,31 @@ function deleteSelectedMatchFromTeams(){
 }
 
 function editSelectedMatchFromTeams(){const s=state(),m=s.matches.find(x=>x.id===teamsMatchSelect.value);if(!m)return alert('اختر لعبة أولاً');editingMatchId.value=m.id;matchDate.value=m.date||today();place.value=m.place||'';bookingCost.value=m.bookingCost||'';neededPlayers.value=m.neededPlayers||'';tempGuests=[...(m.guests||[])];goPage('home');setTimeout(()=>{document.querySelectorAll('.playerCheck').forEach(ch=>{ch.checked=(m.players||[]).includes(ch.value)});renderTempGuests();renderMatchPreview();pricePerPlayer.textContent=money(calcPrice());updateDateButtons()},80)}
+
+function ensureDeleteMatchBtn(){
+  const saveBtn=document.getElementById('saveTeamsBtn')||window.saveTeamsBtn;
+  if(!saveBtn || document.getElementById('deleteMatchFromTeamsBtn')) return;
+  const btn=document.createElement('button');
+  btn.type='button';
+  btn.id='deleteMatchFromTeamsBtn';
+  btn.className='dangerBtn';
+  btn.textContent='مسح المباراة';
+  btn.onclick=deleteSelectedMatchFromTeams;
+  saveBtn.insertAdjacentElement('afterend',btn);
+}
+function deleteSelectedMatchFromTeams(){
+  const s=state(), id=teamsMatchSelect.value;
+  if(!id) return alert('اختر لعبة أولاً');
+  if(!confirm('هل تريد مسح هذه المباراة من سجل المباريات؟')) return;
+  s.matches=(s.matches||[]).filter(m=>m.id!==id);
+  if(s.teams) delete s.teams[id];
+  tempTeamMap={};
+  saveNoRender(s);
+  renderAll();
+  goPage('matchLog');
+  alert('تم مسح المباراة');
+}
+
 function renderPlayerTable(s){
  const b=balances(s),latest=Object.values(b).map(x=>x.last).filter(Boolean).sort().pop()||'';
  playerTableWrap.innerHTML=`<div class="playersModernWrap"><table class="playersModernTable"><thead><tr><th class="pmNameH">الاسم</th><th class="pmBalanceH">الرصيد</th><th class="pmGamesH">لعب</th><th class="pmLastH">آخر لعب</th></tr></thead><tbody>${s.players.map(p=>{const info=b[p]||{}, bal=Number(info.balance||0), inactive=isInactiveThisYear(info.last), isLatest=!!(info.last&&info.last===latest);return `<tr class="pmRow ${inactive?'pmInactive':''} ${isLatest?'pmLatest':''}"><td class="pmNameCell"><button type="button" class="pmNameBtn" onclick="openPlayerReport('${escAttr(p)}')">${escapeHtml(p)}</button></td><td class="pmBalanceCell ${bal<0?'moneyNeg':amountClass(bal)}">${fmAmount(bal)}</td><td class="pmGamesCell">${info.games||''}</td><td class="pmLastCell ${isLatest?'pmLatestDate':''}">${fmDate(info.last)}</td></tr>`}).join('')}</tbody></table></div>`;
@@ -282,13 +308,18 @@ function importData(e){
   const currentTheme=(state().settings&&state().settings.themeMode)||'dark';
   const r=new FileReader();
   r.onload=()=>{
-    localStorage.setItem(LS,r.result);
     try{
+      const incoming=JSON.parse(r.result||'{}');
+      incoming.settings=incoming.settings||{};
+      incoming.settings.themeMode=currentTheme;
+      localStorage.setItem(LS,JSON.stringify(incoming));
+    }catch(err){
+      localStorage.setItem(LS,r.result);
       const s=state();
       s.settings=s.settings||{};
       s.settings.themeMode=currentTheme;
       saveNoRender(s);
-    }catch(err){}
+    }
     renderAll();
     applyThemeMode();
     alert('تم الاستيراد');
@@ -296,7 +327,7 @@ function importData(e){
   r.readAsText(f);
 }
 function exportExcel(){alert('تصدير Excel في هذه النسخة سيكون ملف CSV لاحقاً')}
-ballBtn.onclick=toggleMenu;pagesMenu.addEventListener('click',e=>{const b=e.target.closest('[data-page]');if(b)goPage(b.dataset.page)});addPlayerBtn.onclick=addPlayer;renamePlayerBtn.onclick=renamePlayer;deletePlayerBtn.onclick=deletePlayer;addGuestBtn.onclick=addGuest;saveMatchBtn.onclick=saveMatch;clearMatchBtn.onclick=clearMatch;saveDepositBtn.onclick=saveDeposit;if(typeof clearDepositBtn!=="undefined"&&clearDepositBtn)clearDepositBtn.onclick=clearDeposit;teamsMatchSelect.onchange=renderTeams;saveTeamsBtn.onclick=saveTeams;playerFilterSelect.onchange=renderPlayerReport;prevMonth.onclick=()=>moveMonth(-1);nextMonth.onclick=()=>moveMonth(1);exportDataBtn.onclick=exportData;exportExcelBtn.onclick=exportExcel;importDataInput.onchange=importData;closeAdjustModal.onclick=closeAdjustEditor;saveAdjustModal.onclick=saveAdjustEditor;document.addEventListener('change',e=>{if(e.target.classList.contains('playerCheck'))renderMatchPreview()});['bookingCost','neededPlayers'].forEach(id=>document.getElementById(id).addEventListener('input',()=>pricePerPlayer.textContent=money(calcPrice())));if(typeof applyDateBtn!=='undefined')applyDateBtn.onclick=applyDatePicker;if(typeof matchDateBtn!=='undefined')matchDateBtn.onclick=()=>openDatePicker('matchDate');if(typeof depositDateBtn!=='undefined')depositDateBtn.onclick=()=>openDatePicker('depositDate');if(typeof editDepositModalDateBtn!=='undefined')editDepositModalDateBtn.onclick=()=>openDatePicker('editDepositModalDate');if(typeof saveAppInfoBtn!=='undefined')saveAppInfoBtn.onclick=saveAppInfo;if('serviceWorker'in navigator){navigator.serviceWorker.register('sw.js')}applyThemeMode();renderAll();goPage('home');
+ballBtn.onclick=toggleMenu;pagesMenu.addEventListener('click',e=>{const b=e.target.closest('[data-page]');if(b)goPage(b.dataset.page)});addPlayerBtn.onclick=addPlayer;renamePlayerBtn.onclick=renamePlayer;deletePlayerBtn.onclick=deletePlayer;addGuestBtn.onclick=addGuest;saveMatchBtn.onclick=saveMatch;clearMatchBtn.onclick=clearMatch;saveDepositBtn.onclick=saveDeposit;if(typeof clearDepositBtn!=="undefined"&&clearDepositBtn)clearDepositBtn.onclick=clearDeposit;teamsMatchSelect.onchange=()=>{renderTeams();setTimeout(ensureDeleteMatchBtn,0)};saveTeamsBtn.onclick=saveTeams;setTimeout(ensureDeleteMatchBtn,0);playerFilterSelect.onchange=renderPlayerReport;prevMonth.onclick=()=>moveMonth(-1);nextMonth.onclick=()=>moveMonth(1);exportDataBtn.onclick=exportData;exportExcelBtn.onclick=exportExcel;importDataInput.onchange=importData;closeAdjustModal.onclick=closeAdjustEditor;saveAdjustModal.onclick=saveAdjustEditor;document.addEventListener('change',e=>{if(e.target.classList.contains('playerCheck'))renderMatchPreview()});['bookingCost','neededPlayers'].forEach(id=>document.getElementById(id).addEventListener('input',()=>pricePerPlayer.textContent=money(calcPrice())));if(typeof applyDateBtn!=='undefined')applyDateBtn.onclick=applyDatePicker;if(typeof matchDateBtn!=='undefined')matchDateBtn.onclick=()=>openDatePicker('matchDate');if(typeof depositDateBtn!=='undefined')depositDateBtn.onclick=()=>openDatePicker('depositDate');if(typeof editDepositModalDateBtn!=='undefined')editDepositModalDateBtn.onclick=()=>openDatePicker('editDepositModalDate');if(typeof saveAppInfoBtn!=='undefined')saveAppInfoBtn.onclick=saveAppInfo;if('serviceWorker'in navigator){navigator.serviceWorker.register('sw.js')}applyThemeMode();renderAll();goPage('home');
 
 
 function showConfirm(message,targetPage){
@@ -402,117 +433,23 @@ function importData(e){
   const currentTheme=(state().settings&&state().settings.themeMode)||'dark';
   const r=new FileReader();
   r.onload=()=>{
-    localStorage.setItem(LS,r.result);
     try{
+      const incoming=JSON.parse(r.result||'{}');
+      incoming.settings=incoming.settings||{};
+      incoming.settings.themeMode=currentTheme;
+      localStorage.setItem(LS,JSON.stringify(incoming));
+    }catch(err){
+      localStorage.setItem(LS,r.result);
       const s=state();
       s.settings=s.settings||{};
       s.settings.themeMode=currentTheme;
       saveNoRender(s);
-    }catch(err){}
+    }
     renderAll();
     applyThemeMode();
     alert('تم الاستيراد');
   };
   r.readAsText(f);
-}
-document.addEventListener('DOMContentLoaded',()=>{if(deletePlayerBtn)deletePlayerBtn.onclick=deletePlayer;if(saveMatchBtn)saveMatchBtn.onclick=saveMatch;if(saveDepositBtn)saveDepositBtn.onclick=saveDeposit;if(exportDataBtn)exportDataBtn.onclick=exportData;if(exportExcelBtn)exportExcelBtn.onclick=exportExcel;if(importDataInput)importDataInput.onchange=importData;const c=document.getElementById('clearDepositBtn');if(c)c.remove();document.querySelectorAll('#renamePagesBtn').forEach((b,i)=>{if(i>0)b.remove()})});
-
-
-/* R9 NIGHT UI FINAL OVERRIDES */
-function renderMenuLabels(){
-  const menu=document.getElementById('pagesMenu'); if(!menu)return;
-  const icons={home:'🏠',accounts:'💰',players:'👥',playerReport:'🔎',calendar:'📅',teams:'🟨',deposits:'💳',playerTable:'📊',matchLog:'🧾',settings:'⚙️'};
-  menu.querySelectorAll('[data-page]').forEach(btn=>{const id=btn.dataset.page;btn.textContent=(icons[id]||'📄')+' '+pageTitle(id)});
-}
-
-function forceCompactPlayerRows(){
-  const root=document.getElementById('playerTable');
-  if(!root)return;
-  const wrap=root.querySelector('.playersModernWrap');
-  const table=root.querySelector('.playersModernTable');
-  if(wrap){
-    wrap.style.setProperty('padding','0','important');
-    wrap.style.setProperty('margin','0','important');
-  }
-  if(table){
-    table.style.setProperty('border-collapse','collapse','important');
-    table.style.setProperty('border-spacing','0','important');
-    table.style.setProperty('table-layout','fixed','important');
-    table.style.setProperty('width','100%','important');
-  }
-  root.querySelectorAll('.playersModernTable thead th').forEach(el=>{
-    el.style.setProperty('height','18px','important');
-    el.style.setProperty('min-height','18px','important');
-    el.style.setProperty('max-height','18px','important');
-    el.style.setProperty('padding','0 2px','important');
-    el.style.setProperty('line-height','1','important');
-    el.style.setProperty('font-size','12px','important');
-  });
-  root.querySelectorAll('.playersModernTable tbody tr').forEach(el=>{
-    el.style.setProperty('height','42px','important');
-    el.style.setProperty('min-height','42px','important');
-    el.style.setProperty('max-height','42px','important');
-    el.style.setProperty('border-bottom','1px solid rgba(148,163,184,.34)','important');
-  });
-  root.querySelectorAll('.playersModernTable tbody td').forEach(el=>{
-    el.style.setProperty('height','42px','important');
-    el.style.setProperty('min-height','42px','important');
-    el.style.setProperty('max-height','42px','important');
-    el.style.setProperty('padding','0 3px','important');
-    el.style.setProperty('line-height','1','important');
-    el.style.setProperty('vertical-align','middle','important');
-    el.style.setProperty('background','transparent','important');
-  });
-  root.querySelectorAll('.pmNameBtn').forEach(el=>{
-    el.style.setProperty('font-size','16px','important');
-    el.style.setProperty('line-height','1','important');
-    el.style.setProperty('padding','0','important');
-    el.style.setProperty('margin','0','important');
-    el.style.setProperty('min-height','0','important');
-    el.style.setProperty('height','auto','important');
-  });
-  root.querySelectorAll('.pmBalanceCell').forEach(el=>{
-    el.style.setProperty('font-size','16px','important');
-    el.style.setProperty('line-height','1','important');
-  });
-  root.querySelectorAll('.pmGamesCell').forEach(el=>{
-    el.style.setProperty('font-size','12.5px','important');
-    el.style.setProperty('line-height','1','important');
-  });
-  root.querySelectorAll('.pmLastCell').forEach(el=>{
-    el.style.setProperty('font-size','14px','important');
-    el.style.setProperty('line-height','1','important');
-    el.style.setProperty('font-weight','950','important');
-  });
-}
-
-function openPlayerReport(p){
-  const sel=document.getElementById('playerFilterSelect');
-  if(sel)sel.value=p;
-  goPage('playerReport');
-  setTimeout(()=>{const s=document.getElementById('playerFilterSelect');if(s){s.value=p;renderPlayerReport();}},80);
-}
-function renderAccounts(s){
-  const b=balances(s),neg=s.players.filter(p=>(b[p]?.balance||0)<0),late=s.deposits.filter(d=>d.type==='late'),extra=s.extraCharges.reduce((a,x)=>a+Number(x.amount||0),0),discount=s.extraDiscounts.reduce((a,x)=>a+Number(x.amount||0),0),lateTotal=late.reduce((a,d)=>a+Math.abs(Number(d.amount||0)),0),debt=neg.reduce((a,p)=>a+Math.abs(b[p].balance),0)+discount,final=extra+lateTotal-debt;
-  const debtRows=neg.map(p=>`<div class="tRow" onclick="openPlayerReport('${escAttr(p)}')"><span>${escapeHtml(p)}</span><span>${fmDate(b[p].last)}</span><span class="moneyNeg">-${money(Math.abs(b[p].balance))}</span></div>`).join('');
-  const lateRows=late.map(d=>`<div class="tRow" onclick="openPlayerReport('${escAttr(d.player)}')"><span>${escapeHtml(d.player)}</span><span>${fmDate(d.date)}</span><span class="moneyLate">-${money(Math.abs(d.amount))}</span></div>`).join('');
-  accountsContent.innerHTML=`<div class="accountMiniCards"><div><span>المديونية</span><b class="moneyNeg">-${money(debt)}</b></div><div><span>التأخير</span><b class="moneyLate">-${money(lateTotal)}</b></div><div><span>الإضافي</span><b class="moneyPos">${money(extra)}</b></div><div><span>الإجمالي</span><b class="${amountClass(final)}">${final<0?'-':''}${money(Math.abs(final))}</b></div></div>
-  <div class="card"><h3>اللاعبين المدانين والمتأخرين</h3><div class="compactTable accountsMoneyTable"><div class="tHead"><span>الاسم</span><span>التاريخ</span><span class="amountHead">المبلغ</span></div>${debtRows}${lateRows}${(!debtRows&&!lateRows)?'<p class="muted">لا يوجد</p>':''}</div></div>
-  <div class="card"><div class="sectionTitleLine"><b>سجل الخصم / الإضافة</b><button onclick="openAdjustEditor()">تعديل</button></div>${renderAdjustRows(s)}</div>
-  <div class="card"><div class="sectionTitleLine"><b>خصم / إضافة</b></div><div class="grid2 accountsExtraGrid"><label>النوع<select id="extraType"><option value="extra">إضافة</option><option value="discount">خصم</option></select></label><label>التاريخ<button id="extraDateBtn" class="fakeDateInput" type="button" onclick="openDatePicker('extraDate')">${fmDate(today())}</button><input id="extraDate" type="hidden" value="${today()}"></label><label>المبلغ<input id="extraAmount" type="number" step="0.001"></label><label>الملاحظة<input id="extraNote"></label></div><button class="primary wide saveBtn" onclick="saveExtraUnified()">حفظ</button></div>`;
-  if(typeof updateDateButtons==='function')updateDateButtons();
-}
-
-function saveExtraUnified(){
-  const s=state(),type=extraType.value,amount=Number(extraAmount.value||0); if(!amount)return;
-  const row={id:uid(),date:extraDate.value||today(),amount:Math.abs(amount),note:extraNote.value,createdAt:Date.now()};
-  if(type==='discount')s.extraDiscounts.push(row);else s.extraCharges.push(row);
-  localStorage.setItem(LS,JSON.stringify(s)); renderAll();
-  showConfirm(type==='discount'?`تم خصم مبلغ ${money(Math.abs(amount))} من الإجمالي`:`تم اضافة مبلغ ${money(Math.abs(amount))} بنجاح`,'accounts');
-}
-function exportData(){
-  const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([JSON.stringify(state(),null,2)],{type:'application/json'})); a.download='football-backup.json'; a.click();
-  setTimeout(()=>showConfirm('تم تصدير البيانات بنجاح','settings'),120);
 }
 function exportExcel(){
   const s=state(); const rows=[['النوع','اللاعب','التاريخ','المبلغ','ملاحظة']];
