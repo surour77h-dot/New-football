@@ -3826,3 +3826,22 @@ body.lightMode .accountsMoneyTable .moneyPos,body.lightMode .depositsMoneyTable 
 body.lightMode .accountsMoneyTable .moneyNeg,body.lightMode .depositsMoneyTable .moneyNeg,body.lightMode .reportTable .moneyNeg,body.lightMode .accountMiniCards .moneyNeg,body.lightMode .reportStats .moneyNeg,body.lightMode [data-money-kind="debt"],body.lightMode [data-money-kind="discount"]{color:#dc2626!important;}
 body.lightMode .accountsMoneyTable .moneyLate,body.lightMode .depositsMoneyTable .moneyLate,body.lightMode .reportTable .moneyLate,body.lightMode .accountMiniCards .moneyLate,body.lightMode .reportStats .moneyLate,body.lightMode [data-money-kind="late"]{color:#b45309!important;text-shadow:none!important;}
 .v17MoneyTable .tRow span,.accountsMoneyTable .tRow span,.depositsMoneyTable .tRow span,.reportTable .tRow span{font-family:inherit!important;font-weight:950!important;}
+
+
+/* v18 amount colors only */
+.amtGreen{color:#0a8f4d!important;font-weight:900!important;}
+.amtRed{color:#dc2626!important;font-weight:900!important;}
+.amtDelay{color:#f97316!important;font-weight:900!important;}
+
+#deposits .moneyPos,#accounts .moneyPos,#playerReport .moneyPos,
+#deposits .pos,#accounts .pos,#playerReport .pos{
+ color:#0a8f4d!important;font-weight:900!important;
+}
+#deposits .moneyNeg,#accounts .moneyNeg,#playerReport .moneyNeg,
+#deposits .neg,#accounts .neg,#playerReport .neg{
+ color:#dc2626!important;font-weight:900!important;
+}
+#deposits .delay,#accounts .delay,#playerReport .delay,
+#deposits .late,#accounts .late,#playerReport .late{
+ color:#f97316!important;font-weight:900!important;
+}
