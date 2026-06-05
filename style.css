@@ -3990,3 +3990,21 @@ html.lightMode body button.selB{
 }
 .teamEditFooter .dangerBtn{display:none!important;}
 #players .playerItem,#players .playerRow,#players .playerName,#players b,#players span{cursor:pointer;}
+
+
+/* Batch 1 user changes */
+.calendarDay.hasMatch{
+  background:#22c55e !important;
+}
+
+.matchLog .playerName,
+.matchPlayer,
+.matchRow .name{
+  font-size:1.05em !important;
+}
+
+body.lightMode .guestName,
+body.lightMode .guestPlayer{
+  color:#8b5cf6 !important;
+  font-weight:700 !important;
+}
