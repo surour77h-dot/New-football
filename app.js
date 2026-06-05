@@ -67,12 +67,28 @@ function dedupeRenamePagesButtons(){
   btns.slice(1).forEach(b=>b.remove());
 }
 
-function renderAll(){const s=state();saveNoRender(s);refreshSelects(s);if(!matchDate.value)matchDate.value=today();if(!depositDate.value)depositDate.value=today();applyThemeMode();updateDateButtons();pricePerPlayer.textContent=money(calcPrice());if(s.settings.appTitle)document.querySelector('.title h1').textContent=s.settings.appTitle;if(s.settings.appDesc)document.querySelector('.title p').textContent=s.settings.appDesc;if(typeof appTitleInput!=='undefined'&&appTitleInput){appTitleInput.value=s.settings.appTitle||'قروب الكورة';appDescInput.value=s.settings.appDesc||'إدارة اللعبات • الحسابات • اللاعبين'}renderPlayers(s);renderMatchPlayers(s);renderDeposits(s);renderCalendar();renderCalendarList();renderTeamsSelect(s);renderTeams();renderPlayerTable(s);forceCompactPlayerRows();setTimeout(forceCompactPlayerRows,50);renderPlayerReport();renderAccounts(s);renderMatchLog(s);renderPageOrder();renderSettingsPageNames();renderMenuLabels();document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id===currentPage));pageTitle.textContent=pageTitleFn(currentPage);updateDateButtons()}
+
+function forceCalendarPlayDayLightColor(){
+  try{
+    const s=state();
+    const dates=new Set((s.matches||[]).map(m=>String(m.date||'')));
+    document.querySelectorAll('[data-date]').forEach(el=>{
+      const d=el.dataset.date||'';
+      if(dates.has(d)){
+        el.classList.add('hasMatch','playDay');
+        el.dataset.hasMatch='true';
+      }
+    });
+  }catch(e){}
+}
+
+function renderAll(){const s=state();saveNoRender(s);refreshSelects(s);if(!matchDate.value)matchDate.value=today();if(!depositDate.value)depositDate.value=today();applyThemeMode();updateDateButtons();pricePerPlayer.textContent=money(calcPrice());if(s.settings.appTitle)document.querySelector('.title h1').textContent=s.settings.appTitle;if(s.settings.appDesc)document.querySelector('.title p').textContent=s.settings.appDesc;if(typeof appTitleInput!=='undefined'&&appTitleInput){appTitleInput.value=s.settings.appTitle||'قروب الكورة';appDescInput.value=s.settings.appDesc||'إدارة اللعبات • الحسابات • اللاعبين'}renderPlayers(s);renderMatchPlayers(s);renderDeposits(s);renderCalendar();setTimeout(forceCalendarPlayDayLightColor,0);renderCalendarList();renderTeamsSelect(s);renderTeams();renderPlayerTable(s);forceCompactPlayerRows();setTimeout(forceCompactPlayerRows,50);renderPlayerReport();renderAccounts(s);renderMatchLog(s);renderPageOrder();renderSettingsPageNames();renderMenuLabels();document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id===currentPage));pageTitle.textContent=pageTitleFn(currentPage);updateDateButtons()}
 function calcPrice(){const c=Number(bookingCost.value||0),n=Number(neededPlayers.value||0);return n?c/n:0}
 function renderPlayers(s){
  playersList.innerHTML=s.players.map(p=>`<button type="button" class="playerChipBtn" onclick="openPlayerReport('${escAttr(p)}')">${escapeHtml(p)}</button>`).join('')||'<p class="muted">أضف اللاعبين أولًا.</p>';
   setTimeout(restorePlayerNameClicks,0);
   setTimeout(dedupeRenamePagesButtons,0);
+  setTimeout(forceCalendarPlayDayLightColor,0);
 }
 function renderMatchPlayers(s){matchPlayers.innerHTML=s.players.map(p=>`<label><input class="playerCheck" type="checkbox" value="${escapeHtml(p)}"> <span>${escapeHtml(p)}</span></label>`).join('');renderTempGuests();renderMatchPreview()}
 function renderTempGuests(){tempGuests.innerHTML=tempGuests.map((g,i)=>`<div class="compactItem">${escapeHtml(g.guest)} (${escapeHtml(g.owner)}) <button type="button" onclick="tempGuests.splice(${i},1);renderTempGuests();renderMatchPreview()">×</button></div>`).join('')}
@@ -261,11 +277,11 @@ function renderCalendar(){
  const days=['Sun','Mon','Tues','Wed','Thu','Fri','Sat'];
  let html=`<div class="calendarMeta">⚽ ${monthMs.length} لعبات هذا الشهر</div><div class="luxCalendarGrid">${days.map(d=>`<div class="calDayName">${d}</div>`).join('')}`;
  for(let i=0;i<first.getDay();i++)html+='<div class="calEmpty"></div>';
- for(let d=1;d<=last.getDate();d++){let date=`${y}-${String(mo+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`,ms=s.matches.filter(m=>m.date===date);html+=`<button class="calCell ${ms.length?'hasGame':''} ${selectedCalendarDate===date?'selected':''} ${date===today()?'todayCell':''}" onclick="selectedCalendarDate='${date}';renderCalendar();renderCalendarList()"><b>${d}</b>${ms.length?'<span>⚽</span>':''}</button>`}
+ for(let d=1;d<=last.getDate();d++){let date=`${y}-${String(mo+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`,ms=s.matches.filter(m=>m.date===date);html+=`<button class="calCell ${ms.length?'hasGame':''} ${selectedCalendarDate===date?'selected':''} ${date===today()?'todayCell':''}" onclick="selectedCalendarDate='${date}';renderCalendar();setTimeout(forceCalendarPlayDayLightColor,0);renderCalendarList()"><b>${d}</b>${ms.length?'<span>⚽</span>':''}</button>`}
  monthCalendar.innerHTML=html+'</div>';
 }
 function renderCalendarList(){const s=state(),ms=s.matches.filter(m=>m.date===selectedCalendarDate);calendarSelectedTitle.textContent='المشاركون';calendarList.innerHTML=selectedCalendarDate?(ms.map(m=>{const count=participants(m).length,split=count>=14?'7X7':count>=12?'6X6':(count?Math.floor(count/2)+'X'+Math.ceil(count/2):'');return `<div class="calendarMatchCard"><div class="calMatchTop"><span>⚽ ${fmDate(m.date)}</span><b>${escapeHtml(m.place||'')}</b></div><div class="calMatchMeta splitMeta"><span>${count} لاعب</span><strong>${split}</strong><b>${money(m.bookingCost||0)} د.ك</b></div>${teamHtml(s,m)}</div>`}).join('')||'<p class="muted">لا توجد لعبة بهذا التاريخ.</p>'):'<p class="muted">اضغط على يوم من التقويم.</p>'}
-function moveMonth(n){calendarView.setMonth(calendarView.getMonth()+n);renderCalendar();renderCalendarList()}
+function moveMonth(n){calendarView.setMonth(calendarView.getMonth()+n);renderCalendar();setTimeout(forceCalendarPlayDayLightColor,0);renderCalendarList()}
 function renderAccounts(s){
   const b=balances(s),neg=s.players.filter(p=>(b[p]?.balance||0)<0),late=s.deposits.filter(d=>d.type==='late'),extra=s.extraCharges.reduce((a,x)=>a+Number(x.amount||0),0),discount=s.extraDiscounts.reduce((a,x)=>a+Number(x.amount||0),0),lateTotal=late.reduce((a,d)=>a+Math.abs(Number(d.amount||0)),0),debt=neg.reduce((a,p)=>a+Math.abs(b[p].balance),0)+discount,final=extra+lateTotal-debt;
   const debtRows=neg.map(p=>`<div class="tRow" onclick="openPlayerReport('${escAttr(p)}')"><span>${escapeHtml(p)}</span><span>${fmDate(b[p].last)}</span><span class="moneyNeg">-${money(Math.abs(b[p].balance))}</span></div>`).join('');

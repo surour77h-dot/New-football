@@ -4008,3 +4008,59 @@ body.lightMode .guestPlayer{
   color:#8b5cf6 !important;
   font-weight:700 !important;
 }
+
+
+/* fix calendar play day in light mode */
+body.lightMode .calendarDay.hasMatch,
+body.lightMode .calendarDay.playDay,
+body.lightMode .calendarDay.matchDay,
+body.lightMode .calDay.hasMatch,
+body.lightMode .calDay.playDay,
+body.lightMode .dayCell.hasMatch,
+body.lightMode .dayCell.playDay,
+body.lightMode .calendarGrid .hasMatch,
+body.lightMode .calendarGrid .playDay,
+body.lightMode [data-has-match="true"]{
+  background:#dbeafe !important;
+  border:2px solid #2563eb !important;
+  color:#0f172a !important;
+  font-weight:900 !important;
+}
+
+/* fix match log player names */
+#matchLog .teamName,
+#matchLog .playerName,
+#matchLog .matchPlayer,
+#matchLog .matchName,
+#matchLog .luxTeamBox .teamName,
+#matchLog .unpickedMembers span,
+#matchLog .unpickedGuests div,
+.matchLog .teamName,
+.matchLog .playerName,
+.matchLog .matchPlayer,
+.matchLog .matchName,
+.matchLog .luxTeamBox .teamName,
+.matchLog .unpickedMembers span,
+.matchLog .unpickedGuests div{
+  font-size:16px !important;
+  font-weight:800 !important;
+  line-height:1.35 !important;
+}
+@media (max-width:390px){
+  #matchLog .teamName,
+  #matchLog .playerName,
+  #matchLog .matchPlayer,
+  #matchLog .matchName,
+  #matchLog .luxTeamBox .teamName,
+  #matchLog .unpickedMembers span,
+  #matchLog .unpickedGuests div,
+  .matchLog .teamName,
+  .matchLog .playerName,
+  .matchLog .matchPlayer,
+  .matchLog .matchName,
+  .matchLog .luxTeamBox .teamName,
+  .matchLog .unpickedMembers span,
+  .matchLog .unpickedGuests div{
+    font-size:15px !important;
+  }
+}
