@@ -4064,3 +4064,61 @@ body.lightMode [data-has-match="true"]{
     font-size:15px !important;
   }
 }
+
+
+/* ===== REAL FIX: Calendar play day uses .calCell.hasGame ===== */
+body.lightMode .luxCalendarGrid .calCell.hasGame,
+html.lightMode body .luxCalendarGrid .calCell.hasGame,
+body.lightMode button.calCell.hasGame,
+html.lightMode body button.calCell.hasGame{
+  background:#dbeafe !important;
+  border:2px solid #2563eb !important;
+  color:#0f172a !important;
+  box-shadow:0 0 0 2px rgba(37,99,235,.12) inset !important;
+  font-weight:900 !important;
+}
+
+body.lightMode .luxCalendarGrid .calCell.hasGame b,
+body.lightMode .luxCalendarGrid .calCell.hasGame span,
+html.lightMode body .luxCalendarGrid .calCell.hasGame b,
+html.lightMode body .luxCalendarGrid .calCell.hasGame span{
+  color:#0f172a !important;
+  font-weight:900 !important;
+}
+
+/* Keep selected/today readable if also game day */
+body.lightMode .luxCalendarGrid .calCell.hasGame.selected,
+body.lightMode .luxCalendarGrid .calCell.hasGame.todayCell{
+  background:#bfdbfe !important;
+  border-color:#1d4ed8 !important;
+}
+
+/* ===== REAL FIX: Match log names are inside .matchCard .teamName ===== */
+#matchLog .matchCard .teamName,
+#matchLog .matchCard .unpickedMembers span,
+#matchLog .matchCard .unpickedGuests div,
+.matchCard .luxTeamBox .teamName,
+.matchCard .unpickedMembers span,
+.matchCard .unpickedGuests div{
+  font-size:16px !important;
+  font-weight:850 !important;
+  line-height:1.35 !important;
+}
+
+/* Slightly bigger team titles too */
+#matchLog .matchCard .luxTeamBox h4,
+.matchCard .luxTeamBox h4{
+  font-size:15px !important;
+  font-weight:900 !important;
+}
+
+@media (max-width:390px){
+  #matchLog .matchCard .teamName,
+  #matchLog .matchCard .unpickedMembers span,
+  #matchLog .matchCard .unpickedGuests div,
+  .matchCard .luxTeamBox .teamName,
+  .matchCard .unpickedMembers span,
+  .matchCard .unpickedGuests div{
+    font-size:15px !important;
+  }
+}
