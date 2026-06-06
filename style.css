@@ -4122,3 +4122,52 @@ body.lightMode .luxCalendarGrid .calCell.hasGame.todayCell{
     font-size:15px !important;
   }
 }
+
+
+/* ===== CUSTOM EDITS v19 ===== */
+
+/* Home page info bar */
+.homeInfoGrid{display:flex;gap:16px;flex-wrap:wrap;justify-content:flex-start;}
+.homeInfoGrid span{white-space:nowrap;}
+
+/* Guest names clickable in light mode */
+.guestItem{display:flex;align-items:center;justify-content:space-between;gap:8px;}
+.guestNameBtn{cursor:pointer;flex:1;padding:2px 4px;border-radius:6px;transition:background .15s;}
+.guestNameBtn:hover{background:rgba(215,169,67,.15);}
+body.lightMode .guestItem{background:#fff3cd !important;border-color:#f6b800 !important;color:#7a5200 !important;}
+body.lightMode .guestItem .guestNameBtn{color:#7a5200 !important;}
+body.lightMode .guestItem button{background:#fde68a !important;color:#92400e !important;border-color:#f6b800 !important;}
+
+/* Calendar play day in light mode - vivid green */
+body.lightMode .luxCalendarGrid .calCell.hasGame,
+html.lightMode body .luxCalendarGrid .calCell.hasGame,
+body.lightMode button.calCell.hasGame{
+  background: linear-gradient(180deg,#bbf7d0,#dcfce7) !important;
+  border: 2px solid #16a34a !important;
+  color: #14532d !important;
+  font-weight: 900 !important;
+  box-shadow: 0 0 0 2px rgba(22,163,74,.18) !important;
+}
+body.lightMode .luxCalendarGrid .calCell.hasGame b,
+body.lightMode .luxCalendarGrid .calCell.hasGame span{
+  color:#14532d !important;
+  filter: none !important;
+}
+
+/* Match log - bigger name font */
+#matchLog .matchCard .teamName,
+#matchLog .matchCard .unpickedMembers span,
+#matchLog .matchCard .unpickedGuests div,
+.matchCard .luxTeamBox .teamName,
+.matchCard .unpickedMembers span,
+.matchCard .unpickedGuests div{
+  font-size:17px !important;
+  font-weight:900 !important;
+  line-height:1.4 !important;
+}
+.matchMetaBig{font-size:14px !important;font-weight:700 !important;}
+body.lightMode .matchMetaBig span, body.lightMode .matchMetaBig b{color:#1d4ed8 !important;}
+
+/* readOnly row in adjust editor */
+.readOnlyRow{opacity:.7;cursor:default !important;}
+.readOnlyRow span:first-child::after{content:' 🔒';font-size:10px;}
