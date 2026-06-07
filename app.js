@@ -682,43 +682,43 @@ document.addEventListener('DOMContentLoaded',()=>{
 
 
 // ===== EVENT BINDINGS =====
-(function initApp(){
-  if(typeof ballBtn!=='undefined'&&ballBtn) ballBtn.onclick=toggleMenu;
-  if(typeof pagesMenu!=='undefined'&&pagesMenu) pagesMenu.addEventListener('click',e=>{const b=e.target.closest('[data-page]');if(b)goPage(b.dataset.page)});
-  if(typeof addPlayerBtn!=='undefined'&&addPlayerBtn) addPlayerBtn.onclick=addPlayer;
-  if(typeof renamePlayerBtn!=='undefined'&&renamePlayerBtn) renamePlayerBtn.onclick=renamePlayer;
-  if(typeof deletePlayerBtn!=='undefined'&&deletePlayerBtn) deletePlayerBtn.onclick=deletePlayer;
-  if(typeof addGuestBtn!=='undefined'&&addGuestBtn) addGuestBtn.onclick=addGuest;
-  if(typeof saveMatchBtn!=='undefined'&&saveMatchBtn) saveMatchBtn.onclick=saveMatch;
-  if(typeof clearMatchBtn!=='undefined'&&clearMatchBtn) clearMatchBtn.onclick=clearMatch;
-  if(typeof saveDepositBtn!=='undefined'&&saveDepositBtn) saveDepositBtn.onclick=saveDeposit;
-  if(typeof clearDepositBtn!=='undefined'&&clearDepositBtn) clearDepositBtn.onclick=clearDeposit;
-  if(typeof teamsMatchSelect!=='undefined'&&teamsMatchSelect) teamsMatchSelect.onchange=()=>{renderTeams();setTimeout(ensureDeleteMatchBtn,0)};
-  if(typeof saveTeamsBtn!=='undefined'&&saveTeamsBtn) saveTeamsBtn.onclick=saveTeams;
+function initApp(){
+  ballBtn.onclick=toggleMenu;
+  pagesMenu.addEventListener('click',e=>{const b=e.target.closest('[data-page]');if(b)goPage(b.dataset.page)});
+  addPlayerBtn.onclick=addPlayer;
+  renamePlayerBtn.onclick=renamePlayer;
+  deletePlayerBtn.onclick=deletePlayer;
+  addGuestBtn.onclick=addGuest;
+  saveMatchBtn.onclick=saveMatch;
+  clearMatchBtn.onclick=clearMatch;
+  saveDepositBtn.onclick=saveDeposit;
+  if(typeof clearDepositBtn!=='undefined'&&clearDepositBtn)clearDepositBtn.onclick=clearDeposit;
+  teamsMatchSelect.onchange=()=>{renderTeams();setTimeout(ensureDeleteMatchBtn,0)};
+  saveTeamsBtn.onclick=saveTeams;
   setTimeout(ensureDeleteMatchBtn,0);
-  if(typeof playerFilterSelect!=='undefined'&&playerFilterSelect) playerFilterSelect.onchange=renderPlayerReport;
-  if(typeof prevMonth!=='undefined'&&prevMonth) prevMonth.onclick=()=>moveMonth(-1);
-  if(typeof nextMonth!=='undefined'&&nextMonth) nextMonth.onclick=()=>moveMonth(1);
-  if(typeof exportDataBtn!=='undefined'&&exportDataBtn) exportDataBtn.onclick=exportData;
-  if(typeof exportExcelBtn!=='undefined'&&exportExcelBtn) exportExcelBtn.onclick=exportExcel;
-  // importDataInput - most critical
-  const impEl=document.getElementById('importDataInput');
-  if(impEl) impEl.onchange=importData;
-  if(typeof importDataInput!=='undefined'&&importDataInput) importDataInput.onchange=importData;
-  if(typeof closeAdjustModal!=='undefined'&&closeAdjustModal) closeAdjustModal.onclick=closeAdjustEditor;
-  if(typeof saveAdjustModal!=='undefined'&&saveAdjustModal) saveAdjustModal.onclick=saveAdjustEditor;
+  playerFilterSelect.onchange=renderPlayerReport;
+  prevMonth.onclick=()=>moveMonth(-1);
+  nextMonth.onclick=()=>moveMonth(1);
+  exportDataBtn.onclick=exportData;
+  exportExcelBtn.onclick=exportExcel;
+  document.getElementById('importDataInput').onchange=importData;
+  closeAdjustModal.onclick=closeAdjustEditor;
+  saveAdjustModal.onclick=saveAdjustEditor;
   document.addEventListener('change',e=>{if(e.target.classList.contains('playerCheck')){renderMatchPreview();updateHomeInfoBar();}});
   ['bookingCost','neededPlayers','extraFee'].forEach(id=>{const el=document.getElementById(id);if(el)el.addEventListener('input',updateHomeInfoBar);});
-  if(typeof applyDateBtn!=='undefined'&&applyDateBtn) applyDateBtn.onclick=applyDatePicker;
-  if(typeof matchDateBtn!=='undefined'&&matchDateBtn) matchDateBtn.onclick=()=>openDatePicker('matchDate');
-  if(typeof depositDateBtn!=='undefined'&&depositDateBtn) depositDateBtn.onclick=()=>openDatePicker('depositDate');
-  if(typeof editDepositModalDateBtn!=='undefined'&&editDepositModalDateBtn) editDepositModalDateBtn.onclick=()=>openDatePicker('editDepositModalDate');
-  if(typeof saveAppInfoBtn!=='undefined'&&saveAppInfoBtn) saveAppInfoBtn.onclick=saveAppInfo;
-  if('serviceWorker' in navigator){ navigator.serviceWorker.register('sw.js'); }
-  applyThemeMode();
-  renderAll();
-  goPage('home');
-})();
+  if(typeof applyDateBtn!=='undefined')applyDateBtn.onclick=applyDatePicker;
+  if(typeof matchDateBtn!=='undefined')matchDateBtn.onclick=()=>openDatePicker('matchDate');
+  if(typeof depositDateBtn!=='undefined')depositDateBtn.onclick=()=>openDatePicker('depositDate');
+  if(typeof editDepositModalDateBtn!=='undefined')editDepositModalDateBtn.onclick=()=>openDatePicker('editDepositModalDate');
+  if(typeof saveAppInfoBtn!=='undefined')saveAppInfoBtn.onclick=saveAppInfo;
+  if('serviceWorker'in navigator){navigator.serviceWorker.register('sw.js')}
+  applyThemeMode();renderAll();goPage('home');
+}
+if(document.readyState==='loading'){
+  document.addEventListener('DOMContentLoaded', initApp);
+}else{
+  initApp();
+}
 // ===== END EVENT BINDINGS =====
 
 /* ===== REAL FINAL PLAYER TABLE COMPACT v9 =====
