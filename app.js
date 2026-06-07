@@ -384,27 +384,33 @@ function applyThemeMode(){
 }
 function exportData(){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(state(),null,2)],{type:'application/json'}));a.download='football-backup.json';a.click()}
 function importData(e){
-  const f=e.target.files[0];
-  if(!f)return;
+  const f=e.target.files[0]; if(!f)return;
   const currentTheme=(state().settings&&state().settings.themeMode)||'dark';
   const r=new FileReader();
   r.onload=()=>{
     try{
-      const incoming=JSON.parse(r.result||'{}');
+      const raw=r.result||'{}';
+      const incoming=JSON.parse(raw);
       incoming.settings=incoming.settings||{};
       incoming.settings.themeMode=currentTheme;
       localStorage.setItem(LS,JSON.stringify(incoming));
     }catch(err){
-      localStorage.setItem(LS,r.result);
-      const s=state();
-      s.settings=s.settings||{};
-      s.settings.themeMode=currentTheme;
-      saveNoRender(s);
+      // fallback: store raw and patch theme
+      try{
+        localStorage.setItem(LS,r.result);
+        const s=state();
+        s.settings=s.settings||{};
+        s.settings.themeMode=currentTheme;
+        saveNoRender(s);
+      }catch(e2){}
     }
     renderAll();
     applyThemeMode();
-    alert('تم الاستيراد');
+    goPage('settings');
+    if(typeof showConfirm==='function') showConfirm('تم استيراد البيانات بنجاح','settings');
+    else alert('تم استيراد البيانات بنجاح');
   };
+  r.onerror=()=>{ alert('فشل قراءة الملف'); };
   r.readAsText(f);
 }
 function exportExcel(){alert('تصدير Excel في هذه النسخة سيكون ملف CSV لاحقاً')}
@@ -509,27 +515,33 @@ function renderMenuLabels(){const menu=document.getElementById('pagesMenu');if(!
 function exportData(){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(state(),null,2)],{type:'application/json'}));a.download='football-backup.json';a.click();showConfirm('تم تصدير البيانات بنجاح','settings')}
 function exportExcel(){let s=state(),rows=['player,balance,games,last'];let b=balances(s);s.players.forEach(p=>rows.push(`${p},${b[p]?.balance||0},${b[p]?.games||0},${b[p]?.last||''}`));const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([rows.join('\n')],{type:'text/csv'}));a.download='football-export.csv';a.click();showConfirm('تم تصدير البيانات بنجاح كملف EXCEL','settings')}
 function importData(e){
-  const f=e.target.files[0];
-  if(!f)return;
+  const f=e.target.files[0]; if(!f)return;
   const currentTheme=(state().settings&&state().settings.themeMode)||'dark';
   const r=new FileReader();
   r.onload=()=>{
     try{
-      const incoming=JSON.parse(r.result||'{}');
+      const raw=r.result||'{}';
+      const incoming=JSON.parse(raw);
       incoming.settings=incoming.settings||{};
       incoming.settings.themeMode=currentTheme;
       localStorage.setItem(LS,JSON.stringify(incoming));
     }catch(err){
-      localStorage.setItem(LS,r.result);
-      const s=state();
-      s.settings=s.settings||{};
-      s.settings.themeMode=currentTheme;
-      saveNoRender(s);
+      // fallback: store raw and patch theme
+      try{
+        localStorage.setItem(LS,r.result);
+        const s=state();
+        s.settings=s.settings||{};
+        s.settings.themeMode=currentTheme;
+        saveNoRender(s);
+      }catch(e2){}
     }
     renderAll();
     applyThemeMode();
-    alert('تم الاستيراد');
+    goPage('settings');
+    if(typeof showConfirm==='function') showConfirm('تم استيراد البيانات بنجاح','settings');
+    else alert('تم استيراد البيانات بنجاح');
   };
+  r.onerror=()=>{ alert('فشل قراءة الملف'); };
   r.readAsText(f);
 }
 function exportExcel(){
@@ -581,16 +593,28 @@ function importData(e){
   const r=new FileReader();
   r.onload=()=>{
     try{
-      const incoming=JSON.parse(r.result||'{}');
+      const raw=r.result||'{}';
+      const incoming=JSON.parse(raw);
       incoming.settings=incoming.settings||{};
       incoming.settings.themeMode=currentTheme;
       localStorage.setItem(LS,JSON.stringify(incoming));
     }catch(err){
-      localStorage.setItem(LS,r.result);
-      const s=state();s.settings=s.settings||{};s.settings.themeMode=currentTheme;saveNoRender(s);
+      // fallback: store raw and patch theme
+      try{
+        localStorage.setItem(LS,r.result);
+        const s=state();
+        s.settings=s.settings||{};
+        s.settings.themeMode=currentTheme;
+        saveNoRender(s);
+      }catch(e2){}
     }
-    renderAll();applyThemeMode();goPage('settings');showConfirm('تم استيراد البيانات للتطبيق','settings');
+    renderAll();
+    applyThemeMode();
+    goPage('settings');
+    if(typeof showConfirm==='function') showConfirm('تم استيراد البيانات بنجاح','settings');
+    else alert('تم استيراد البيانات بنجاح');
   };
+  r.onerror=()=>{ alert('فشل قراءة الملف'); };
   r.readAsText(f);
 }
 function applyThemeMode(){
