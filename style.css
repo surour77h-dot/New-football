@@ -4271,9 +4271,7 @@ html.darkMode body #playerReport .moneyNeg {
 
 /* ---- Player table summary cards ---- */
 .ptSummaryCards {
-  margin-top:10px !important;
-  display:flex !important;
-  gap:8px !important;
+  margin-top:14px !important;
 }
 
 /* ---- Teams: selA/selB colors all modes ---- */
