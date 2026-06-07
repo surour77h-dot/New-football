@@ -4308,3 +4308,111 @@ body.lightMode .teamABox h4 { color:#92400e !important; }
 body.lightMode .teamBBox { border-color:#db2777 !important; }
 body.lightMode .teamBBox h4 { color:#9d174d !important; }
 /* keep original background - no override */
+
+
+/* ===== CUSTOM EDITS v22 ===== */
+
+/* ---- Home page grid layout ---- */
+.homeGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+.homeGrid > label { display: flex; flex-direction: column; gap: 4px; }
+.homeSubRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+.homeSubRow .neededLabel { display: flex; flex-direction: column; gap: 4px; }
+.homeSubRow input { width: 100% !important; max-width: 100% !important; }
+
+/* ---- teamTabs buttons: yellow/pink background when selected ---- */
+.teamTabs button.selA {
+  background: #facc15 !important;
+  color: #111 !important;
+  border-color: #ca8a04 !important;
+  font-weight: 900 !important;
+  text-shadow: none !important;
+  border-bottom: none !important;
+}
+.teamTabs button.selB {
+  background: #f472b6 !important;
+  color: #111 !important;
+  border-color: #db2777 !important;
+  font-weight: 900 !important;
+  text-shadow: none !important;
+  border-bottom: none !important;
+}
+body.lightMode .teamTabs button.selA { background: #fde047 !important; color: #111 !important; border-color: #a16207 !important; }
+body.lightMode .teamTabs button.selB { background: #f9a8d4 !important; color: #111 !important; border-color: #9d174d !important; }
+
+/* ---- teamABox/teamBBox: yellow/pink border, no bg change, both modes ---- */
+.teamABox,
+.matchCard .teamABox,
+.calendarMatchCard .teamABox,
+#matchLog .teamABox,
+#calendar .teamABox {
+  border: 2px solid #facc15 !important;
+  box-shadow: 0 0 0 1px rgba(250,204,21,.15) !important;
+}
+.teamBBox,
+.matchCard .teamBBox,
+.calendarMatchCard .teamBBox,
+#matchLog .teamBBox,
+#calendar .teamBBox {
+  border: 2px solid #f472b6 !important;
+  box-shadow: 0 0 0 1px rgba(244,114,182,.15) !important;
+}
+.teamABox h4 { color: #facc15 !important; }
+.teamBBox h4 { color: #f472b6 !important; }
+body.lightMode .teamABox { border-color: #ca8a04 !important; }
+body.lightMode .teamBBox { border-color: #db2777 !important; }
+body.lightMode .teamABox h4 { color: #92400e !important; }
+body.lightMode .teamBBox h4 { color: #9d174d !important; }
+
+/* ---- adjustTable: 4 columns with note ---- */
+.adjustTable .tHead,
+.adjustTable .tRow {
+  display: grid !important;
+  grid-template-columns: 64px 1fr 56px 80px !important;
+  gap: 4px !important;
+  align-items: center !important;
+}
+.adjustTable .tHead span { font-size: 11px !important; }
+.adjustTable .noteCell {
+  font-size: 11px !important;
+  color: var(--muted) !important;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+/* sign on right: discount shows "3.000 -" */
+.adjustTable .tRow span:last-child {
+  direction: ltr !important;
+  text-align: left !important;
+  white-space: nowrap !important;
+}
+
+/* ---- playerTable summary boxes: label above box ---- */
+.ptSummaryCards {
+  margin-top: 14px !important;
+}
+.ptSummaryCards > div {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+.ptSummaryCards > div > span {
+  display: block !important;
+  margin-bottom: 4px !important;
+  font-size: 11px !important;
+  color: var(--muted) !important;
+  font-weight: 900 !important;
+  text-align: center !important;
+}
+.ptSummaryCards > div > b {
+  font-size: 18px !important;
+  font-weight: 950 !important;
+}
