@@ -4171,3 +4171,142 @@ body.lightMode .matchMetaBig span, body.lightMode .matchMetaBig b{color:#1d4ed8 
 /* readOnly row in adjust editor */
 .readOnlyRow{opacity:.7;cursor:default !important;}
 .readOnlyRow span:first-child::after{content:' 🔒';font-size:10px;}
+
+
+/* ===== CUSTOM EDITS v20 ===== */
+
+/* ---- Home page new grid layout ---- */
+.homeInputGrid { display:flex; flex-direction:column; gap:8px; margin-bottom:4px; }
+.homeRow1 { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+.homeRow2 { display:grid; grid-template-columns:1fr 1fr auto; gap:8px; align-items:end; }
+.labelSmall { flex-shrink:0; }
+.labelSmall input { max-width:54px !important; }
+.neededLabel input { max-width:54px !important; }
+/* keep grid2 for existing rows */
+
+/* addGuestLine: button + registered badge in one row */
+.addGuestLine { display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-top:4px; }
+.registeredBadge {
+  background:var(--panel2);
+  border:1px solid var(--line);
+  border-radius:10px;
+  padding:4px 10px;
+  font-size:13px;
+  color:var(--muted);
+  white-space:nowrap;
+}
+.registeredBadge b { color:var(--text); font-weight:900; }
+body.lightMode .registeredBadge { background:#f1f5f9 !important; color:#334155 !important; border-color:rgba(15,23,42,.16) !important; }
+body.lightMode .registeredBadge b { color:#111827 !important; }
+
+/* ---- Guest names in المشاركون - better light mode color ---- */
+body.lightMode .guestItem {
+  background:#e0f2fe !important;
+  border-color:#0284c7 !important;
+  color:#0c4a6e !important;
+}
+body.lightMode .guestItem .guestNameBtn { color:#0c4a6e !important; font-weight:700; }
+body.lightMode .guestItem button { background:#bae6fd !important; color:#0c4a6e !important; border-color:#0284c7 !important; }
+
+/* ---- Money colors: match playerTable for deposits/accounts/report ---- */
+/* Light mode: use same amber/green as playerTable */
+body.lightMode #deposits .moneyPos,
+body.lightMode #accounts .moneyPos,
+body.lightMode #playerReport .moneyPos {
+  color:#059669 !important;
+}
+body.lightMode #deposits .moneyNeg,
+body.lightMode #accounts .moneyNeg,
+body.lightMode #playerReport .moneyNeg {
+  color:#dc2626 !important;
+}
+
+/* Dark mode: use same bright green/red as playerTable */
+body.darkMode #deposits .moneyPos,
+body.darkMode #accounts .moneyPos,
+body.darkMode #playerReport .moneyPos,
+html.darkMode body #deposits .moneyPos,
+html.darkMode body #accounts .moneyPos,
+html.darkMode body #playerReport .moneyPos {
+  color:#34d399 !important;
+}
+body.darkMode #deposits .moneyNeg,
+body.darkMode #accounts .moneyNeg,
+body.darkMode #playerReport .moneyNeg,
+html.darkMode body #deposits .moneyNeg,
+html.darkMode body #accounts .moneyNeg,
+html.darkMode body #playerReport .moneyNeg {
+  color:#ff5b6e !important;
+}
+
+/* ---- Match log names smaller ---- */
+#matchLog .matchCard .teamName,
+#matchLog .matchCard .unpickedMembers span,
+#matchLog .matchCard .unpickedGuests div,
+.matchCard .luxTeamBox .teamName,
+.matchCard .unpickedMembers span,
+.matchCard .unpickedGuests div {
+  font-size:14px !important;
+  font-weight:850 !important;
+  line-height:1.35 !important;
+}
+
+/* ---- Adjust table: note column, sign on right ---- */
+.adjustTable .tHead,
+.adjustTable .tRow {
+  grid-template-columns: 68px 1fr 64px 72px !important;
+}
+.adjustTable .noteCell {
+  color:var(--muted);
+  font-size:12px;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+/* amount with sign on right: use bdi so minus appears right */
+.adjustTable .tRow span:last-child bdi {
+  display:inline-block;
+  direction:ltr;
+}
+
+/* ---- Player table summary cards ---- */
+.ptSummaryCards {
+  margin-top:10px !important;
+  display:flex !important;
+  gap:8px !important;
+}
+
+/* ---- Teams: selA/selB colors all modes ---- */
+.teamTabs button.selA,
+body.lightMode .teamTabs button.selA,
+body.darkMode .teamTabs button.selA {
+  background:#facc15 !important;
+  color:#111 !important;
+  border-color:#ca8a04 !important;
+  font-weight:900 !important;
+}
+.teamTabs button.selB,
+body.lightMode .teamTabs button.selB,
+body.darkMode .teamTabs button.selB {
+  background:#f472b6 !important;
+  color:#111 !important;
+  border-color:#db2777 !important;
+  font-weight:900 !important;
+}
+
+/* ---- Teams preview boxes: yellow/pink border, no bg change ---- */
+.teamABox {
+  border:2px solid #facc15 !important;
+  box-shadow:none !important;
+}
+.teamBBox {
+  border:2px solid #f472b6 !important;
+  box-shadow:none !important;
+}
+.teamABox h4 { color:#facc15 !important; }
+.teamBBox h4 { color:#f472b6 !important; }
+body.lightMode .teamABox { border-color:#ca8a04 !important; }
+body.lightMode .teamABox h4 { color:#92400e !important; }
+body.lightMode .teamBBox { border-color:#db2777 !important; }
+body.lightMode .teamBBox h4 { color:#9d174d !important; }
+/* keep original background - no override */

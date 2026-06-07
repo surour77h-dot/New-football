@@ -91,7 +91,7 @@ function updateHomeInfoBar(){
   if(tDisp)tDisp.textContent=money(total);
   if(typeof pricePerPlayer!=='undefined'&&pricePerPlayer)pricePerPlayer.textContent=money(calcPrice());
   const rc=document.getElementById('registeredCount');
-  if(rc){const checked=[...document.querySelectorAll('.playerCheck:checked')].length;rc.value=(checked+(Array.isArray(tempGuests)?tempGuests.length:0))+' لاعب';}
+  if(rc){const checked=[...document.querySelectorAll('.playerCheck:checked')].length;const total=checked+(Array.isArray(tempGuests)?tempGuests.length:0);rc.textContent=total+' لاعب';}
 }
 function renderPlayers(s){
  playersList.innerHTML=s.players.map(p=>`<button type="button" class="playerChipBtn" onclick="openPlayerReport('${escAttr(p)}')">${escapeHtml(p)}</button>`).join('')||'<p class="muted">أضف اللاعبين أولًا.</p>';
@@ -214,7 +214,9 @@ function deleteSelectedMatchFromTeams(){
 
 function renderPlayerTable(s){
  const b=balances(s),latest=Object.values(b).map(x=>x.last).filter(Boolean).sort().pop()||'';
- playerTableWrap.innerHTML=`<div class="playersModernWrap"><table class="playersModernTable"><thead><tr><th class="pmNameH">الاسم</th><th class="pmBalanceH">الرصيد</th><th class="pmGamesH">لعب</th><th class="pmLastH">آخر لعب</th></tr></thead><tbody>${s.players.map(p=>{const info=b[p]||{}, bal=Number(info.balance||0), inactive=isInactiveThisYear(info.last), isLatest=!!(info.last&&info.last===latest);return `<tr class="pmRow ${inactive?'pmInactive':''} ${isLatest?'pmLatest':''}"><td class="pmNameCell"><button type="button" class="pmNameBtn" onclick="openPlayerReport('${escAttr(p)}')" onclick="openPlayerReport(\'${escAttr(p)}\')">${escapeHtml(p)}</button></td><td class="pmBalanceCell ${bal<0?'moneyNeg':amountClass(bal)}">${fmAmount(bal)}</td><td class="pmGamesCell">${info.games||''}</td><td class="pmLastCell ${isLatest?'pmLatestDate':''}">${fmDate(info.last)}</td></tr>`}).join('')}</tbody></table></div>`;
+ const totalPos=s.players.reduce((a,p)=>{const bal=Number((b[p]||{}).balance||0);return a+(bal>0?bal:0);},0);
+ const totalNeg=s.players.reduce((a,p)=>{const bal=Number((b[p]||{}).balance||0);return a+(bal<0?Math.abs(bal):0);},0);
+ playerTableWrap.innerHTML=`<div class="playersModernWrap"><table class="playersModernTable"><thead><tr><th class="pmNameH">الاسم</th><th class="pmBalanceH">الرصيد</th><th class="pmGamesH">لعب</th><th class="pmLastH">آخر لعب</th></tr></thead><tbody>${s.players.map(p=>{const info=b[p]||{}, bal=Number(info.balance||0), inactive=isInactiveThisYear(info.last), isLatest=!!(info.last&&info.last===latest);return `<tr class="pmRow ${inactive?'pmInactive':''} ${isLatest?'pmLatest':''}"><td class="pmNameCell"><button type="button" class="pmNameBtn" onclick="openPlayerReport('${escAttr(p)}')" onclick="openPlayerReport(\'${escAttr(p)}\')">${escapeHtml(p)}</button></td><td class="pmBalanceCell ${bal<0?'moneyNeg':amountClass(bal)}">${fmAmount(bal)}</td><td class="pmGamesCell">${info.games||''}</td><td class="pmLastCell ${isLatest?'pmLatestDate':''}">${fmDate(info.last)}</td></tr>`}).join('')}</tbody></table></div><div class="accountMiniCards ptSummaryCards"><div><span>رصيد اللاعبين</span><b class="moneyPos">${money(totalPos)}</b></div><div><span>المطلوب</span><b class="moneyNeg">-${money(totalNeg)}</b></div></div>`;
  forceCompactPlayerRows();setTimeout(forceCompactPlayerRows,30);
 }
 
@@ -317,7 +319,7 @@ function renderAccounts(s){
 function renderAdjustRows(s){
   const matchBonus=(s.matches||[]).filter(m=>Number(m.extraFee||0)>0).map(m=>({id:'mb_'+m.id,date:m.date,amount:Number(m.extraFee),t:'مبلغ إضافي',cls:'moneyPos',type:'matchBonus'}));
   let rows=[...matchBonus,...(s.extraCharges||[]).map(x=>({...x,t:'إضافة',cls:'moneyPos',type:'extra'})),...(s.extraDiscounts||[]).map(x=>({...x,t:'خصم',cls:'moneyNeg',type:'discount'}))].sort((a,b)=>(b.date||'').localeCompare(a.date||''));
-  return `<div class="compactTable accountsMoneyTable"><div class="tHead"><span>التاريخ</span><span>العملية</span><span class="amountHead">المبلغ</span></div>${rows.map(r=>`<div class="tRow"><span>${fmDate(r.date)}</span><span>${r.t}</span><span class="${r.cls}">${r.type==='discount'?'-':''}${money(Math.abs(r.amount||0))}</span></div>`).join('')||'<p class="muted">لا يوجد</p>'}</div>`;
+  return `<div class="compactTable accountsMoneyTable adjustTable"><div class="tHead"><span>التاريخ</span><span>الملاحظة</span><span>العملية</span><span class="amountHead">المبلغ</span></div>${rows.map(r=>`<div class="tRow"><span>${fmDate(r.date)}</span><span class="noteCell">${r.type==='matchBonus'?'تكملة القطية':(r.note||'')}</span><span>${r.t}</span><span class="${r.cls}">${r.type==='discount'?'':r.type==='matchBonus'?'':r.type==='extra'?'':''}<bdi>${r.type==='discount'?money(Math.abs(r.amount||0))+' -':money(Math.abs(r.amount||0))}</bdi></span></div>`).join('')||'<p class="muted">لا يوجد</p>'}</div>`;
 }
 function saveExtraUnified(){
   const s=state(),type=extraType.value,amount=Number(extraAmount.value||0);if(!amount)return;
@@ -326,7 +328,7 @@ function saveExtraUnified(){
 }
 function openAdjustEditor(){const s=state();adjustEditorDraft={extraCharges:JSON.parse(JSON.stringify(s.extraCharges)),extraDiscounts:JSON.parse(JSON.stringify(s.extraDiscounts))};renderAdjustEditTable();adjustEditModal.classList.add('show')}
 function closeAdjustEditor(){adjustEditModal.classList.remove('show')}
-function renderAdjustEditTable(){let s=adjustEditorDraft;const matchBonus=(state().matches||[]).filter(m=>Number(m.extraFee||0)>0).map(m=>({id:'mb_'+m.id,date:m.date,amount:Number(m.extraFee),t:'مبلغ إضافي',cls:'moneyPos',type:'matchBonus'}));let rows=[...matchBonus,...s.extraCharges.map(x=>({...x,t:'إضافة',cls:'moneyPos',type:'extra'})),...s.extraDiscounts.map(x=>({...x,t:'خصم',cls:'moneyNeg',type:'discount'}))];adjustEditTable.innerHTML=`<div class="tHead"><span>التاريخ</span><span>العملية</span><span>المبلغ</span></div>${rows.map(r=>r.type==='matchBonus'?`<div class="tRow readOnlyRow"><span>${fmDate(r.date)}</span><span>${r.t}</span><span class="${r.cls}">${money(r.amount)}</span></div>`:`<div class="tRow" onclick="removeAdjust('${r.type}','${r.id}')"><span>${fmDate(r.date)}</span><span>${r.t}</span><span class="${r.cls}">${money(r.amount)}</span></div>`).join('')}`}
+function renderAdjustEditTable(){let s=adjustEditorDraft;const matchBonus=(state().matches||[]).filter(m=>Number(m.extraFee||0)>0).map(m=>({id:'mb_'+m.id,date:m.date,amount:Number(m.extraFee),t:'مبلغ إضافي',cls:'moneyPos',type:'matchBonus'}));let rows=[...matchBonus,...s.extraCharges.map(x=>({...x,t:'إضافة',cls:'moneyPos',type:'extra'})),...s.extraDiscounts.map(x=>({...x,t:'خصم',cls:'moneyNeg',type:'discount'}))];adjustEditTable.innerHTML=`<div class="tHead"><span>التاريخ</span><span>الملاحظة</span><span>العملية</span><span>المبلغ</span></div>${rows.map(r=>r.type==='matchBonus'?`<div class="tRow readOnlyRow"><span>${fmDate(r.date)}</span><span class="noteCell">تكملة القطية</span><span>${r.t}</span><span class="${r.cls}">${money(r.amount)}</span></div>`:`<div class="tRow" onclick="removeAdjust('${r.type}','${r.id}')"><span>${fmDate(r.date)}</span><span class="noteCell">${r.note||''}</span><span>${r.t}</span><span class="${r.cls}">${r.type==='discount'?money(r.amount)+' -':money(r.amount)}</span></div>`).join('')}`}
 function removeAdjust(type,id){let k=type==='discount'?'extraDiscounts':'extraCharges';adjustEditorDraft[k]=adjustEditorDraft[k].filter(x=>x.id!==id);renderAdjustEditTable()}
 function saveAdjustEditor(){const s=state();s.extraCharges=adjustEditorDraft.extraCharges;s.extraDiscounts=adjustEditorDraft.extraDiscounts;save(s);closeAdjustEditor();goPage('accounts')}
 function renderMatchLog(s){matchLogList.innerHTML=[...s.matches].sort((a,b)=>(b.date||'').localeCompare(a.date||'')).map(m=>`<div class="matchCard"><div class="matchHead"><b>${fmDate(m.date)}</b><span>${escapeHtml(m.place||'')}</span></div><div class="matchMeta matchMetaBig"><span>${participants(m).length} لاعب مسجل</span><b>${money(m.bookingCost||0)} د.ك</b></div>${teamHtml(s,m)}</div>`).join('')||'<p class="muted">لا توجد ألعاب محفوظة.</p>'}
@@ -522,15 +524,64 @@ function importData(e){
   r.readAsText(f);
 }
 function exportExcel(){
-  const s=state(); const rows=[['النوع','اللاعب','التاريخ','المبلغ','ملاحظة']];
-  (s.deposits||[]).forEach(d=>rows.push([depositTypeLabel(d),d.player||'',fmDate(d.date||''),money(d.amount||0),'']));
-  const csv=rows.map(r=>r.map(x=>`"${String(x).replace(/"/g,'""')}"`).join(',')).join('\n');
-  const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'})); a.download='football-data.csv'; a.click();
-  setTimeout(()=>showConfirm('تم تصدير البيانات بنجاح كملف EXCEL','settings'),120);
+  const s=state();
+  const b=balances(s);
+  const BOM='\uFEFF';
+  function csvSection(title,headers,rows){
+    const lines=[];
+    lines.push([title].map(x=>'"'+String(x).replace(/"/g,'""')+'"').join(','));
+    lines.push(headers.map(x=>'"'+String(x).replace(/"/g,'""')+'"').join(','));
+    rows.forEach(r=>lines.push(r.map(x=>'"'+String(x==null?'':x).replace(/"/g,'""')+'"').join(',')));
+    lines.push('');
+    return lines.join('\n');
+  }
+  const playerRows=(s.players||[]).map(p=>{
+    const info=b[p]||{};const bal=Number(info.balance||0);
+    return [p,(bal<0?'-':'')+money(Math.abs(bal)),info.games||0,fmDate(info.last||'')];
+  });
+  let csv=BOM;
+  csv+=csvSection('جدول اللاعبين',['الاسم','الرصيد','عدد اللعب','آخر لعب'],playerRows);
+  const matchRows=[...(s.matches||[])].sort((a,c)=>(c.date||'').localeCompare(a.date||'')).map(m=>{
+    const allP=[...(m.players||[]),...(m.guests||[]).map(g=>g.guest+' (ضيف '+g.owner+')')];
+    return [fmDate(m.date),m.place||'',money(m.bookingCost||0),m.extraFee>0?money(m.extraFee):'',money(m.totalCost||m.bookingCost||0),m.neededPlayers||0,allP.length,allP.join(' | ')];
+  });
+  csv+=csvSection('سجل المباريات',['التاريخ','المكان','سعر الحجز','مبلغ إضافي','إجمالي القطية','عدد اللاعبين','المسجلين','الأسماء'],matchRows);
+  const depRows=[...(s.deposits||[])].sort((a,c)=>(c.date||'').localeCompare(a.date||'')).map(d=>{
+    const type=d.type||'in';const sign=(type==='out'||type==='late')?'-':'';
+    return [d.player||'',fmDate(d.date||''),depositTypeLabel(d),sign+money(Math.abs(d.amount||0)),d.note||''];
+  });
+  csv+=csvSection('الإيداعات',['اللاعب','التاريخ','النوع','المبلغ','ملاحظة'],depRows);
+  const matchBonus=(s.matches||[]).filter(m=>Number(m.extraFee||0)>0).map(m=>[fmDate(m.date),'مبلغ إضافي',money(m.extraFee),'تكملة القطية']);
+  const extraRows=[...matchBonus,...(s.extraCharges||[]).map(x=>[fmDate(x.date),'إضافة',money(x.amount),x.note||'']),...(s.extraDiscounts||[]).map(x=>[fmDate(x.date),'خصم','-'+money(x.amount),x.note||''])];
+  csv+=csvSection('سجل الخصم / الإضافة',['التاريخ','العملية','المبلغ','الملاحظة'],extraRows);
+  const extra=(s.extraCharges||[]).reduce((a,x)=>a+Number(x.amount||0),0);
+  const discount=(s.extraDiscounts||[]).reduce((a,x)=>a+Number(x.amount||0),0);
+  const lateTotal=(s.deposits||[]).filter(d=>d.type==='late').reduce((a,d)=>a+Math.abs(Number(d.amount||0)),0);
+  const neg=(s.players||[]).filter(p=>(b[p]?.balance||0)<0);
+  const debt=neg.reduce((a,p)=>a+Math.abs(b[p].balance),0)+discount;
+  const final=extra+lateTotal-debt;
+  csv+=csvSection('ملخص الحسابات',['البند','المبلغ'],[['المديونية','-'+money(debt)],['التأخير','-'+money(lateTotal)],['الإضافي',money(extra)],['الإجمالي',(final<0?'-':'')+money(Math.abs(final))]]);
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));
+  a.download='football-data.csv';a.click();
+  setTimeout(()=>showConfirm('تم تصدير جميع البيانات بنجاح (5 أقسام)','settings'),120);
 }
 function importData(e){
-  const f=e.target.files[0]; if(!f)return; const r=new FileReader();
-  r.onload=()=>{localStorage.setItem(LS,r.result); renderAll(); goPage('settings'); showConfirm('تم استيراد البيانات للتطبيق','settings');};
+  const f=e.target.files[0]; if(!f)return;
+  const currentTheme=(state().settings&&state().settings.themeMode)||'dark';
+  const r=new FileReader();
+  r.onload=()=>{
+    try{
+      const incoming=JSON.parse(r.result||'{}');
+      incoming.settings=incoming.settings||{};
+      incoming.settings.themeMode=currentTheme;
+      localStorage.setItem(LS,JSON.stringify(incoming));
+    }catch(err){
+      localStorage.setItem(LS,r.result);
+      const s=state();s.settings=s.settings||{};s.settings.themeMode=currentTheme;saveNoRender(s);
+    }
+    renderAll();applyThemeMode();goPage('settings');showConfirm('تم استيراد البيانات للتطبيق','settings');
+  };
   r.readAsText(f);
 }
 function applyThemeMode(){
