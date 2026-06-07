@@ -4416,3 +4416,135 @@ body.lightMode .teamBBox h4 { color: #9d174d !important; }
   font-size: 18px !important;
   font-weight: 950 !important;
 }
+
+
+/* ===== CUSTOM EDITS v23 ===== */
+
+/* ---- Full-screen light mode background fix ---- */
+html { min-height: 100vh !important; }
+html, body { height: 100% !important; }
+body.lightMode {
+  background: #f5f7fb !important;
+  min-height: 100vh !important;
+}
+html:has(body.lightMode),
+html body.lightMode {
+  background: #f5f7fb !important;
+}
+body:not(.lightMode) {
+  background: #08111f !important;
+  min-height: 100vh !important;
+}
+
+/* ---- teamRatioBadge in match log ---- */
+.teamRatioBadge {
+  background: rgba(253,224,71,.13);
+  border: 1px solid rgba(253,224,71,.4);
+  color: #fde047;
+  font-size: 13px;
+  font-weight: 900;
+  padding: 1px 8px;
+  border-radius: 8px;
+  letter-spacing: 1px;
+}
+body.lightMode .teamRatioBadge {
+  background: rgba(161,98,7,.08) !important;
+  border-color: rgba(161,98,7,.3) !important;
+  color: #92400e !important;
+}
+
+/* ---- adjustTable: 4 named columns, correct sizing ---- */
+.adjustTable .tHead,
+.adjustTable .tRow {
+  display: grid !important;
+  grid-template-columns: 62px 1fr 54px 82px !important;
+  gap: 4px !important;
+  align-items: center !important;
+  padding: 5px 8px !important;
+}
+.adjustTable .tHead .colDate,
+.adjustTable .tHead .colNote,
+.adjustTable .tHead .colOp,
+.adjustTable .tHead .colAmt {
+  font-size: 10px !important;
+  color: var(--muted) !important;
+  font-weight: 700 !important;
+}
+.adjustTable .tRow .colDate { font-size: 11px !important; color: var(--muted) !important; }
+.adjustTable .tRow .colNote { font-size: 11px !important; color: var(--muted) !important; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.adjustTable .tRow .colOp  { font-size: 12px !important; font-weight: 700 !important; }
+.adjustTable .tRow .colAmt {
+  font-size: 13px !important;
+  font-weight: 800 !important;
+  text-align: left !important;
+  direction: ltr !important;
+  white-space: nowrap !important;
+}
+
+/* ---- teamTabs selA/selB buttons - solid bg both modes ---- */
+.teamTabs button {
+  padding: 3px 10px !important;
+  border-radius: 8px !important;
+  border: 1px solid var(--line) !important;
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  transition: background .15s, color .15s !important;
+}
+.teamTabs button.selA {
+  background: #facc15 !important;
+  color: #111 !important;
+  border-color: #ca8a04 !important;
+  font-weight: 900 !important;
+  text-shadow: none !important;
+}
+.teamTabs button.selB {
+  background: #f472b6 !important;
+  color: #111 !important;
+  border-color: #db2777 !important;
+  font-weight: 900 !important;
+  text-shadow: none !important;
+}
+
+/* ---- luxTeamBox: yellow/pink border + matching h4, no bg change ---- */
+.luxTeamBox { background: transparent !important; }
+.teamABox {
+  border: 2px solid #facc15 !important;
+  box-shadow: 0 0 0 1px rgba(250,204,21,.12) !important;
+  background: rgba(250,204,21,.04) !important;
+}
+.teamBBox {
+  border: 2px solid #f472b6 !important;
+  box-shadow: 0 0 0 1px rgba(244,114,182,.12) !important;
+  background: rgba(244,114,182,.04) !important;
+}
+.teamABox h4 {
+  color: #facc15 !important;
+  font-weight: 900 !important;
+}
+.teamBBox h4 {
+  color: #f472b6 !important;
+  font-weight: 900 !important;
+}
+.teamABox h4 small { color: #facc15 !important; opacity: .8; }
+.teamBBox h4 small { color: #f472b6 !important; opacity: .8; }
+
+/* Light mode team boxes */
+body.lightMode .teamABox {
+  border-color: #ca8a04 !important;
+  background: rgba(202,138,4,.05) !important;
+  box-shadow: none !important;
+}
+body.lightMode .teamBBox {
+  border-color: #db2777 !important;
+  background: rgba(219,39,119,.05) !important;
+  box-shadow: none !important;
+}
+body.lightMode .teamABox h4,
+body.lightMode .teamABox h4 small { color: #92400e !important; }
+body.lightMode .teamBBox h4,
+body.lightMode .teamBBox h4 small { color: #9d174d !important; }
+
+/* tRowClickable cursor */
+.tRowClickable { cursor: pointer !important; }
+.tRowClickable:hover { background: rgba(255,255,255,.05) !important; }
+body.lightMode .tRowClickable:hover { background: rgba(0,0,0,.04) !important; }
