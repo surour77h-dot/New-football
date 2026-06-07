@@ -282,18 +282,17 @@ function forceCompactPlayerRows(){
 }
 
 function openPlayerReport(p){
-  // Set the value first on all possible select elements
-  ['playerFilterSelect','playerFilter','reportPlayerSelect'].forEach(id=>{
-    const el=document.getElementById(id); if(el){el.value=p;}
-  });
   goPage('playerReport');
-  // Force set and render after page switch
-  setTimeout(()=>{
-    ['playerFilterSelect','playerFilter','reportPlayerSelect'].forEach(id=>{
-      const el=document.getElementById(id); if(el){el.value=p;}
-    });
+  // Multiple timed attempts to ensure value sticks after any re-render
+  function setAndRender(){
+    const sel=document.getElementById('playerFilterSelect');
+    if(sel){sel.value=p; sel.dispatchEvent(new Event('change'));}
     if(typeof renderPlayerReport==='function') renderPlayerReport();
-  },60);
+  }
+  setAndRender();
+  setTimeout(setAndRender,50);
+  setTimeout(setAndRender,150);
+  setTimeout(setAndRender,350);
 }
 function renderPlayerReport(){
   const s=state(),p=playerFilterSelect.value;if(!p){playerFilterContent.innerHTML='';return}const b=balances(s)[p]||{},deps=s.deposits.filter(d=>d.player===p),games=s.matches.filter(m=>(m.players||[]).includes(p));const playPlusDebt=(b.playTotal||0)+(b.debtDeposits||0);
@@ -320,9 +319,9 @@ function renderAccounts(s){
   if(typeof updateDateButtons==='function')updateDateButtons();
 }
 function renderAdjustRows(s){
-  const matchBonus=(s.matches||[]).filter(m=>Number(m.extraFee||0)>0).map(m=>({id:'mb_'+m.id,date:m.date,amount:Number(m.extraFee),t:'مبلغ إضافي',cls:'moneyPos',type:'matchBonus'}));
-  let rows=[...matchBonus,...(s.extraCharges||[]).map(x=>({...x,t:'إضافة',cls:'moneyPos',type:'extra'})),...(s.extraDiscounts||[]).map(x=>({...x,t:'خصم',cls:'moneyNeg',type:'discount'}))].sort((a,b)=>(b.date||'').localeCompare(a.date||''));
-  return `<div class="compactTable accountsMoneyTable adjustTable"><div class="tHead"><span class="colDate">التاريخ</span><span class="colNote">الملاحظة</span><span class="colOp">العملية</span><span class="colAmt amountHead">المبلغ</span></div>${rows.map(r=>{const isDiscount=r.type==='discount';const displayAmt=isDiscount?money(Math.abs(r.amount||0))+' -':money(Math.abs(r.amount||0));const cls=isDiscount?'moneyNeg':r.type==='matchBonus'?'moneyPos':r.cls;return `<div class="tRow"><span class="colDate">${fmDate(r.date)}</span><span class="colNote noteCell">${r.type==='matchBonus'?'تكملة القطية':(r.note||'')}</span><span class="colOp">${r.t}</span><span class="colAmt ${cls}">${displayAmt}</span></div>`;}).join('')||'<p class="muted">لا يوجد</p>'}</div>`;
+  const matchBonus=(s.matches||[]).filter(m=>Number(m.extraFee||0)>0).map(m=>({id:'mb_'+m.id,date:m.date,amount:Number(m.extraFee),t:'مبلغ إضافي',kind:'matchBonus',note:'تكملة القطية'}));
+  let rows=[...matchBonus,...(s.extraCharges||[]).map(x=>({...x,t:'إضافة',kind:'deposit'})),...(s.extraDiscounts||[]).map(x=>({...x,t:'خصم',kind:'discount'}))].sort((a,b)=>(b.date||'').localeCompare(a.date||''));
+  return `<div class="compactTable accountsMoneyTable adjustFinalTable"><div class="tHead afRow"><span class="afDate">التاريخ</span><span class="afOp">العملية</span><span class="afNote">الملاحظة</span><span class="afAmt">المبلغ</span></div>${rows.map(r=>{const isDisc=r.kind==='discount';const cls=isDisc?'moneyNeg':'moneyPos';const rawAmt=money(Math.abs(r.amount||0));const displayAmt=isDisc?`<span class="${cls}">- ${rawAmt}</span>`:`<span class="${cls}">${rawAmt}</span>`;return `<div class="tRow afRow${r.kind==='matchBonus'?' readOnlyRow':''}"><span class="afDate">${fmDate(r.date)}</span><span class="afOp">${r.t}</span><span class="afNote noteCell">${r.note||''}</span><span class="afAmt">${displayAmt}</span></div>`;}).join('')||'<p class="muted">لا يوجد</p>'}</div>`;
 }
 function saveExtraUnified(){
   const s=state(),type=extraType.value,amount=Number(extraAmount.value||0);if(!amount)return;
@@ -337,10 +336,9 @@ function saveAdjustEditor(){const s=state();s.extraCharges=adjustEditorDraft.ext
 function teamRatio(m){
   const n=participants(m).length;
   if(!n)return '';
-  const half=Math.floor(n/2);
   const a=Math.ceil(n/2);
-  const b=half;
-  return a===b?`${a}x${b}`:`${a}x${b}`;
+  const b=Math.floor(n/2);
+  return `${a}x${b}`;
 }
 function renderMatchLog(s){matchLogList.innerHTML=[...s.matches].sort((a,b)=>(b.date||'').localeCompare(a.date||'')).map(m=>{const ratio=teamRatio(m);return `<div class="matchCard"><div class="matchHead"><b>${fmDate(m.date)}</b><span>${escapeHtml(m.place||'')}</span></div><div class="matchMeta matchMetaBig"><span>${participants(m).length} لاعب مسجل</span>${ratio?`<span class="teamRatioBadge">${ratio}</span>`:''}<b>${money(m.bookingCost||0)} د.ك</b></div>${teamHtml(s,m)}</div>`;}).join('')||'<p class="muted">لا توجد ألعاب محفوظة.</p>'}
 function renderPageOrder(){
@@ -386,33 +384,36 @@ function applyThemeMode(){
 }
 function exportData(){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(state(),null,2)],{type:'application/json'}));a.download='football-backup.json';a.click()}
 function importData(e){
-  const f=e.target.files[0];
-  if(!f)return;
+  const f=e&&e.target&&e.target.files&&e.target.files[0];
+  if(!f){ return; }
   const currentTheme=(state().settings&&state().settings.themeMode)||'dark';
   const r=new FileReader();
-  r.onload=()=>{
+  r.onload=function(){
     try{
       const incoming=JSON.parse(r.result||'{}');
       incoming.settings=incoming.settings||{};
       incoming.settings.themeMode=currentTheme;
       localStorage.setItem(LS,JSON.stringify(incoming));
     }catch(err){
-      localStorage.setItem(LS,r.result);
-      const s=state();
-      s.settings=s.settings||{};
-      s.settings.themeMode=currentTheme;
-      saveNoRender(s);
+      try{
+        localStorage.setItem(LS,r.result);
+        const s=state();
+        s.settings=s.settings||{};
+        s.settings.themeMode=currentTheme;
+        saveNoRender(s);
+      }catch(e2){ alert('خطأ في حفظ البيانات: '+e2); return; }
     }
+    // reset file input so same file can be re-imported
+    try{ if(e&&e.target) e.target.value=''; }catch(ex){}
     renderAll();
     applyThemeMode();
-    alert('تم الاستيراد');
+    goPage('settings');
+    if(typeof showConfirm==='function') showConfirm('تم استيراد البيانات بنجاح','settings');
+    else alert('تم استيراد البيانات بنجاح');
   };
+  r.onerror=function(){ alert('فشل قراءة الملف'); };
   r.readAsText(f);
 }
-function exportExcel(){alert('تصدير Excel في هذه النسخة سيكون ملف CSV لاحقاً')}
-ballBtn.onclick=toggleMenu;pagesMenu.addEventListener('click',e=>{const b=e.target.closest('[data-page]');if(b)goPage(b.dataset.page)});addPlayerBtn.onclick=addPlayer;renamePlayerBtn.onclick=renamePlayer;deletePlayerBtn.onclick=deletePlayer;addGuestBtn.onclick=addGuest;saveMatchBtn.onclick=saveMatch;clearMatchBtn.onclick=clearMatch;saveDepositBtn.onclick=saveDeposit;if(typeof clearDepositBtn!=="undefined"&&clearDepositBtn)clearDepositBtn.onclick=clearDeposit;teamsMatchSelect.onchange=()=>{renderTeams();setTimeout(ensureDeleteMatchBtn,0)};saveTeamsBtn.onclick=saveTeams;setTimeout(ensureDeleteMatchBtn,0);playerFilterSelect.onchange=renderPlayerReport;prevMonth.onclick=()=>moveMonth(-1);nextMonth.onclick=()=>moveMonth(1);exportDataBtn.onclick=exportData;exportExcelBtn.onclick=exportExcel;importDataInput.onchange=importData;closeAdjustModal.onclick=closeAdjustEditor;saveAdjustModal.onclick=saveAdjustEditor;document.addEventListener('change',e=>{if(e.target.classList.contains('playerCheck'))renderMatchPreview()});['bookingCost','neededPlayers','extraFee'].forEach(id=>{const el=document.getElementById(id);if(el)el.addEventListener('input',updateHomeInfoBar);});if(typeof applyDateBtn!=='undefined')applyDateBtn.onclick=applyDatePicker;if(typeof matchDateBtn!=='undefined')matchDateBtn.onclick=()=>openDatePicker('matchDate');if(typeof depositDateBtn!=='undefined')depositDateBtn.onclick=()=>openDatePicker('depositDate');if(typeof editDepositModalDateBtn!=='undefined')editDepositModalDateBtn.onclick=()=>openDatePicker('editDepositModalDate');if(typeof saveAppInfoBtn!=='undefined')saveAppInfoBtn.onclick=saveAppInfo;if('serviceWorker'in navigator){navigator.serviceWorker.register('sw.js')}applyThemeMode();renderAll();goPage('home');
-
-
 function showConfirm(message,targetPage){
   const modal=document.getElementById('confirmModal'),msg=document.getElementById('confirmMessage'),btn=document.getElementById('confirmCloseBtn');
   if(!modal||!msg||!btn){alert(message);if(targetPage)goPage(targetPage);return;}
@@ -504,34 +505,51 @@ function forceCompactPlayerRows(){
   });
 }
 
-function openPlayerReport(p){playerFilterSelect.value=p;goPage('playerReport');setTimeout(renderPlayerReport,30);}
+function openPlayerReport(p){
+  goPage('playerReport');
+  function setIt(){
+    const sel=document.getElementById('playerFilterSelect');
+    if(sel){sel.value=p;}
+    if(typeof renderPlayerReport==='function') renderPlayerReport();
+  }
+  setIt();
+  setTimeout(setIt, 80);
+  setTimeout(setIt, 250);
+}
 function renderPageOrder(){const order=getPageOrder();pageOrderList.innerHTML=`<div class="newPageOrder">${order.map(id=>`<div class="pageOrderRow"><span>${pageTitle(id)}</span><div><button type="button" onclick="movePage('${id}',-1);event.preventDefault();event.stopPropagation();">↑</button><button type="button" onclick="movePage('${id}',1);event.preventDefault();event.stopPropagation();">↓</button></div></div>`).join('')}</div>`}
 function movePage(id,dir){const order=getPageOrder(),i=order.indexOf(id),j=i+dir;if(i<0||j<0||j>=order.length)return;[order[i],order[j]]=[order[j],order[i]];const s=state();s.settings.pageOrder=order;localStorage.setItem(LS,JSON.stringify(s));renderPageOrder();renderMenuLabels();document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id===currentPage));pageTitleEl.textContent=pageTitle(currentPage)}
 function renderMenuLabels(){const menu=document.getElementById('pagesMenu');if(!menu)return;const icons={home:'🏠',accounts:'💰',players:'👥',playerReport:'🔎',calendar:'📅',teams:'🟨',deposits:'💳',playerTable:'📊',matchLog:'🧾',settings:'⚙️'};menu.querySelectorAll('[data-page]').forEach(btn=>{const id=btn.dataset.page;btn.textContent=(icons[id]||'📄')+' '+pageTitle(id)})}
 function exportData(){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(state(),null,2)],{type:'application/json'}));a.download='football-backup.json';a.click();showConfirm('تم تصدير البيانات بنجاح','settings')}
-function exportExcel(){let s=state(),rows=['player,balance,games,last'];let b=balances(s);s.players.forEach(p=>rows.push(`${p},${b[p]?.balance||0},${b[p]?.games||0},${b[p]?.last||''}`));const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([rows.join('\n')],{type:'text/csv'}));a.download='football-export.csv';a.click();showConfirm('تم تصدير البيانات بنجاح كملف EXCEL','settings')}
+/* exportExcel v1 removed */
 function importData(e){
-  const f=e.target.files[0];
-  if(!f)return;
+  const f=e&&e.target&&e.target.files&&e.target.files[0];
+  if(!f){ return; }
   const currentTheme=(state().settings&&state().settings.themeMode)||'dark';
   const r=new FileReader();
-  r.onload=()=>{
+  r.onload=function(){
     try{
       const incoming=JSON.parse(r.result||'{}');
       incoming.settings=incoming.settings||{};
       incoming.settings.themeMode=currentTheme;
       localStorage.setItem(LS,JSON.stringify(incoming));
     }catch(err){
-      localStorage.setItem(LS,r.result);
-      const s=state();
-      s.settings=s.settings||{};
-      s.settings.themeMode=currentTheme;
-      saveNoRender(s);
+      try{
+        localStorage.setItem(LS,r.result);
+        const s=state();
+        s.settings=s.settings||{};
+        s.settings.themeMode=currentTheme;
+        saveNoRender(s);
+      }catch(e2){ alert('خطأ في حفظ البيانات: '+e2); return; }
     }
+    // reset file input so same file can be re-imported
+    try{ if(e&&e.target) e.target.value=''; }catch(ex){}
     renderAll();
     applyThemeMode();
-    alert('تم الاستيراد');
+    goPage('settings');
+    if(typeof showConfirm==='function') showConfirm('تم استيراد البيانات بنجاح','settings');
+    else alert('تم استيراد البيانات بنجاح');
   };
+  r.onerror=function(){ alert('فشل قراءة الملف'); };
   r.readAsText(f);
 }
 function exportExcel(){
@@ -578,21 +596,34 @@ function exportExcel(){
   setTimeout(()=>showConfirm('تم تصدير جميع البيانات بنجاح (5 أقسام)','settings'),120);
 }
 function importData(e){
-  const f=e.target.files[0]; if(!f)return;
+  const f=e&&e.target&&e.target.files&&e.target.files[0];
+  if(!f){ return; }
   const currentTheme=(state().settings&&state().settings.themeMode)||'dark';
   const r=new FileReader();
-  r.onload=()=>{
+  r.onload=function(){
     try{
       const incoming=JSON.parse(r.result||'{}');
       incoming.settings=incoming.settings||{};
       incoming.settings.themeMode=currentTheme;
       localStorage.setItem(LS,JSON.stringify(incoming));
     }catch(err){
-      localStorage.setItem(LS,r.result);
-      const s=state();s.settings=s.settings||{};s.settings.themeMode=currentTheme;saveNoRender(s);
+      try{
+        localStorage.setItem(LS,r.result);
+        const s=state();
+        s.settings=s.settings||{};
+        s.settings.themeMode=currentTheme;
+        saveNoRender(s);
+      }catch(e2){ alert('خطأ في حفظ البيانات: '+e2); return; }
     }
-    renderAll();applyThemeMode();goPage('settings');showConfirm('تم استيراد البيانات للتطبيق','settings');
+    // reset file input so same file can be re-imported
+    try{ if(e&&e.target) e.target.value=''; }catch(ex){}
+    renderAll();
+    applyThemeMode();
+    goPage('settings');
+    if(typeof showConfirm==='function') showConfirm('تم استيراد البيانات بنجاح','settings');
+    else alert('تم استيراد البيانات بنجاح');
   };
+  r.onerror=function(){ alert('فشل قراءة الملف'); };
   r.readAsText(f);
 }
 function applyThemeMode(){
@@ -648,6 +679,47 @@ function applyDatePicker(){
 document.addEventListener('DOMContentLoaded',()=>{
   if(typeof applyDateBtn!=='undefined')applyDateBtn.onclick=applyDatePicker;
 });
+
+
+// ===== EVENT BINDINGS =====
+(function initApp(){
+  if(typeof ballBtn!=='undefined'&&ballBtn) ballBtn.onclick=toggleMenu;
+  if(typeof pagesMenu!=='undefined'&&pagesMenu) pagesMenu.addEventListener('click',e=>{const b=e.target.closest('[data-page]');if(b)goPage(b.dataset.page)});
+  if(typeof addPlayerBtn!=='undefined'&&addPlayerBtn) addPlayerBtn.onclick=addPlayer;
+  if(typeof renamePlayerBtn!=='undefined'&&renamePlayerBtn) renamePlayerBtn.onclick=renamePlayer;
+  if(typeof deletePlayerBtn!=='undefined'&&deletePlayerBtn) deletePlayerBtn.onclick=deletePlayer;
+  if(typeof addGuestBtn!=='undefined'&&addGuestBtn) addGuestBtn.onclick=addGuest;
+  if(typeof saveMatchBtn!=='undefined'&&saveMatchBtn) saveMatchBtn.onclick=saveMatch;
+  if(typeof clearMatchBtn!=='undefined'&&clearMatchBtn) clearMatchBtn.onclick=clearMatch;
+  if(typeof saveDepositBtn!=='undefined'&&saveDepositBtn) saveDepositBtn.onclick=saveDeposit;
+  if(typeof clearDepositBtn!=='undefined'&&clearDepositBtn) clearDepositBtn.onclick=clearDeposit;
+  if(typeof teamsMatchSelect!=='undefined'&&teamsMatchSelect) teamsMatchSelect.onchange=()=>{renderTeams();setTimeout(ensureDeleteMatchBtn,0)};
+  if(typeof saveTeamsBtn!=='undefined'&&saveTeamsBtn) saveTeamsBtn.onclick=saveTeams;
+  setTimeout(ensureDeleteMatchBtn,0);
+  if(typeof playerFilterSelect!=='undefined'&&playerFilterSelect) playerFilterSelect.onchange=renderPlayerReport;
+  if(typeof prevMonth!=='undefined'&&prevMonth) prevMonth.onclick=()=>moveMonth(-1);
+  if(typeof nextMonth!=='undefined'&&nextMonth) nextMonth.onclick=()=>moveMonth(1);
+  if(typeof exportDataBtn!=='undefined'&&exportDataBtn) exportDataBtn.onclick=exportData;
+  if(typeof exportExcelBtn!=='undefined'&&exportExcelBtn) exportExcelBtn.onclick=exportExcel;
+  // importDataInput - most critical
+  const impEl=document.getElementById('importDataInput');
+  if(impEl) impEl.onchange=importData;
+  if(typeof importDataInput!=='undefined'&&importDataInput) importDataInput.onchange=importData;
+  if(typeof closeAdjustModal!=='undefined'&&closeAdjustModal) closeAdjustModal.onclick=closeAdjustEditor;
+  if(typeof saveAdjustModal!=='undefined'&&saveAdjustModal) saveAdjustModal.onclick=saveAdjustEditor;
+  document.addEventListener('change',e=>{if(e.target.classList.contains('playerCheck')){renderMatchPreview();updateHomeInfoBar();}});
+  ['bookingCost','neededPlayers','extraFee'].forEach(id=>{const el=document.getElementById(id);if(el)el.addEventListener('input',updateHomeInfoBar);});
+  if(typeof applyDateBtn!=='undefined'&&applyDateBtn) applyDateBtn.onclick=applyDatePicker;
+  if(typeof matchDateBtn!=='undefined'&&matchDateBtn) matchDateBtn.onclick=()=>openDatePicker('matchDate');
+  if(typeof depositDateBtn!=='undefined'&&depositDateBtn) depositDateBtn.onclick=()=>openDatePicker('depositDate');
+  if(typeof editDepositModalDateBtn!=='undefined'&&editDepositModalDateBtn) editDepositModalDateBtn.onclick=()=>openDatePicker('editDepositModalDate');
+  if(typeof saveAppInfoBtn!=='undefined'&&saveAppInfoBtn) saveAppInfoBtn.onclick=saveAppInfo;
+  if('serviceWorker' in navigator){ navigator.serviceWorker.register('sw.js'); }
+  applyThemeMode();
+  renderAll();
+  goPage('home');
+})();
+// ===== END EVENT BINDINGS =====
 
 /* ===== REAL FINAL PLAYER TABLE COMPACT v9 =====
    المطلوب: تضييق السطر فقط + تقريب الأعمدة + منع خروج التاريخ + تكبير التاريخ
@@ -819,9 +891,10 @@ setTimeout(forceCompactPlayerRows,300);
   };
 
   window.renderAdjustRows = function(s){
-    const matchBonus=(s.matches||[]).filter(m=>Number(m.extraFee||0)>0).map(m=>({id:'mb_'+m.id,date:m.date,amount:Number(m.extraFee),t:'مبلغ إضافي',kind:'matchBonus'}));
+    const matchBonus=(s.matches||[]).filter(m=>Number(m.extraFee||0)>0).map(m=>({id:'mb_'+m.id,date:m.date,amount:Number(m.extraFee),t:'مبلغ إضافي',kind:'matchBonus',note:'تكملة القطية'}));
     let rows=[...matchBonus,...((s.extraCharges||[]).map(x=>({...x,t:'إضافة',kind:'deposit'}))),...((s.extraDiscounts||[]).map(x=>({...x,t:'خصم',kind:'discount'})))].sort((a,b)=>(b.date||'').localeCompare(a.date||''));
-    return `<div class="compactTable accountsMoneyTable v17MoneyTable"><div class="tHead"><span>التاريخ</span><span>العملية</span><span class="amountHead">المبلغ</span></div>${rows.map(r=>{const c=r.kind==='discount'?'moneyNeg':r.kind==='matchBonus'?'moneyPos':cls(r.kind);const noteVal=r.kind==='matchBonus'?'تكملة القطية':(r.note||'');const rawAmt=typeof amt==='function'?amt(Math.abs(r.amount||0),r.kind):money(Math.abs(r.amount||0));const amtVal=r.kind==='discount'?rawAmt+' -':rawAmt;return `<div class="tRow${r.kind==='matchBonus'?' readOnlyRow':''}"><span class="colDate">${fmDate(r.date)}</span><span class="colNote noteCell">${noteVal}</span><span class="colOp" data-money-kind="${r.kind}">${r.t}</span><span class="colAmt ${c}" data-money-kind="${r.kind}">${amtVal}</span></div>`}).join('')||'<p class="muted">لا يوجد</p>'}</div>`;
+    const amtFn=typeof amt==='function'?amt:(typeof amount==='function'?amount:money);
+    return `<div class="compactTable accountsMoneyTable adjustFinalTable"><div class="tHead afRow"><span class="afDate">التاريخ</span><span class="afOp">العملية</span><span class="afNote">الملاحظة</span><span class="afAmt">المبلغ</span></div>${rows.map(r=>{const isDisc=r.kind==='discount';const cls=isDisc?'moneyNeg':r.kind==='matchBonus'?'moneyPos':'moneyPos';const rawAmt=money(Math.abs(r.amount||0));const displayAmt=isDisc?`<span class="${cls}">- ${rawAmt}</span>`:`<span class="${cls}">${rawAmt}</span>`;return `<div class="tRow afRow${r.kind==='matchBonus'?' readOnlyRow':''}"><span class="afDate">${fmDate(r.date)}</span><span class="afOp">${r.t}</span><span class="afNote noteCell">${r.note||''}</span><span class="afAmt">${displayAmt}</span></div>`;}).join('')||'<p class="muted">لا يوجد</p>'}</div>`;
   };
 
   window.v17PostFormat=function(){
@@ -898,10 +971,11 @@ setTimeout(forceCompactPlayerRows,300);
   }; } catch(e) {}
 
   try { renderAdjustRows = function(s){
-    const matchBonus=(s.matches||[]).filter(m=>Number(m.extraFee||0)>0).map(m=>({id:'mb_'+m.id,date:m.date,amount:Number(m.extraFee),t:'مبلغ إضافي',kind:'matchBonus'}));
+    const matchBonus=(s.matches||[]).filter(m=>Number(m.extraFee||0)>0).map(m=>({id:'mb_'+m.id,date:m.date,amount:Number(m.extraFee),t:'مبلغ إضافي',kind:'matchBonus',note:'تكملة القطية'}));
     let rows=[...matchBonus,...((s.extraCharges||[]).map(x=>({...x,t:'إضافة',kind:'deposit'}))),...((s.extraDiscounts||[]).map(x=>({...x,t:'خصم',kind:'discount'})))].sort((a,b)=>(b.date||'').localeCompare(a.date||''));
-    return `<div class="compactTable accountsMoneyTable"><div class="tHead"><span>التاريخ</span><span>العملية</span><span class="amountHead">المبلغ</span></div>${rows.map(r=>{const c=r.kind==='discount'?'moneyNeg':r.kind==='matchBonus'?'moneyPos':cls(r.kind);const noteVal=r.kind==='matchBonus'?'تكملة القطية':(r.note||'');const rawAmt=typeof amount==='function'?amount(Math.abs(r.amount||0),r.kind):money(Math.abs(r.amount||0));const amtVal=r.kind==='discount'?rawAmt+' -':rawAmt;return `<div class="tRow${r.kind==='matchBonus'?' readOnlyRow':''}"><span class="colDate">${fmDate(r.date)}</span><span class="colNote noteCell">${noteVal}</span><span class="colOp" data-money-kind="${r.kind}">${r.t}</span><span class="colAmt ${c}" data-money-kind="${r.kind}">${amtVal}</span></div>`}).join('')||'<p class="muted">لا يوجد</p>'}</div>`;
-  }; } catch(e) {}
+    const amtFn=typeof amt==='function'?amt:(typeof amount==='function'?amount:money);
+    return `<div class="compactTable accountsMoneyTable adjustFinalTable"><div class="tHead afRow"><span class="afDate">التاريخ</span><span class="afOp">العملية</span><span class="afNote">الملاحظة</span><span class="afAmt">المبلغ</span></div>${rows.map(r=>{const isDisc=r.kind==='discount';const cls=isDisc?'moneyNeg':r.kind==='matchBonus'?'moneyPos':'moneyPos';const rawAmt=money(Math.abs(r.amount||0));const displayAmt=isDisc?`<span class="${cls}">- ${rawAmt}</span>`:`<span class="${cls}">${rawAmt}</span>`;return `<div class="tRow afRow${r.kind==='matchBonus'?' readOnlyRow':''}"><span class="afDate">${fmDate(r.date)}</span><span class="afOp">${r.t}</span><span class="afNote noteCell">${r.note||''}</span><span class="afAmt">${displayAmt}</span></div>`;}).join('')||'<p class="muted">لا يوجد</p>'}</div>`;
+  }; } catch(e){} } catch(e) {}
 
   try { renderPlayerReport = function(){
     const s=state(), p=playerFilterSelect.value;

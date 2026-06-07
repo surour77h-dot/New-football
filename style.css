@@ -4548,3 +4548,70 @@ body.lightMode .teamBBox h4 small { color: #9d174d !important; }
 .tRowClickable { cursor: pointer !important; }
 .tRowClickable:hover { background: rgba(255,255,255,.05) !important; }
 body.lightMode .tRowClickable:hover { background: rgba(0,0,0,.04) !important; }
+
+
+/* ===== CUSTOM EDITS v24 ===== */
+
+/* ---- adjustFinalTable: tight 4-col grid, no wrapping ---- */
+.adjustFinalTable .tHead.afRow,
+.adjustFinalTable .tRow.afRow {
+  display: grid !important;
+  grid-template-columns: 58px 46px 1fr 68px !important;
+  /* التاريخ | العملية | الملاحظة | المبلغ */
+  gap: 4px !important;
+  align-items: center !important;
+  padding: 5px 8px !important;
+  min-height: 0 !important;
+  white-space: nowrap !important;
+}
+.adjustFinalTable .tHead.afRow { border-bottom: 1px solid var(--line) !important; }
+.adjustFinalTable .afDate  { font-size: 10.5px !important; overflow:hidden; text-overflow:ellipsis; }
+.adjustFinalTable .afOp    { font-size: 11px !important; font-weight: 700 !important; overflow:hidden; text-overflow:ellipsis; }
+.adjustFinalTable .afNote  { font-size: 10.5px !important; color: var(--muted) !important; overflow:hidden; text-overflow:ellipsis; }
+.adjustFinalTable .afAmt   {
+  font-size: 12px !important;
+  font-weight: 800 !important;
+  text-align: left !important;
+  direction: ltr !important;
+  white-space: nowrap !important;
+}
+.adjustFinalTable .tHead .afDate,
+.adjustFinalTable .tHead .afOp,
+.adjustFinalTable .tHead .afNote,
+.adjustFinalTable .tHead .afAmt  {
+  font-size: 9px !important;
+  color: var(--muted) !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+}
+
+/* ---- teamTabs: force yellow/pink on both modes (light override) ---- */
+body.lightMode .teamTabs button.selA,
+.teamTabs button.selA {
+  background: #facc15 !important;
+  color: #111 !important;
+  border-color: #ca8a04 !important;
+  font-weight: 900 !important;
+  text-shadow: none !important;
+  -webkit-text-stroke: 0 !important;
+}
+body.lightMode .teamTabs button.selB,
+.teamTabs button.selB {
+  background: #f472b6 !important;
+  color: #111 !important;
+  border-color: #db2777 !important;
+  font-weight: 900 !important;
+  text-shadow: none !important;
+  -webkit-text-stroke: 0 !important;
+}
+/* Override lightMode button rule that resets all buttons */
+body.lightMode .teamTabs button.selA,
+body.lightMode .teamTabs button.selB {
+  border: 1px solid !important;
+}
+body.lightMode .teamTabs button.selA {
+  border-color: #ca8a04 !important;
+}
+body.lightMode .teamTabs button.selB {
+  border-color: #db2777 !important;
+}
