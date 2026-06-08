@@ -4656,3 +4656,70 @@ body.lightMode .teamBBox h4{
   padding:6px 10px !important;
   border-radius:8px !important;
 }
+
+/* ===== FINAL FIX 2026-06-08: توحيد ألوان الفريقين في النهاري والليلي =====
+   المطلوب: المختار الأول = خلفية صفراء + خط أسود، المختار الثاني = خلفية وردية + خط أسود
+   السبب: كان يوجد كود عام في الوضع النهاري يغيّر خلفية الأزرار إلى رمادي، لذلك استخدمنا محددات أقوى. */
+:root{
+  --team-first-bg:#FFD21F;
+  --team-second-bg:#EA66A8;
+  --team-text:#050505;
+}
+html body .teamTabs button.selA,
+html.lightMode body .teamTabs button.selA,
+html.darkMode body .teamTabs button.selA,
+body.lightMode .teamTabs button.selA:not(.primary):not(.danger):not(.ball),
+body.darkMode .teamTabs button.selA:not(.primary):not(.danger):not(.ball),
+body .teamTabs button.selA:not(.primary):not(.danger):not(.ball){
+  background:var(--team-first-bg) !important;
+  background-color:var(--team-first-bg) !important;
+  color:var(--team-text) !important;
+  -webkit-text-fill-color:var(--team-text) !important;
+  border:2px solid #B8860B !important;
+  border-bottom:2px solid #B8860B !important;
+  box-shadow:0 0 12px rgba(255,210,31,.35) !important;
+  text-shadow:none !important;
+  font-weight:950 !important;
+}
+html body .teamTabs button.selB,
+html.lightMode body .teamTabs button.selB,
+html.darkMode body .teamTabs button.selB,
+body.lightMode .teamTabs button.selB:not(.primary):not(.danger):not(.ball),
+body.darkMode .teamTabs button.selB:not(.primary):not(.danger):not(.ball),
+body .teamTabs button.selB:not(.primary):not(.danger):not(.ball){
+  background:var(--team-second-bg) !important;
+  background-color:var(--team-second-bg) !important;
+  color:var(--team-text) !important;
+  -webkit-text-fill-color:var(--team-text) !important;
+  border:2px solid #B83280 !important;
+  border-bottom:2px solid #B83280 !important;
+  box-shadow:0 0 12px rgba(234,102,168,.35) !important;
+  text-shadow:none !important;
+  font-weight:950 !important;
+}
+html body .teamABox h4,
+html.lightMode body .teamABox h4,
+html.darkMode body .teamABox h4{
+  background:var(--team-first-bg) !important;
+  color:var(--team-text) !important;
+  -webkit-text-fill-color:var(--team-text) !important;
+  padding:6px 10px !important;
+  border-radius:10px !important;
+  text-shadow:none !important;
+}
+html body .teamBBox h4,
+html.lightMode body .teamBBox h4,
+html.darkMode body .teamBBox h4{
+  background:var(--team-second-bg) !important;
+  color:var(--team-text) !important;
+  -webkit-text-fill-color:var(--team-text) !important;
+  padding:6px 10px !important;
+  border-radius:10px !important;
+  text-shadow:none !important;
+}
+html body .teamABox,
+html.lightMode body .teamABox,
+html.darkMode body .teamABox{border-color:var(--team-first-bg) !important;}
+html body .teamBBox,
+html.lightMode body .teamBBox,
+html.darkMode body .teamBBox{border-color:var(--team-second-bg) !important;}
