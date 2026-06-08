@@ -4940,3 +4940,20 @@ body:not(.lightMode) .adjustUnifiedTable .moneyNeg{
   unicode-bidi:plaintext!important;
 }
 
+
+
+/* sync account log colors with top summary boxes */
+.adjustTable .positive,
+.adjustTable .amount.positive,
+.accountsLog .positive,
+.accountsLog .green,
+.accountsLog td.pos{
+ color: var(--success) !important;
+}
+.adjustTable .negative,
+.adjustTable .amount.negative,
+.accountsLog .negative,
+.accountsLog .red,
+.accountsLog td.neg{
+ color: var(--danger) !important;
+}
