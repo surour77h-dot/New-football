@@ -4621,3 +4621,38 @@ body.lightMode .teamTabs button.selB {
   text-shadow: none !important;
   -webkit-text-fill-color: #111 !important;
 }
+
+
+/* ChatGPT patch: unify team colors in Light Mode */
+body.lightMode .teamTabs .selA{
+  background:#F5CD49 !important;
+  color:#000 !important;
+  border-radius:8px !important;
+  padding:4px 10px !important;
+  border-bottom:none !important;
+}
+body.lightMode .teamTabs .selB{
+  background:#E37AB3 !important;
+  color:#000 !important;
+  border-radius:8px !important;
+  padding:4px 10px !important;
+  border-bottom:none !important;
+}
+body.lightMode .teamABox{
+  border:2px solid #F5CD49 !important;
+}
+body.lightMode .teamBBox{
+  border:2px solid #E37AB3 !important;
+}
+body.lightMode .teamABox h4{
+  background:#F5CD49 !important;
+  color:#000 !important;
+  padding:6px 10px !important;
+  border-radius:8px !important;
+}
+body.lightMode .teamBBox h4{
+  background:#E37AB3 !important;
+  color:#000 !important;
+  padding:6px 10px !important;
+  border-radius:8px !important;
+}
