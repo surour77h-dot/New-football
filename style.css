@@ -4723,3 +4723,204 @@ html.darkMode body .teamABox{border-color:var(--team-first-bg) !important;}
 html body .teamBBox,
 html.lightMode body .teamBBox,
 html.darkMode body .teamBBox{border-color:var(--team-second-bg) !important;}
+
+
+/* =========================================================
+   FINAL UNIFIED TEAM COLORS
+   توحيد أماكن وألوان الأصفر والوردي في النهاري والليلي
+   الفريق الأول = أصفر
+   الفريق الثاني = وردي
+   ========================================================= */
+
+:root{
+  --team-yellow:#FFD60A;
+  --team-yellow-soft:rgba(255,214,10,.16);
+  --team-yellow-line:rgba(255,214,10,.88);
+  --team-pink:#FF5FA2;
+  --team-pink-soft:rgba(255,95,162,.16);
+  --team-pink-line:rgba(255,95,162,.88);
+}
+
+/* نفس الألوان في الوضع النهاري */
+body.lightMode{
+  --team-yellow:#FFD60A;
+  --team-yellow-soft:rgba(255,214,10,.18);
+  --team-yellow-line:rgba(255,214,10,.95);
+  --team-pink:#FF5FA2;
+  --team-pink-soft:rgba(255,95,162,.18);
+  --team-pink-line:rgba(255,95,162,.95);
+}
+
+/* نفس الألوان في الوضع الليلي */
+body.darkMode,
+body:not(.lightMode){
+  --team-yellow:#FFD60A;
+  --team-yellow-soft:rgba(255,214,10,.16);
+  --team-yellow-line:rgba(255,214,10,.9);
+  --team-pink:#FF5FA2;
+  --team-pink-soft:rgba(255,95,162,.16);
+  --team-pink-line:rgba(255,95,162,.9);
+}
+
+/* صناديق الفريقين في تقسيم اللاعبين + سجل المباريات + التقويم */
+.teamABox,
+body.lightMode .teamABox,
+body.darkMode .teamABox,
+.calendarMatchCard .teamABox,
+.matchCard .teamABox,
+#teams .teamABox,
+#matchLog .teamABox,
+#calendar .teamABox{
+  border:2px solid var(--team-yellow-line)!important;
+  box-shadow:0 0 0 2px var(--team-yellow-soft)!important;
+}
+
+.teamBBox,
+body.lightMode .teamBBox,
+body.darkMode .teamBBox,
+.calendarMatchCard .teamBBox,
+.matchCard .teamBBox,
+#teams .teamBBox,
+#matchLog .teamBBox,
+#calendar .teamBBox{
+  border:2px solid var(--team-pink-line)!important;
+  box-shadow:0 0 0 2px var(--team-pink-soft)!important;
+}
+
+/* عناوين الفريق الأول والثاني */
+.teamABox h4,
+.teamABox h4 *,
+body.lightMode .teamABox h4,
+body.lightMode .teamABox h4 *,
+body.darkMode .teamABox h4,
+body.darkMode .teamABox h4 *,
+.calendarMatchCard .teamABox h4,
+.matchCard .teamABox h4,
+#teams .teamABox h4,
+#matchLog .teamABox h4,
+#calendar .teamABox h4{
+  color:var(--team-yellow)!important;
+  -webkit-text-fill-color:var(--team-yellow)!important;
+  text-shadow:none!important;
+}
+
+.teamBBox h4,
+.teamBBox h4 *,
+body.lightMode .teamBBox h4,
+body.lightMode .teamBBox h4 *,
+body.darkMode .teamBBox h4,
+body.darkMode .teamBBox h4 *,
+.calendarMatchCard .teamBBox h4,
+.matchCard .teamBBox h4,
+#teams .teamBBox h4,
+#matchLog .teamBBox h4,
+#calendar .teamBBox h4{
+  color:var(--team-pink)!important;
+  -webkit-text-fill-color:var(--team-pink)!important;
+  text-shadow:none!important;
+}
+
+/* أزرار الأول والثاني عند الاختيار في تقسيم اللاعبين */
+.teamTabs button.selA,
+.teamTabs .selA,
+body.lightMode .teamTabs button.selA,
+body.lightMode .teamTabs .selA,
+body.darkMode .teamTabs button.selA,
+body.darkMode .teamTabs .selA,
+#teams .teamTabs button.selA,
+#teams .teamTabs .selA{
+  color:#111827!important;
+  -webkit-text-fill-color:#111827!important;
+  background:var(--team-yellow)!important;
+  border:1px solid var(--team-yellow-line)!important;
+  border-bottom:3px solid var(--team-yellow-line)!important;
+  box-shadow:0 0 0 2px var(--team-yellow-soft)!important;
+  font-weight:950!important;
+  text-shadow:none!important;
+}
+
+.teamTabs button.selB,
+.teamTabs .selB,
+body.lightMode .teamTabs button.selB,
+body.lightMode .teamTabs .selB,
+body.darkMode .teamTabs button.selB,
+body.darkMode .teamTabs .selB,
+#teams .teamTabs button.selB,
+#teams .teamTabs .selB{
+  color:#111827!important;
+  -webkit-text-fill-color:#111827!important;
+  background:var(--team-pink)!important;
+  border:1px solid var(--team-pink-line)!important;
+  border-bottom:3px solid var(--team-pink-line)!important;
+  box-shadow:0 0 0 2px var(--team-pink-soft)!important;
+  font-weight:950!important;
+  text-shadow:none!important;
+}
+
+/* أسماء اللاعبين داخل الصناديق لا تأخذ الأصفر/الوردي، فقط الصندوق والعنوان */
+.teamABox .teamName,
+.teamBBox .teamName,
+body.lightMode .teamABox .teamName,
+body.lightMode .teamBBox .teamName,
+body.darkMode .teamABox .teamName,
+body.darkMode .teamBBox .teamName{
+  color:var(--text)!important;
+  -webkit-text-fill-color:var(--text)!important;
+}
+
+/* الوضع النهاري: تأكيد وضوح أسماء اللاعبين داخل الفريقين */
+body.lightMode .teamABox .teamName,
+body.lightMode .teamBBox .teamName{
+  color:#111827!important;
+  -webkit-text-fill-color:#111827!important;
+}
+
+/* الوضع الليلي: تأكيد وضوح أسماء اللاعبين داخل الفريقين */
+body.darkMode .teamABox .teamName,
+body.darkMode .teamBBox .teamName,
+body:not(.lightMode) .teamABox .teamName,
+body:not(.lightMode) .teamBBox .teamName{
+  color:#f8fafc!important;
+  -webkit-text-fill-color:#f8fafc!important;
+}
+
+/* إزالة أي تعريفات قديمة تجعل الأصفر/الوردي ذهبي أو بني أو باهت */
+body.lightMode .teamABox,
+body.lightMode .teamBBox,
+body.darkMode .teamABox,
+body.darkMode .teamBBox{
+  background:var(--panel)!important;
+}
+
+/* تمييز الفريقين في كل أماكن العرض بنفس المنطق */
+.luxTeamsGrid .teamABox{border-color:var(--team-yellow-line)!important;}
+.luxTeamsGrid .teamBBox{border-color:var(--team-pink-line)!important;}
+.luxTeamsGrid .teamABox h4{color:var(--team-yellow)!important;-webkit-text-fill-color:var(--team-yellow)!important;}
+.luxTeamsGrid .teamBBox h4{color:var(--team-pink)!important;-webkit-text-fill-color:var(--team-pink)!important;}
+
+/* إصلاح إن كان التطبيق يستخدم كلاسات بديلة */
+.firstTeam,
+.teamFirst,
+.team-one,
+.teamOne{
+  border-color:var(--team-yellow-line)!important;
+}
+.secondTeam,
+.teamSecond,
+.team-two,
+.teamTwo{
+  border-color:var(--team-pink-line)!important;
+}
+.firstTeam h4,
+.teamFirst h4,
+.team-one h4,
+.teamOne h4{
+  color:var(--team-yellow)!important;
+}
+.secondTeam h4,
+.teamSecond h4,
+.team-two h4,
+.teamTwo h4{
+  color:var(--team-pink)!important;
+}
+
