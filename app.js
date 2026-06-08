@@ -925,3 +925,114 @@ setTimeout(forceCompactPlayerRows,300);
   renderAll = function(){ const r = oldRenderAll.apply(this, arguments); cleanMoneyText(); setTimeout(cleanMoneyText,50); return r; };
   setTimeout(()=>{ try{ renderAll(); cleanMoneyText(); }catch(e){} }, 80);
 })();
+
+/* =========================================================
+   FINAL REPAIR 20260608 - JS
+   فتح كشف اللاعب مع تحديد الاسم + سجل الخصم/الإضافة
+   ========================================================= */
+(function(){
+  function absMoney(n){
+    try { return Math.abs(Number(n||0)).toFixed(3); } catch(e){ return '0.000'; }
+  }
+  function moneyEndMinus(n){
+    const v = Number(n||0);
+    if(Math.abs(v) < 0.0005) return '';
+    return absMoney(v) + (v < 0 ? '-' : '');
+  }
+  function safeDate(d){
+    try { return fmDate(d); } catch(e){ return d || ''; }
+  }
+  function safeHtml(v){
+    try { return escapeHtml(v); } catch(e){ return String(v || ''); }
+  }
+  function safeAttr(v){
+    try { return escAttr(v); } catch(e){ return String(v || '').replace(/'/g,"\\'"); }
+  }
+
+  window.openPlayerReport = function(playerName){
+    const name = String(playerName || '').trim();
+    if(!name) return false;
+    try { goPage('playerReport'); } catch(e) {}
+    const choose = function(){
+      const sel = document.getElementById('playerFilterSelect');
+      if(!sel) return;
+      let found = false;
+      [...sel.options].forEach(o => { if(o.value === name || o.textContent === name) found = true; });
+      if(!found){
+        const opt = document.createElement('option');
+        opt.value = name;
+        opt.textContent = name;
+        sel.appendChild(opt);
+      }
+      sel.value = name;
+      try { sel.dispatchEvent(new Event('change', {bubbles:true})); } catch(e) {}
+      try { renderPlayerReport(); } catch(e) {}
+    };
+    setTimeout(choose, 0);
+    setTimeout(choose, 60);
+    setTimeout(choose, 180);
+    return false;
+  };
+
+  window.renderAdjustRows = function(s){
+    s = s || (typeof state === 'function' ? state() : {});
+    const rows = [];
+    (s.matches || []).forEach(m => {
+      const amount = Number(m.extraFee || 0);
+      if(amount > 0){
+        rows.push({date:m.date, operation:'مبلغ إضافي', note:'تكملة القطية', amount:amount, kind:'pos', readOnly:true});
+      }
+    });
+    (s.extraCharges || []).forEach(x => rows.push({date:x.date, operation:'إضافة', note:x.note || '', amount:Number(x.amount || 0), kind:'pos'}));
+    (s.extraDiscounts || []).forEach(x => rows.push({date:x.date, operation:'خصم', note:x.note || '', amount:-Math.abs(Number(x.amount || 0)), kind:'neg'}));
+    rows.sort((a,b)=>String(b.date||'').localeCompare(String(a.date||'')));
+    const body = rows.map(r => {
+      const cls = r.amount < 0 ? 'moneyNeg' : 'moneyPos';
+      return `<div class="tRow adjustRow${r.readOnly?' readOnlyRow':''}">`+
+        `<span class="adjDate">${safeDate(r.date)}</span>`+
+        `<span class="adjOp">${safeHtml(r.operation)}</span>`+
+        `<span class="adjNote noteCell">${safeHtml(r.note)}</span>`+
+        `<span class="adjAmt ${cls}">${moneyEndMinus(r.amount)}</span>`+
+      `</div>`;
+    }).join('');
+    return `<div class="compactTable accountsMoneyTable adjustUnifiedTable">`+
+      `<div class="tHead adjustRow"><span class="adjDate">التاريخ</span><span class="adjOp">العملية</span><span class="adjNote">الملاحظة</span><span class="adjAmt amountHead">المبلغ</span></div>`+
+      (body || '<p class="muted">لا يوجد</p>')+
+    `</div>`;
+  };
+
+  function fixNegativeText(){
+    document.querySelectorAll('.adjustUnifiedTable .adjAmt').forEach(el=>{
+      let t = (el.textContent || '').trim();
+      t = t.replace(/^[-\s]+(\d+(?:\.\d{3})?)$/,'$1-');
+      t = t.replace(/^(\d+(?:\.\d{3})?)\s+-$/,'$1-');
+      el.textContent = t;
+    });
+  }
+
+  const oldRenderAll = window.renderAll;
+  if(typeof oldRenderAll === 'function'){
+    window.renderAll = function(){
+      const r = oldRenderAll.apply(this, arguments);
+      setTimeout(fixNegativeText, 0);
+      setTimeout(fixNegativeText, 80);
+      return r;
+    };
+  }
+
+  document.addEventListener('click', function(ev){
+    const el = ev.target.closest('[data-player-report], .pmNameBtn, .tableNameBtn, .playerChipBtn, .tRowClickable span:first-child');
+    if(!el) return;
+    const txt = (el.getAttribute('data-player-report') || el.textContent || '').trim();
+    if(!txt) return;
+    const players = (typeof state === 'function' ? (state().players || []) : []);
+    if(players.includes(txt)){
+      ev.preventDefault();
+      ev.stopPropagation();
+      window.openPlayerReport(txt);
+    }
+  }, true);
+
+  setTimeout(function(){ try { renderAll(); fixNegativeText(); } catch(e){} }, 120);
+})();
+

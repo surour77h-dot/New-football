@@ -4724,203 +4724,219 @@ html body .teamBBox,
 html.lightMode body .teamBBox,
 html.darkMode body .teamBBox{border-color:var(--team-second-bg) !important;}
 
-
 /* =========================================================
-   FINAL UNIFIED TEAM COLORS
-   توحيد أماكن وألوان الأصفر والوردي في النهاري والليلي
-   الفريق الأول = أصفر
-   الفريق الثاني = وردي
+   FINAL REPAIR 20260608
+   إصلاح ما تغيّر بالخطأ + تنفيذ تعليمات الحسابات والضغط على الاسم
+   لا يغير شكل التقويم العام ولا يضيف ألوان جديدة خارج المطلوب
    ========================================================= */
 
+/* 1) إرجاع منطق الأصفر والوردي فقط لمواضع الفريقين مثل المثال */
 :root{
-  --team-yellow:#FFD60A;
-  --team-yellow-soft:rgba(255,214,10,.16);
-  --team-yellow-line:rgba(255,214,10,.88);
-  --team-pink:#FF5FA2;
-  --team-pink-soft:rgba(255,95,162,.16);
-  --team-pink-line:rgba(255,95,162,.88);
+  --fix-team-yellow:#ffd60a;
+  --fix-team-pink:#ff5fa2;
 }
 
-/* نفس الألوان في الوضع النهاري */
-body.lightMode{
-  --team-yellow:#FFD60A;
-  --team-yellow-soft:rgba(255,214,10,.18);
-  --team-yellow-line:rgba(255,214,10,.95);
-  --team-pink:#FF5FA2;
-  --team-pink-soft:rgba(255,95,162,.18);
-  --team-pink-line:rgba(255,95,162,.95);
-}
-
-/* نفس الألوان في الوضع الليلي */
-body.darkMode,
-body:not(.lightMode){
-  --team-yellow:#FFD60A;
-  --team-yellow-soft:rgba(255,214,10,.16);
-  --team-yellow-line:rgba(255,214,10,.9);
-  --team-pink:#FF5FA2;
-  --team-pink-soft:rgba(255,95,162,.16);
-  --team-pink-line:rgba(255,95,162,.9);
-}
-
-/* صناديق الفريقين في تقسيم اللاعبين + سجل المباريات + التقويم */
+/* صناديق الفريقين: إطار فقط، بدون تغيير باقي البطاقة */
 .teamABox,
 body.lightMode .teamABox,
 body.darkMode .teamABox,
-.calendarMatchCard .teamABox,
-.matchCard .teamABox,
+body:not(.lightMode) .teamABox,
 #teams .teamABox,
+#calendar .teamABox,
 #matchLog .teamABox,
-#calendar .teamABox{
-  border:2px solid var(--team-yellow-line)!important;
-  box-shadow:0 0 0 2px var(--team-yellow-soft)!important;
+.calendarMatchCard .teamABox,
+.matchCard .teamABox{
+  border:2px solid var(--fix-team-yellow)!important;
+  box-shadow:none!important;
 }
-
 .teamBBox,
 body.lightMode .teamBBox,
 body.darkMode .teamBBox,
-.calendarMatchCard .teamBBox,
-.matchCard .teamBBox,
+body:not(.lightMode) .teamBBox,
 #teams .teamBBox,
+#calendar .teamBBox,
 #matchLog .teamBBox,
-#calendar .teamBBox{
-  border:2px solid var(--team-pink-line)!important;
-  box-shadow:0 0 0 2px var(--team-pink-soft)!important;
+.calendarMatchCard .teamBBox,
+.matchCard .teamBBox{
+  border:2px solid var(--fix-team-pink)!important;
+  box-shadow:none!important;
 }
 
-/* عناوين الفريق الأول والثاني */
+/* عنوان الفريق يكون خلفية صفراء/وردية واضحة مثل المثال */
 .teamABox h4,
-.teamABox h4 *,
 body.lightMode .teamABox h4,
-body.lightMode .teamABox h4 *,
 body.darkMode .teamABox h4,
-body.darkMode .teamABox h4 *,
-.calendarMatchCard .teamABox h4,
-.matchCard .teamABox h4,
+body:not(.lightMode) .teamABox h4,
 #teams .teamABox h4,
+#calendar .teamABox h4,
 #matchLog .teamABox h4,
-#calendar .teamABox h4{
-  color:var(--team-yellow)!important;
-  -webkit-text-fill-color:var(--team-yellow)!important;
+.calendarMatchCard .teamABox h4,
+.matchCard .teamABox h4{
+  background:var(--fix-team-yellow)!important;
+  color:#111827!important;
+  -webkit-text-fill-color:#111827!important;
+  border-radius:12px!important;
+  padding:7px 10px!important;
+  text-align:center!important;
   text-shadow:none!important;
+  font-weight:950!important;
 }
-
 .teamBBox h4,
-.teamBBox h4 *,
 body.lightMode .teamBBox h4,
-body.lightMode .teamBBox h4 *,
 body.darkMode .teamBBox h4,
-body.darkMode .teamBBox h4 *,
-.calendarMatchCard .teamBBox h4,
-.matchCard .teamBBox h4,
+body:not(.lightMode) .teamBBox h4,
 #teams .teamBBox h4,
+#calendar .teamBBox h4,
 #matchLog .teamBBox h4,
-#calendar .teamBBox h4{
-  color:var(--team-pink)!important;
-  -webkit-text-fill-color:var(--team-pink)!important;
+.calendarMatchCard .teamBBox h4,
+.matchCard .teamBBox h4{
+  background:var(--fix-team-pink)!important;
+  color:#111827!important;
+  -webkit-text-fill-color:#111827!important;
+  border-radius:12px!important;
+  padding:7px 10px!important;
+  text-align:center!important;
   text-shadow:none!important;
+  font-weight:950!important;
 }
 
-/* أزرار الأول والثاني عند الاختيار في تقسيم اللاعبين */
-.teamTabs button.selA,
+/* أزرار الأول والثاني المختارة في تقسيم اللاعبين: نفس الألوان في النهاري والليلي */
 .teamTabs .selA,
-body.lightMode .teamTabs button.selA,
+.teamTabs button.selA,
 body.lightMode .teamTabs .selA,
-body.darkMode .teamTabs button.selA,
+body.lightMode .teamTabs button.selA,
 body.darkMode .teamTabs .selA,
-#teams .teamTabs button.selA,
-#teams .teamTabs .selA{
+body.darkMode .teamTabs button.selA,
+body:not(.lightMode) .teamTabs .selA,
+body:not(.lightMode) .teamTabs button.selA{
+  background:var(--fix-team-yellow)!important;
   color:#111827!important;
   -webkit-text-fill-color:#111827!important;
-  background:var(--team-yellow)!important;
-  border:1px solid var(--team-yellow-line)!important;
-  border-bottom:3px solid var(--team-yellow-line)!important;
-  box-shadow:0 0 0 2px var(--team-yellow-soft)!important;
-  font-weight:950!important;
+  border:1px solid var(--fix-team-yellow)!important;
+  border-bottom:3px solid var(--fix-team-yellow)!important;
+  box-shadow:none!important;
   text-shadow:none!important;
+  font-weight:950!important;
 }
-
-.teamTabs button.selB,
 .teamTabs .selB,
-body.lightMode .teamTabs button.selB,
+.teamTabs button.selB,
 body.lightMode .teamTabs .selB,
-body.darkMode .teamTabs button.selB,
+body.lightMode .teamTabs button.selB,
 body.darkMode .teamTabs .selB,
-#teams .teamTabs button.selB,
-#teams .teamTabs .selB{
+body.darkMode .teamTabs button.selB,
+body:not(.lightMode) .teamTabs .selB,
+body:not(.lightMode) .teamTabs button.selB{
+  background:var(--fix-team-pink)!important;
   color:#111827!important;
   -webkit-text-fill-color:#111827!important;
-  background:var(--team-pink)!important;
-  border:1px solid var(--team-pink-line)!important;
-  border-bottom:3px solid var(--team-pink-line)!important;
-  box-shadow:0 0 0 2px var(--team-pink-soft)!important;
-  font-weight:950!important;
+  border:1px solid var(--fix-team-pink)!important;
+  border-bottom:3px solid var(--fix-team-pink)!important;
+  box-shadow:none!important;
   text-shadow:none!important;
+  font-weight:950!important;
 }
 
-/* أسماء اللاعبين داخل الصناديق لا تأخذ الأصفر/الوردي، فقط الصندوق والعنوان */
+/* أسماء اللاعبين داخل الفريقين لا تأخذ خلفية أو ألوان إضافية */
 .teamABox .teamName,
 .teamBBox .teamName,
 body.lightMode .teamABox .teamName,
-body.lightMode .teamBBox .teamName,
-body.darkMode .teamABox .teamName,
-body.darkMode .teamBBox .teamName{
-  color:var(--text)!important;
-  -webkit-text-fill-color:var(--text)!important;
-}
-
-/* الوضع النهاري: تأكيد وضوح أسماء اللاعبين داخل الفريقين */
-body.lightMode .teamABox .teamName,
 body.lightMode .teamBBox .teamName{
+  background:transparent!important;
   color:#111827!important;
   -webkit-text-fill-color:#111827!important;
 }
-
-/* الوضع الليلي: تأكيد وضوح أسماء اللاعبين داخل الفريقين */
 body.darkMode .teamABox .teamName,
 body.darkMode .teamBBox .teamName,
 body:not(.lightMode) .teamABox .teamName,
 body:not(.lightMode) .teamBBox .teamName{
+  background:transparent!important;
   color:#f8fafc!important;
   -webkit-text-fill-color:#f8fafc!important;
 }
 
-/* إزالة أي تعريفات قديمة تجعل الأصفر/الوردي ذهبي أو بني أو باهت */
-body.lightMode .teamABox,
-body.lightMode .teamBBox,
-body.darkMode .teamABox,
-body.darkMode .teamBBox{
-  background:var(--panel)!important;
+/* 2) جدول سجل الخصم/الإضافة: أعمدة صحيحة وتاريخ كامل ومبالغ يسار */
+.adjustUnifiedTable,
+.accountsMoneyTable.adjustUnifiedTable{
+  width:100%!important;
+  direction:rtl!important;
+}
+.adjustUnifiedTable .adjustRow{
+  display:grid!important;
+  grid-template-columns:106px 66px minmax(0,1fr) 86px!important;
+  gap:6px!important;
+  align-items:center!important;
+  min-height:34px!important;
+  padding:5px 4px!important;
+  border-bottom:1px solid var(--line)!important;
+}
+.adjustUnifiedTable .tHead.adjustRow{
+  min-height:28px!important;
+  padding-top:2px!important;
+  padding-bottom:4px!important;
+  color:var(--muted)!important;
+  font-size:12px!important;
+  font-weight:950!important;
+}
+.adjustUnifiedTable .adjDate{
+  white-space:nowrap!important;
+  overflow:visible!important;
+  text-overflow:clip!important;
+  text-align:right!important;
+  font-weight:850!important;
+}
+.adjustUnifiedTable .adjOp{
+  white-space:nowrap!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+  text-align:right!important;
+  font-weight:850!important;
+}
+.adjustUnifiedTable .adjNote{
+  min-width:0!important;
+  white-space:nowrap!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+  text-align:right!important;
+  color:var(--muted)!important;
+  font-weight:850!important;
+}
+.adjustUnifiedTable .adjAmt{
+  justify-self:stretch!important;
+  text-align:left!important;
+  direction:ltr!important;
+  white-space:nowrap!important;
+  overflow:visible!important;
+  text-overflow:clip!important;
+  font-weight:950!important;
+}
+.adjustUnifiedTable .moneyPos,
+body.lightMode .adjustUnifiedTable .moneyPos,
+body.darkMode .adjustUnifiedTable .moneyPos,
+body:not(.lightMode) .adjustUnifiedTable .moneyPos{
+  color:var(--green)!important;
+  -webkit-text-fill-color:var(--green)!important;
+  text-shadow:none!important;
+}
+.adjustUnifiedTable .moneyNeg,
+body.lightMode .adjustUnifiedTable .moneyNeg,
+body.darkMode .adjustUnifiedTable .moneyNeg,
+body:not(.lightMode) .adjustUnifiedTable .moneyNeg{
+  color:var(--red)!important;
+  -webkit-text-fill-color:var(--red)!important;
+  text-shadow:none!important;
 }
 
-/* تمييز الفريقين في كل أماكن العرض بنفس المنطق */
-.luxTeamsGrid .teamABox{border-color:var(--team-yellow-line)!important;}
-.luxTeamsGrid .teamBBox{border-color:var(--team-pink-line)!important;}
-.luxTeamsGrid .teamABox h4{color:var(--team-yellow)!important;-webkit-text-fill-color:var(--team-yellow)!important;}
-.luxTeamsGrid .teamBBox h4{color:var(--team-pink)!important;-webkit-text-fill-color:var(--team-pink)!important;}
+@media(max-width:390px){
+  .adjustUnifiedTable .adjustRow{
+    grid-template-columns:102px 58px minmax(0,1fr) 78px!important;
+    gap:5px!important;
+    font-size:13px!important;
+  }
+  .adjustUnifiedTable .tHead.adjustRow{font-size:11.5px!important;}
+}
 
-/* إصلاح إن كان التطبيق يستخدم كلاسات بديلة */
-.firstTeam,
-.teamFirst,
-.team-one,
-.teamOne{
-  border-color:var(--team-yellow-line)!important;
-}
-.secondTeam,
-.teamSecond,
-.team-two,
-.teamTwo{
-  border-color:var(--team-pink-line)!important;
-}
-.firstTeam h4,
-.teamFirst h4,
-.team-one h4,
-.teamOne h4{
-  color:var(--team-yellow)!important;
-}
-.secondTeam h4,
-.teamSecond h4,
-.team-two h4,
-.teamTwo h4{
-  color:var(--team-pink)!important;
+/* 3) إصلاح شكل السالب داخل جدول سجل الخصم/الإضافة فقط */
+.adjustUnifiedTable .adjAmt.moneyNeg{
+  unicode-bidi:plaintext!important;
 }
 
