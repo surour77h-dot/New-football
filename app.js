@@ -282,18 +282,14 @@ function forceCompactPlayerRows(){
 }
 
 function openPlayerReport(p){
-  // Set the value first on all possible select elements
-  ['playerFilterSelect','playerFilter','reportPlayerSelect'].forEach(id=>{
-    const el=document.getElementById(id); if(el){el.value=p;}
-  });
   goPage('playerReport');
-  // Force set and render after page switch
   setTimeout(()=>{
-    ['playerFilterSelect','playerFilter','reportPlayerSelect'].forEach(id=>{
-      const el=document.getElementById(id); if(el){el.value=p;}
-    });
-    if(typeof renderPlayerReport==='function') renderPlayerReport();
-  },60);
+    const sel=document.getElementById('playerFilterSelect');
+    if(sel){
+      sel.value=p;
+      sel.dispatchEvent(new Event('change'));
+    }
+  },30);
 }
 function renderPlayerReport(){
   const s=state(),p=playerFilterSelect.value;if(!p){playerFilterContent.innerHTML='';return}const b=balances(s)[p]||{},deps=s.deposits.filter(d=>d.player===p),games=s.matches.filter(m=>(m.players||[]).includes(p));const playPlusDebt=(b.playTotal||0)+(b.debtDeposits||0);
@@ -322,7 +318,7 @@ function renderAccounts(s){
 function renderAdjustRows(s){
   const matchBonus=(s.matches||[]).filter(m=>Number(m.extraFee||0)>0).map(m=>({id:'mb_'+m.id,date:m.date,amount:Number(m.extraFee),t:'مبلغ إضافي',cls:'moneyPos',type:'matchBonus'}));
   let rows=[...matchBonus,...(s.extraCharges||[]).map(x=>({...x,t:'إضافة',cls:'moneyPos',type:'extra'})),...(s.extraDiscounts||[]).map(x=>({...x,t:'خصم',cls:'moneyNeg',type:'discount'}))].sort((a,b)=>(b.date||'').localeCompare(a.date||''));
-  return `<div class="compactTable accountsMoneyTable adjustTable"><div class="tHead"><span class="colDate">التاريخ</span><span class="colNote">الملاحظة</span><span class="colOp">العملية</span><span class="colAmt amountHead">المبلغ</span></div>${rows.map(r=>{const isDiscount=r.type==='discount';const displayAmt=isDiscount?money(Math.abs(r.amount||0))+' -':money(Math.abs(r.amount||0));const cls=isDiscount?'moneyNeg':r.type==='matchBonus'?'moneyPos':r.cls;return `<div class="tRow"><span class="colDate">${fmDate(r.date)}</span><span class="colNote noteCell">${r.type==='matchBonus'?'تكملة القطية':(r.note||'')}</span><span class="colOp">${r.t}</span><span class="colAmt ${cls}">${displayAmt}</span></div>`;}).join('')||'<p class="muted">لا يوجد</p>'}</div>`;
+  return `<div class="compactTable accountsMoneyTable adjTbl"><div class="tHead adjRow"><span class="adjDate">التاريخ</span><span class="adjOp">العملية</span><span class="adjNote">الملاحظة</span><span class="adjAmt">المبلغ</span></div>${rows.map(r=>{const isDiscount=r.type==='discount';const cls=isDiscount?'moneyNeg':'moneyPos';const amt=money(Math.abs(r.amount||0));const displayAmt=isDiscount?`- ${amt}`:amt;return `<div class="tRow adjRow"><span class="adjDate">${fmDate(r.date)}</span><span class="adjOp">${r.t}</span><span class="adjNote noteCell">${r.type==='matchBonus'?'تكملة القطية':(r.note||'')}</span><span class="adjAmt ${cls}">${displayAmt}</span></div>`;}).join('')||'<p class="muted">لا يوجد</p>'}</div>`;
 }
 function saveExtraUnified(){
   const s=state(),type=extraType.value,amount=Number(extraAmount.value||0);if(!amount)return;
@@ -821,7 +817,7 @@ setTimeout(forceCompactPlayerRows,300);
   window.renderAdjustRows = function(s){
     const matchBonus=(s.matches||[]).filter(m=>Number(m.extraFee||0)>0).map(m=>({id:'mb_'+m.id,date:m.date,amount:Number(m.extraFee),t:'مبلغ إضافي',kind:'matchBonus'}));
     let rows=[...matchBonus,...((s.extraCharges||[]).map(x=>({...x,t:'إضافة',kind:'deposit'}))),...((s.extraDiscounts||[]).map(x=>({...x,t:'خصم',kind:'discount'})))].sort((a,b)=>(b.date||'').localeCompare(a.date||''));
-    return `<div class="compactTable accountsMoneyTable v17MoneyTable"><div class="tHead"><span>التاريخ</span><span>العملية</span><span class="amountHead">المبلغ</span></div>${rows.map(r=>{const c=r.kind==='discount'?'moneyNeg':r.kind==='matchBonus'?'moneyPos':cls(r.kind);const noteVal=r.kind==='matchBonus'?'تكملة القطية':(r.note||'');const rawAmt=typeof amt==='function'?amt(Math.abs(r.amount||0),r.kind):money(Math.abs(r.amount||0));const amtVal=r.kind==='discount'?rawAmt+' -':rawAmt;return `<div class="tRow${r.kind==='matchBonus'?' readOnlyRow':''}"><span class="colDate">${fmDate(r.date)}</span><span class="colNote noteCell">${noteVal}</span><span class="colOp" data-money-kind="${r.kind}">${r.t}</span><span class="colAmt ${c}" data-money-kind="${r.kind}">${amtVal}</span></div>`}).join('')||'<p class="muted">لا يوجد</p>'}</div>`;
+    return `<div class="compactTable accountsMoneyTable adjTbl"><div class="tHead adjRow"><span class="adjDate">التاريخ</span><span class="adjOp">العملية</span><span class="adjNote">الملاحظة</span><span class="adjAmt">المبلغ</span></div>${rows.map(r=>{const isDisc=r.kind==='discount';const c=isDisc?'moneyNeg':'moneyPos';const rawAmt=money(Math.abs(r.amount||0));const amtVal=isDisc?`- ${rawAmt}`:rawAmt;const noteVal=r.kind==='matchBonus'?'تكملة القطية':(r.note||'');return `<div class="tRow adjRow${r.kind==='matchBonus'?' readOnlyRow':''}"><span class="adjDate">${fmDate(r.date)}</span><span class="adjOp">${r.t}</span><span class="adjNote noteCell">${noteVal}</span><span class="adjAmt ${c}">${amtVal}</span></div>`}).join('')||'<p class="muted">لا يوجد</p>'}</div>`;
   };
 
   window.v17PostFormat=function(){
@@ -900,7 +896,7 @@ setTimeout(forceCompactPlayerRows,300);
   try { renderAdjustRows = function(s){
     const matchBonus=(s.matches||[]).filter(m=>Number(m.extraFee||0)>0).map(m=>({id:'mb_'+m.id,date:m.date,amount:Number(m.extraFee),t:'مبلغ إضافي',kind:'matchBonus'}));
     let rows=[...matchBonus,...((s.extraCharges||[]).map(x=>({...x,t:'إضافة',kind:'deposit'}))),...((s.extraDiscounts||[]).map(x=>({...x,t:'خصم',kind:'discount'})))].sort((a,b)=>(b.date||'').localeCompare(a.date||''));
-    return `<div class="compactTable accountsMoneyTable"><div class="tHead"><span>التاريخ</span><span>العملية</span><span class="amountHead">المبلغ</span></div>${rows.map(r=>{const c=r.kind==='discount'?'moneyNeg':r.kind==='matchBonus'?'moneyPos':cls(r.kind);const noteVal=r.kind==='matchBonus'?'تكملة القطية':(r.note||'');const rawAmt=typeof amount==='function'?amount(Math.abs(r.amount||0),r.kind):money(Math.abs(r.amount||0));const amtVal=r.kind==='discount'?rawAmt+' -':rawAmt;return `<div class="tRow${r.kind==='matchBonus'?' readOnlyRow':''}"><span class="colDate">${fmDate(r.date)}</span><span class="colNote noteCell">${noteVal}</span><span class="colOp" data-money-kind="${r.kind}">${r.t}</span><span class="colAmt ${c}" data-money-kind="${r.kind}">${amtVal}</span></div>`}).join('')||'<p class="muted">لا يوجد</p>'}</div>`;
+    return `<div class="compactTable accountsMoneyTable adjTbl"><div class="tHead adjRow"><span class="adjDate">التاريخ</span><span class="adjOp">العملية</span><span class="adjNote">الملاحظة</span><span class="adjAmt">المبلغ</span></div>${rows.map(r=>{const isDisc=r.kind==='discount';const c=isDisc?'moneyNeg':'moneyPos';const rawAmt=money(Math.abs(r.amount||0));const amtVal=isDisc?`- ${rawAmt}`:rawAmt;const noteVal=r.kind==='matchBonus'?'تكملة القطية':(r.note||'');return `<div class="tRow adjRow${r.kind==='matchBonus'?' readOnlyRow':''}"><span class="adjDate">${fmDate(r.date)}</span><span class="adjOp">${r.t}</span><span class="adjNote noteCell">${noteVal}</span><span class="adjAmt ${c}">${amtVal}</span></div>`}).join('')||'<p class="muted">لا يوجد</p>'}</div>`;
   }; } catch(e) {}
 
   try { renderPlayerReport = function(){

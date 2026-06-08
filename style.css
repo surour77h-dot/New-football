@@ -4548,3 +4548,76 @@ body.lightMode .teamBBox h4 small { color: #9d174d !important; }
 .tRowClickable { cursor: pointer !important; }
 .tRowClickable:hover { background: rgba(255,255,255,.05) !important; }
 body.lightMode .tRowClickable:hover { background: rgba(0,0,0,.04) !important; }
+
+
+/* ===== v23-fixes ===== */
+
+/* adjTbl: tight 4-col grid التاريخ|العملية|الملاحظة|المبلغ */
+.adjTbl .adjRow {
+  display: grid !important;
+  grid-template-columns: 56px 44px 1fr 62px !important;
+  gap: 3px !important;
+  align-items: center !important;
+  padding: 5px 8px !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+}
+.adjTbl .tHead.adjRow {
+  border-bottom: 1px solid var(--line) !important;
+}
+.adjTbl .tHead .adjDate,
+.adjTbl .tHead .adjOp,
+.adjTbl .tHead .adjNote,
+.adjTbl .tHead .adjAmt {
+  font-size: 9.5px !important;
+  color: var(--muted) !important;
+  font-weight: 700 !important;
+}
+.adjTbl .adjDate { font-size: 11px !important; overflow:hidden; text-overflow:ellipsis; }
+.adjTbl .adjOp   { font-size: 12px !important; font-weight:700 !important; overflow:hidden; text-overflow:ellipsis; }
+.adjTbl .adjNote { font-size: 11px !important; color:var(--muted) !important; overflow:hidden; text-overflow:ellipsis; }
+.adjTbl .adjAmt  {
+  font-size: 12.5px !important;
+  font-weight: 800 !important;
+  text-align: right !important;
+  direction: rtl !important;
+  white-space: nowrap !important;
+  overflow: hidden;
+}
+
+/* teamRatioBadge */
+.teamRatioBadge {
+  background: rgba(253,224,71,.13);
+  border: 1px solid rgba(253,224,71,.4);
+  color: #fde047;
+  font-size: 13px;
+  font-weight: 900;
+  padding: 1px 9px;
+  border-radius: 8px;
+  letter-spacing: 1px;
+}
+body.lightMode .teamRatioBadge {
+  background: rgba(161,98,7,.08) !important;
+  border-color: rgba(161,98,7,.3) !important;
+  color: #92400e !important;
+}
+
+/* teamTabs selA/selB - force yellow/pink in BOTH modes */
+.teamTabs button.selA,
+body.lightMode .teamTabs button.selA {
+  background: #facc15 !important;
+  color: #111 !important;
+  border-color: #ca8a04 !important;
+  font-weight: 900 !important;
+  text-shadow: none !important;
+  -webkit-text-fill-color: #111 !important;
+}
+.teamTabs button.selB,
+body.lightMode .teamTabs button.selB {
+  background: #f472b6 !important;
+  color: #111 !important;
+  border-color: #db2777 !important;
+  font-weight: 900 !important;
+  text-shadow: none !important;
+  -webkit-text-fill-color: #111 !important;
+}
