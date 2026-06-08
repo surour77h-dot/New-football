@@ -4941,19 +4941,69 @@ body:not(.lightMode) .adjustUnifiedTable .moneyNeg{
 }
 
 
-
-/* sync account log colors with top summary boxes */
-.adjustTable .positive,
-.adjustTable .amount.positive,
-.accountsLog .positive,
-.accountsLog .green,
-.accountsLog td.pos{
- color: var(--success) !important;
+/* === VERIFIED COLOR MATCH: سجل الخصم/الإضافة يأخذ نفس ألوان المربعات العلوية === */
+:root{
+  --account-positive-light:#07864f;
+  --account-negative-light:#dc2626;
+  --account-positive-dark:#34d399;
+  --account-negative-dark:#ff5b6e;
 }
-.adjustTable .negative,
-.adjustTable .amount.negative,
-.accountsLog .negative,
-.accountsLog .red,
-.accountsLog td.neg{
- color: var(--danger) !important;
+
+/* الوضع النهاري: نفس أخضر الإضافي ونفس أحمر المديونية */
+body.lightMode #accounts .accountMiniCards .moneyPos,
+body.lightMode #accounts .adjustUnifiedTable .adjAmt.moneyPos,
+body.lightMode #accounts .adjustUnifiedTable .moneyPos,
+body.lightMode #accounts .adjTbl .adjAmt.moneyPos,
+body.lightMode #accounts .adjTbl .moneyPos{
+  color:var(--account-positive-light)!important;
+  -webkit-text-fill-color:var(--account-positive-light)!important;
+  text-shadow:none!important;
+}
+body.lightMode #accounts .accountMiniCards .moneyNeg,
+body.lightMode #accounts .adjustUnifiedTable .adjAmt.moneyNeg,
+body.lightMode #accounts .adjustUnifiedTable .moneyNeg,
+body.lightMode #accounts .adjTbl .adjAmt.moneyNeg,
+body.lightMode #accounts .adjTbl .moneyNeg{
+  color:var(--account-negative-light)!important;
+  -webkit-text-fill-color:var(--account-negative-light)!important;
+  text-shadow:none!important;
+}
+
+/* الوضع الليلي: نفس أخضر الإضافي ونفس أحمر المديونية */
+body.darkMode #accounts .accountMiniCards .moneyPos,
+body:not(.lightMode) #accounts .accountMiniCards .moneyPos,
+body.darkMode #accounts .adjustUnifiedTable .adjAmt.moneyPos,
+body:not(.lightMode) #accounts .adjustUnifiedTable .adjAmt.moneyPos,
+body.darkMode #accounts .adjustUnifiedTable .moneyPos,
+body:not(.lightMode) #accounts .adjustUnifiedTable .moneyPos,
+body.darkMode #accounts .adjTbl .adjAmt.moneyPos,
+body:not(.lightMode) #accounts .adjTbl .adjAmt.moneyPos,
+body.darkMode #accounts .adjTbl .moneyPos,
+body:not(.lightMode) #accounts .adjTbl .moneyPos{
+  color:var(--account-positive-dark)!important;
+  -webkit-text-fill-color:var(--account-positive-dark)!important;
+  text-shadow:none!important;
+}
+body.darkMode #accounts .accountMiniCards .moneyNeg,
+body:not(.lightMode) #accounts .accountMiniCards .moneyNeg,
+body.darkMode #accounts .adjustUnifiedTable .adjAmt.moneyNeg,
+body:not(.lightMode) #accounts .adjustUnifiedTable .adjAmt.moneyNeg,
+body.darkMode #accounts .adjustUnifiedTable .moneyNeg,
+body:not(.lightMode) #accounts .adjustUnifiedTable .moneyNeg,
+body.darkMode #accounts .adjTbl .adjAmt.moneyNeg,
+body:not(.lightMode) #accounts .adjTbl .adjAmt.moneyNeg,
+body.darkMode #accounts .adjTbl .moneyNeg,
+body:not(.lightMode) #accounts .adjTbl .moneyNeg{
+  color:var(--account-negative-dark)!important;
+  -webkit-text-fill-color:var(--account-negative-dark)!important;
+  text-shadow:none!important;
+}
+
+/* تبقى مبالغ سجل الخصم/الإضافة يسار والسالب بنهاية الرقم */
+#accounts .adjustUnifiedTable .adjAmt,
+#accounts .adjTbl .adjAmt{
+  text-align:left!important;
+  direction:ltr!important;
+  justify-self:stretch!important;
+  white-space:nowrap!important;
 }
