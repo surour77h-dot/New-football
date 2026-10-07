@@ -5007,3 +5007,10 @@ body:not(.lightMode) #accounts .adjTbl .moneyNeg{
   justify-self:stretch!important;
   white-space:nowrap!important;
 }
+
+
+/* R16 مسح البيانات */
+.dataClearCard .dataStats{margin:6px 0 12px;line-height:1.9}
+.dataClearActions{display:grid;gap:10px}
+.dataClearActions button{width:100%;min-height:52px;font-size:16px;text-align:center}
+.dataClearActions button small{display:block;font-size:12px;opacity:.75;margin-top:2px}

@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#08111f">
 <title>قروب الكورة - Clean V3</title>
 <link rel="manifest" href="manifest.json?v=cleanv3r15">
-<link rel="stylesheet" href="style.css?v=color_verified_20260608_2">
+<link rel="stylesheet" href="style.css?v=r16_clear">
 <script id="FINAL_FORCE_CLEAR_CACHE_V8">
 if('caches' in window){caches.keys().then(keys=>keys.forEach(k=>caches.delete(k))).catch(()=>{});}
 if('serviceWorker' in navigator){navigator.serviceWorker.getRegistrations().then(rs=>rs.forEach(r=>r.unregister())).catch(()=>{});}
@@ -174,8 +174,19 @@ if('serviceWorker' in navigator){navigator.serviceWorker.getRegistrations().then
           <label class="importLabel">استيراد البيانات<input id="importDataInput" type="file" accept="application/json"></label>
         </div>
       </div>
+      <div class="card dataClearCard">
+        <h3>مسح البيانات</h3>
+        <div id="dataStats" class="dataStats muted"></div>
+        <div class="dataClearActions">
+          <button id="clearMatchLogBtn" class="danger" type="button" onclick="clearMatchLog()">🧾 مسح سجل المباريات <small>(المباريات + الفريقين + التقويم)</small></button>
+          <button id="clearTeamsBtn" class="danger" type="button" onclick="clearTeamsOnly()">🟨 مسح تقسيم الفريقين فقط</button>
+          <button id="clearAllBtn" class="danger" type="button" onclick="clearAllData()">⚠️ مسح كل البيانات <small>(لاعبين + إيداعات + حسابات)</small></button>
+          <button id="undoClearBtn" type="button" onclick="undoLastClear()" style="display:none">↩️ استرجاع آخر مسح</button>
+        </div>
+        <p class="muted">الإعدادات (الاسم، الوضع، ترتيب الصفحات) لا تُمسح. ينصح بالتصدير قبل المسح.</p>
+      </div>
       <div class="card">
-        <div class="sectionTitleLine pageOrderHeader"><div class="sectionTitleLine pageOrderHeader"><h3>ترتيب الصفحات</h3><button id="renamePagesBtn" type="button" onclick="openRenamePages()">إعادة تسمية الصفحات</button></div></div></div></div></div>
+        <div class="sectionTitleLine pageOrderHeader"><h3>ترتيب الصفحات</h3><button id="renamePagesBtn" type="button" onclick="openRenamePages()">إعادة تسمية الصفحات</button></div>
         <div id="pageOrderList"></div>
       </div>
     </section>
@@ -191,7 +202,7 @@ if('serviceWorker' in navigator){navigator.serviceWorker.getRegistrations().then
   </div>
 </div>
 
-<script src="app.js?v=color_verified_20260608_2"></script>
+<script src="app.js?v=r16_clear"></script>
 
 <script>
 (function(){
