@@ -1126,3 +1126,74 @@ function undoLastClear(){
     return r;
   };
 })();
+
+
+/* ===== R17: حذف مباراة واحدة بكل مدخلاتها ===== */
+function deleteMatchById(id){
+  const s=state(),m=(s.matches||[]).find(x=>x.id===id);
+  if(!m)return alert('المباراة غير موجودة');
+  const n=participants(m).length;
+  const msg=`حذف هذه المباراة نهائياً؟\n\nالتاريخ: ${fmDate(m.date)}\nالمكان: ${m.place||'-'}\nسعر الحجز: ${money(m.bookingCost||0)} د.ك\nعدد اللاعبين: ${n}\n\nيُحذف معها تقسيم الفريقين. باقي المباريات والبيانات تبقى.`;
+  if(!confirm(msg))return;
+  const raw=localStorage.getItem(LS)||'{}';
+  s.matches=s.matches.filter(x=>x.id!==id);
+  if(s.teams)delete s.teams[id];
+  localStorage.setItem(LS_BACKUP,raw);
+  localStorage.setItem(LS,JSON.stringify(s));
+  const ed=document.getElementById('editingMatchId');
+  const wasEditing=ed&&ed.value===id;
+  tempTeamMap={};
+  const ts=document.getElementById('teamsMatchSelect');if(ts)ts.value='';
+  const old=document.getElementById('deleteMatchFromTeamsBtn');if(old)old.remove();
+  if(wasEditing){tempGuests=[];try{clearMatch();}catch(_){}}
+  renderAll();
+  showConfirm(`تم حذف مباراة ${fmDate(m.date)} ${escapeHtml(m.place||'')} بكل مدخلاتها`,currentPage==='settings'?'settings':currentPage);
+}
+
+function deleteSelectedMatchFromTeams(){
+  const id=document.getElementById('teamsMatchSelect').value;
+  if(!id)return alert('اختر لعبة أولاً');
+  deleteMatchById(id);
+}
+
+function undoLastClear(){
+  const b=localStorage.getItem(LS_BACKUP);
+  if(!b)return alert('لا توجد نسخة للاسترجاع');
+  if(!confirm('استرجاع آخر مباراة محذوفة (والعودة لحالة البيانات قبل الحذف)؟'))return;
+  localStorage.setItem(LS,b);localStorage.removeItem(LS_BACKUP);
+  tempTeamMap={};renderAll();
+  showConfirm('تم الاسترجاع','settings');
+}
+
+function injectDeleteButtons(){
+  const s=state();
+  const mk=id=>{const b=document.createElement('button');b.type='button';b.className='danger delMatchBtn';b.textContent='🗑 حذف المباراة';b.onclick=()=>deleteMatchById(id);return b;};
+  const sorted=[...s.matches].sort((a,b)=>(b.date||'').localeCompare(a.date||''));
+  document.querySelectorAll('#matchLogList .matchCard').forEach((card,i)=>{
+    if(sorted[i]&&!card.querySelector('.delMatchBtn'))card.appendChild(mk(sorted[i].id));
+  });
+  const dayMs=s.matches.filter(m=>m.date===selectedCalendarDate);
+  document.querySelectorAll('#calendarList .calendarMatchCard').forEach((card,i)=>{
+    if(dayMs[i]&&!card.querySelector('.delMatchBtn'))card.appendChild(mk(dayMs[i].id));
+  });
+}
+
+function renderMatchDeleteList(){
+  const box=document.getElementById('matchDeleteList');if(!box)return;
+  const s=state();
+  const sorted=[...s.matches].sort((a,b)=>(b.date||'').localeCompare(a.date||''));
+  box.innerHTML=sorted.length?sorted.map(m=>`<div class="matchDeleteRow"><div><b>${fmDate(m.date)}</b> <span>${escapeHtml(m.place||'')}</span><small>${participants(m).length} لاعب • ${money(m.bookingCost||0)} د.ك</small></div><button type="button" class="danger" onclick="deleteMatchById('${escAttr(m.id)}')">🗑 حذف</button></div>`).join(''):'<p class="muted">لا توجد مباريات محفوظة.</p>';
+  const u=document.getElementById('undoClearBtn');
+  if(u)u.style.display=localStorage.getItem(LS_BACKUP)?'block':'none';
+}
+
+(function(){
+  const _ra=renderAll;
+  renderAll=function(){
+    const r=_ra.apply(this,arguments);
+    try{injectDeleteButtons();renderMatchDeleteList();}catch(e){}
+    return r;
+  };
+  const _rcl=renderCalendarList;
+  renderCalendarList=function(){const r=_rcl.apply(this,arguments);try{injectDeleteButtons();}catch(e){}return r;};
+})();

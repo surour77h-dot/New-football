@@ -5014,3 +5014,10 @@ body:not(.lightMode) #accounts .adjTbl .moneyNeg{
 .dataClearActions{display:grid;gap:10px}
 .dataClearActions button{width:100%;min-height:52px;font-size:16px;text-align:center}
 .dataClearActions button small{display:block;font-size:12px;opacity:.75;margin-top:2px}
+
+/* R17 حذف مباراة */
+.delMatchBtn{width:100%;min-height:46px;margin-top:10px;font-size:15px}
+.matchDeleteList{display:grid;gap:8px;margin:10px 0}
+.matchDeleteRow{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 10px;border-radius:12px;background:rgba(127,127,127,.12)}
+.matchDeleteRow small{display:block;opacity:.7;font-size:12px}
+.matchDeleteRow button{min-width:84px;min-height:44px}
